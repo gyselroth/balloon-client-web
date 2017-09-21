@@ -1,0 +1,61 @@
+{
+  "name": "balloon-client-web",
+  "version": "2.0.0-dev",
+  "description": "Balloon Web UI (SPA)",
+  "title": "balloon",
+  "scripts": {
+    "start": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "install": "napa StefH/bower-kendo-ui-web:kendo-ui-web"
+  },
+  "dependencies": {
+    "@openid/appauth": "*",
+    "@gyselroth/icon-collection": "1.0.2",
+    "bundle-loader": "^0.5.5",
+    "file-loader": "^0.11.2",
+    "i18next": "3.x",
+    "i18next-browser-languagedetector": "*",
+    "i18next-localstorage-cache": "*",
+    "i18next-sprintf-postprocessor": "*",
+    "i18next-xhr-backend": "*",
+    "jquery-i18next": "*",
+    "kendo-ui-core": "*"
+  },
+  "devDependencies": {
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^2.30.1",
+    "napa": "^3.0.0",
+    "source-map-loader": "^0.1.5",
+    "style-loader": "^0.18.2",
+    "typings": "^1.0.4",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.8.2",
+    "webpack-merge": "^4.1.0"
+  },
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gyselroth/balloon-client-web.git"
+  },
+  "keywords": [
+    "Balloon",
+    "JavaScript",
+    "HTML5",
+    "CSS3",
+    "SPA",
+    "Fast",
+    "Super-fast",
+    "Web",
+    "UI",
+    "Balloon",
+    "client"
+  ],
+  "author": "Raffael Sahli <sahli@gyselroth.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/gyselroth/balloon-client-web/issues"
+  },
+  "homepage": "https://github.com/gyselroth/balloon-client-web#readme"
+}
