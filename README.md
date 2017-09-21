@@ -37,4 +37,4 @@ You need a running balloon server to operate the balloon web client. Please see 
 A changelog is available [here](https://github.com/gyselroth/balloon-client-web/CHANGELOG.md).
 
 ## Contribute
-We are glad that you would like to contribute to this project. Please follow the given [terms](https://github.com/gyselroth/balloon-client-web/CONTRIBUTE.md).
+We are glad that you would like to contribute to this project. Please follow the given [terms](https://github.com/gyselroth/balloon-client-web/CONTRIBUTING.md).
