@@ -5,7 +5,6 @@
  * @copyright Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
  * @license   GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
-"use strict";
 
 import * as $ from "jquery";
 import balloon from './core.js';
@@ -42,13 +41,13 @@ var login = {
 
     if(this.basic === false) {
       $('#login-basic').hide();
-    }    
-      
+    }
+
     var $oidc = $('#login-oidc');
     for(let i in this.oidc) {
       $oidc.append('<img alt="'+this.oidc[i].providerUrl+'" src="data:image/png;base64,'+this.oidc[i].imgBase64+'" />');
     }
-  
+
     this.checkAuth();
   },
 
@@ -56,7 +55,7 @@ var login = {
     var hash = window.location.hash.substr(1);
     var obj = {};
     var pairs = hash.split('&');
-    
+
     for(let i in pairs){
       let split = pairs[i].split('=');
       obj[decodeURIComponent(split[0])] = decodeURIComponent(split[1]);
@@ -78,10 +77,10 @@ var login = {
       } else {
         $('#login-oidc-error').show();
       }
-        
+
       window.location.hash = '';
     });
-    
+
     this.handler.setAuthorizationNotifier(this.notifier);
     this.handler.completeAuthorizationRequestIfPossible();
   },
@@ -90,7 +89,7 @@ var login = {
     this.checkOidcAuth();
 
     var login_helper = function(e) {
-      login.destroyBrowser();   
+      login.destroyBrowser();
       var $login = $('#login').show();
       $('#fs-namespace').hide();
       $login.find('input[type=submit]').off('click').on('click', login.initBasicAuth);
@@ -104,13 +103,13 @@ var login = {
           login.initBasicAuth();
         }
       });
-          
+
       $('#login-oidc').find('img').off('click').on('click', function() {
         $login.find('.error-message').hide();
         login.initOidcAuth($(this).attr('alt'));
       });
     };
-     
+
     var options = {
       type:'GET',
       url: '/api/auth',
@@ -118,10 +117,10 @@ var login = {
       complete: function(response) {
         switch(response.status) {
           case 401:
-          case 403: 
+          case 403:
             login_helper(response);
           break;
-        
+
           case 400:
             if(login.token) {
               login.adapter = 'oidc';
@@ -132,9 +131,9 @@ var login = {
             login.fetchIdentity();
           break;
 
-          default: 
+          default:
             $('#login-server-error').show();
-            $('#login-body').hide();  
+            $('#login-body').hide();
           break;
         }
       }
@@ -144,7 +143,7 @@ var login = {
       options.headers = {
         "Authorization": 'Bearer '+login.token,
       }
-    }   
+    }
 
     $.ajax(options);
   },
@@ -156,8 +155,8 @@ var login = {
     if(login.adapter === 'basic') {
       if(navigator.userAgent.indexOf('MSIE') > -1 || navigator.userAgent.indexOf('Edge') > -1) {
         document.execCommand('ClearAuthenticationCache', 'false');
-        login.destroyBrowser();   
-        login.checkAuth();       
+        login.destroyBrowser();
+        login.checkAuth();
       } else {
         $.ajax({
           url: '/api/v'+balloon.BALLOON_API_VERSION,
@@ -166,15 +165,15 @@ var login = {
           cache: false,
           statusCode: {
             401: function() {
-              login.destroyBrowser();   
-              login.checkAuth();       
+              login.destroyBrowser();
+              login.checkAuth();
             }
           }
-        }); 
+        });
       }
-    }    
+    }
   },
-  
+
   verifyOidcAuthentication: function() {
     login.xmlHttpRequest({
       url: '/api/auth',
@@ -182,18 +181,18 @@ var login = {
       complete: function(response) {
         switch(response.status) {
           case 401:
-          case 403: 
+          case 403:
             $('#login-oidc-error').show();
           break;
-        
+
           case 400:
             login.fetchIdentity();
             login.initBrowser();
           break;
 
-          default: 
+          default:
             $('#login-server-error').show();
-            $('#login-body').hide();  
+            $('#login-body').hide();
           break;
         }
       }
@@ -208,7 +207,7 @@ var login = {
       success: function(body) {
         login.username = body.data;
         localStorage.username = login.username;
-        $('#fs-identity').show().find('#fs-identity-username').html(body.data);    
+        $('#fs-identity').show().find('#fs-identity-username').html(body.data);
       }
     });
   },
@@ -230,7 +229,7 @@ var login = {
             "Authorization": 'Bearer '+login.token
           };
       }
-    }   
+    }
 
     return $.ajax(options);
   },
@@ -245,11 +244,11 @@ var login = {
 
   initOidcAuth: function(provider_url) {
     var idp = this.getIdpConfigByProviderUrl(provider_url);
-  
+
     AuthorizationServiceConfiguration.fetchFromIssuer(idp.providerUrl).then(configuration => {
       var request = new AuthorizationRequest(
         idp.clientId, idp.redirectUri, idp.scope, 'id_token token', undefined, {'nonce': Math.random().toString(36).slice(2)});
-  
+
       login.handler.performAuthorizationRequest(configuration, request);
     });
   },
@@ -272,7 +271,7 @@ var login = {
 
     if(username == '' || password == '') {
       return;
-    } 
+    }
 
     $password_input.val('');
 
@@ -283,7 +282,7 @@ var login = {
     var $login = $('#login');
     var $username_input = $login.find('input[type=text]');
     var $password_input = $login.find('input[type=password]');
-    
+
     $.ajax({
       type: 'GET',
       username: username,
@@ -292,29 +291,29 @@ var login = {
       url: '/api/v1/user/whoami',
       beforeSend: function() {
         $username_input.removeClass('error');
-        $password_input.removeClass('error');  
+        $password_input.removeClass('error');
       },
       complete: function(response) {
         switch(response.status) {
           case 401:
-          case 403: 
+          case 403:
             $('#fs-namespace').hide();
             $('#login-basic-error').show();
             $username_input.addClass('error');
             $password_input.addClass('error');
           break;
-        
-          case 200: 
+
+          case 200:
             login.adapter = 'basic';
             login.username = response.responseJSON.data;
             localStorage.username = login.username;
-            $('#fs-identity').show().find('#fs-identity-username').html(login.username);    
+            $('#fs-identity').show().find('#fs-identity-username').html(login.username);
             login.initBrowser();
           break;
-        
-          default: 
+
+          default:
             $('#login-server-error').show();
-            $('#login-body').hide();  
+            $('#login-body').hide();
           break;
         }
       }
@@ -326,7 +325,7 @@ var login = {
     $('#fs-namespace').show();
 
     $('#fs-menu-user-logout').unbind('click').bind('click', function() {
-      login.logout(); 
+      login.logout();
     });
 
     balloon.init();
