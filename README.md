@@ -34,7 +34,7 @@ balloon is a cloud server and document management system.
 You need a running balloon server to operate the balloon web client. Please see [balloon](https://github.com/gyselroth/balloon) for further information.
 
 ## Changelog
-A changelog is available [here](https://github.com/gyselroth/balloon-client-web/CHANGELOG.md).
+A changelog is available [here](https://github.com/gyselroth/balloon-client-web/blob/master/CHANGELOG.md).
 
 ## Contribute
-We are glad that you would like to contribute to this project. Please follow the given [terms](https://github.com/gyselroth/balloon-client-web/CONTRIBUTING.md).
+We are glad that you would like to contribute to this project. Please follow the given [terms](https://github.com/gyselroth/balloon-client-web/blob/master/CONTRIBUTING.md).

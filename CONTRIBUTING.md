@@ -1,4 +1,4 @@
-# Contribute to balloon
+# Contribute to balloon web client
 Did you find a bug or would you like to contribute a feature? You are certainly welcome to do so.
 Please always fill an [issue](https://github.com/gyselroth/balloon-client-web/issues/new) first to discuss the matter.
 Do not start development without an open issue otherwise we do not know what you are working on. 
@@ -50,4 +50,4 @@ There are no javascript standards like PSR-1/2 for PHP, but please follow the fo
 * Always cache dom objects which will be used more than once: (`var $body = $('body');`)
 * Add a $ prefix for variables containing a jquery object
 * Always use i18next for output messages
-* All api calls must use login.xmlHttpRequest()
+* All api calls must use balloon.xmlHttpRequest()

@@ -3,7 +3,7 @@
  *
  * @author    Raffael Sahli <sahli@gyselroth.net>
  * @copyright Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
- * @license   GPLv3 https://opensource.org/licenses/GPL-3.0
+ * @license   GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
 "use strict";
 
@@ -203,6 +203,7 @@ var login = {
   fetchIdentity: function() {
     login.xmlHttpRequest({
       url: '/api/v'+balloon.BALLOON_API_VERSION+'/user/whoami',
+      dataType: 'json',
       cache: false,
       success: function(body) {
         login.username = body.data;
@@ -287,6 +288,7 @@ var login = {
       type: 'GET',
       username: username,
       password: password,
+      dataType: 'json',
       url: '/api/v1/user/whoami',
       beforeSend: function() {
         $username_input.removeClass('error');
@@ -304,9 +306,9 @@ var login = {
         
           case 200: 
             login.adapter = 'basic';
-            login.username = body.data;
+            login.username = response.responseJSON.data;
             localStorage.username = login.username;
-            $('#fs-identity').show().find('#fs-identity-username').html(body.data);    
+            $('#fs-identity').show().find('#fs-identity-username').html(login.username);    
             login.initBrowser();
           break;
         
