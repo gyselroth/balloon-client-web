@@ -25,7 +25,7 @@ npm install
 ```
 
 ### Balloon Server
-You will need a balloon server to develop the web ui. Easiest way is to grap the (balloon docker image)[https://github.com/gyselroth/balloon-dockerimage].
+You will need a balloon server to develop the web ui. Easiest way is to grap the [balloon docker image](https://github.com/gyselroth/balloon-dockerimage).
 ```
 git clone https://github.com/gyselroth/balloon-dockerimage
 cd balloon-dockerimage
