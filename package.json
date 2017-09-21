@@ -5,6 +5,7 @@
   "title": "balloon",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
+    "devlocal": "webpack-dev-server --open --config webpack.local.js",
     "build": "webpack --config webpack.prod.js",
     "install": "napa StefH/bower-kendo-ui-web:kendo-ui-web"
   },

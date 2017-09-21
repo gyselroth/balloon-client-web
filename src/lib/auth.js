@@ -133,6 +133,7 @@ var login = {
           break;
 
           default: 
+            $('#login').show();
             $('#login-server-error').show();
             $('#login-body').hide();  
           break;
@@ -192,6 +193,7 @@ var login = {
           break;
 
           default: 
+            $('#login').show();
             $('#login-server-error').show();
             $('#login-body').hide();  
           break;
@@ -313,6 +315,7 @@ var login = {
           break;
         
           default: 
+            $('#login').show();
             $('#login-server-error').show();
             $('#login-body').hide();  
           break;
