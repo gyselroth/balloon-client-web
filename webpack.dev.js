@@ -6,8 +6,9 @@ module.exports = merge(common, {
   devServer: {
   proxy: {
     '/api': {
-      target: 'http://localhost:9000',
-      changeOrigin: true
+      target: process.env.BALLOON_API_URL || 'http://localhost:8081',
+      changeOrigin: true,
+      secure: (process.env.BALLOON_API_URL_INSECURE || 'false') !== 'true'
     }
   }
   }
