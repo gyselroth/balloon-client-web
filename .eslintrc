@@ -1,0 +1,31 @@
+{
+  "ecmaFeatures": {
+    "globalReturn": true,
+    "jsx": true,
+    "modules": true
+  },
+
+  "env": {
+    "browser": true,
+    "es6": true,
+  },
+
+  "globals": {
+
+  },
+
+  "parserOptions": {
+    "sourceType": "module",
+  },
+
+  "plugins": [
+
+  ],
+
+  "rules": {
+    "strict": ["error", "global"],
+    "indent": ["warn", 2],
+    "no-mixed-spaces-and-tabs": ["error"],
+    "brace-style": ["warn", "1tbs"],
+  }
+}

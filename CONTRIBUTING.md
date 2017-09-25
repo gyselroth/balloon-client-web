@@ -1,7 +1,7 @@
 # Contribute to balloon web client
 Did you find a bug or would you like to contribute a feature? You are certainly welcome to do so.
 Please always fill an [issue](https://github.com/gyselroth/balloon-client-web/issues/new) first to discuss the matter.
-Do not start development without an open issue otherwise we do not know what you are working on. 
+Do not start development without an open issue otherwise we do not know what you are working on.
 
 ## Bug
 If you just want to fill a bug report, please open your [issue](https://github.com/gyselroth/balloon-client-web/issues/new).
@@ -23,7 +23,6 @@ git clone https://github.com/gyselroth/balloon-client-web.git
 git clone https://github.com/gyselroth/balloon-client-web.git
 npm install
 ```
-
 ### Balloon Server
 You will need a balloon server to develop the web ui. Easiest way is to grap the [balloon docker image](https://github.com/gyselroth/balloon-dockerimage).
 ```
@@ -46,7 +45,7 @@ npm start
 Please make sure that you always specify the number of your issue starting with a hastag (#) within any git commits.
 
 ## Pull Request
-You are absolutely welcome to submit a pull request which references an open issue. Please make sure you're follwing coding standards 
+You are absolutely welcome to submit a pull request which references an open issue. Please make sure you're follwing coding standards
 and be sure all your modifications pass the build.
 [![Build Status](https://travis-ci.org/gyselroth/balloon-client-web.svg)](https://travis-ci.org/gyselroth/balloon-client-web)
 
@@ -65,7 +64,9 @@ There are no javascript standards like PSR-1/2 for PHP, but please follow the fo
 * Interfaces named with an Interface suffix: ExampleInterface
 * Variables named with underscore (_) and not camelCase
 * Methods and classes follow the camelCase naming
-* All files delcare "use strict;"
+* Always use 4 spaces for indentation
+* Use "one true brace style" for blocks
+* All non-module files delcare "use strict;"
 * Always cache dom objects which will be used more than once: (`var $body = $('body');`)
 * Add a $ prefix for variables containing a jquery object
 * Always use i18next for output messages

@@ -11,13 +11,13 @@
 */
 
 
-import css from './themes/default/css/reset.css';
-import css from './themes/default/css/kendo.css';
-import css from './themes/default/css/fonts.css';
-import css from './themes/default/css/kendo_theme.css';
-import css from './themes/default/css/layout.css';
-import css from './themes/default/css/responsive.css';
-import css from '@gyselroth/icon-collection/src/icons.css';
+import reset from './themes/default/css/reset.css';
+import kendo from './themes/default/css/kendo.css';
+import fonts from './themes/default/css/fonts.css';
+import kendo_theme from './themes/default/css/kendo_theme.css';
+import layout from './themes/default/css/layout.css';
+import responsive from './themes/default/css/responsive.css';
+import icons from '@gyselroth/icon-collection/src/icons.css';
 
 
 /*import jqueryui from 'jquery-ui';
