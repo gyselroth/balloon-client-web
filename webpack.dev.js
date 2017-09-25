@@ -11,5 +11,4 @@ module.exports = merge(common, {
       secure: (process.env.BALLOON_API_URL_INSECURE || 'false') !== 'true'
     }
   }
-  }
 });

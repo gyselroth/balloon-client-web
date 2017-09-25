@@ -16,14 +16,32 @@ You can clone the repository from:
 ```
 git clone https://github.com/gyselroth/balloon-client-web.git
 ```
+## Recomended setup for development
 
-## Install dependencies
-To setup your development base you have to install all requirements:
+### Get the base and install dependencies
 ```
+git clone https://github.com/gyselroth/balloon-client-web.git
 npm install
 ```
+### Balloon Server
+You will need a balloon server to develop the web ui. Easiest way is to grap the [balloon docker image](https://github.com/gyselroth/balloon-dockerimage).
+```
+git clone https://github.com/gyselroth/balloon-dockerimage
+cd balloon-dockerimage
+docker build -t balloon .
+docker run -p 8081:443 balloon
+```
+Instead running `docker build -t balloon` you can also specify a development branch (or master) if you do not want the latest tagged version:
+`docker build --build-arg BALLOON_BRANCH=v2 -t balloon .`
 
-## Git commit
+### Start the magic
+`npm start` will start a local development server, you can access the web ui at http://localhost:8080. If you cachange any file within the source,
+your ui will automatically rebuild itself, you do not have to reload your browser, this will happen automatically.
+```
+npm start
+```
+
+## Git commit 
 Please make sure that you always specify the number of your issue starting with a hastag (#) within any git commits.
 
 ## Pull Request
