@@ -29,10 +29,25 @@ You will need a balloon server to develop the web ui. Easiest way is to grap the
 git clone https://github.com/gyselroth/balloon-dockerimage
 cd balloon-dockerimage
 docker build -t balloon .
-docker run -p 8081:443 balloon
+cd ..
 ```
-Instead running `docker build -t balloon` you can also specify a development branch (or master) if you do not want the latest tagged version:
-`docker build --build-arg BALLOON_BRANCH=v2 -t balloon .`
+
+Clone the balloon server:
+```
+git clone https://github.com/gyselroth/balloon.git
+```
+
+Start the docker container and inject the local balloon server repository:
+(Replace /path/to/balloon with the path where you cloned the balloon server repository)
+```
+docker run -p 8081:443 -v /path/to/balloon:/srv/www/balloon balloon
+```
+
+Install dependencies:
+(Always execute build.sh via docker exec!)
+```
+docker exec efc12a87d00e /srv/www/balloon/build.sh --dep
+```
 
 ### Start the magic
 `npm start` will start a local development server, you can access the web ui at http://localhost:8080. If you cachange any file within the source,
