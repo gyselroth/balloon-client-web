@@ -14,9 +14,8 @@ import i18nextSprintfPostProcessor from 'i18next-sprintf-postprocessor';
 import jqueryI18next from 'jquery-i18next';
 import login from './auth.js'
 
-var config = {};
-
 var translate = {
+  config: {},
   load: function(url, options, callback, data) {
     try {
       let waitForLocale = require('bundle-loader!../locale/'+url+'.json');
@@ -29,7 +28,9 @@ var translate = {
     }
   },
 
-  init: function() {
+  init: function(config) {
+console.log(config);
+    this.config = config;
     var locale_version = '2017062004';
 
     var locales = [
@@ -69,7 +70,7 @@ var translate = {
           prefix: 'i18next_res_',
           expirationTime: 60*60*120
         },
-        fallbackLng: config.default_lang,
+        fallbackLng: translate.config.default_lang,
         backend: {
           ajax: translate.load,
           loadPath: function(lng,ns){
@@ -98,10 +99,10 @@ var translate = {
 
         $('[data-i18n]').localize();        
 
-        login.init();
-        if($('#fs-namespace').is(':visible')) {
-          balloon.init();
-        }
+        login.init(translate.config);
+        //if($('#fs-namespace').is(':visible')) {
+        //  balloon.init();
+        //}
         
         var current = localStorage.i18nextLng;
         kendo.culture(current);

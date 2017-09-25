@@ -26,7 +26,7 @@ module.exports = {
         })
       },
       {
-        test    : /\.(png|jpg|svg|gif|eot|woff|ttf)$/,
+        test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
         loader  : 'url-loader?limit=30000&name=images/[name].[ext]'
       },
       {

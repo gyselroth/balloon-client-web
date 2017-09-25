@@ -13,11 +13,13 @@
 
 import reset from './themes/default/css/reset.css';
 import kendo from './themes/default/css/kendo.css';
-import fonts from './themes/default/css/fonts.css';
+import ubuntu_fonts from 'ubuntu-fontface/ubuntu.css';
+//import fonts from './themes/default/css/fonts.css';
 import kendo_theme from './themes/default/css/kendo_theme.css';
 import layout from './themes/default/css/layout.css';
 import responsive from './themes/default/css/responsive.css';
 import icons from '@gyselroth/icon-collection/src/icons.css';
+import translate from './lib/translate.js';
 
 
 /*import jqueryui from 'jquery-ui';
@@ -29,9 +31,17 @@ import i18next_browser_languagedetector from 'i18next-browser-languagedetector';
 import i18next_localstorage_cache from 'i18next-localstorage-cache';
 import i18next_sprintf_postprocessor from 'i18next-sprintf-postprocessor';
 */
+  
+try {
+  let wait = require('bundle-loader!../config.json');
+  wait((config) => {
+    translate.init(config);
+  })
+} catch (e) {
+  translate.init({});
+}
 
-import translate from './lib/translate.js';
-translate.init();
+
 
 /*import auth from './lib/auth.js';
 import core from './lib/core.js';

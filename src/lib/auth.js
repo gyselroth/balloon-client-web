@@ -13,12 +13,6 @@ const {AuthorizationRequest} = require('@openid/appauth/built/authorization_requ
 const {AuthorizationNotifier} = require('@openid/appauth/built/authorization_request_handler.js');
 const {RedirectRequestHandler} = require('@openid/appauth/built/redirect_based_handler.js');
 
-try {
-  var config = require('../../config.json');
-} catch(Err) {
-  var config = {};
-}
-
 var login = {
   token: undefined,
   adapter: null,
@@ -28,7 +22,7 @@ var login = {
   notifier: null,
   handler: null,
 
-  init: function() {
+  init: function(config) {
     if(config && config.auth) {
       if(config.auth.basic === false) {
         this.basic = false;

@@ -11,3 +11,4 @@ First relese of the extracted web ui from the core server. This release features
 * [FEATURE] Support for multiple OpenID-connect provider
 * [CHANGE] Migrated from bower to npm and webpack https://github.com/gyselroth/balloon/issues/54
 * [CHANGE] Started to refactore into modules https://github.com/gyselroth/balloon/issues/35, also implemented some build changes according webpack
+* [CHANGE] migrated fonts to ubuntu-fontface

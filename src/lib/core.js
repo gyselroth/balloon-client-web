@@ -3756,7 +3756,7 @@ var balloon = {
 
       $fs_share_collection_tbody.append(
         '<tr fs-acl-name="'+item.id+'" fs-acl-type="user">'+
-          '<td><div class="gr-icon gr-i-user"></div></td>'+
+          '<td><div class="gr-icon gr-i-person"></div></td>'+
           '<td class="fs-role-name">'+item.name+'</td>'+
           '<td><input name="priv_'+item.id+'" value="rw" checked="checked" type="radio"/></td>'+
           '<td><input name="priv_'+item.id+'" value="r" type="radio"/></td>'+
