@@ -75,7 +75,6 @@ and do not contribute software which ist not compatible with GPL-3.0 or is not y
 This repository gets shipped with an .editorconfig configuration. For more information on how to configure your editor please visit [editorconfig](https://github.com/editorconfig).
 
 ## Code policy
-
 There are no javascript standards like PSR-1/2 for PHP, but please follow the following rules:
 
 * Abstract classes named with an Abstract prefix: AbstractExample
