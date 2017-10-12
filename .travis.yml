@@ -21,6 +21,7 @@ deploy:
     api_key:
       secure: WXsFv62P7BYeM0s32rcGx/LqdwECQRvUJWJ8YDZ4jdv8w4O4vlCLURiwW/65WNi7peKiMpPmv7q/NOtNrXT1PDIMyeMeJvToHGELyepGex0v1goqfURExpIEm8ddC2HiJf7ctgk7V5CichL/1DpJ2BWzCMUi1OnhLfjWpXQz4OZN8X5XwcgtMjUzEy/Ry1xMbbhrBs4a3IKyBJsbN7TRWibHsJHfl5pvk5qq7xL2s8/5/vEwMDZYFdK8BraF9AOUSqTqrDv2dfdkQrbZNiS2vPGAHdP+YRGGlbZoyHU10wIYJ3zEJ5zVtnAxa7TawZaomPVo6eglr9EuE5D79LVQVHLpBiSfAUViYuZkgxaAgeh4lpgpHgjeIYbetZ4arAcpov3Dnkpqc2Iu95M2jN5ehFtSP23OBoSxseJ3aHwQEnKJy9N6Yhww+l6E6HGqUaa+cVlVdP2zhu462oWH/4HVb1V9yrXij5+/Lo/JWYw58t86gpQTL3DmQQ0SSSj/iwaTN/qpJtzRv2ZfTY7RDS/MUiCZLf8zJ4c+BzBUVBRhIvq8LGusVhszOUhkHqndtaGHGI0+anNvvCTLUv09tOhp1m7uLB6xRloxQPdIcYfNN20+WL/zUYqOLmUx3wc0bpLh8LCHj8wbGYW7RbYcKQw66BmKgfLxUdBEBISDkgKuYx0=
     file: dist/balloon-full-2.0.0-dev.deb
+    skip_cleanup: true
     on:
       repo: gyselroth/balloon-client-web
   - provider: bintray
