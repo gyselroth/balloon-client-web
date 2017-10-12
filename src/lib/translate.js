@@ -29,7 +29,6 @@ var translate = {
   },
 
   init: function(config) {
-console.log(config);
     this.config = config;
     var locale_version = '2017062004';
 
@@ -43,7 +42,7 @@ console.log(config);
       ['de-DE', 'Deutsch (Deutschland)'],
       ['de-AT', 'Deutsch (Österreich)']
     ];
-    
+
     if(localStorage.i18next_version !== locale_version) {
       var key;
       for(var i = 0; i < localStorage.length; i++){
@@ -78,13 +77,13 @@ console.log(config);
               lng = lng[0];
               var pos = lng.indexOf('-');
               if(pos !== -1) {
-                lng = lng.substr(0, pos);  
+                lng = lng.substr(0, pos);
               }
             }
-    
+
             return lng
           }
-        },   
+        },
       }, function() {
         jqueryI18next.init(i18next, $, {
           tName: 't',
@@ -97,21 +96,21 @@ console.log(config);
           parseDefaultValueFromContent: true
         });
 
-        $('[data-i18n]').localize();        
+        $('[data-i18n]').localize();
 
         login.init(translate.config);
         //if($('#fs-namespace').is(':visible')) {
         //  balloon.init();
         //}
-        
+
         var current = localStorage.i18nextLng;
         kendo.culture(current);
-        
+
         for(let lang in locales) {
           $('#login-locale').append('<option value="'+locales[lang][0]+'">'+locales[lang][1]+'</option>')
         }
-     
-        $('#login-locale option[value='+current+']').attr('selected','selected'); 
+
+        $('#login-locale option[value='+current+']').attr('selected','selected');
         $('#login-locale').unbind('change').change(function(){
           kendo.culture($(this).val());
           i18next.changeLanguage($(this).val(), function(){
