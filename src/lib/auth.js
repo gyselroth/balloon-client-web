@@ -125,7 +125,7 @@ var login = {
             login.fetchIdentity();
           break;
 
-          default: 
+          default:
             $('#login').show();
             $('#login-server-error').show();
             $('#login-body').hide();
@@ -185,7 +185,7 @@ var login = {
             login.initBrowser();
           break;
 
-          default: 
+          default:
             $('#login').show();
             $('#login-server-error').show();
             $('#login-body').hide();
@@ -307,7 +307,7 @@ var login = {
             login.initBrowser();
           break;
 
-          default: 
+          default:
             $('#login').show();
             $('#login-server-error').show();
             $('#login-body').hide();
