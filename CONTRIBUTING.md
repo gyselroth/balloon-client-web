@@ -23,6 +23,7 @@ git clone https://github.com/gyselroth/balloon-client-web.git
 git clone https://github.com/gyselroth/balloon-client-web.git
 npm install
 ```
+
 ### Balloon Server
 You will need a balloon server to develop the web ui. Easiest way is to grap the [balloon docker image](https://github.com/gyselroth/balloon-dockerimage).
 ```
@@ -30,23 +31,7 @@ git clone https://github.com/gyselroth/balloon-dockerimage
 cd balloon-dockerimage
 docker build -t balloon .
 cd ..
-```
-
-Clone the balloon server:
-```
-git clone https://github.com/gyselroth/balloon.git
-```
-
-Start the docker container and inject the local balloon server repository:
-(Replace /path/to/balloon with the path where you cloned the balloon server repository)
-```
-docker run -p 8081:443 -v /path/to/balloon:/srv/www/balloon balloon
-```
-
-Install dependencies:
-(Always execute build.sh via docker exec!)
-```
-docker exec efc12a87d00e /srv/www/balloon/build.sh --dep
+docker run balloon
 ```
 
 ### Start the magic
@@ -55,6 +40,15 @@ your ui will automatically rebuild itself, you do not have to reload your browse
 ```
 npm start
 ```
+
+## Building
+Besides npm scripts like build and start you can use make to build this software. The following make targets are supported:
+* `build` Build software, but do not package
+* `clean` Clear build and dependencies
+* `deb` Create debian packages
+* `deps` Install dependencies
+* `dist` Distribute (Create tar and deb packages)
+* `tar` Create tar package
 
 ## Git commit 
 Please make sure that you always specify the number of your issue starting with a hastag (#) within any git commits.
