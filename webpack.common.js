@@ -9,7 +9,7 @@ module.exports = {
     app: './app.js',
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
     filename: 'balloon.bundle.js',
   },
   module: {
@@ -27,7 +27,7 @@ module.exports = {
       },
       {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
-        loader  : 'url-loader?limit=30000&name=images/[name].[ext]'
+        loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
       },
       {
         test: /(\.jsx|\.js)$/,
