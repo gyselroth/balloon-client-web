@@ -24,7 +24,7 @@ deploy:
     file: dist/*
     skip_cleanup: true
     on:
-      repo: gyselroth/balloon-client-web
+      tags: true
   - provider: bintray
     file: bintray-stable.json
     user: raffis
