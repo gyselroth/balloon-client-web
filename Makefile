@@ -22,7 +22,7 @@ NPM_BIN = npm
 NPM_TARGET = $(NODE_MODULES_DIR)
 WEBPACK_TARGET = $(BUILD_DIR)
 CHANGELOG_TARGET = $(PACK_DIR)/DEBIAN/changelog
-BUILD_TARGET = $(NPM_TARGET) $(WEBPACK_TARGET)
+BUILD_TARGET = $(WEBPACK_TARGET)
 
 
 # TARGETS
@@ -31,9 +31,13 @@ all: dist
 
 
 .PHONY: clean
-clean:
-	@-test ! -f $(TAR) || rm -fv $(TAR)
+clean:	mostlyclean
 	@-test ! -d $(BUILD_DIR) || rm -rfv $(BUILD_DIR)
+
+
+.PHONY: mostlyclean
+mostlyclean:
+	@-test ! -f $(TAR) || rm -fv $(TAR)
 	@-test ! -d $(NODE_MODULES_DIR) || rm -rfv $(NODE_MODULES_DIR)
 	@-test ! -f $(DIST_DIR)/* || rm -fv $(DIST_DIR)/*
 
@@ -151,7 +155,7 @@ npm: $(NPM_TARGET)
 
 $(NPM_TARGET) : $(BASE_DIR)/package.json
 	@test "`$(NPM_BIN) install --dry-run 2>&1 >/dev/null | grep Failed`" == ""
-	$(NPM_BIN) install
+	$(NPM_BIN) run install
 	$(NPM_BIN) update
 	@touch $@
 
@@ -159,7 +163,6 @@ $(NPM_TARGET) : $(BASE_DIR)/package.json
 .PHONY: webpack
 webpack: $(WEBPACK_TARGET)
 
-$(WEBPACK_TARGET) : $(BASE_DIR)/webpack.common.js
-	#@test "`$(NPM_BIN) run build --dry-run 2>&1 >/dev/null | grep Failed`" == ""
+$(WEBPACK_TARGET) : $(NPM_TARGET) $(BASE_DIR)/webpack.common.js
 	$(NPM_BIN) run build
 	@touch $@
