@@ -19,4 +19,6 @@ RUN apt-get update && \
 COPY --from=builder /build/build /var/www/html/
 RUN chown -R www-data /var/www/html
 
+EXPOSE 80
+
 CMD /usr/sbin/nginx -g 'daemon off;'
