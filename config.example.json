@@ -1,8 +1,8 @@
-var config = {
-  default_lang: 'en',
-  auth: {
-    basic: true,
-    oidc: [
+{
+  "default_lang": "en",
+  "auth": {
+    "basic": true,
+    "oidc": [
       {
         "providerUrl": "https://accounts.google.com",
         "clientId": "myclienti",
@@ -12,4 +12,4 @@ var config = {
       }
     ]
   }
-};
+}
