@@ -10,7 +10,7 @@ balloon.apps['Balloon.App.Shadow'] = {
         var $node = $('<li id="fs-view-shadow" style="display: inline-block;" class="fs-view-bar-active">'
                 +'<span data-i18n="app.balloon_app_shadow.menu_title"></span>'
             +'</li>');
-        
+
         $('#fs-view-bar').find('ul').append($node);
         balloon.apps['Balloon.App.Shadow'].$menu = $node;
 
@@ -42,7 +42,7 @@ balloon.apps['Balloon.App.Shadow'] = {
         if(balloon.last.directory || balloon.last.deleted) {
             return;
         }
-        
+
         balloon.apps['Balloon.App.Shadow'].$menu.show().unbind('click').bind('click', function(){
             balloon.apps['Balloon.App.Shadow'].resetView();
             $('.fs-view-content').hide();
@@ -50,7 +50,7 @@ balloon.apps['Balloon.App.Shadow'] = {
             balloon.apps['Balloon.App.Shadow'].loadShadows(balloon.last);
         });
     },
-    
+
     loadShadows: function(node) {
         balloon.xmlHttpRequest({
             url: balloon.base+'/file/convert/shadow',
@@ -99,17 +99,17 @@ balloon.apps['Balloon.App.Shadow'] = {
                     if(formats.indexOf(data.data[format]) !== -1) {
                         continue;
                     }
-    
-                    let sprite = balloon.getSpriteClass(data.data[format]);    
+
+                    let sprite = balloon.getSpriteClass(data.data[format]);
                     $select.append('<option value="'+data.data[format]+'" class="'+sprite+' fs-icon">'
                     +data.data[format]+'</option>');
                 }
-                
+
                 $add.unbind('click').bind('click', function() {
                     if($select.val() ===  $select.find('option:first-child').val()) {
                         return;
-                    }  
-                    
+                    }
+
                     var sprite = balloon.getSpriteClass($select.val());
                     $ul.append('<li>'
                         +'<span class="k-sprite fs-i-remove fs-icon"></span>'
@@ -123,13 +123,13 @@ balloon.apps['Balloon.App.Shadow'] = {
                     $ul.find('li').each(function(){
                         formats.push($(this).find('span:last-child').html());
                     })
-                    
+
                     balloon.apps['Balloon.App.Shadow'].setShadowFormats(node, formats);
                 });
             }
         });
     },
-    
+
     setShadowFormats: function(node, formats) {
         balloon.xmlHttpRequest({
             url: balloon.base+'/file/convert/shadow',

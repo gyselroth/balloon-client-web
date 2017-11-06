@@ -15,6 +15,7 @@ import kendoSplitter from 'kendo-ui-core/js/kendo.splitter.js';
 import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
 import login from './auth.js';
 import i18next from 'i18next';
+import app from './app.js';
 
 var balloon = {
   /**
@@ -131,21 +132,14 @@ var balloon = {
    */
   quota: {},
 
-
-  /**
-   * Apps
-   *
-   * @var object
-   */
-  apps: {},
-
-
   /**
    * Init file browsing
    *
    * @return void
    */
   init: function() {
+    app.render(this);
+
     if(balloon.isInitialized()) {
       balloon.resetDom();
     } else {
@@ -276,21 +270,7 @@ var balloon = {
 
     balloon.showHint();
     balloon.initialized = true;
-    balloon.initApps();
-  },
-
-
-  /**
-   * Init apps
-   *
-   * @return void
-   */
-  initApps: function() {
-    for(var app in this.apps) {
-      if(typeof this.apps[app].init === 'function') {
-        this.apps[app].init();
-      }
-    }
+    app.init(this);
   },
 
 
@@ -6735,4 +6715,5 @@ var balloon = {
   }
 };
 
+import './app.js';
 export default balloon;
