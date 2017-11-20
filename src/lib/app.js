@@ -7,10 +7,11 @@
  */
 
 import office from '../app/Balloon.App.Office/lib/lib.js';
-//import convert '../app/Balloon.App.Convert/lib/lib.js';
+import convert from '../app/Balloon.App.Convert/lib/lib.js';
 
 var apps = [
-  office
+  office,
+  convert,
 ]
 
 var app = {

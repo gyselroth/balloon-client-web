@@ -5,14 +5,21 @@
  * @copyright   Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
  * @license     GPLv3 https://opensource.org/licenses/GPL-3.0
  */
-balloon.apps['Balloon.App.Shadow'] = {
-    render: function() {
+import * as $ from "jquery";
+import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
+import i18next from 'i18next';
+import css from '../styles/style.css';
+
+var app = {
+    render: function(core) {
+        this.balloon = core;
+
         var $node = $('<li id="fs-view-shadow" style="display: inline-block;" class="fs-view-bar-active">'
                 +'<span data-i18n="app.balloon_app_shadow.menu_title"></span>'
             +'</li>');
 
         $('#fs-view-bar').find('ul').append($node);
-        balloon.apps['Balloon.App.Shadow'].$menu = $node;
+        app.$menu = $node;
 
         var $view = $('<div id="fs-shadow" class="fs-view-content">'
                 +'<div id="fs-shadow-description" data-i18n="app.balloon_app_shadow.description"></div>'
@@ -20,13 +27,19 @@ balloon.apps['Balloon.App.Shadow'] = {
                 +'<select name="formats">'
                     +'<option data-i18n="app.balloon_app_shadow.choose_format"></option>'
                 +'</select>'
-                +'<span class="k-sprite fs-i-add fs-icon"></span>'
+                +'<span class="k-sprite gr-i-add gr-icon"></span>'
                 +'<ul></ul>'
-                +'<input type="submit" data-i18n="[value]button.save" name="save"/>'
             +'</div>');
 
         $('#fs-content-data').append($view);
-        balloon.apps['Balloon.App.Shadow'].$view = $view;
+
+
+        $view.find('ul').on('click', '.gr-i-remove', function(){
+          var id = $(this).parent().attr('data-id');
+          app.deleteSlave(app.balloon.last, id);
+        });
+
+        app.$view = $view;
     },
 
     init: function()  {
@@ -34,60 +47,59 @@ balloon.apps['Balloon.App.Shadow'] = {
     },
 
     resetView: function() {
-        balloon.apps['Balloon.App.Shadow'].$view.find('li, option[value]').remove();
-        balloon.apps['Balloon.App.Shadow'].$view.find('.fs-shadow-not-supported').hide();
+        app.$view.find('li, option[value]').remove();
+        app.$view.find('.fs-shadow-not-supported').hide();
     },
 
     selectNode: function() {
-        if(balloon.last.directory || balloon.last.deleted) {
+        if(app.balloon.last.directory || app.balloon.last.deleted) {
             return;
         }
 
-        balloon.apps['Balloon.App.Shadow'].$menu.show().unbind('click').bind('click', function(){
-            balloon.apps['Balloon.App.Shadow'].resetView();
+        app.$menu.show().unbind('click').bind('click', function(){
+            app.resetView();
             $('.fs-view-content').hide();
-            balloon.apps['Balloon.App.Shadow'].$view.show();
-            balloon.apps['Balloon.App.Shadow'].loadShadows(balloon.last);
+            app.$view.show();
+            app.loadSlaves(app.balloon.last);
+            app.loadSupportedFormats(app.balloon.last);
         });
     },
 
-    loadShadows: function(node) {
-        balloon.xmlHttpRequest({
-            url: balloon.base+'/file/convert/shadow',
+    loadSlaves: function(node) {
+        app.balloon.xmlHttpRequest({
+            url: app.balloon.base+'/file/convert/slaves',
             type: 'GET',
             dataType: 'json',
             data: {
-                id: balloon.id(node)
+                id: app.balloon.id(node)
             },
             success: function(data) {
-                var $view = balloon.apps['Balloon.App.Shadow'].$view,
+                var $view = app.$view,
                     $ul = $view.find('ul');
 
-                for(var format in data.data) {
-                    let sprite = balloon.getSpriteClass(data.data[format]);
-                    $ul.append('<li><span class="k-sprite fs-i-remove fs-icon"></span>'
-                    +'<span class="k-sprite '+sprite+' fs-icon"></span>'
-                    +'<span>'+data.data[format]+'</span></li>');
+                for(var slave in data.data) {
+                    let sprite = app.balloon.getSpriteClass(data.data[slave].format);
+                    $ul.append('<li data-id="'+slave+'"><span class="k-sprite gr-i-remove gr-icon"></span>'
+                    +'<span class="k-sprite '+sprite+' gr-icon"></span>'
+                    +'<span>'+data.data[slave].format+'</span></li>');
                 }
-
-                balloon.apps['Balloon.App.Shadow'].loadSupportedFormats(balloon.last, data.data);
             }
         })
     },
 
-    loadSupportedFormats: function(node, formats) {
-        balloon.xmlHttpRequest({
-            url: balloon.base+'/file/convert/supported-formats',
+    loadSupportedFormats: function(node) {
+        app.balloon.xmlHttpRequest({
+            url: app.balloon.base+'/file/convert/supported-formats',
             type: 'GET',
             dataType: 'json',
             data: {
-                id: balloon.id(node)
+                id: app.balloon.id(node)
             },
             success: function(data) {
-                var $view = balloon.apps['Balloon.App.Shadow'].$view,
+                var $view = app.$view,
                     $submit = $view.find('input'),
                     $ul = $view.find('ul'),
-                    $add = $view.find('.fs-i-add'),
+                    $add = $view.find('.gr-i-add'),
                     $select = $view.find('select');
 
                 if(data.data.length === 0) {
@@ -96,12 +108,8 @@ balloon.apps['Balloon.App.Shadow'] = {
                 }
 
                 for(var format in data.data) {
-                    if(formats.indexOf(data.data[format]) !== -1) {
-                        continue;
-                    }
-
-                    let sprite = balloon.getSpriteClass(data.data[format]);
-                    $select.append('<option value="'+data.data[format]+'" class="'+sprite+' fs-icon">'
+                    let sprite = app.balloon.getSpriteClass(data.data[format]);
+                    $select.append('<option value="'+data.data[format]+'" class="'+sprite+' gr-icon">'
                     +data.data[format]+'</option>');
                 }
 
@@ -110,39 +118,40 @@ balloon.apps['Balloon.App.Shadow'] = {
                         return;
                     }
 
-                    var sprite = balloon.getSpriteClass($select.val());
-                    $ul.append('<li>'
-                        +'<span class="k-sprite fs-i-remove fs-icon"></span>'
-                        +'<span class="k-sprite '+sprite+' fs-icon"></span><span>'+$select.val()+'</span></li>')
-                    $select.find('option[value='+$select.val()+']').remove();
+                    var format = $select.val();
                     $select.find('option:first-child').select();
-                });
-
-                $submit.unbind('click').bind('click', function() {
-                    var formats = [];
-                    $ul.find('li').each(function(){
-                        formats.push($(this).find('span:last-child').html());
-                    })
-
-                    balloon.apps['Balloon.App.Shadow'].setShadowFormats(node, formats);
+                    app.addSlave(node, format);
                 });
             }
         });
     },
 
-    setShadowFormats: function(node, formats) {
-        balloon.xmlHttpRequest({
-            url: balloon.base+'/file/convert/shadow',
+    addSlave: function(node, format) {
+        app.balloon.xmlHttpRequest({
+            url: app.balloon.base+'/file/convert/slave',
             type: 'POST',
-            dataType: 'json',
             data: {
-                id: balloon.id(node),
-                formats: formats
+                id: app.balloon.id(node),
+                format: format
             },
+            success: function() {
+                var sprite = app.balloon.getSpriteClass(format);
+                app.$view.find('ul').append('<li>'
+                    +'<span class="k-sprite gr-i-remove gr-icon"></span>'
+                    +'<span class="k-sprite '+sprite+' gr-icon"></span><span>'+format+'</span></li>')
+            }
+        });
+    },
+
+    deleteSlave: function(node, slave) {
+        app.balloon.xmlHttpRequest({
+            url: app.balloon.base+'/file/convert/slave?id='+app.balloon.id(node)+'&slave='+slave,
+            type: 'DELETE',
+            success: function() {
+               app.$view.find('li[data-id='+slave+']').remove();
+            }
         });
     }
 };
 
-$(document).ready(function(e) {
-    balloon.apps['Balloon.App.Shadow'].render();
-});
+export default app;

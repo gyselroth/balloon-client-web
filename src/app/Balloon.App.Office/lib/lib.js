@@ -175,7 +175,7 @@ var app = {
                 app.showStartupPrompt();
 
                 $('#fs-edit-office_wnd_title').html(
-                    $('#fs-browser-tree').find('li[fs-id="'+node.id+'"]').find('.k-in').find('> span').clone()
+                    $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
                 );
 
                 var src = 'https://'+window.location.hostname+app.balloon.base+'/app/office/wopi/document/'+session.data.id,
@@ -262,7 +262,6 @@ var app = {
     },
 
     treeDblclick: function(e) {
-console.log(4);
       if(app.balloon.last.directory === true) {
           app.balloon.resetDom('selected');
       }
@@ -315,12 +314,12 @@ console.log(4);
     }
 
     var $select = $('<div id="fs-new-file">'+
-        '<div class="fs-icon fs-i-file-add"></div>' +
+        '<div class="gr-icon gr-i-file-add"></div>' +
         '<ul>'+
-            '<li><span class="fs-i-file-text fs-icon"></span><span>'+i18next.t('app.office.text_document')+'</span></li>'+
-            '<li><span class="fs-i-file-word fs-icon"></span><span>'+i18next.t('app.office.word_document')+'</span></li>'+
-            '<li><span class="fs-i-file-excel fs-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span></li>'+
-            '<li><span class="fs-i-file-powerpoint fs-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span></li>'+
+            '<li><span class="gr-i-file-text gr-icon"></span><span>'+i18next.t('app.office.text_document')+'</span></li>'+
+            '<li><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span></li>'+
+            '<li><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span></li>'+
+            '<li><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span></li>'+
         '</ul>'+
     '</div>');
 
@@ -329,24 +328,23 @@ console.log(4);
     $box = $('#fs-new-file');
 
     $box.on('click', 'li', function(){
-        var $type = $(this).find('.fs-icon');
+        var $type = $(this).find('.gr-icon');
 
-        if($type.hasClass('fs-i-file-text')) {
+        if($type.hasClass('gr-i-file-text')) {
             app.addTextFile();
-        } else if($type.hasClass('fs-i-file-word')) {
+        } else if($type.hasClass('gr-i-file-word')) {
             app.addOfficeFile('docx');
-        } else if($type.hasClass('fs-i-file-excel')) {
+        } else if($type.hasClass('gr-i-file-excel')) {
             app.addOfficeFile('xlsx');
-        } else if($type.hasClass('fs-i-file-powerpoint')) {
+        } else if($type.hasClass('gr-i-file-powerpoint')) {
             app.addOfficeFile('pptx');
         }
 
         $box.remove();
     });
 
-return;
     $(document).off('click.office').on('click.office', function(e) {
-        if($(e.target).hasClass('fs-i-file-add')) {
+        if($(e.target).hasClass('gr-i-file-add')) {
             return;
         }
 
