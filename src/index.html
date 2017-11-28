@@ -35,7 +35,7 @@
     <div style="display: none;" id="fs-namespace">
     <div id="fs-browser-properties"></div>
     <input id="fs-query" name="query" type="hidden" value=""/>
-            
+
     <div id="fs-browser-top-bar">
         <div class="gr-icon gr-i-cloud"></div>
         <div id="fs-title" data-i18n="app.title"></div>
@@ -65,7 +65,7 @@
             <div id="fs-identity-menu">
                 <div id="fs-quota" data-i18n="[title]user.disk_space">
                     <div id="fs-quota-usage"></div>
-                    <div id="fs-quota-total"></div> 
+                    <div id="fs-quota-total"></div>
                 </div>
 
                 <ul>
@@ -76,7 +76,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="fs-browser-layout" >
         <div id="fs-menu-left">
             <ul>
@@ -99,7 +99,7 @@
                     <li id="fs-action-upload" class="gr-icon gr-i-cloud-upload fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.upload"></li>
                     <li id="fs-action-filter" class="gr-icon gr-i-filter fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.filter"></li>
                 </ul>
-    
+
                 <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
 
                 <div id="fs-action-search">
@@ -271,7 +271,7 @@
                                 <tr class="fs-searchable">
                                     <th data-i18n="view.prop.head.share"></th>
                                     <td id="fs-properties-share">
-                                        <div class="gr-icon gr-i-folder-shared"></div> 
+                                        <div class="gr-icon gr-i-folder-shared"></div>
                                         <div class="fs-value"></div>
                                     </td>
                                 </tr>
@@ -301,8 +301,8 @@
                                 <th data-i18n="view.prop.head.license"></th>
                                 <td id="fs-properties-license"><input type="text"/></td>
                             </tr>
-                        </table> 
-                    </fieldset>           
+                        </table>
+                    </fieldset>
                 </div>
                 <div class="fs-view-content" id="fs-preview">
                     <div id="fs-preview-thumb">
@@ -318,7 +318,7 @@
                                 <ul></ul>
                             </div>
                         </div>
-    
+
                         <div>
                             <div data-i18n="view.prop.head.color_tag"></div>
                             <div id="fs-properties-meta-color">
@@ -347,21 +347,21 @@
                             <tr>
                                 <th></th>
                                 <th data-i18n="view.share.resource"></th>
+                                <th data-i18n="view.share.manage"></th>
                                 <th data-i18n="view.share.full_access"></th>
                                 <th data-i18n="view.share.ro"></th>
-                                <th data-i18n="view.share.wo"></th>
                                 <th data-i18n="view.share.wp"></th>
                                 <th></th>
-                            </tr>                                                            
+                            </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                     <div>
-                        <input type="submit" name="share" data-i18n="[value]view.share.create"/> 
+                        <input type="submit" name="share" data-i18n="[value]view.share.create"/>
                     </div>
                     <div class="fs-share-remove">
-                        <p class="fs-hint" data-i18n="view.share.hint_remove"></p>   
-                        <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/> 
+                        <p class="fs-hint" data-i18n="view.share.hint_remove"></p>
+                        <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/>
                     </div>
                 </div>
                 <div class="fs-view-content" id="fs-share-link">
@@ -373,19 +373,19 @@
                     </div>
                     <div>
                         <p data-i18n="view.share.expiration"></p>
-                        <input type="text" name="share_expiration"> 
+                        <input type="text" name="share_expiration">
                     </div>
                     <div>
                         <p data-i18n="view.share.password"></p>
-                        <input type="password" name="share_password"> 
+                        <input type="password" name="share_password">
                     </div>
                     <div>
-                        <input type="submit" name="share" data-i18n="[value]view.share.create"/> 
+                        <input type="submit" name="share" data-i18n="[value]view.share.create"/>
                     </div>
                     <div class="fs-share-remove">
                         <p class="fs-hint" data-i18n="view.share.hint_remove_url"></p>
-                        <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/> 
-                    </div>                    
+                        <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/>
+                    </div>
                 </div>
                 <div class="fs-view-content" id="fs-events">
                     <ul></ul>
@@ -393,7 +393,7 @@
                 <div class="fs-view-content" id="fs-advanced">
                     <div>
                         <p data-i18n="view.advanced.destroyable"></p>
-                        <input type="text" name="destroy_at"> 
+                        <input type="text" name="destroy_at">
                     </div>
                     <div>
                         <p data-i18n="view.advanced.readonly"></p>
@@ -403,11 +403,11 @@
                         </div>
                     </div>
                     <div>
-                        <input type="submit" name="submit" data-i18n="[value]button.save"/> 
+                        <input type="submit" name="submit" data-i18n="[value]button.save"/>
                     </div>
                 </div>
-            </div> 
-        </div>     
+            </div>
+        </div>
     </div>
 
     <div id="fs-upload-progress">
@@ -422,22 +422,22 @@
             <span>0%</span>
         </div>
      </div>
-    
+
     <div id="fs-edit-live">
         <textarea></textarea>
         <input type="submit" data-i18n="[value]view.preview.save">
     </div>
-    
+
     <div id="fs-display-live">
         <div id="fs-display-left"></div>
         <div id="fs-display-content"></div>
         <div id="fs-display-right"></div>
     </div>
-    
+
     <div id="fs-event-window" data-i18n="[title]login.events">
         <ul></ul>
     </div>
-    
+
     <div id="fs-profile-window" data-i18n="[title]login.profile">
         <div id="fs-profile-avatar"></div>
 
@@ -494,7 +494,7 @@
             <ul></ul>
         </fieldset>
     </div>
-    
+
     <div id="fs-hint-window" class="fs-prompt-window" data-i18n="[title]hint.did_you_know">
         <div id="fs-hint-window-content"></div>
         <div id="fs-hint-window-button-wrapper">
@@ -502,7 +502,7 @@
             <input type="button" tabindex="1" name="next" data-i18n="[value]hint.next_hint"/>
         </div>
     </div>
-    
+
     <div id="fs-prompt-window" class="fs-prompt-window" data-i18n="[title]prompt.confirm">
         <div id="fs-prompt-window-content"></div>
         <div id="fs-prompt-window-button-wrapper">
@@ -510,7 +510,7 @@
             <input type="button" tabindex="1" name="cancel" data-i18n="[value]prompt.cancel"/>
         </div>
     </div>
-    
+
     <iframe style="display: none;" id="fs-fetch-file"></iframe>
     <div id="fs-status-message"></div>
 
@@ -520,7 +520,7 @@
         <p></p>
         <div class="fs-uploadmgr-area" data-i18n="uploadmgr.progress"></div>
         <div id="fs-uploadmgr-total-progress"><div></div></div>
-        
+
         <div id="fs-uploadmgr-files"></div>
         <div id="fs-uploadmgr-files-progress"><div></div></div>
 

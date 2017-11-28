@@ -30,7 +30,7 @@ var translate = {
 
   init: function(config) {
     this.config = config;
-    var locale_version = '2017062004';
+    var locale_version = '2017112701';
 
     var locales = [
       ['en',  'English'],

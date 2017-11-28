@@ -349,8 +349,9 @@ var balloon = {
         }
       };
     }(kendo.ui.Window.fn._keydown);
-
+/*
     window.kendo.ui.AutoComplete.fn.search = function (word) {
+console.log(word);
       var that = this,
       options = that.options,
       ignoreCase = options.ignoreCase,
@@ -358,7 +359,7 @@ var balloon = {
       length;
 
       word = word || that.value();
-
+console.log(word);
       that._current = null;
 
       clearTimeout(that._typing);
@@ -382,6 +383,7 @@ var balloon = {
         });
       }
     };
+*/
   },
 
 
@@ -3469,10 +3471,7 @@ var balloon = {
         id: balloon.id(node),
       },
       success: function(data) {
-        var acl = {
-          group: [],
-          user:  [],
-        };
+        var acl = [];
 
         var $fs_share_collection     = $('#fs-share-collection'),
           $fs_share_collection_tbl   = $fs_share_collection.find('table'),
@@ -3495,29 +3494,10 @@ var balloon = {
               checked = "checked='checked'";
             }
 
-            if(data.data[i].type == 'user') {
-              acl.user.push({
-                user: data.data[i].id,
-                priv: data.data[i].priv,
-              });
-            } else {
-              acl.group.push({
-                group: data.data[i].id,
-                priv: data.data[i].priv,
-              });
-            }
+            balloon._addShareRole(data.data[i], acl);
 
-            $acl_role = $('<tr fs-acl-name="'+data.data[i].id+'" fs-acl-type="'+data.data[i].type+'">'+
-                    '<td><div class="gr-icon gr-i-'+data.data[i].type+'"></div></td>'+
-                    '<td class="fs-role-name">'+data.data[i].name+'</td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="rw" type="radio"/></td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="r" type="radio"/></td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="w" type="radio"/></td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="w+" type="radio"/></td>'+
-                    '<td class="fs-delete-role"><div class="gr-icon gr-i-trash"></div></td>'+
-                  '</tr>');
-
-            $acl_role.find('input[value="'+data.data[i].priv+'"]').prop('checked', true);
+            $fs_share_collection.find('tr[fs-acl-name="'+data.data[i].id+'"]')
+              .find('input[value="'+data.data[i].priv+'"]').prop('checked', true);
 
 
             $fs_share_collection_tbody.append($acl_role);
@@ -3594,6 +3574,7 @@ var balloon = {
         $share_role.kendoAutoComplete({
           minLength: 3,
           dataTextField: "name",
+          filter: "contains",
           dataSource: new kendo.data.DataSource({
             serverFiltering: true,
             transport: {
@@ -3625,11 +3606,17 @@ var balloon = {
           }),
           dataBound: function(e) {
             $(e.sender.ul).find('li').each(function(n) {
-               $(this).html('<div class="gr-icon gr-i-'+e.sender.dataSource._data[n].type+'"></div>'+$(this).html());
+              var icon;
+              if(e.sender.dataSource._data[n].type === 'user') {
+                icon = 'person';
+              } else if(e.sender.dataSource._data[n].type === 'group') {
+                icon = 'group';
+              }
+
+               $(this).html('<div class="gr-icon gr-i-'+icon+'"></div>'+$(this).html());
             });
 
             var $container =  $(e.sender.list);
-            $container.parent().css({'margin-top': '-18px'});
           },
           change: function(e) {
              this.dataSource.read();
@@ -3649,7 +3636,7 @@ var balloon = {
 
         $fs_share_collection.find('input[type=submit]').unbind().click(function(){
           if($(this).attr('name') == 'share') {
-            if(acl.user.length === 0 && acl.group.length === 0) {
+            if(acl.length === 0) {
               $share_role.focus();
             } else {
               balloon._shareCollection(node, acl);
@@ -3659,7 +3646,6 @@ var balloon = {
             var msg = i18next.t('view.share.prompt_remove_share', node.name);
             balloon.promptConfirm(msg, 'deleteShare', [node]);
           }
-
         });
       },
     });
@@ -3703,54 +3689,35 @@ var balloon = {
       $fs_share_collection_tbl   = $fs_share_collection.find('table'),
       $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
 
-    if(item.type == 'group') {
-      if($.grep(acl.group, function(e) {
+      /*if($.grep(acl.group, function(e) {
         return e.group == item.id;
       }).length != 0) {
         return acl;
+      }*/
+      var icon;
+      if(item.type === 'user') {
+        icon = 'person';
+      } else if(item.type === 'group') {
+        icon = 'group';
       }
 
       $fs_share_collection_tbody.append(
-        '<tr fs-acl-name="'+item.id+'" fs-acl-type="group">'+
-          '<td><div class="gr-icon gr-i-group"></div></td>'+
+        '<tr fs-acl-name="'+item.id+'" fs-acl-type="'+item.type+'">'+
+          '<td><div class="gr-icon gr-i-'+icon+'"></div></td>'+
           '<td class="fs-role-name">'+item.name+'</td>'+
+          '<td><input name="priv_'+item.id+'" value="m" checked="checked" type="radio"/></td>'+
           '<td><input name="priv_'+item.id+'" value="rw" checked="checked" type="radio"/></td>'+
           '<td><input name="priv_'+item.id+'" value="r" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="w" type="radio"/></td>'+
           '<td><input name="priv_'+item.id+'" value="w+" type="radio"/></td>'+
           '<td class="fs-delete-role"><div class="gr-icon gr-i-trash"></div></td>'+
         '</tr>'
       );
 
-      acl.group.push({
-        group: item.id,
-        priv: 'rw',
+      acl.push({
+        type: item.type,
+        id: item.id,
+        privilege: 'rw',
       });
-    }
-    else if(item.type == 'user') {
-      if($.grep(acl.user, function(e) {
-        return e.user == item.id;
-      }).length != 0) {
-        return acl;
-      }
-
-      $fs_share_collection_tbody.append(
-        '<tr fs-acl-name="'+item.id+'" fs-acl-type="user">'+
-          '<td><div class="gr-icon gr-i-person"></div></td>'+
-          '<td class="fs-role-name">'+item.name+'</td>'+
-          '<td><input name="priv_'+item.id+'" value="rw" checked="checked" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="r" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="w" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="w+" type="radio"/></td>'+
-          '<td class="fs-delete-role"><div class="gr-icon gr-i-trash"></div></td>'+
-        '</tr>'
-      );
-
-      acl.user.push({
-        user: item.id,
-        priv: 'rw',
-      });
-    }
 
     if($fs_share_collection_tbody.find('tr').length > 0) {
       $fs_share_collection_tbl.show();
