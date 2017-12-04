@@ -1,0 +1,10 @@
+{
+  "app": {
+    "balloon_app_convert": {
+      "menu_title": "Schatten",
+      "choose_format": "Format auswählen",
+      "description": "Erstelle Dateiklone dieser Datei, welche sich automatisch aktuallsieren. Es ist auch möglich der Inhalt in ein anderes Dateiformat konventieren zu lassen.",
+      "not_supported": "Dieser Dateityp ist nicht unterstützt."
+    }
+  }
+}

@@ -18,7 +18,7 @@ var translate = {
   config: {},
   load: function(url, options, callback, data) {
     try {
-      let waitForLocale = require('bundle-loader!../locale/'+url+'.json');
+      let waitForLocale = require('bundle-loader!../../build/locale/'+url+'.json');
       waitForLocale((locale) => {
         locale = JSON.stringify(locale);
         callback(locale, {status: '200'});
@@ -30,7 +30,7 @@ var translate = {
 
   init: function(config) {
     this.config = config;
-    var locale_version = '2017112701';
+    var locale_version = process.env.VERSION+'-'+process.env.COMMITHASH;
 
     var locales = [
       ['en',  'English'],
@@ -99,9 +99,6 @@ var translate = {
         $('[data-i18n]').localize();
 
         login.init(translate.config);
-        //if($('#fs-namespace').is(':visible')) {
-        //  balloon.init();
-        //}
 
         var current = localStorage.i18nextLng;
         kendo.culture(current);

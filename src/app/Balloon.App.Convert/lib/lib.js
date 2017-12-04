@@ -15,17 +15,17 @@ var app = {
         this.balloon = core;
 
         var $node = $('<li id="fs-view-shadow" style="display: inline-block;" class="fs-view-bar-active">'
-                +'<span data-i18n="app.balloon_app_shadow.menu_title"></span>'
+                +'<span>'+i18next.t('app.balloon_app_convert.menu_title')+'</span>'
             +'</li>');
 
         $('#fs-view-bar').find('ul').append($node);
         app.$menu = $node;
 
         var $view = $('<div id="fs-shadow" class="fs-view-content">'
-                +'<div id="fs-shadow-description" data-i18n="app.balloon_app_shadow.description"></div>'
-                +'<div id="fs-shadow-not-supported" data-i18n="app.balloon_app_shadow.not_supported"></div>'
+                +'<div id="fs-shadow-description">'+i18next.t('app.balloon_app_convert.description')+'</div>'
+                +'<div id="fs-shadow-not-supported">'+i18next.t('app.balloon_app_convert.not_supported')+'</div>'
                 +'<select name="formats">'
-                    +'<option data-i18n="app.balloon_app_shadow.choose_format"></option>'
+                    +'<option>'+i18next.t('app.balloon_app_convert.choose_format')+'</option>'
                 +'</select>'
                 +'<span class="k-sprite gr-i-add gr-icon"></span>'
                 +'<ul></ul>'

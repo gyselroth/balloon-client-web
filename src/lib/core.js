@@ -349,41 +349,6 @@ var balloon = {
         }
       };
     }(kendo.ui.Window.fn._keydown);
-/*
-    window.kendo.ui.AutoComplete.fn.search = function (word) {
-console.log(word);
-      var that = this,
-      options = that.options,
-      ignoreCase = options.ignoreCase,
-      separator = options.separator,
-      length;
-
-      word = word || that.value();
-console.log(word);
-      that._current = null;
-
-      clearTimeout(that._typing);
-
-      if (separator) {
-        word = wordAtCaret(caretPosition(that.element[0]), word, separator);
-      }
-
-      length = word.length;
-
-      if (!length && !length == 0) {
-        that.popup.close();
-      } else if (length >= that.options.minLength) {
-        that._open = true;
-
-        that.dataSource.filter({
-          value: ignoreCase ? word.toLowerCase() : word,
-          operator: options.filter,
-          field: options.dataTextField,
-          ignoreCase: ignoreCase
-        });
-      }
-    };
-*/
   },
 
 

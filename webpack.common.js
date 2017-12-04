@@ -2,6 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
+
+var gitRevisionPlugin = new GitRevisionPlugin();
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -29,11 +33,11 @@ module.exports = {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
         loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
       },
-      {
+      /*{
         test: /(\.jsx|\.js)$/,
         loader: 'eslint-loader',
         exclude: /node_modules/
-      },
+      },*/
     ]
   },
   plugins: [
@@ -49,6 +53,24 @@ module.exports = {
       hash: true,
       filename: 'index.html',
       template: 'index.html',
+    }),
+    new webpack.DefinePlugin({
+      'process.env.VERSION': JSON.stringify(gitRevisionPlugin.version()),
+      'process.env.COMMITHASH': JSON.stringify(gitRevisionPlugin.commithash()),
+      'process.env.BRANCH': JSON.stringify(gitRevisionPlugin.branch()),
+    }),
+    new MergeJsonWebpackPlugin({
+      "output": {
+          "groupBy": [
+              {
+                 "pattern": "{./src/locale/en.json,./src/app/*/locale/en.json}",
+                 "fileName": "locale/en.json"
+              }
+          ]
+      },
+      "globOptions": {
+          "nosort": true
+      }
     })
   ]
 };
