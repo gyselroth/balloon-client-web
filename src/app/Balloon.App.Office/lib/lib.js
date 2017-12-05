@@ -19,7 +19,6 @@ var app = {
     init: function(core)  {
         app.addTextFile = app.balloon.addFile;
         app.balloon.addFile = app.addFile;
-        console.log(app.balloon.isInitialized());
     },
 
     resetView: function() {

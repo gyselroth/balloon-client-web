@@ -59,6 +59,8 @@ var app = {
         app.$menu.show().unbind('click').bind('click', function(){
             app.resetView();
             $('.fs-view-content').hide();
+            $('#fs-view-bar').find('li').removeClass('fs-view-bar-active');
+            $('#fs-view-shadow').addClass('fs-view-bar-active');
             app.$view.show();
             app.loadSlaves(app.balloon.last);
             app.loadSupportedFormats(app.balloon.last);
@@ -103,9 +105,11 @@ var app = {
                     $select = $view.find('select');
 
                 if(data.data.length === 0) {
-                    $view.find('fs-shadow-not-supported').show();
+                    $view.find('.fs-shadow-not-supported').show();
                     return;
                 }
+
+                $select.find('option[value]').remove();
 
                 for(var format in data.data) {
                     let sprite = app.balloon.getSpriteClass(data.data[format]);
