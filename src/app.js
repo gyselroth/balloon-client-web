@@ -15,13 +15,3 @@ try {
 } catch (e) {
   translate.init({});
 }
-
-/*
-    <script type="text/javascript" src="/ui/vendor/kendo-ui-web/scripts/cultures/kendo.culture.de.min.js"></script>
-    <script type="text/javascript" src="/ui/vendor/kendo-ui-web/scripts/cultures/kendo.culture.de-CH.min.js"></script>
-    <script type="text/javascript" src="/ui/vendor/kendo-ui-web/scripts/cultures/kendo.culture.de-AT.min.js"></script>
-    <script type="text/javascript" src="/ui/vendor/kendo-ui-web/scripts/cultures/kendo.culture.de-DE.min.js"></script>
-    <script type="text/javascript" src="/ui/vendor/kendo-ui-web/scripts/cultures/kendo.culture.en.min.js"></script>
-    <script type="text/javascript" src="/ui/vendor/kendo-ui-web/scripts/cultures/kendo.culture.en-GB.min.js"></script>
-    <script type="text/javascript" src="/ui/vendor/kendo-ui-web/scripts/cultures/kendo.culture.en-AU.min.js"></script>
-*/

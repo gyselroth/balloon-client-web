@@ -18,13 +18,22 @@ var translate = {
   config: {},
   load: function(url, options, callback, data) {
     try {
-      let waitForLocale = require('bundle-loader!../../build/locale/'+url+'.json');
-      waitForLocale((locale) => {
+      require('bundle-loader!../../build/locale/'+url+'.json')((locale) => {
         locale = JSON.stringify(locale);
         callback(locale, {status: '200'});
-      })
+      });
     } catch (e) {
       callback(null, {status: '404'});
+    }
+  },
+
+  loadCulture: function(locale) {
+    try {
+      require('bundle-loader!kendo-ui-core/js/cultures/kendo.culture.'+locale+'.js')((data) => {
+        kendo.culture(locale);
+      });
+    } catch (e) {
+      //fallback to en-US
     }
   },
 
@@ -101,15 +110,16 @@ var translate = {
         login.init(translate.config);
 
         var current = localStorage.i18nextLng;
-        kendo.culture(current);
+        translate.loadCulture(current);
+        var $locales = $('#login-locale');
 
         for(let lang in locales) {
-          $('#login-locale').append('<option value="'+locales[lang][0]+'">'+locales[lang][1]+'</option>')
+          $locales.append('<option value="'+locales[lang][0]+'">'+locales[lang][1]+'</option>')
         }
 
-        $('#login-locale option[value='+current+']').attr('selected','selected');
-        $('#login-locale').unbind('change').change(function(){
-          kendo.culture($(this).val());
+        $locales.find('option[value='+current+']').attr('selected','selected');
+        $locales.unbind('change').change(function(){
+          translate.loadCulture($(this).val());
           i18next.changeLanguage($(this).val(), function(){
             $('[data-i18n]').localize();
           });
