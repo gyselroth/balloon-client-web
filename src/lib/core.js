@@ -29,12 +29,6 @@ var balloon = {
 
 
   /**
-   * Version
-   */
-  BALLOON_VERSION: '2.0.0-dev',
-
-
-  /**
    * API Version
    */
   BALLOON_API_VERSION: 1,
@@ -404,7 +398,7 @@ var balloon = {
     }
 
     options.headers = {
-      'X-Client': 'Webinterface|'+balloon.BALLOON_VERSION
+      'X-Client': 'Webinterface|'+process.env.VERSION+'-'+process.env.COMMITHASH
     }
 
     return login.xmlHttpRequest(options);
@@ -493,8 +487,7 @@ var balloon = {
         if(next >= balloon.datasource._data.length) {
           next--;
         }
-      }
-      else if(e.keyCode === 38) {
+      } else if(e.keyCode === 38) {
         next--;
         if(0 > next) {
           next = 0;
@@ -511,8 +504,7 @@ var balloon = {
 
       if(balloon.datasource._data[next].id == '_FOLDERUP') {
         $node = $fs_browser_tree.find('.k-first');
-      }
-      else {
+      } else {
         $node = $fs_browser_tree.find('.k-item[fs-id='+balloon.datasource._data[next].id+']');
       }
 
@@ -779,7 +771,7 @@ var balloon = {
          $that.addClass('fs-node-deleted');
       }
 
-      var order = ['name', 'shared', 'deleted', 'sharelink', 'tag', 'size', 'changed'];
+      var order = ['name', 'shared', 'deleted', 'sharelink', 'readonly', 'destroy', 'tag', 'size', 'changed'];
       $that.attr('fs-id', balloon.id(node));
 
       if(node.directory === true) {
@@ -798,6 +790,22 @@ var balloon = {
           case 'sharelink':
             if(node.sharelink === true) {
               html_children.push('<div class="fs-node-shared gr-icon gr-i-hyperlink"></div>');
+            } else {
+              html_children.push('<div>&nbsp;</div>');
+            }
+          break;
+
+          case 'readonly':
+            if(node.readonly === true) {
+              html_children.push('<div class="fs-node-readonly gr-icon gr-i-lock"></div>');
+            } else {
+              html_children.push('<div>&nbsp;</div>');
+            }
+          break;
+
+          case 'destroy':
+            if(node.destroy !== undefined) {
+              html_children.push('<div class="fs-node-destroy gr-icon gr-i-flag"></div>');
             } else {
               html_children.push('<div>&nbsp;</div>');
             }
@@ -822,6 +830,8 @@ var balloon = {
           case 'size':
             if(!node.directory) {
               html_children.push('<span class="fs-meta-info">'+balloon.getReadableFileSizeString(node.size)+'</span>');
+            } else {
+              html_children.push('<span class="fs-meta-info"></span>');
             }
           break;
 
@@ -980,7 +990,7 @@ var balloon = {
     if(balloon.last.directory) {
       if(balloon.last.deleted !== false) {
         balloon.showView(['preview', 'properties', 'events', 'advanced']);
-      } else if(balloon.last.shared === false && balloon.last.share === false || (balloon.last.shared === true && balloon.last.reference === false)) {
+      } else if(balloon.last.access === 'm') {
         balloon.showView(['preview', 'properties', 'share-collection', 'share-link', 'events', 'advanced']);
       } else  {
         balloon.showView(['preview', 'properties', 'share-link', 'events', 'advanced']);
@@ -1835,64 +1845,54 @@ var balloon = {
   advancedOperations: function(node) {
     balloon.resetDom('advanced');
 
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/node/attributes',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-        attributes: ['readonly', 'destroy']
-      },
-      success: function(data) {
-        var $fs_advanced   = $('#fs-advanced'),
-          $fs_destroy_at = $fs_advanced.find('input[name=destroy_at]'),
-          $fs_readonly   = $fs_advanced.find('input[name=readonly]'),
-          $fs_submit   = $fs_advanced.find('input[name=submit]'),
-          formatted    = '';
+      var $fs_advanced   = $('#fs-advanced'),
+        $fs_destroy_at = $fs_advanced.find('input[name=destroy_at]'),
+        $fs_readonly   = $fs_advanced.find('input[name=readonly]'),
+        $fs_submit   = $fs_advanced.find('input[name=submit]'),
+        formatted    = '';
 
-        if(data.data.destroy !== null) {
-          var ts = data.data.destroy.sec,
-            date = new Date(parseInt(ts) * 1000);
-          formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
+      if(node.destroy !== undefined) {
+        var ts = node.destroy.sec,
+          date = new Date(parseInt(ts) * 1000);
+        formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
 
-          $fs_destroy_at.val(formatted);
+        $fs_destroy_at.val(formatted);
+      }
+
+      if(node.readonly === true) {
+        $fs_readonly.prop('checked', true);
+      }
+
+      $fs_destroy_at.kendoDateTimePicker({
+        format: kendo.culture().calendar.patterns.g,
+        min: new Date(),
+      });
+
+      $fs_submit.off('click').on('click', function(){
+        var ts = $fs_destroy_at.val();
+        if(ts !== formatted) {
+          formatted = ts;
+          if(ts === '') {
+            balloon.selfDestroyNode(node, ts);
+          } else {
+            var msg  = i18next.t('view.advanced.prompt_destroy', ts, node.name);
+            balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts]);
+          }
         }
 
-        if(data.data.readonly === true) {
-          $fs_readonly.prop('checked', true);
+        if(node.readonly !== $fs_readonly.is(':checked')) {
+          node.readonly = $fs_readonly.is(':checked');
+          balloon.xmlHttpRequest({
+            url: balloon.base+'/node/readonly',
+            type: 'POST',
+            data: {
+              id: balloon.id(node),
+              readonly: node.readonly
+            },
+          });
         }
-
-        $fs_destroy_at.kendoDateTimePicker({
-          format: kendo.culture().calendar.patterns.g,
-          min: new Date(),
-        });
-
-        $fs_submit.off('click').on('click', function(){
-          var ts = $fs_destroy_at.val();
-          if(ts !== formatted) {
-            formatted = ts;
-            if(ts === '') {
-              balloon.selfDestroyNode(node, ts);
-            } else {
-              var msg  = i18next.t('view.advanced.prompt_destroy', ts, node.name);
-              balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts]);
-            }
-          }
-
-          if(data.data.readonly !== $fs_readonly.is(':checked')) {
-            data.data.readonly = $fs_readonly.is(':checked');
-            balloon.xmlHttpRequest({
-              url: balloon.base+'/node/readonly',
-              type: 'POST',
-              data: {
-                id: balloon.id(node),
-                readonly: data.data.readonly
-              },
-            });
-          }
-        });
-      },
-    });
+      });
+    },
   },
 
 
@@ -2267,7 +2267,7 @@ var balloon = {
           var attributes = [
             'id', 'name', 'mime', 'deleted', 'meta.color', 'meta.tags',
             'directory', 'changed', 'file.size', 'filtered',
-            'shared', 'sharelink', 'hash', 'reference', 'share', 'access'
+            'shared', 'sharelink', 'hash', 'reference', 'share', 'access', 'readonly', 'destroy'
           ];
 
           if(balloon.datasource._ds_params === undefined) {
@@ -2791,7 +2791,6 @@ var balloon = {
             {
               data: {
                 name: node.name,
-                share: node.share,
                 meta: {
                   color: node.meta.color,
                   tags: node.meta.tags,
@@ -5360,7 +5359,6 @@ var balloon = {
                   $field.val(data.data.meta[meta_attr]);
                 break;
 
-
                 default:
                   $field = $('#fs-properties-'+meta_attr).find('input');
                   $field.val(data.data.meta[meta_attr]);
@@ -5374,8 +5372,8 @@ var balloon = {
           break;
 
           case 'share':
-            if(data.data[prop] !== false && 'shareowner' in data.data) {
-              var msg = i18next.t('view.prop.head.share_value', data.data[prop], data.data.shareowner, data.data.access);
+            if(data.data[prop] !== undefined && 'shareowner' in data.data) {
+              var msg = i18next.t('view.prop.head.share_value', data.data[prop], data.data.shareowner.username, data.data.access);
               $field.html(msg)
                 .parent().parent().css('display','table-row');
 
@@ -5391,7 +5389,7 @@ var balloon = {
           break;
 
           default:
-            if($field.length != 0 && prop !== 'shareaccess' && prop != 'shareowner') {
+            if($field.length != 0 && prop !== 'access' && prop != 'shareowner') {
               $field.html(data.data[prop]);
             }
           break;
@@ -5434,7 +5432,9 @@ var balloon = {
       'meta.author',
       'created',
       'version',
-      'shareowner'
+      'shareowner',
+      'master',
+      'scan'
     ];
 
     balloon.xmlHttpRequest({
@@ -5512,7 +5512,6 @@ var balloon = {
       {
         data: {
           name: node.name,
-          share: node.share,
           meta: {
             color: node.meta.color,
             tags: node.meta.tags,
@@ -5999,8 +5998,6 @@ var balloon = {
         break;
 
         case 'preview':
-          $('#fs-properties-share').parent().hide();
-
           var $fs_meta_tags = $("#fs-properties-meta-tags");
           $fs_meta_tags.hide()
             .find('li').remove();

@@ -2163,7 +2163,7 @@ td {
     float: left;
 }
 
-.fs-node-shared {
+.fs-node-shared, .fs-node-readonly, .fs-node-destroy {
     float: left;
     margin-right: 20px;
     margin-top: -2px;
