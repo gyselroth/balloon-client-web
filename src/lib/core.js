@@ -1892,7 +1892,6 @@ var balloon = {
           });
         }
       });
-    },
   },
 
 
@@ -2267,7 +2266,7 @@ var balloon = {
           var attributes = [
             'id', 'name', 'mime', 'deleted', 'meta.color', 'meta.tags',
             'directory', 'changed', 'file.size', 'filtered',
-            'shared', 'sharelink', 'hash', 'reference', 'share', 'access', 'readonly', 'destroy'
+            'shared', 'sharelink', 'hash', 'reference', 'access', 'readonly', 'destroy'
           ];
 
           if(balloon.datasource._ds_params === undefined) {
@@ -3439,7 +3438,8 @@ var balloon = {
 
         var $fs_share_collection     = $('#fs-share-collection'),
           $fs_share_collection_tbl   = $fs_share_collection.find('table'),
-          $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
+          $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
+          $share_name = $fs_share_collection.find("input[name=share_name]");
 
         $fs_share_collection.find('th').each(function(){
           var $that = $(this);
@@ -3447,27 +3447,29 @@ var balloon = {
           $that.height(chars);
         });
 
-        if(data.data !== false ) {
+        if(data.data.acl === false) {
+          $share_name.val(node.name);
+        } else {
           $fs_share_collection.find('.fs-share-remove').show();
           var checked,
             $acl_role;
 
-          for(var i in data.data) {
+          for(var i in data.data.acl) {
             checked = '';
-            if(data.data[i].priv == 'r') {
+            if(data.data.acl[i].priv == 'r') {
               checked = "checked='checked'";
             }
 
-            balloon._addShareRole(data.data[i], acl);
+            balloon._addShareRole(data.data.acl[i], acl);
 
-            $fs_share_collection.find('tr[fs-acl-name="'+data.data[i].id+'"]')
-              .find('input[value="'+data.data[i].priv+'"]').prop('checked', true);
+            $fs_share_collection.find('tr[fs-acl-name="'+data.data.acl[i].id+'"]')
+              .find('input[value="'+data.data.acl[i].priv+'"]').prop('checked', true);
 
 
             $fs_share_collection_tbody.append($acl_role);
           }
 
-          if(data.data.length > 0) {
+          if(data.data.acl.length > 0) {
             $fs_share_collection_tbl.show().css('display', 'table');
             $fs_share_collection.find('input[name=share]').val(i18next.t('view.share.update'));
           }
@@ -3600,10 +3602,12 @@ var balloon = {
 
         $fs_share_collection.find('input[type=submit]').unbind().click(function(){
           if($(this).attr('name') == 'share') {
-            if(acl.length === 0) {
+            if($share_name.val() === '') {
+              $share_name.focus();
+            } else if(acl.length === 0) {
               $share_role.focus();
             } else {
-              balloon._shareCollection(node, acl);
+              balloon._shareCollection(node, acl, $share_name.val());
             }
           }
           else {
@@ -3653,11 +3657,6 @@ var balloon = {
       $fs_share_collection_tbl   = $fs_share_collection.find('table'),
       $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
 
-      /*if($.grep(acl.group, function(e) {
-        return e.group == item.id;
-      }).length != 0) {
-        return acl;
-      }*/
       var icon;
       if(item.type === 'user') {
         icon = 'person';
@@ -3695,17 +3694,21 @@ var balloon = {
    * Save share collection
    *
    * @param   object node
-   * @param   object acl
+   * @param   array acl
+   * @param   string name
    * @return  void
    */
-   _shareCollection: function(node, acl) {
+   _shareCollection: function(node, acl, name) {
     var url = balloon.base+'/collection/share?id='+balloon.id(node);
 
     balloon.xmlHttpRequest({
       url: url,
       type: 'POST',
       dataType: 'json',
-      data: {acl: acl},
+      data: {
+        acl: acl,
+        name: name
+      },
       statusCode: {
         201: function(e) {
           balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
@@ -5373,7 +5376,7 @@ var balloon = {
 
           case 'share':
             if(data.data[prop] !== undefined && 'shareowner' in data.data) {
-              var msg = i18next.t('view.prop.head.share_value', data.data[prop], data.data.shareowner.username, data.data.access);
+              var msg = i18next.t('view.prop.head.share_value', data.data.share.name, data.data.shareowner.username, data.data.access);
               $field.html(msg)
                 .parent().parent().css('display','table-row');
 
@@ -5432,7 +5435,9 @@ var balloon = {
       'meta.author',
       'created',
       'version',
+      'share',
       'shareowner',
+      'sharename',
       'master',
       'scan'
     ];
