@@ -17,12 +17,14 @@ TAR = $(DIST_DIR)/balloon-web-$(VERSION).tar.gz
 
 # NPM STUFF
 NPM_BIN = npm
+ESLINT_BIN = $(NODE_MODULES_DIR)/.bin/eslint
 
 # TARGET ALIASES
 NPM_TARGET = $(NODE_MODULES_DIR)
 WEBPACK_TARGET = $(BUILD_DIR)
+ESLINT_TARGET = $(BASE_DIR)
 CHANGELOG_TARGET = $(PACK_DIR)/DEBIAN/changelog
-BUILD_TARGET = $(WEBPACK_TARGET)
+BUILD_TARGET = $(ESLINT_TARGET) $(WEBPACK_TARGET)
 
 
 # TARGETS
@@ -159,6 +161,13 @@ $(NPM_TARGET) : $(BASE_DIR)/package.json
 	$(NPM_BIN) update
 	@touch $@
 
+
+.PHONY: eslint
+eslint: $(ESLINT_TARGET)
+
+$(ESLINT_TARGET) : $(NPM_TARGET)
+	$(ESLINT_BIN) src *.js
+	@touch $@
 
 .PHONY: webpack
 webpack: $(WEBPACK_TARGET)

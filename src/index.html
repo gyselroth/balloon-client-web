@@ -200,6 +200,9 @@
                     <li id="fs-view-share-collection">
                         <span data-i18n="nav.view.share_folder"></span>
                     </li>
+                    <li id="fs-view-share-collection-read">
+                        <span data-i18n="nav.view.share_folder"></span>
+                    </li>
                     <li id="fs-view-share-link">
                         <span data-i18n="nav.view.share_link"></span>
                     </li>
@@ -271,7 +274,7 @@
                                 <tr class="fs-searchable">
                                     <th data-i18n="view.prop.head.share"></th>
                                     <td id="fs-properties-share">
-                                        <div class="gr-icon gr-i-folder-shared"></div>
+                                        <div></div>
                                         <div class="fs-value"></div>
                                     </td>
                                 </tr>
@@ -337,6 +340,23 @@
                     <ul></ul>
                     <input type="submit" name="restore" data-i18n="[value]view.history.restore">
                 </div>
+                <div class="fs-view-content" id="fs-share-collection-read">
+                    <p class="fs-hint" data-i18n="view.share_read.hint"></p>
+                    <div class="share-name">
+                        <div class="gr-icon gr-i-folder-shared"></div>
+                        <span></span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th data-i18n="view.share_read.resource"></th>
+                                <th data-i18n="view.share_read.privilege"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
                 <div class="fs-view-content" id="fs-share-collection">
                     <p class="fs-hint" data-i18n="view.share.hint_add"></p>
                     <div>
@@ -350,10 +370,10 @@
                             <tr>
                                 <th></th>
                                 <th data-i18n="view.share.resource"></th>
-                                <th data-i18n="view.share.manage"></th>
-                                <th data-i18n="view.share.full_access"></th>
-                                <th data-i18n="view.share.ro"></th>
-                                <th data-i18n="view.share.wp"></th>
+                                <th data-i18n="view.share.privilege_m"></th>
+                                <th data-i18n="view.share.privilege_rw"></th>
+                                <th data-i18n="view.share.privilege_r"></th>
+                                <th data-i18n="view.share.privilege_w+"></th>
                                 <th></th>
                             </tr>
                         </thead>

@@ -2055,7 +2055,7 @@ td {
     width: 20px;
 }
 
-#fs-share-collection .fs-role-name {
+#fs-share-collection .fs-role-name, #fs-share-collection-read .fs-role-name {
     max-width: 170px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2063,10 +2063,10 @@ td {
     line-height: 25px;
 }
 
-#fs-share-collection th[data-i18n="view.share.full_access"],
-#fs-share-collection th[data-i18n="view.share.wp"],
-#fs-share-collection th[data-i18n="view.share.ro"],
-#fs-share-collection th[data-i18n="view.share.manage"] {
+#fs-share-collection th[data-i18n="view.share.privilege_m"],
+#fs-share-collection th[data-i18n="view.share.privilege_rw"],
+#fs-share-collection th[data-i18n="view.share.privilege_r"],
+#fs-share-collection th[data-i18n="view.share.privilege_w+"] {
     padding-left: 10px;
     transform: rotate(270deg);
     transform-origin: 60% 93% 0;
@@ -2144,7 +2144,7 @@ td {
     table-layout: fixed;
 }
 
-#fs-share-collection th, #fs-share-collection td {
+#fs-share-collection th, #fs-share-collection td, #fs-share-collection-read td, #fs-share-collection-read th {
     padding: 3px;
     text-align: left;
     vertical-align: bottom;

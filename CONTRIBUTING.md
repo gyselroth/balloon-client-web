@@ -47,8 +47,11 @@ Besides npm scripts like build and start you can use make to build this software
 * `clean` Clear build and dependencies
 * `deb` Create debian packages
 * `deps` Install dependencies
+* `npm` Update dependencies
 * `dist` Distribute (Create tar and deb packages)
 * `tar` Create tar package
+* `webpack` Package build
+* `eslint` Enforce code policy
 
 ## Git commit 
 Please make sure that you always specify the number of your issue starting with a hastag (#) within any git commits.
@@ -68,17 +71,12 @@ and do not contribute software which ist not compatible with GPL-3.0 or is not y
 ## Editor config
 This repository gets shipped with an .editorconfig configuration. For more information on how to configure your editor please visit [editorconfig](https://github.com/editorconfig).
 
-## Code policy
-There are no javascript standards like PSR-1/2 for PHP, but please follow the following rules:
 
-* Abstract classes named with an Abstract prefix: AbstractExample
-* Interfaces named with an Interface suffix: ExampleInterface
-* Variables named with underscore (_) and not camelCase
-* Methods and classes follow the camelCase naming
-* Always use 4 spaces for indentation
-* Use "one true brace style" for blocks
-* All non-module files delcare "use strict;"
-* Always cache dom objects which will be used more than once: (`var $body = $('body');`)
-* Add a $ prefix for variables containing a jquery object
-* Always use i18next for output messages
-* All api calls must use balloon.xmlHttpRequest()
+## Code policy
+Add the following script to your git pre-commit hook file, otherwise your build will fail if you do not following code style:
+
+```
+./node_modules/.bin/eslint --fix src *.js
+```
+
+This automatically converts your code into the code style guidelines of this project.

@@ -32,12 +32,7 @@ module.exports = {
       {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
         loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
-      },
-      /*{
-        test: /(\.jsx|\.js)$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/
-      },*/
+      }
     ]
   },
   plugins: [

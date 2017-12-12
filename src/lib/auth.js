@@ -110,25 +110,25 @@ var login = {
       cache: false,
       complete: function(response) {
         switch(response.status) {
-          case 401:
-          case 403:
-            login_helper(response);
+        case 401:
+        case 403:
+          login_helper(response);
           break;
 
-          case 400:
-            if(login.token) {
-              login.adapter = 'oidc';
-            } else {
-              login.adapter = 'basic';
-            }
+        case 400:
+          if(login.token) {
+            login.adapter = 'oidc';
+          } else {
+            login.adapter = 'basic';
+          }
 
-            login.fetchIdentity();
+          login.fetchIdentity();
           break;
 
-          default:
-            $('#login').show();
-            $('#login-server-error').show();
-            $('#login-body').hide();
+        default:
+          $('#login').show();
+          $('#login-server-error').show();
+          $('#login-body').hide();
           break;
         }
       }
@@ -175,20 +175,20 @@ var login = {
       cache: false,
       complete: function(response) {
         switch(response.status) {
-          case 401:
-          case 403:
-            $('#login-oidc-error').show();
+        case 401:
+        case 403:
+          $('#login-oidc-error').show();
           break;
 
-          case 400:
-            login.fetchIdentity();
-            login.initBrowser();
+        case 400:
+          login.fetchIdentity();
+          login.initBrowser();
           break;
 
-          default:
-            $('#login').show();
-            $('#login-server-error').show();
-            $('#login-body').hide();
+        default:
+          $('#login').show();
+          $('#login-server-error').show();
+          $('#login-body').hide();
           break;
         }
       }
@@ -219,11 +219,11 @@ var login = {
   xmlHttpRequest: function(options) {
     if(login.token) {
       if(options.headers) {
-          options.headers["Authorization"] = 'Bearer '+login.token;
+        options.headers["Authorization"] = 'Bearer '+login.token;
       } else {
-          options.headers = {
-            "Authorization": 'Bearer '+login.token
-          };
+        options.headers = {
+          "Authorization": 'Bearer '+login.token
+        };
       }
     }
 
@@ -291,26 +291,26 @@ var login = {
       },
       complete: function(response) {
         switch(response.status) {
-          case 401:
-          case 403:
-            $('#fs-namespace').hide();
-            $('#login-basic-error').show();
-            $username_input.addClass('error');
-            $password_input.addClass('error');
+        case 401:
+        case 403:
+          $('#fs-namespace').hide();
+          $('#login-basic-error').show();
+          $username_input.addClass('error');
+          $password_input.addClass('error');
           break;
 
-          case 200:
-            login.adapter = 'basic';
-            login.username = response.responseJSON.data;
-            localStorage.username = login.username;
-            $('#fs-identity').show().find('#fs-identity-username').html(login.username);
-            login.initBrowser();
+        case 200:
+          login.adapter = 'basic';
+          login.username = response.responseJSON.data;
+          localStorage.username = login.username;
+          $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+          login.initBrowser();
           break;
 
-          default:
-            $('#login').show();
-            $('#login-server-error').show();
-            $('#login-body').hide();
+        default:
+          $('#login').show();
+          $('#login-server-error').show();
+          $('#login-body').hide();
           break;
         }
       }

@@ -15,3 +15,6 @@ First relese of the extracted web ui from the core server.
 * [CHANGE] Migrated from bower to npm and webpack https://github.com/gyselroth/balloon/issues/54
 * [CHANGE] Started to refactore into modules https://github.com/gyselroth/balloon/issues/35, also implemented some build changes according webpack
 * [CHANGE] migrated fonts to ubuntu-fontface
+* [FEATURE] Possibility to configure share node name https://github.com/gyselroth/balloon/issues/94
+* [FIX] Changeable node properties in readonly shares are not visible anymore (Only as readable decleration)
+* [FIX] share collection tab is not visible for sub share nodes

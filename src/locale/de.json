@@ -118,8 +118,6 @@
         "contains": "Enthält",
         "changed": "Geändert",
         "deleted": "Gelöscht",
-        "share_owner": "Freigabe-Besitzer",
-        "share_access": "Freigabe-Zugriffsrecht",
         "version": "Version",
         "hash": "Prüfsumme",
         "size": "Grösse",
@@ -127,6 +125,7 @@
         "tags": "Tags",
         "color_tag": "Farbmarkierung",
         "share": "Freigabe",
+        "share_name": "Freigabename",
         "share_value": "%s (von %s) [%s]",
         "description": "Beschreibung",
         "license": "Lizenz",
@@ -144,14 +143,21 @@
     "preview": {
       "failed": "Die Vorschau konnte nicht erstellt werden"
     },
+    "share_read": {
+      "hint": "Dieser order wurde unter folgenden Bedingungen freigegeben:",
+      "resource": "Ressource",
+      "role": "Rolle"
+    },
     "share": {
       "hint_add": "Ein freigegebener Ordner wird automatisch bei allen Freigabemitgliedern hinterlegt (Dies kann einige Minuten in Anspruch nehmen)",
+      "name": "Name für die Freigabe",
       "search_user": "Nach Benutzer/Gruppe suchen...",
       "resource": "Ressource",
       "manage": "Administrator",
-      "full_access": "Vollzugriff",
-      "ro": "Nur Leseberechtigung",
-      "wp": "Briefkasten",
+      "privilege_m": "Administrator",
+      "privilege_rw": "Lesen/Schreiben",
+      "privilege_r": "Nur Lesen",
+      "privilege_w+": "Briefkasten",
       "password": "Passwort (optional)",
       "create": "Erstellen",
       "update": "Anpassen",
