@@ -1,0 +1,28 @@
+// TDOO pixtron - implement this
+
+#fs-event-window {
+  display: none;
+
+  #fs-event-window-content {
+    position: relative;
+    height: 100%;
+    overflow-y: scroll;
+
+    ul {
+      padding-bottom: 100px;
+
+      @include events-list;
+    }
+
+    #fs-event-window {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+
+      display: block;
+      height: 100px;
+      width: 100%;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+    }
+  }
+}

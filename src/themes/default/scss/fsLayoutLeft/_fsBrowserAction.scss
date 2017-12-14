@@ -1,0 +1,30 @@
+#fs-browser-action {
+  display: inline-block;
+
+  @include clearfix;
+
+  li {
+    $buttonSize: 50px;
+    @include icon-button($buttonSize, $buttonSize);
+
+    color: $colorActiveBlue;
+    background-color: $colorWhite;
+    float: left;
+    box-sizing: border-box;
+    border-right: 1px solid $colorLightGrey;
+
+    &:first-child {
+      border-radius: 4px 0 0 4px;
+    }
+
+    &:last-child {
+      border-right: none;
+      border-radius: 0 4px 4px 0;
+    }
+
+    &:hover {
+      background-color: $colorActiveBlue;
+      color: $colorWhite;
+    }
+  }
+}

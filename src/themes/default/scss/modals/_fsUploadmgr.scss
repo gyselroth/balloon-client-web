@@ -1,0 +1,132 @@
+// TDOO pixtron - implement this
+
+#fs-uploadmgr {
+  display: none;
+}
+
+#fs-uploadmgr {
+    padding: 8px;
+    width: 600px;
+    display: none;
+}
+
+#fs-uploadmgr > p {
+    margin-top: 8px;
+    font-size: 0.8em;
+}
+
+#fs-uploadmgr .fs-uploadmgr-area {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+#fs-uploadmgr .k-progressbar-horizontal {
+    width: calc(100% - 10px);
+    margin-top: 5px;
+}
+
+#fs-uploadmgr .k-state-selected, #fs-upload-progress .k-state-selected {
+    background-color: #00addb;
+    opacity: 0.3;
+    color: #000;
+}
+
+#fs-uploadmgr-bytes {
+    float: left;
+}
+
+#fs-uploadmgr-bandwidth {
+    float: left;
+    margin-left: 8px;
+}
+
+#fs-uploadmgr-time {
+    float: right;
+}
+
+#fs-upload-list .fs-status-loader {
+    margin: 5px 8px 0 !important;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#fs-uploadmgr .fs-status-loader {
+    float: right;
+    margin: -6px 4px 0;
+}
+
+#fs-uploadmgr-total-progress {
+    margin-bottom: 15px;
+}
+
+#fs-upload-list .k-progress-status {
+    margin-right: 20px;
+}
+
+.fs-progress-filename {
+    position: absolute;
+    z-index: 2;
+    padding: 0.3em 0.5em 0;
+
+    max-width: 450px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.fs-progress-stop {
+    position: absolute;
+    z-index: 2;
+    padding: 0.3em 0.5em 0;
+    width: 15px;
+    height: 15px;
+    right: 0;
+    margin: 5px 8px 0;
+}
+
+.fs-progress-stop:hover {
+    cursor: pointer;
+}
+
+#fs-upload-list {
+    overflow-y: auto;
+    max-height: 250px;
+    padding: 2px 0;
+}
+
+.fs-progress-error {
+    background-color: #f5cfcf !important;
+}
+
+#fs-uploadmgr-files-progress .k-item {
+    border-color: #c8c8c8 !important;
+}
+
+#fs-uploadmgr-files-progress {
+    margin-bottom: 10px;
+}
+
+#fs-uploadmgr-files-progress .k-progress-status {
+    display: none;
+}
+
+#fs-upload-details {
+     color: #4589BD;
+}
+
+#fs-upload-details:hover {
+     color: #0000ff;
+     cursor: pointer;
+}
+
+.fs-status {
+    width: 25px;
+    height: 25px;
+    margin-left: 5px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.fs-status-loader {
+    background-image: url("../../../themes/default/img/loading.gif") !important;
+}

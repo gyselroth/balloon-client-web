@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "balloon",
+    "title": "Balloon",
     "disclaimer": "balloon v2.0.0-dev 2017"
   },
   "login": {
@@ -10,6 +10,7 @@
     "logout": "Logout",
     "events": "Events",
     "profile": "Profil",
+    "settings": "Einstellungen",
     "error": {
       "server": "Der balloon Server meldet aktuell eine Störung, bitte versuche es später erneut.",
       "basic": "Der Benutzername oder das Passwort ist falsch.",
@@ -34,10 +35,11 @@
       "restore": "Wiederherstellen",
       "search": "Suchen...",
       "toggle_menu": "Menü ein-/ausklappen",
-      "copy": "Kopieren",   
+      "copy": "Kopieren",
       "cut": "Ausschneiden",
       "paste": "Einfügen",
-      "filter": "Filter"
+      "filter": "Filter",
+      "rename": "Umbenennen"
     },
     "view": {
       "preview": "Vorschau",
@@ -84,13 +86,13 @@
     "open_folder": "Ordner öffnen",
     "new_folder": "Neuer Ordner",
     "new_file": "Neue Datei",
-    "selected": "({{count}} items ausgewählt)",
-    "selected_plural": "({{count}} items ausgewählt)",
+    "selected": "{{count}} Objekt ausgewählt",
+    "selected_plural": "{{count}} Objekte ausgewählt",
     "no_nodes": "<Es wurden keine Daten gefunden>"
   },
   "user": {
     "disk_space": "Speicherplatz:",
-    "quota_left": "(%s übrig)",
+    "quota_left": "%s übrig",
     "quota_detail": "Speicherplatz: %s / %s (%s%%) => %s übrig"
   },
   "time": {

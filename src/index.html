@@ -16,7 +16,10 @@
 <body>
     <div id="login">
         <div id="login-box">
-            <div id="login-header"><span class="gr-icon gr-i-cloud"></span><span data-i18n="app.title"></span></div>
+            <div id="login-header">
+                <svg class="gr-icon gr-i-cloud"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#cloud"></use></svg>
+                <span data-i18n="app.title"></span>
+            </div>
             <div id="login-server-error" class="error-message" data-i18n="login.error.server"></div>
             <div id="login-body">
                 <div id="login-basic-error" class="error-message" data-i18n="login.error.basic"></div>
@@ -32,190 +35,365 @@
         </div>
     </div>
 
+    <!-- TODO pixtron - what is this for? -->
     <div style="display: none;" id="fs-namespace">
-    <div id="fs-browser-properties"></div>
-    <input id="fs-query" name="query" type="hidden" value=""/>
-            
-    <div id="fs-browser-top-bar">
-        <div class="gr-icon gr-i-cloud"></div>
-        <div id="fs-title" data-i18n="app.title"></div>
 
-        <div id="fs-crumb">
-            <ul id="fs-crumb-search-list">
-                <li fs-id="" id="fs-crumb-search">
-                    <div></div>
-                    <div class="gr-icon gr-i-arrowhead-e"></div>
-                </li>
-            </ul>
-            <ul id="fs-crumb-home-list">
-                <li fs-id="" id="fs-crumb-home">
-                    <div data-i18n="menu.cloud"></div>
-                    <div class="gr-icon gr-i-arrowhead-e"></div>
-                </li>
-            </ul>
+    <!-- TODO pixtron - what is this for? -->
+    <div id="fs-browser-properties"></div>
+
+    <!-- TODO pixtron - remove this? -->
+    <input id="fs-query" name="query" type="hidden" value=""/>
+
+    <div id="fs-browser-top-bar">
+        <div id="fs-toggle-overlay-menu" class="fs-action-element" data-i18n="[title]nav.action.toggle_menu">
+            <svg class="gr-icon gr-i-menu"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#menu"></use></svg>
         </div>
 
-        <div id="fs-request-success" class="gr-icon gr-i-check"></div>
+        <div id="fs-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>icon-black-2</title><path d="M15.88,28a.1.1,0,0,0-.08-.11l-2.95-.52a.1.1,0,0,1-.06,0l-.48-.68a.1.1,0,0,0-.06,0l-1.85-.34a.1.1,0,0,0-.11.08L10,27.88l5.7,1Z"/><path d="M9.48,30.91a.1.1,0,0,0,.08.11l5.51,1a.1.1,0,0,0,.11-.08l.43-2.42-5.7-1Z"/><path d="M17.78.23h0C12.53-.69,5.95,1,4.4,8.27c-1.59,7.53,6.44,14.85,6.44,14.85l.58.1c-2.1-3.07-4.51-9-3.66-14.12C8.72,3.42,13.4-.51,17.78.23Z"/><path d="M27.68,12.38C28.73,5,23.09,1.17,17.83.24,22.21,1,25.29,6.33,24.23,12c-1,5.12-5.24,9.85-8.26,12l.58.1S26.6,20,27.68,12.38Z"/><path d="M17.82.24h0Z"/><path d="M17.8.23h0Z"/><path d="M17.81.23h0Z"/><polygon points="17.82 0.24 17.82 0.24 17.82 0.23 17.82 0.23 17.81 0.23 17.82 0.24 17.82 0.24"/><circle cx="17.81" cy="0.23" transform="translate(14.62 17.76) rotate(-80.44)"/><path d="M17.82.24h0Z"/><path d="M12.24,10a43.38,43.38,0,0,0,.19,13.44l1.27.22h0l1.25.22a43.38,43.38,0,0,0,4.77-12.56c1-5.73.17-10.67-1.89-11h-.06C15.72-.1,13.25,4.25,12.24,10Z"/></svg>
+            <div id="fs-title" data-i18n="app.title"></div>
+        </div>
+
+        <div id="fs-request-success">
+            <svg class="gr-icon gr-i-check"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#check"></use></svg>
+        </div>
         <div id="fs-loader"></div>
 
+        <input id="fs-browser-top-search" type="text" placeholder="TODO pixtron - search placeholder" />
+
         <div id="fs-identity">
-            <div class="gr-icon gr-i-person"></div>
-                <div id="fs-identity-username"></div>
+            <div id="fs-identity-username"></div>
+            <ul id="fs-identity-menu">
+                <li id="fs-menu-user-events" data-i18n="[title]login.events">
+                    <svg class="gr-icon gr-i-alert"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#alert"></use></svg>
+                </li>
+                <li id="fs-settings" data-i18n="[title]login.settings">
+                    <svg class="gr-icon gr-i-alert"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#person"></use></svg>
 
-            <div id="fs-identity-menu">
-                <div id="fs-quota" data-i18n="[title]user.disk_space">
-                    <div id="fs-quota-usage"></div>
-                    <div id="fs-quota-total"></div> 
-                </div>
-
-                <ul>
-                    <li id="fs-menu-user-profile"><span class="gr-icon gr-i-person"></span><span data-i18n="login.profile"></span></li>
-                    <li id="fs-menu-user-events"><span class="gr-icon gr-i-alert"></span><span data-i18n="login.events"></span></li>
-                    <li id="fs-menu-user-logout"><span class="gr-icon gr-i-logout"></span><span data-i18n="login.logout"></span></li>
-                </ul>
-            </div>
+                    <div id="fs-settings-menu-wrap">
+                        <div id="fs-settings-menu">
+                            <div id="fs-quota" data-i18n="[title]user.disk_space">
+                                <div id="fs-quota-usage"></div>
+                                <div id="fs-quota-total"></div>
+                            </div>
+                            <ul>
+                                <li id="fs-menu-user-profile" data-i18n="login.profile"></li>
+                                <li id="fs-menu-user-settings" data-i18n="login.settings"></li>
+                                <li id="fs-menu-user-logout" data-i18n="login.logout"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div id="fs-identity-avatar"></div>
         </div>
     </div>
-    
+
+
+    <!--ul id="fs-menu-flyover">
+        <li class="fs-menu-left-active" id="fs-menu-cloud">
+            <svg class="gr-icon gr-i-cloud"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#cloud"></use></svg>
+            <div data-i18n="menu.cloud"></div>
+        </li>
+        <li id="fs-menu-shared_for_me">
+            <svg class="gr-icon gr-i-folder-received"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-received"></use></svg>
+            <div data-i18n="menu.shared_for_me"></div>
+        </li>
+        <li id="fs-menu-shared_from_me">
+            <svg class="gr-icon gr-i-folder-shared"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-shared"></use></svg>
+            <div data-i18n="menu.shared_from_me"></div>
+        </li>
+        <li id="fs-menu-shared_link">
+            <svg class="gr-icon gr-i-hyperlink"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#hyperlink"></use></svg>
+            <div data-i18n="menu.shared_link"></div>
+        </li>
+        <li id="fs-menu-search">
+            <svg class="gr-icon gr-i-search"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#search"></use></svg>
+            <div data-i18n="menu.search"></div>
+        </li>
+        <li id="fs-menu-trash">
+            <svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg>
+            <div data-i18n="menu.trash"></div>
+        </li>
+    </ul-->
+
+    <ul id="fs-menu-left">
+        <li class="fs-menu-left-active" id="fs-menu-cloud">
+            <svg class="gr-icon gr-i-cloud"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#cloud"></use></svg>
+        </li>
+        <li id="fs-menu-shared_for_me">
+            <svg class="gr-icon gr-i-folder-received"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-received"></use></svg>
+        </li>
+        <li id="fs-menu-shared_from_me">
+            <svg class="gr-icon gr-i-folder-shared"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-shared"></use></svg>
+        </li>
+        <li id="fs-menu-shared_link">
+            <svg class="gr-icon gr-i-hyperlink"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#hyperlink"></use></svg>
+        </li>
+        <li id="fs-menu-search">
+            <svg class="gr-icon gr-i-search"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#search"></use></svg>
+        </li>
+        <li id="fs-menu-trash">
+            <svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg>
+        </li>
+    </ul>
+
     <div id="fs-browser-layout" >
-        <div id="fs-menu-left">
-            <ul>
-                <li class="fs-menu-left-active" id="fs-menu-cloud"><div class="gr-icon gr-i-cloud"></div><div data-i18n="menu.cloud"></div></li>
-                <li id="fs-menu-shared_for_me"><div class="gr-icon gr-i-folder-received"></div><div data-i18n="menu.shared_for_me"></div></li>
-                <li id="fs-menu-shared_from_me"><div class="gr-icon gr-i-folder-shared"></div><div data-i18n="menu.shared_from_me"></div></li>
-                <li id="fs-menu-shared_link"><div class="gr-icon gr-i-hyperlink"></div><div data-i18n="menu.shared_link"></div></li>
-                <li id="fs-menu-search"><div class="gr-icon gr-i-search"></div><div data-i18n="menu.search"></div></li>
-                <li id="fs-menu-trash"><div class="gr-icon gr-i-trash"></div><div data-i18n="menu.trash"></div></li>
-            </ul>
-
-            <div id="fs-disclaimer" data-i18n="app.disclaimer"></div>
-        </div>
         <div id="fs-layout-left">
-            <div id="fs-browser-action">
-                <ul>
-                    <li id="fs-action-menu" class="gr-icon gr-i-menu fs-action-element" data-i18n="[title]nav.action.toggle_menu"></li>
-                    <li id="fs-action-file" class="gr-icon gr-i-file-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_file"></li>
-                    <li id="fs-action-folder" class="gr-icon gr-i-folder-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_folder"></li>
-                    <li id="fs-action-upload" class="gr-icon gr-i-cloud-upload fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.upload"></li>
-                    <li id="fs-action-filter" class="gr-icon gr-i-filter fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.filter"></li>
-                </ul>
-    
-                <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
-
-                <div id="fs-action-search">
-                    <div class="gr-icon gr-i-search"></div>
-                    <button id="fs-search-button" type="button"></button>
-                    <input accesskey="s" type="text" data-i18n="[placeholder]nav.action.search"/>
-                    <button id="fs-search-reset-button" type="button">x</button>
-                </div>
-                <div id="fs-action-filter-select">
-                    <div class="gr-icon gr-i-filter"></div>
-                    <div>
-                        <ul>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="directory" class="fs-onoffswitch-checkbox" id="fs-filter-directory" checked>
-                                    <label for="fs-filter-directory" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.directories"></span>
+            <div id="fs-layout-left-container">
+                <div id="fs-layout-left-inner">
+                <div id="fs-layout-left-header">
+                    <div id="fs-crumb">
+                        <!-- TODO pixtron - can this be removed? -->
+                        <!--ul id="fs-crumb-search-list">
+                            <li fs-id="" id="fs-crumb-search">
+                                <div></div>
+                                <svg class="gr-icon gr-i-arrowhead-e"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-e"></use></svg-->
                             </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="file" class="fs-onoffswitch-checkbox" id="fs-filter-file" checked>
-                                    <label for="fs-filter-file" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.files"></span>
-                            </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="share" class="fs-onoffswitch-checkbox" id="fs-filter-share" checked>
-                                    <label for="fs-filter-share" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.shares"></span>
-                            </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="deleted" class="fs-onoffswitch-checkbox" id="fs-filter-deleted">
-                                    <label for="fs-filter-deleted" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.deleted"></span>
-                            </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="hidden" class="fs-onoffswitch-checkbox" id="fs-filter-hidden">
-                                    <label for="fs-filter-hidden" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.hidden"></span>
+                        </ul-->
+                        <ul id="fs-crumb-home-list">
+                            <li fs-id="" id="fs-crumb-home" data-i18n="menu.cloud">
+                                <!-- TODO pixtron - remove this -->
+                                <!--div data-i18n="menu.cloud"></div>
+                                <svg class="gr-icon gr-i-arrowhead-e"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-e"></use></svg-->
                             </li>
                         </ul>
                     </div>
-                    </div>
-                </div>
-                <div id="fs-browser">
-                    <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
-                    <div id="fs-browser-header">
-                    <div id="fs-browser-header-name"><div data-i18n="tree.column.name"></div><span class="k-icon k-i-arrow-s"></span></div>
-                    <div id="fs-browser-header-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
-                    <div id="fs-browser-header-size"><div data-i18n="tree.column.size"></div><span></span></div>
-                </div>
 
-                <div id="fs-browser-tree"></div>
-
-                <div id="fs-browser-select-action">
-                    <div id="fs-action-refresh" class="gr-icon gr-i-refresh fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.refresh"></div>
-                    <div id="fs-browser-summary"></div>
-                    <ul>
-                        <li id="fs-action-download" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.download"><div class="gr-icon gr-i-download"></div></li>
-                        <li id="fs-action-delete" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.delete"><div class="gr-icon gr-i-trash"></div></li>
-                        <li id="fs-action-restore" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.restore"><div class="gr-icon gr-i-restore-trash"></div></li>
-                        <li id="fs-action-copy" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.copy"><div class="gr-icon gr-i-copy"></div></li>
-                        <li id="fs-action-cut" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.cut"><div class="gr-icon gr-i-cut"></div></li>
-                        <li id="fs-action-paste" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.paste"><div class="gr-icon gr-i-paste"></div></li>
+                    <ul id="fs-browser-action">
+                        <li id="fs-action-file" class="fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_file">
+                            <svg class="gr-icon gr-i-file-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-add"></use></svg>
+                        </li>
+                        <li id="fs-action-folder" class="fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_folder">
+                            <svg class="gr-icon gr-i-folder-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-add"></use></svg>
+                        </li>
+                        <li id="fs-action-upload" class="fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.upload">
+                            <svg class="gr-icon gr-i-cloud-upload"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#cloud-upload"></use></svg>
+                        </li>
                     </ul>
+
+                    <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
+
+                    <!-- TODO pixtron - can this be removed? -->
+                    <!--div id="fs-action-search">
+                        <svg class="gr-icon gr-i-search"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#search"></use></svg>
+                        <button id="fs-search-button" type="button"></button>
+                        <input accesskey="s" type="text" data-i18n="[placeholder]nav.action.search"/>
+                        <button id="fs-search-reset-button" type="button">x</button>
+                    </div-->
+                </div>
+
+                <div id="fs-browser">
+                    <div id="fs-action-filter-select">
+                        <div class="gr-icon gr-i-filter"></div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="directory" class="fs-onoffswitch-checkbox" id="fs-filter-directory" checked>
+                                        <label for="fs-filter-directory" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.directories"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="file" class="fs-onoffswitch-checkbox" id="fs-filter-file" checked>
+                                        <label for="fs-filter-file" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.files"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="share" class="fs-onoffswitch-checkbox" id="fs-filter-share" checked>
+                                        <label for="fs-filter-share" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.shares"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="deleted" class="fs-onoffswitch-checkbox" id="fs-filter-deleted">
+                                        <label for="fs-filter-deleted" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.deleted"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="hidden" class="fs-onoffswitch-checkbox" id="fs-filter-hidden">
+                                        <label for="fs-filter-hidden" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.hidden"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- TODO pixtron - styling for "fresh state" -->
+                    <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
+
+                    <div id="fs-browser-header">
+                        <div id="fs-action-filter" class="fs-browser-column fs-browser-column-icon fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.filter">
+                            <svg class="gr-icon gr-i-filter"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#filter"></use></svg>
+                        </div>
+                        <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-name"><div data-i18n="tree.column.name"></div><span class="k-icon k-i-arrow-s"></span></div>
+                        <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
+                        <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
+                        <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-checkbox"></div>
+                    </div>
+
+                    <div id="fs-browser-tree"></div>
+
+                    <div id="fs-action-refresh" class="fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.refresh">
+                        <svg class="gr-icon gr-i-refresh"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#refresh"></use></svg>
+                    </div>
+
+                    <div id="fs-upload"></div>
                 </div>
             </div>
-
-            <div id="fs-upload"></div>
+            </div>
         </div>
 
         <div id="fs-content">
-            <div id="fs-properties-name">
-                <div class="gr-icon"></div>
-                <span class="fs-value"></span>
-                <span class="fs-ext"></span>
-                <div class="gr-icon gr-i-pencil"></div>
-            </div>
+            <div id="fs-content-inner">
+                <div id="fs-browser-summary"></div>
 
-            <div id="fs-view-bar">
-                <ul>
-                    <li id="fs-view-preview">
-                        <span class="fs-action-bar-active" data-i18n="nav.view.preview"></span>
+                <div id="fs-properties-name">
+                    <span class="fs-value"></span>
+                    <span class="fs-ext"></span>
+                </div>
+
+                <ul id="fs-browser-select-action">
+                    <!-- TODO pixtron - is class 'fs-action-select-only' still needed?-->
+                    <li id="fs-action-download" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.download">
+                        <svg class="gr-icon gr-i-download"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#download"></use></svg>
                     </li>
-                    <li id="fs-view-properties">
-                        <span data-i18n="nav.view.properties"></span>
+                    <li id="fs-action-delete" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.delete">
+                        <svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg>
                     </li>
-                    <li id="fs-view-history">
-                        <span data-i18n="nav.view.history"></span>
+                    <li id="fs-action-restore" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.restore">
+                        <svg class="gr-icon gr-i-restore-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#restore-trash"></use></svg>
                     </li>
-                    <li id="fs-view-share-collection">
-                        <span data-i18n="nav.view.share_folder"></span>
+                    <li id="fs-action-copy" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.copy">
+                        <svg class="gr-icon gr-i-copy"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#copy"></use></svg>
                     </li>
-                    <li id="fs-view-share-link">
-                        <span data-i18n="nav.view.share_link"></span>
+                    <li id="fs-action-cut" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.cut">
+                        <svg class="gr-icon gr-i-cut"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#cut"></use></svg>
                     </li>
-                    <li id="fs-view-events">
-                        <span data-i18n="nav.view.events"></span>
+                    <li id="fs-action-paste" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.paste">
+                        <svg class="gr-icon gr-i-paste"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#paste"></use></svg>
                     </li>
-                    <li id="fs-view-advanced">
-                        <span data-i18n="nav.view.advanced"></span>
+                    <li id="fs-action-rename" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.rename">
+                        <svg class="gr-icon gr-i-pencil"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#pencil"></use></svg>
                     </li>
                 </ul>
-            </div>
 
-            <div id="fs-content-data">
-                <div class="fs-view-content" id="fs-properties">
-                    <fieldset id="fs-properties-fixed">
+                <dl id="fs-content-view">
+                    <dt id="fs-content-view-title-preview">
+                        <span data-i18n="nav.view.preview"></span>
+                        <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
+                        <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
+                    </dt>
+                    <dd id="fs-preview">
+                        <div id="fs-preview-thumb">
+                            <div></div>
+                        </div>
+
+                        <div id="fs-preview-properties">
+                            <div id="fs-properties-meta-tags" class="fs-preview-property">
+                                <div id="fs-properties-meta-tags-input">
+                                    <div class="fs-preview-label" data-i18n="view.prop.head.tags"></div>
+                                    <div id="fs-preview-add-tag">
+                                        <input type="text" name="add_tag"/>
+                                    </div>
+                                    <div id="fs-preview-add-tag-button">
+                                        <div class="fs-add">
+                                            <svg class="gr-icon gr-i-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#add"></use></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="fs-properties-meta-tags-tags">
+                                    <ul></ul>
+                                </div>
+                            </div>
+
+                            <div id="fs-properties-meta-color" class="fs-preview-property">
+                                <div class="fs-preview-label" data-i18n="view.prop.head.color_tag"></div>
+                                <ul>
+                                    <li class="fs-color-FFE14D"></li>
+                                    <li class="fs-color-4DFF88"></li>
+                                    <li class="fs-color-4DC9FF"></li>
+                                    <li class="fs-color-854DFF"></li>
+                                    <li class="fs-color-FF4D8D"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </dd>
+                    <dt id="fs-content-view-title-share-link">
+                        <span data-i18n="nav.view.share_link"></span>
+                        <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
+                        <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
+                    </dt>
+                    <dd id="fs-share-link">
+                        <p class="fs-hint" data-i18n="view.share.hint_create_url"></p>
+                        <div id="fs-link-options">
+                            <div>
+                                <input type="text" readonly="readonly" name="file_url">
+                            </div>
+                        </div>
+                        <div>
+                            <p data-i18n="view.share.expiration"></p>
+                            <input type="text" name="share_expiration">
+                        </div>
+                        <div>
+                            <p data-i18n="view.share.password"></p>
+                            <input type="password" name="share_password">
+                        </div>
+                        <div>
+                            <input type="submit" name="share" data-i18n="[value]view.share.create"/>
+                        </div>
+                        <div class="fs-share-remove">
+                            <p class="fs-hint" data-i18n="view.share.hint_remove_url"></p>
+                            <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/>
+                        </div>
+                    </dd>
+                    <dt id="fs-content-view-title-share-collection">
+                        <span data-i18n="nav.view.share_folder"></span>
+                        <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
+                        <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
+                    </dt>
+                    <dd id="fs-share-collection">
+                        <p class="fs-hint" data-i18n="view.share.hint_add"></p>
+                        <div>
+                            <input type="text" name="share_role" data-i18n="[placeholder]view.share.search_user">
+                        </div>
                         <table>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th data-i18n="view.share.resource"></th>
+                                    <th data-i18n="view.share.full_access"></th>
+                                    <th data-i18n="view.share.ro"></th>
+                                    <th data-i18n="view.share.wo"></th>
+                                    <th data-i18n="view.share.wp"></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div>
+                            <input type="submit" name="share" data-i18n="[value]view.share.create"/>
+                        </div>
+                        <div class="fs-share-remove">
+                            <p class="fs-hint" data-i18n="view.share.hint_remove"></p>
+                            <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/>
+                        </div>
+                    </dd>
+                    <dt id="fs-content-view-title-properties">
+                        <span data-i18n="nav.view.properties"></span>
+                        <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
+                        <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
+                    </dt>
+                    <dd id="fs-properties">
+                        <table id="fs-properties-fixed" class="fs-properties-group">
                             <tbody id="fs-properties-collection">
                                 <tr>
                                     <td colspan="2"></td>
@@ -271,144 +449,78 @@
                                 <tr class="fs-searchable">
                                     <th data-i18n="view.prop.head.share"></th>
                                     <td id="fs-properties-share">
-                                        <div class="gr-icon gr-i-folder-shared"></div> 
+                                        <svg class="gr-icon gr-i-folder-shared"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-shared"></use></svg>
                                         <div class="fs-value"></div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                    </fieldset>
 
-                    <fieldset id="fs-properties-editable">
-                        <table>
-                            <tr class="fs-editable">
-                                <th data-i18n="view.prop.head.description"></th>
-                                <td id="fs-properties-description"><textarea></textarea></td>
-                            </tr>
-                            <tr class="fs-editable">
-                                <th data-i18n="view.prop.head.coordinate"></th>
-                                <td id="fs-properties-coordinate"><input type="text"/></td>
-                            </tr>
-                            <tr class="fs-editable">
-                                <th data-i18n="view.prop.head.copyright"></th>
-                                <td id="fs-properties-copyright"><input type="text"/></td>
-                            </tr>
-                            <tr class="fs-editable">
-                                <th data-i18n="view.prop.head.author"></th>
-                                <td id="fs-properties-author"><input type="text"/></td>
-                            </tr>
-                            <tr class="fs-editable">
-                                <th data-i18n="view.prop.head.license"></th>
-                                <td id="fs-properties-license"><input type="text"/></td>
-                            </tr>
-                        </table> 
-                    </fieldset>           
-                </div>
-                <div class="fs-view-content" id="fs-preview">
-                    <div id="fs-preview-thumb">
-                        <div></div>
-                    </div>
-
-                    <div id="fs-preview-properties">
-                        <div>
-                            <div data-i18n="view.prop.head.tags"></div>
-                            <div class="fs-add gr-icon gr-i-add"></div>
-                            <div id="fs-preview-add-tag"><input type="text" name="add_tag"/></div>
-                            <div id="fs-properties-meta-tags">
-                                <ul></ul>
+                        <fieldset id="fs-properties-editable" class="fs-properties-group">
+                            <div>
+                                <label for="fs-properties-description" data-i18n="view.prop.head.description"></label>
+                                <textarea id="fs-properties-description"></textarea>
                             </div>
-                        </div>
-    
-                        <div>
-                            <div data-i18n="view.prop.head.color_tag"></div>
-                            <div id="fs-properties-meta-color">
-                                <ul>
-                                    <li style="background-color: #FF4D8D" class="fs-color-FF4D8D"></li>
-                                    <li style="background-color: #854DFF" class="fs-color-854DFF"></li>
-                                    <li style="background-color: #4DC9FF" class="fs-color-4DC9FF"></li>
-                                    <li style="background-color: #4DFF88" class="fs-color-4DFF88"></li>
-                                    <li style="background-color: #FFE14D" class="fs-color-FFE14D"></li>
-                                </ul>
+                            <div>
+                                <label for="fs-properties-coordinate" data-i18n="view.prop.head.coordinate"></label>
+                                <input id="fs-properties-coordinate" type="text"/>
                             </div>
+                            <div>
+                                <label for="fs-properties-copyright" data-i18n="view.prop.head.copyright"></label>
+                                <input id="fs-properties-copyright" type="text"/>
+                            </div>
+                            <div>
+                                <label for="fs-properties-author" data-i18n="view.prop.head.author"></label>
+                                <input id="fs-properties-author" type="text"/>
+                            </div>
+                            <div>
+                                <label for="fs-properties-license" data-i18n="view.prop.head.license"></label>
+                                <input id="fs-properties-license" type="text"/>
+                            </div>
+                        </fieldset>
+                    </dd>
+                    <dt id="fs-content-view-title-history">
+                        <span data-i18n="nav.view.history"></span>
+                        <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
+                        <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
+                    </dt>
+                    <dd id="fs-history">
+                        <ul></ul>
+                        <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                    </dd>
+                    <dt id="fs-content-view-title-events">
+                        <span data-i18n="nav.view.events"></span>
+                        <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
+                        <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
+                    </dt>
+                    <dd id="fs-events">
+                        <ul></ul>
+                    </dd>
+                    <dt id="fs-content-view-title-advanced">
+                        <span data-i18n="nav.view.advanced"></span>
+                        <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
+                        <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
+                    </dt>
+                    <dd id="fs-advanced">
+                        <div class="fs-advanced-group">
+                            <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
+                            <label for="fs-readonly" data-i18n="view.advanced.readonly"></label>
                         </div>
-                    </div>
-                </div>
-                <div class="fs-view-content" id="fs-history">
-                    <ul></ul>
-                    <input type="submit" name="restore" data-i18n="[value]view.history.restore">
-                </div>
-                <div class="fs-view-content" id="fs-share-collection">
-                    <p class="fs-hint" data-i18n="view.share.hint_add"></p>
-                    <div>
-                        <input type="text" name="share_role" data-i18n="[placeholder]view.share.search_user">
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th data-i18n="view.share.resource"></th>
-                                <th data-i18n="view.share.full_access"></th>
-                                <th data-i18n="view.share.ro"></th>
-                                <th data-i18n="view.share.wo"></th>
-                                <th data-i18n="view.share.wp"></th>
-                                <th></th>
-                            </tr>                                                            
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                    <div>
-                        <input type="submit" name="share" data-i18n="[value]view.share.create"/> 
-                    </div>
-                    <div class="fs-share-remove">
-                        <p class="fs-hint" data-i18n="view.share.hint_remove"></p>   
-                        <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/> 
-                    </div>
-                </div>
-                <div class="fs-view-content" id="fs-share-link">
-                    <p class="fs-hint" data-i18n="view.share.hint_create_url"></p>
-                    <div id="fs-link-options">
-                        <div>
-                            <input type="text" readonly="readonly" name="file_url">
+                        <div class="fs-advanced-group">
+                            <p data-i18n="view.advanced.destroyable"></p>
+                            <input type="text" name="destroy_at">
                         </div>
-                    </div>
-                    <div>
-                        <p data-i18n="view.share.expiration"></p>
-                        <input type="text" name="share_expiration"> 
-                    </div>
-                    <div>
-                        <p data-i18n="view.share.password"></p>
-                        <input type="password" name="share_password"> 
-                    </div>
-                    <div>
-                        <input type="submit" name="share" data-i18n="[value]view.share.create"/> 
-                    </div>
-                    <div class="fs-share-remove">
-                        <p class="fs-hint" data-i18n="view.share.hint_remove_url"></p>
-                        <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/> 
-                    </div>                    
-                </div>
-                <div class="fs-view-content" id="fs-events">
-                    <ul></ul>
-                </div>
-                <div class="fs-view-content" id="fs-advanced">
-                    <div>
-                        <p data-i18n="view.advanced.destroyable"></p>
-                        <input type="text" name="destroy_at"> 
-                    </div>
-                    <div>
-                        <p data-i18n="view.advanced.readonly"></p>
-                        <div class="fs-onoffswitch">
-                           <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
-                           <label for="fs-readonly" class="fs-onoffswitch-label"/>
+                        <div class="fs-advanced-group">
+                            <input type="submit" name="submit" data-i18n="[value]button.save"/>
                         </div>
-                    </div>
-                    <div>
-                        <input type="submit" name="submit" data-i18n="[value]button.save"/> 
-                    </div>
-                </div>
-            </div> 
-        </div>     
+                    </dd>
+                </dl>
+            </div>
+        </div>
     </div>
+
+
+
 
     <div id="fs-upload-progress">
         <div id="fs-upload-progress-bar">
@@ -422,22 +534,25 @@
             <span>0%</span>
         </div>
      </div>
-    
+
     <div id="fs-edit-live">
         <textarea></textarea>
         <input type="submit" data-i18n="[value]view.preview.save">
     </div>
-    
+
     <div id="fs-display-live">
         <div id="fs-display-left"></div>
         <div id="fs-display-content"></div>
         <div id="fs-display-right"></div>
     </div>
-    
+
     <div id="fs-event-window" data-i18n="[title]login.events">
-        <ul></ul>
+        <div id="fs-event-window-content">
+            <ul></ul>
+            <div id="fs-event-window"></div>
+        </div>
     </div>
-    
+
     <div id="fs-profile-window" data-i18n="[title]login.profile">
         <div id="fs-profile-avatar"></div>
 
@@ -494,7 +609,7 @@
             <ul></ul>
         </fieldset>
     </div>
-    
+
     <div id="fs-hint-window" class="fs-prompt-window" data-i18n="[title]hint.did_you_know">
         <div id="fs-hint-window-content"></div>
         <div id="fs-hint-window-button-wrapper">
@@ -502,7 +617,7 @@
             <input type="button" tabindex="1" name="next" data-i18n="[value]hint.next_hint"/>
         </div>
     </div>
-    
+
     <div id="fs-prompt-window" class="fs-prompt-window" data-i18n="[title]prompt.confirm">
         <div id="fs-prompt-window-content"></div>
         <div id="fs-prompt-window-button-wrapper">
@@ -510,7 +625,7 @@
             <input type="button" tabindex="1" name="cancel" data-i18n="[value]prompt.cancel"/>
         </div>
     </div>
-    
+
     <iframe style="display: none;" id="fs-fetch-file"></iframe>
     <div id="fs-status-message"></div>
 
@@ -520,7 +635,7 @@
         <p></p>
         <div class="fs-uploadmgr-area" data-i18n="uploadmgr.progress"></div>
         <div id="fs-uploadmgr-total-progress"><div></div></div>
-        
+
         <div id="fs-uploadmgr-files"></div>
         <div id="fs-uploadmgr-files-progress"><div></div></div>
 

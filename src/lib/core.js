@@ -155,15 +155,15 @@ var balloon = {
     balloon.kendoFixes();
 
     var $fs_browser_layout = $("#fs-browser-layout");
+    var $fs_layout_left = $("#fs-layout-left");
+
     if($fs_browser_layout.data('kendoSplitter') === undefined) {
       $fs_browser_layout.kendoSplitter({
         panes: [
-          { collapsible: true, size: "13%", min: "13%" },
-          { collapsible: true, size: "50%", min: "25%" },
-          { collapsible: true, size: "37%", min: "35%", collapsed: true },
+          { collapsible: false, min: "25%" },
+          { collapsible: true, size: "400px", min: "400px", collapsed: true },
         ],
-        scrollable: false,
-        collapsed: true,
+        scrollable: false
       });
     }
 
@@ -173,8 +173,7 @@ var balloon = {
     balloon.createDatasource();
     balloon.initCrumb();
 
-    $("#fs-browser-action").find(".fs-action-element").unbind('click').click(balloon.doAction);
-    $("#fs-browser-select-action").find(".fs-action-element").unbind('click').click(balloon.doAction);
+    $(".fs-action-element").unbind('click').click(balloon.doAction);
     $("#fs-browser-header").find("> div").unbind('click').click(balloon._sortTree);
 
     $(document).unbind('drop').on('drop', function(e) {
@@ -533,7 +532,7 @@ var balloon = {
     //keyup/keydown node selection
     if(e.keyCode === 38 || e.keyCode === 40) {
       if($("#fs-share-collection").find("input[name=share_role]").is(':focus')
-      || $('#fs-properties-meta-tags').hasClass('fs-select-tags')) {
+      || $('#fs-properties-meta-tags-tags').hasClass('fs-select-tags')) {
         return;
       }
 
@@ -666,7 +665,7 @@ var balloon = {
       //rename node (F2)
       case 113:
         if(balloon.last !== undefined) {
-          balloon.initRenameBrowser(balloon.last);
+          balloon.initRename();
         }
       break;
     }
@@ -795,7 +794,7 @@ var balloon = {
   _treeDataBound: function(e) {
     balloon.resetDom(['multiselect', 'action-bar']);
 
-    var actions = ['file', 'folder', 'upload', 'refresh', 'filter'];
+    var actions = ['file', 'folder', 'upload', 'refresh', 'filter', 'rename'];
 
     if(balloon.selected_action.command !== null) {
       actions.push('paste');
@@ -832,7 +831,8 @@ var balloon = {
          $that.addClass('fs-node-deleted');
       }
 
-      var order = ['name', 'shared', 'deleted', 'sharelink', 'tag', 'size', 'changed'];
+      var order = ['icon', 'name', 'meta', 'size', 'changed', 'checkbox'];
+      var metaOrder = ['tag', 'sharelink', 'deleted'];
       $that.attr('fs-id', balloon.id(node));
 
       if(node.directory === true) {
@@ -842,71 +842,79 @@ var balloon = {
       }
 
       var $that_k_in = $that.find('.k-in');
-      $that_k_in.first().find('.fs-browser-meta').remove();
-      $that_k_in.first().append('<div class="fs-browser-meta"></div>');
-      var html_children = [];
+      var $node_el = $that_k_in.first();
+      $node_el.empty();
 
       for(var prop in order) {
         switch(order[prop]) {
-          case 'sharelink':
-            if(node.sharelink === true) {
-              html_children.push('<div class="fs-node-shared gr-icon gr-i-hyperlink"></div>');
-            } else {
-              html_children.push('<div>&nbsp;</div>');
-            }
-          break;
-
           case 'changed':
             var ts  = node.changed.sec*1000,
               date  = new Date(ts),
               since = balloon.timeSince(date);
 
-            html_children.push('<span class="fs-meta-info">'+since+'</span>');
+            $node_el.append('<div class="fs-browser-column fs-browser-column-changed">'+since+'</div>');
           break;
-
-          case 'deleted':
-            if(node.deleted !== false) {
-              html_children.push('<div class="fs-node-shared gr-icon gr-i-trash"></div>');
-            } else {
-              html_children.push('<div>&nbsp;</div>');
-            }
-          break;
-
           case 'size':
+            var size = '';
             if(!node.directory) {
-              html_children.push('<span class="fs-meta-info">'+balloon.getReadableFileSizeString(node.size)+'</span>');
+              size = balloon.getReadableFileSizeString(node.size || 0);
             }
+
+            $node_el.append('<div class="fs-browser-column fs-browser-column-size">'+size+'</div>');
+          break;
+
+          case 'meta':
+            var meta_html_children = [];
+            for(var metaProp in metaOrder) {
+              switch(metaOrder[metaProp]) {
+                case 'sharelink':
+                  meta_html_children.push('<div class="fs-node-shared"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#hyperlink"></use></svg></div>');
+
+                  /*if(node.sharelink === true) {
+                    meta_html_children.push('<div class="fs-node-shared"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#hyperlink"></use></svg></div>');
+                  } else {
+                    meta_html_children.push('<div>&nbsp;</div>');
+                  }*/
+                break;
+                case 'deleted':
+                  meta_html_children.push('<div class="fs-node-shared"><svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg></div>');
+
+                  /*if(node.deleted !== false) {
+                    meta_html_children.push('<div class="fs-node-shared"><svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg></div>');
+                  } else {
+                    meta_html_children.push('<div>&nbsp;</div>');
+                  }*/
+                break;
+                case 'tag':
+                  var color = node.meta.color,
+                    color_tag;
+                  if(typeof color != "undefined"){
+                    color_tag = '<span style="background-color: '+color+';" class="fs-color-tag"></span>';
+                    meta_html_children.push(color_tag);
+                  }
+                break;
+              }
+            }
+            $node_el.append('<div class="fs-browser-column fs-browser-column-meta">' + meta_html_children.join('') + '</div>');
           break;
 
           case 'name':
             var ext = balloon.getFileExtension(node);
             if(ext != null && !node.directory) {
-              var sprite = $that.find('.k-sprite').addClass('gr-icon')[0].outerHTML;
-              var name = '<span class="fs-browser-name">'+node.name.substr(0, node.name.length-ext.length-1)+'</span> <span class="fs-ext">[.'+ext+']</span>';
-              $that_k_in.html(sprite+name+$(this).find('.k-in > .fs-browser-meta')[0].outerHTML);
+              $node_el.append('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name.substr(0, node.name.length-ext.length-1)+'</span><span class="fs-ext">&nbsp;('+ext+')</span></div>');
             }
             else {
-               var sprite = $(this).find('.k-sprite').addClass('gr-icon')[0].outerHTML;
-               $that_k_in.html(sprite+'<span class="fs-browser-name">'+node.name+'</span>'+$that.find('.fs-browser-meta')[0].outerHTML);
+              $node_el.append('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name+'</span></div>');
             }
           break;
-
-          case 'tag':
-            var color = node.meta.color,
-              color_tag;
-            if(typeof color != "undefined"){
-              color_tag = '<span style="background-color: '+color+';" class="fs-color-tag"></span>';
-            }
-            else{
-              color_tag = '<span style="background-color: transparent;" class="fs-color-tag"></span>';
-            }
-
-            html_children.push(color_tag);
-
+          case 'icon':
+            var spriteClass = balloon.getSpriteClass(node);
+            $node_el.append('<div class="fs-browser-column fs-browser-column-icon"><svg class="gr-icon  ' + spriteClass + '"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg></div>');
+          break;
+          case 'checkbox':
+            $node_el.append('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
           break;
         }
-
-        $that_k_in.find('.fs-browser-meta').html(html_children.join(''));
       }
 
       if(node.directory) {
@@ -932,8 +940,7 @@ var balloon = {
       var dom_node = $('li[data-uid='+rename_match.uid+']');
       $k_tree.select(dom_node);
       $k_tree.trigger('select', {node: dom_node});
-
-      balloon.initRenameBrowser(rename_match);
+      balloon.initRename();
       balloon.added_rename = null;
       rename_match = false;
     }
@@ -973,7 +980,7 @@ var balloon = {
 
     var actions = ['download', 'delete', 'refresh'];
     if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
-      actions.push('file', 'folder', 'upload', 'cut', 'copy', 'filter');
+      actions.push('file', 'folder', 'upload', 'cut', 'copy', 'filter', 'rename');
     }
     if(balloon.last.deleted !== false) {
       actions.push('restore', 'delete');
@@ -983,7 +990,7 @@ var balloon = {
     }
 
     balloon.showAction(actions);
-    $('.fs-action-select-only').css('display','inline-block');
+    //$('.fs-action-select-only').css('display','inline-block');
 
     if(balloon.isSystemNode(node) || balloon.isMultiSelect()) {
        e.preventDefault();
@@ -1026,10 +1033,6 @@ var balloon = {
     balloon.switchView(view);
     $('#fs-properties-name').show();
 
-    var $fs_view_bar_li = $('#fs-view-bar').find('li');
-    $fs_view_bar_li.removeClass('fs-view-bar-active');
-    $('#fs-view-'+view).addClass('fs-view-bar-active');
-
     if(balloon.last.directory) {
       if(balloon.last.deleted !== false) {
         balloon.showView(['preview', 'properties', 'events', 'advanced']);
@@ -1046,12 +1049,9 @@ var balloon = {
       }
     }
 
-    $fs_view_bar_li.unbind('click').click(function() {
+    $('#fs-content-view dt').unbind('click').not('.disabled').click(function() {
       var $that = $(this),
-        action = $that.attr('id').substr(8);
-
-      $fs_view_bar_li.removeClass('fs-view-bar-active');
-      $that.addClass('fs-view-bar-active');
+          action = $that.attr('id').substr(22);
 
       if(balloon.getViewName() != action) {
         balloon.switchView(action);
@@ -1367,6 +1367,9 @@ var balloon = {
       success: function(body) {
         var $node,
           $icon,
+          $text,
+          $action,
+          icon,
           $undo,
           undo,
           username,
@@ -1395,9 +1398,6 @@ var balloon = {
           undo    = false;
           date    = kendo.toString(new Date((body.data[log].timestamp.sec*1000)), kendo.culture().calendar.patterns.g);
           operation = balloon.camelCaseToUnderline(body.data[log].operation);
-          $node   = $('<li></li>');
-          $icon  = $('<div class="gr-icon"></div>');
-          $node.append($icon);
 
           switch(body.data[log].operation) {
             case 'deleteCollectionReference':
@@ -1405,71 +1405,82 @@ var balloon = {
             case 'deleteCollection':
             case 'deleteFile':
               undo = true;
-              $icon.addClass('gr-i-trash');
+              icon = 'trash';
               break;
             case 'forceDeleteCollectionReference':
             case 'forceDeleteCollectionShare':
             case 'forceDeleteCollection':
             case 'forceDeleteFile':
-              $icon.addClass('gr-i-trash');
+              icon = 'trash';
               break;
             case 'addCollection':
               undo = true;
-              $icon.addClass('gr-i-folder-add');
+              icon = 'folder-add';
               break;
             case 'addFile':
               undo = true;
-              $icon.addClass('gr-i-file-add');
+              icon = 'file-add';
               break;
             case 'addCollectionShare':
             case 'addCollectionReference':
               undo = true;
-              $icon.addClass('gr-i-group');
+              icon = 'group';
               break;
             case 'unshareCollection':
               undo = false;
-              $icon.addClass('gr-i-group');
+              icon = 'group';
               break;
             case 'editFile':
               undo = true;
-              $icon.addClass('gr-i-pencil');
+              icon = 'pencil';
               break;
             case 'undeleteFile':
             case 'undeleteCollection':
             case 'undeleteCollectionReference':
             case 'undeleteCollectionShare':
               undo = true;
-              $icon.addClass('gr-i-restore-trash');
+              icon = 'restore-trash';
               break;
             case 'restoreFile':
               undo = true;
-              $icon.addClass('gr-i-restore');
+              icon = 'restore';
               break;
             case 'renameFile':
             case 'renameCollection':
             case 'renameCollectionShare':
             case 'renameCollectionReference':
               undo = true;
-              $icon.addClass('gr-i-italic');
+              icon = 'italic';
               break;
             case 'moveFile':
             case 'moveCollection':
             case 'moveCollectionReference':
             case 'moveCollectionShare':
               undo = true;
-              $icon.addClass('gr-i-paste');
+              icon = 'paste';
               break;
             case 'copyFile':
             case 'copyCollection':
             case 'copyCollectionReference':
               undo = true;
-              $icon.addClass('gr-i-copy');
+              icon = 'copy';
               break;
           }
 
+          $node = $('<li></li>');
+
+          $icon = $('<div class="fs-events-icon"><svg class="gr-icon"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#undo"></use></svg></div>');
+          balloon._spriteIcon($icon, icon);
+          $node.append($icon);
+
+          $text = $('<div class="fs-events-text"></div>');
+          $action = $('<p></p>');
+          $text.append($action);
+
+          $node.append($text);
 
           if(body.data[log].share !== null && share_events.indexOf(body.data[log].operation) == -1) {
-            $node.append(i18next.t('events.share', {
+            $action.append(i18next.t('events.share', {
               share:  body.data[log].share.name,
             })+' ');
           }
@@ -1490,7 +1501,7 @@ var balloon = {
             body.data[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
-          $node.append(i18next.t('events.'+operation, {
+          $action.append(i18next.t('events.'+operation, {
             user:   username,
             name:   body.data[log].name,
             previous: body.data[log].previous,
@@ -1499,12 +1510,6 @@ var balloon = {
 
           if(body.data[log].node === null) {
             undo = false;
-          }
-
-          if(undo === true) {
-            $undo = $('<div class="gr-icon gr-i-undo"></div>').unbind('click').bind('click',
-              body.data[log], balloon._undoEvent);
-            $node.append($undo);
           }
 
           var app = body.data[log].client.type;
@@ -1528,7 +1533,15 @@ var balloon = {
             via += ' ('+body.data[log].client.hostname+')';
           }
 
-          $node.append('<span class="fs-event-time">'+via+'</span>');
+          $text.append('<p class="fs-event-time">'+via+'</p>');
+
+
+          if(undo === true) {
+            $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#undo"></use></svg></div>').unbind('click').bind('click',
+              body.data[log], balloon._undoEvent);
+            $node.append($undo);
+          }
+
           $dom.append($node);
         }
       },
@@ -1793,7 +1806,8 @@ var balloon = {
       balloon.resetDom(['search']);
     }
 
-    if(action === 'cloud') {
+    // TODO pixtron - can this be removed?
+    /*if(action === 'cloud') {
       balloon.resetDom('breadcrumb-home');
       $('#fs-crumb-search-list').hide();
       $('#fs-crumb-home-list').show();
@@ -1802,7 +1816,7 @@ var balloon = {
       $('#fs-crumb-home-list').hide();
       $('#fs-crumb-search-list').show();
       $('#fs-crumb-search').find('div:first-child').html($that.find('div:last-child').html());
-    }
+    }*/
 
     if(exec === false) {
       return;
@@ -1846,8 +1860,9 @@ var balloon = {
    * @return void
    */
   switchView: function(view) {
-    $('.fs-view-content').hide();
-    var $view = $('#fs-'+view).show();
+    $('#fs-content-view').find('dt,dd').removeClass('active');
+    var $title = $('#fs-content-view-title-'+view).addClass('active');
+    $title.next().addClass('active');
 
     switch(view) {
       case 'properties':
@@ -1866,7 +1881,7 @@ var balloon = {
         balloon.shareLink(balloon.getCurrentNode());
       break;
       case 'events':
-        var $view_list = $view.find('ul');
+        var $view_list = $('#fs-events ul');
         balloon.displayEventsInfiniteScroll($view_list, balloon.getCurrentNode());
         balloon.displayEvents($view_list, balloon.getCurrentNode());
       break;
@@ -2242,6 +2257,8 @@ var balloon = {
    * @return  void
    */
   _searchResetClick: function(e) {
+    // TODO pixtron - can this method be removed?
+    return false;
     var $input = $('#fs-action-search').find('input:text')
       .val('');
 
@@ -2254,7 +2271,7 @@ var balloon = {
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list').hide();
     $fs_crumb_search_list.find('li').remove();
-    $fs_crumb_search_list.append('<li fs-id="" id="fs-crumb-search"><div>'+i18next.t('nav.search')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
+    $fs_crumb_search_list.append('<li fs-id="" id="fs-crumb-search"><div>'+i18next.t('nav.search')+'</div></li>');
 
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
       'view-bar', 'history', 'share-collection', 'share-link', 'search']);
@@ -2374,9 +2391,9 @@ var balloon = {
                 data = {data:[]};
               }
               var pool = data.data;
-              for(var node in pool) {
+              /*for(var node in pool) {
                 pool[node].spriteCssClass = balloon.getSpriteClass(pool[node]);
-              }
+              }*/
 
               if(balloon.datasource._ds_params.action == '_FOLDERDOWN') {
                 balloon.addCrumbRegister(balloon.getCurrentNode());
@@ -2636,86 +2653,27 @@ var balloon = {
 
 
   /**
-   * Rename node directly in the browser
+   * Rename the selected node
    *
-   * @param   object node
    * @return  void
    */
-  initRenameBrowser: function(node) {
-    balloon.rename_node = node;
-    var $target = $('li[data-uid='+node.uid+']').find('.k-in')
-      .addClass('fs-rename');
-
-    $target.find('.fs-ext').hide();
-
-    var value = node.name,
-      name  = $target.find('.fs-browser-name').html();
-
-    $target.find('.fs-browser-name')
-      .html('<input name="rename" value="'+value+'"/>');
-
-    var ext = balloon.getFileExtension(node);
-    balloon.rename_input = $target.find('input').focus();
-    if(ext === null) {
-       balloon.rename_input.select();
-    } else {
-      var length = node.name.length - ext.length - 1;
-      balloon.rename_input[0].setSelectionRange(0, length);
-    }
-
-    $(document).unbind('click').click(function(e) {
-       if($(e.target).attr('name') == 'rename') {
-        return;
-      }
-
-      if(node.id == balloon.rename_node.id) {
-        balloon.rename_input.parent().removeClass('fs-rename');
-      }
-
-      balloon._rename();
-    });
-
-    balloon.rename_input.keyup(function(e) {
-       e.stopImmediatePropagation();
-
-      if(e.which === 27) {
-        balloon.resetRename(name);
-      } else if(e.which === 13) {
-        if(node.id == balloon.rename_node.id) {
-          balloon.rename_input.parent().removeClass('fs-rename');
-        }
-
-        balloon._rename();
-      }
-    });
-  },
-
-
-  /**
-   * Rename the selected node in the right view
-   *
-   * @param   object e
-   * @return  void
-   */
-  initRenameProperties: function(e) {
+  initRename: function() {
     if(balloon.rename_node !== null && balloon.rename_node !== undefined ){
       return;
     }
 
-    var $fs_properties_name = $('#fs-properties-name'),
-      $target       = $fs_properties_name.find('.fs-value'),
-      node        = balloon.getSelected(),
-      $input        = $('<input class="fs-filename-rename" type="text" value="'+ node.name +'" />'),
-      name        = $target.html();
+    var node = balloon.getSelected(),
+        $target = $('#fs-browser').find('li[fs-id='+node.id+']').find('.fs-browser-column-name'),
+        $input = $('<input class="fs-filename-rename" type="text" value="'+ node.name +'" />');
 
     balloon.rename_node = node;
     balloon.rename_input = $input;
+    balloon.rename_original = $target.html();
 
-    $fs_properties_name.find('.fs-ext').hide();
     $target.html($input);
-    var $e_target = $(e.target);
 
     $input.focus();
+
     var ext = balloon.getFileExtension(node);
     if(ext === null) {
        $input.select();
@@ -2724,8 +2682,10 @@ var balloon = {
       $input[0].setSelectionRange(0, length);
     }
 
-    $(document).unbind('click').click(function(e) {
+    //TODO pixtron - can this be removed? should be handled by $input.focusout() below
+    /*$(document).unbind('click').click(function(e) {
       var $some_target = $(e.target);
+
       if($some_target.attr('id') == 'fs-properties-name'  ||
       $some_target.parent().attr('id') == 'fs-properties-name' ||
       $some_target.parent().parent().attr('id') == 'fs-properties-name') {
@@ -2734,12 +2694,17 @@ var balloon = {
 
       balloon._rename();
       balloon._resetRenameView();
+    });*/
+
+    $input.focusout(function(e) {
+      balloon._rename();
+      balloon._resetRenameView();
     });
 
     $input.keyup(function(e) {
       e.stopImmediatePropagation();
       if(e.which === 27) {
-        balloon.resetRename(name);
+        balloon._resetRenameView();
       } else if(e.keyCode == 13) {
         balloon._rename();
         balloon._resetRenameView();
@@ -2754,6 +2719,8 @@ var balloon = {
    * @param string name
    */
   resetRename: function(name) {
+    //TODO pixtron - can this savely be removed?
+    return;
     var $parent = balloon.rename_input.parent();
     balloon.rename_input.remove().unbind('keyup');
     $parent.html(name);
@@ -2771,9 +2738,16 @@ var balloon = {
    * @return void
    */
   _resetRenameView: function(){
+    if(balloon.rename_input && balloon.rename_original) {
+      balloon.rename_input.parent().append(balloon.rename_original);
+    }
+
+    if(balloon.rename_input) {
+      balloon.rename_input.remove();
+    }
+
     balloon.rename_node = undefined;
     balloon.rename_input = null;
-    $('#fs-properties-name').find('.fs-value').find('input').remove();
   },
 
 
@@ -2788,33 +2762,15 @@ var balloon = {
     }
 
     var new_value = balloon.rename_input.val();
-    var parent = balloon.rename_input.parent();
-    balloon.rename_input.remove();
-    parent.html(new_value);
 
     balloon.rename_input.unbind('keyup');
-    $(document).unbind('click');
 
     if(new_value != balloon.rename_node.name) {
+      balloon.rename_original = null;
       balloon.rename_node.name = new_value;
-
-      var $browser_node = $('#fs-browser').find('li[fs-id='+balloon.rename_node.id+']').find('.k-in');
-
-      if(!balloon.rename_node.directory) {
-        var ext = balloon.getFileExtension(new_value);
-
-        if(ext != null) {
-          var sprite = '<span class="k-sprite gr-icon '+balloon.getSpriteClass(balloon.rename_node)+'"></span>';
-          var name = '<span class="fs-browser-name">'+new_value.substr(0, new_value.length-ext.length-1)+'</span> <span class="fs-ext">[.'+ext+']</span>';
-          $browser_node.html(sprite+name+$browser_node.find('.fs-browser-meta')[0].outerHTML);
-        }
-      } else {
-        $browser_node.find('.fs-browser-name').html(new_value);
-      }
 
       balloon.rename(balloon.rename_node, new_value);
     } else {
-      $('#fs-properties-name').find('.fs-ext').show();
       balloon._resetRenameView();
     }
   },
@@ -2902,7 +2858,7 @@ var balloon = {
       $selected.addClass('fs-multiselected');
     }
 
-    $('#fs-browser-summary').html(i18next.t('tree.selected', {count: balloon.multiselect.length}));
+    $('#fs-browser-summary').html(i18next.t('tree.selected', {count: balloon.multiselect.length})).show();
   },
 
 
@@ -3094,7 +3050,7 @@ var balloon = {
         $fs_error_win.parent().addClass('fs-error-window');
       },
       close: function() {
-         balloon.showAction(['file', 'menu', 'download', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
+         balloon.showAction(['file', 'menu', 'download', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter', 'rename']);
       }
      }).data("kendoWindow").center().open();
   },
@@ -3229,11 +3185,13 @@ var balloon = {
    * @return object
    */
   getCrumb: function() {
-    if(balloon.isSearch()) {
+    return $("#fs-crumb-home-list");
+    // TODO pixtron - can this be removed?
+    /*if(balloon.isSearch()) {
       return $("#fs-crumb-search-list");
     } else {
       return $("#fs-crumb-home-list");
-    }
+    }*/
   },
 
 
@@ -3282,7 +3240,8 @@ var balloon = {
       $($crumbs[0]).hide();
     }
 
-    var child = '<li fs-id="'+node.id+'"><div>'+node.name+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>';
+    //var child = '<li fs-id="'+node.id+'"><div>'+node.name+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>';
+    var child = '<li fs-id="'+node.id+'">'+node.name+'</li>';
     balloon.getCrumb().append(child);
   },
 
@@ -4276,6 +4235,8 @@ var balloon = {
    * @return bool
    */
   isSearch: function() {
+    // TODO pixtron - needs to be reimplemented
+    return false;
     return $('#fs-crumb-search-list').is(':visible') || $('#fs-action-search').find('input').val().length > 0;
   },
 
@@ -5008,7 +4969,7 @@ var balloon = {
 
 
   /**
-   * Display user quta
+   * Display user quota
    *
    * @return void
    */
@@ -5223,34 +5184,34 @@ var balloon = {
         id: balloon.id(node)
       },
       success: function(data) {
-        var icon, dom_node, ts, since, radio;
+        var action, dom_node, ts, since, radio;
         data.data.reverse();
 
         for(var i in data.data) {
           switch(data.data[i].type) {
             case 0:
-              icon = '<div class="gr-icon gr-i-add">'+ i18next.t('view.history.added')+'</div>';
+              action = '<span class="fs-history-text-action">'+ i18next.t('view.history.added')+'</span>';
             break;
 
             case 1:
-              icon = '<div class="gr-icon gr-i-pencil">'+ i18next.t('view.history.modified')+'</div>';
+              action = '<span class="fs-history-text-action">'+ i18next.t('view.history.modified')+'</span>';
             break;
 
             case 2:
               if(data.data[i].origin != undefined) {
-                icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data.data[i].origin)+'</div>';
+                action = '<span class="fs-history-text-action">'+i18next.t('view.history.restored_from', data.data[i].origin)+'</span>';
               }
               else {
-                icon = '<div class="gr-icon gr-i-restore">'+ i18next.t('view.history.restored')+'</div>';
+                action = '<span class="fs-history-text-action">'+ i18next.t('view.history.restored')+'</span>';
               }
             break;
 
             case 3:
-              icon = '<div class="gr-icon gr-i-trash">'+ i18next.t('view.history.deleted')+'</div>';
+              action = '<span class="fs-history-text-action">'+ i18next.t('view.history.deleted')+'</span>';
             break;
 
             case 4:
-              icon = '<div class="gr-icon gr-i-restore-trash">'+ i18next.t('view.history.undeleted')+'</div>';
+              action = '<span class="fs-history-text-action">'+ i18next.t('view.history.undeleted')+'</span>';
             break;
           }
 
@@ -5258,14 +5219,18 @@ var balloon = {
           ts = kendo.toString(new Date((data.data[i].changed.sec*1000)), kendo.culture().calendar.patterns.g)
 
           if(i != 0) {
-            radio = '<input type="radio" name="version" value="'+data.data[i].version+'"/>';
+            radio = '<div class="fs-history-select"><input type="radio" name="version" value="'+data.data[i].version+'"/></div>';
           } else {
-            radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data.data[i].version+'"/>';
+            radio = '<div class="fs-history-select"><input type="radio" name="version" value="'+data.data[i].version+'"/></div>';
           }
 
-          dom_node = '<li>'+radio+
-            '<div class="fs-history-version">'+i18next.t('view.history.version', data.data[i].version)+'</div>'+
-            icon+'<div class="fs-history-label">'+i18next.t('view.history.changed_by', data.data[i].user, since, ts)+'</div></li>';
+          dom_node = '<li' + (i == 0 ? ' class="selected"' : '') + '>'
+              + '<div class="fs-history-select"><input type="radio" name="version" value="'+data.data[i].version+'"' + (i == 0 ? ' checked' : '') + '/></div>'
+              + '<div class="fs-history-text">'
+                + '<h6><span class="fs-history-text-version">'+i18next.t('view.history.version', data.data[i].version)+'</span>'+action+'</h6>'
+                + '<p class="fs-history-label">'+i18next.t('view.history.changed_by', data.data[i].user, since, ts)+'</p>'
+            + '</div>';
+          + '</li>';
 
           $fs_history.append(dom_node);
         }
@@ -5274,6 +5239,11 @@ var balloon = {
         if(data.data.length > 1) {
           $submit.show();
         }
+
+        $fs_history.find('input').off('focus').on('focus', function(event) {
+          $fs_history.find('li').removeClass('selected');
+          $(this).parents().filter('li').addClass('selected');
+        });
 
         $submit.off('click').on('click', function(){
           var version = $fs_history.find('input[name=version]:checked').val();
@@ -5317,7 +5287,7 @@ var balloon = {
   _saveMetaAttributes: function() {
     var $that = $(this),
       value = $that.val(),
-      name  = $that.parent().attr('id').substr(14),
+      name  = $that.attr('id').substr(14),
       attrs = {};
 
     attrs[name] = value;
@@ -5349,12 +5319,13 @@ var balloon = {
       $fs_prop_file.show();
     }
 
-    var $fs_prop_tags = $("#fs-properties-meta-tags").show();
+    var $fs_prop_tags = $("#fs-properties-meta-tags-tags").show();
     $("#fs-properties-node").show();
 
     var success = function(data) {
       var $field;
       data.data = $.extend(true, data.data, node.toJSON());
+
       for(var prop in data.data) {
         $field = $('#fs-properties-'+prop).find('.fs-value');
         if(data.data[prop] != '' && data.data[prop] !== null) {
@@ -5385,20 +5356,16 @@ var balloon = {
 
           case 'name':
             var $fs_prop_name = $("#fs-properties-name");
-            $fs_prop_name.find(".gr-icon:first-child")
-              .removeAttr('class')
-              .addClass('gr-icon')
-              .addClass(node.spriteCssClass);
 
-            $field.parent().unbind('click').click(balloon.initRenameProperties);
-            var ext = balloon.getFileExtension(data.data);
+            var ext = balloon.getFileExtension(data.data),
+                name = data.data[prop];
 
             if(ext != null && node.directory == false) {
-              $fs_prop_name.find(".fs-ext").html('[.'+ext+']').show();
-              $field.html(data.data[prop].substr(0, data.data[prop].length-ext.length-1));
+              $fs_prop_name.find(".fs-ext").html('('+ext+')');
+              $field.html(name.substr(0, name.length-ext.length-1));
             } else {
               $fs_prop_name.find(".fs-ext").html('');
-              $field.html(data.data[prop]);
+              $field.html(name);
             }
           break;
 
@@ -5410,6 +5377,7 @@ var balloon = {
               switch(meta_attr) {
                 case 'color':
                   if(data.data[prop].color != undefined) {
+                    // TODO pixtron - wouldn't it make more sense to give names like colorTag1, colorTag2 ...
                     var $fs_prop_color = $('#fs-properties-'+prop+'-color');
                     var color = 'fs-color-'+data.data[prop].color.substr(1);
                     $fs_prop_color.find('.'+color).addClass('fs-color-selected');
@@ -5423,7 +5391,7 @@ var balloon = {
 
                   $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
                     balloon.initMetaTagCompletion();
-                    $('#fs-preview-add-tag').show();
+                    $('#fs-preview-add-tag').addClass('fs-add-tag-active');
                     $fs_prop_tags_parent
                       .find('input:text')
                       .focus()
@@ -5432,25 +5400,14 @@ var balloon = {
 
                   $fs_prop_tags.find('li').remove();
                   for(var tag in data.data.meta.tags) {
-                    children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+data.data.meta.tags[tag]+'</div></li>');
+                    children.push('<li><div class="tag-name">'+data.data.meta.tags[tag]+'</div><div class="fs-delete">x</div></li>');
                   }
 
                   $fs_prop_tags.find('ul').html(children.join(''));
                 break;
 
-                case 'description':
-                  $field = $('#fs-properties-'+meta_attr).find('textarea');
-                  $field.val(data.data.meta[meta_attr]);
-                break;
-
-                case 'coordinate':
-                  $field = $('#fs-properties-'+meta_attr).find('input');
-                  $field.val(data.data.meta[meta_attr]);
-                break;
-
-
                 default:
-                  $field = $('#fs-properties-'+meta_attr).find('input');
+                  $field = $('#fs-properties-'+meta_attr);
                   $field.val(data.data.meta[meta_attr]);
                 break;
               }
@@ -5544,11 +5501,11 @@ var balloon = {
    * @return void
    */
   initMetaTagCompletion: function() {
-    var $meta_tags = $('#fs-properties-meta-tags'),
+    var $meta_tags = $('#fs-properties-meta-tags-tags'),
       $meta_tags_parent = $meta_tags.parent(),
       $input = $meta_tags_parent.find('input');
 
-     $input.kendoAutoComplete({
+    $input.kendoAutoComplete({
       minLength: 0,
       dataTextField: "_id",
       dataSource: new kendo.data.DataSource({
@@ -5661,7 +5618,7 @@ var balloon = {
    */
   handleTags: function(node) {
     var last_tag,
-      $fs_prop_tags = $('#fs-properties-meta-tags'),
+      $fs_prop_tags = $('#fs-properties-meta-tags-tags'),
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
     $fs_prop_tags.unbind('click').on('click', 'li', function(e) {
@@ -5721,9 +5678,9 @@ var balloon = {
         return false;
       }
 
-      var $fs_prop_tags = $('#fs-properties-meta-tags');
+      var $fs_prop_tags = $('#fs-properties-meta-tags-tags');
       if($last_tag.attr('name') == 'add_tag') {
-        $fs_prop_tags.find('ul').append('<li><div class="fs-delete">x</div><div class="tag-name">'+value+'</div></li>');
+        $fs_prop_tags.find('ul').append('<li><div class="tag-name">'+value+'</div><div class="fs-delete">x</div></li>');
         $last_tag.val('').focus();
       }
       else {
@@ -5799,7 +5756,8 @@ var balloon = {
     }
 
     for(var element in elements) {
-      $('#fs-view-'+elements[element]).css('display', 'inline-block');
+      var $title = $('#fs-content-view-title-'+elements[element]).removeClass('disabled');
+      $title.next().removeClass('disabled');
     }
   },
 
@@ -5841,17 +5799,11 @@ var balloon = {
       $k_splitter = $fs_browser_layout.data('kendoSplitter'),
       $pannel  = $('#fs-'+pannel);
 
-    if(hide === true) {
-      if($pannel.width() !== 0) {
-        $k_splitter.toggle($pannel);
-      }
-    } else if(hide === false) {
-      if($pannel.width() === 0) {
-        $k_splitter.toggle($pannel);
-      }
-    } else {
-      $k_splitter.toggle($pannel);
+    if(hide === true && $pannel.width() === 0) {
+      return
     }
+
+    $k_splitter.toggle($pannel);
   },
 
 
@@ -5872,9 +5824,10 @@ var balloon = {
     }
 
     switch(name) {
-      case 'menu':
+      //TODO pixtron - remove the left menu is not a kendo splitter pannel anymore
+      /*case 'menu':
         balloon.togglePannel('menu-left');
-      break;
+      break;*/
       case 'upload':
         var $files = $('#fs-files');
         $files.unbind('change').change(function(e) {
@@ -5924,7 +5877,7 @@ var balloon = {
 
         if(balloon.selected_action.command === 'cut') {
           if(balloon.selected_action.collection == parent) {
-            balloon.showAction(['download', 'file', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
+            balloon.showAction(['download', 'file', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter', 'rename']);
           } else {
             balloon.move(balloon.selected_action.nodes, parent);
           }
@@ -5951,6 +5904,11 @@ var balloon = {
         $('#fs-action-filter-select').show().off('click', 'input[type=checkbox]')
           .on('click', 'input[type=checkbox]', balloon._filterTree);
       break;
+
+      case 'rename':
+        balloon.initRename();
+      break;
+
     }
   },
 
@@ -6056,6 +6014,7 @@ var balloon = {
         break;
 
         case 'properties':
+          //TODO pixtron - is this still needed?
           balloon._rename();
           balloon._resetRenameView();
           var $fs_prop = $('#fs-properties');
@@ -6063,7 +6022,7 @@ var balloon = {
           $fs_prop.find('textarea').val('');
           $fs_prop.find('input').val('');
           $fs_prop.find('select').val('');
-          $fs_prop.hide();
+
           $fs_prop.find("span").html('');
           $('#fs-properties-root').hide();
           $('#fs-properties-id').parent().show();
@@ -6089,12 +6048,12 @@ var balloon = {
         case 'preview':
           $('#fs-properties-share').parent().hide();
 
-          var $fs_meta_tags = $("#fs-properties-meta-tags");
+          var $fs_meta_tags = $("#fs-properties-meta-tags-tags");
           $fs_meta_tags.hide()
             .find('li').remove();
 
 
-          var $fs_preview_add_tag = $('#fs-preview-add-tag').hide(),
+          var $fs_preview_add_tag = $('#fs-preview-add-tag').removeClass('fs-add-tag-active'),
             $add   = $fs_preview_add_tag.find("input"),
             $k_add = $add.data('kendoAutoComplete');
 
@@ -6130,7 +6089,7 @@ var balloon = {
         break;
 
         case 'view-bar':
-          $('#fs-view-bar').find('li').hide();
+          $('#fs-content-view').find('dt,dd').addClass('disabled');
         break;
 
         case 'action-bar':
@@ -6207,14 +6166,16 @@ var balloon = {
         case 'breadcrumb-home':
           var $crumb = $('#fs-crumb-home-list');
           $crumb.find('li').remove();
-          $crumb.append('<li id="fs-crumb-home" fs-id=""><div>'+i18next.t('menu.cloud')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
+          //$crumb.append('<li id="fs-crumb-home" fs-id=""><div>'+i18next.t('menu.cloud')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
+          $crumb.append('<li id="fs-crumb-home" fs-id="">'+i18next.t('menu.cloud')+'</li>');
         break;
 
-        case 'breadcrumb-search':
+        // TODO pixtron - can this be removed?
+        /*case 'breadcrumb-search':
           var $crumb = $('#fs-crumb-search-list');
           $crumb.find('li').remove();
           $crumb.append('<li id="fs-crumb-search" fs-id=""><div>'+i18next.t('menu.search')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
-        break;
+        break;*/
 
         case 'shortcuts':
           $(document).unbind('keyup');
@@ -6732,6 +6693,16 @@ var balloon = {
       name = name+' ('+balloon.randomString(4)+').'+ext;
       return name;
     }
+  },
+
+  _spriteIcon: function($icon, icon) {
+    var iconUrl = $icon.find('use').attr('xlink:href');
+
+    $icon.find('svg').removeAttr('class')
+         .addClass('gr-icon')
+         .addClass('gr-i-'+icon);
+
+    $icon.find('use').attr('xlink:href', iconUrl.substr(0, iconUrl.indexOf('#')+1) + icon);
   }
 };
 

@@ -1,0 +1,7 @@
+#fs-events {
+  ul {
+    margin-bottom: 20px;
+
+    @include events-list;
+  }
+}

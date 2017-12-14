@@ -1,0 +1,23 @@
+// TDOO pixtron - implement this
+
+#fs-upload-progress {
+  .fs-status {
+      float: right;
+  }
+
+  .k-progress-status-wrap {
+      height: 0;
+  }
+}
+
+#fs-upload-progress-more {
+    bottom: 0px;
+    height: 25px;
+    position: absolute;
+    right: 0;
+
+    & > * {
+        float: right;
+        margin: 4px;
+    }
+}

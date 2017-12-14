@@ -1,0 +1,164 @@
+#fs-browser {
+  $headerHeight: 28px; //height of the header
+  $headerBorderColor: $colorLightGrey;
+  $nodeHeight: 50px; //height of a single node
+
+  $lineHeight: 24px;
+
+  $iconWidth: 24px;
+  $metaWidth: 72px;
+  $sizeWidth: 110px;
+  $changedWidth: 150px;
+  $checkboxWidth: 18px;
+
+  $columnPadding: 0 25px;
+
+  $border-radius: 4px;
+
+  .fs-browser-column {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: $columnPadding;
+    line-height: $lineHeight;
+    vertical-align: middle;
+    color: $colorMediumGrey;
+  }
+
+  .fs-browser-column-icon {
+    width: $iconWidth;
+    height: $iconWidth;
+    margin: 0;
+    padding: 0;
+  }
+
+  .fs-browser-column-changed {
+    width: $changedWidth;
+  }
+
+  .fs-browser-column-size {
+    width: $sizeWidth;
+  }
+
+  .fs-browser-column-checkbox {
+    @include checkbox($checkboxWidth);
+  }
+
+  #fs-browser-header {
+    border: 1px solid $headerBorderColor;
+    border-radius: $border-radius;
+    padding: 0 10px;
+    margin-bottom: 20px;
+
+    .fs-browser-column {
+      $paddingTopBottom: ($headerHeight - $lineHeight) / 2;
+
+      padding-top: $paddingTopBottom;
+      padding-bottom: $paddingTopBottom;
+      div {
+        display: inline-block;
+        width: auto;
+      }
+    }
+
+    .fs-browser-column-name {
+      width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+    }
+
+    .fs-browser-column-size,
+    .fs-browser-column-changed {
+      border-left: 1px dotted $headerBorderColor;
+    }
+
+
+    #fs-browser-header-checkbox {
+      width: $checkboxWidth;
+      height: $checkboxWidth;
+      border: 1px solid $colorMediumGrey;
+      border-radius: 2px;
+    }
+  }
+
+  #fs-browser-tree {
+
+    width: 100%;
+
+    // single node
+    .k-item {
+      $paddingTopBottom: ($nodeHeight - $lineHeight) / 2;
+      padding: $paddingTopBottom 10px;
+      margin: 0;
+
+      background-color: $colorWhite;
+      border: none;
+      border-radius: $border-radius;
+      margin-bottom: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(57, 165, 255, 0.1);
+      }
+
+      &[aria-selected="true"] {
+        @include shadow-selected;
+        border: 2px solid $colorActiveBlue;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .k-in {
+        display: block;
+        width: 100%;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+
+
+        .fs-browser-column-name {
+          width: calc(100% - #{$iconWidth} - #{$metaWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+          color: $colorDarkGrey;
+          font-size: 15px;
+
+          .fs-ext {
+            text-transform: uppercase;
+          }
+        }
+
+        .fs-browser-column-meta {
+          width: $metaWidth;
+          padding: 0;
+          color: $colorMediumGrey;
+
+          @include clearfix;
+
+          & > span,
+          & > div {
+            float: right;
+            display: inline-block;
+          }
+
+          .fs-node-shared {
+            height: 24px;
+          }
+
+          .fs-color-tag {
+            margin: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: $border-radius;
+          }
+        }
+      }
+    }
+
+    // selected node
+    .k-state-selected,
+    .fs-multiselected {
+      .fs-browser-column-checkbox {
+        @include checkboxChecked;
+      }
+    }
+  }
+}

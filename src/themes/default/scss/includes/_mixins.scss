@@ -1,0 +1,126 @@
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin checkbox($checkboxSize) {
+  width: $checkboxSize;
+  height: $checkboxSize;
+  padding: 0;
+  border: 1px solid $colorMediumGrey;
+  border-radius: 2px;
+  font-size: $checkboxSize;
+  line-height: $checkboxSize;
+  text-align: center;
+}
+
+@mixin checkboxChecked {
+  background-color: $colorActiveBlue;
+}
+
+@mixin icon-button($width:60px, $height:null) {
+  @if ($height == null) { $height: $width }
+
+  position: relative;
+  display: block;
+  width: $width;
+  height: $height;
+  cursor: pointer;
+  transition: color .5s ease-in-out, background-color .7s ease-in-out, border-color .7s ease-in-out;
+
+  .gr-icon {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right: 0;
+    margin: auto;
+  }
+}
+
+@mixin icon-button-small($width:60px, $height:null) {
+  @include icon-button($width, $height);
+
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: inline-block;
+  color: $colorActiveBlue;
+  border: 1px solid $colorLightGrey;
+  margin-right: 13px;
+
+  &:hover {
+    color: $colorHoverBlue;
+    border-color: $colorHoverBlue;
+  }
+}
+
+@mixin shadow-default {
+  box-shadow: 0 0 25px 0 rgba(77, 75, 89, 0.12);
+}
+
+@mixin shadow-hover {
+  box-shadow: 0 5px 30px 0 rgba(77, 75, 89, 0.24);
+}
+
+@mixin shadow-selected {
+  box-shadow: 0 2px 25px 0 rgba(77, 75, 89, 0.24);
+}
+
+@mixin events-list {
+  li {
+    @include clearfix;
+
+    $iconWidth: 40px;
+    $undoWidth: 45px;
+
+    border: 1px solid $colorLightGrey;
+    border-radius: 4px;
+    padding: 8px 0;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .fs-events-icon,
+    .fs-events-text,
+    .fs-events-undo {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .fs-events-icon {
+      width: $iconWidth;
+      color: $colorMediumGrey;
+      text-align: center;
+    }
+
+    .fs-events-text {
+      box-sizing: border-box;
+      width: calc(100% - #{$iconWidth} - #{$undoWidth});
+      padding: 0;
+
+      p {
+        line-height: 17px;
+        font-weight: 300;
+
+        &:first-child {
+          color: $colorDarkGrey;
+        }
+
+        .fs-event-name {
+          font-style: italic;
+        }
+      }
+    }
+
+    .fs-events-undo {
+      width: $undoWidth;
+      color: $colorActiveBlue;
+      text-align: center;
+    }
+  }
+}

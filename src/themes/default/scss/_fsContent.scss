@@ -1,0 +1,19 @@
+$fsContentSidePadding: 30px;
+
+@import './fsContent/fsBrowserSelectAction';
+@import './fsContent/fsPropertiesName';
+@import './fsContent/fsContentView';
+
+#fs-content {
+
+  border-top: 1px solid $colorBrightGrey;
+  background-color: $colorWhite;
+
+  #fs-content-inner {
+    height: 100%;
+    overflow-y: scroll;
+    border-bottom: 1px solid $colorBrightGrey;
+    box-sizing: border-box;
+    padding: 22px $fsContentSidePadding 0;
+  }
+}

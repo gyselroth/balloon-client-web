@@ -1,0 +1,18 @@
+// TDOO pixtron - implement this
+
+#fs-action-filter-select {
+  display: none;
+  position: absolute;
+  left: 156px;
+  top: 5px;
+  z-index: 5;
+
+  .gr-i-filter {
+    float: left;
+    background-color: #f4f4f4;
+    opacity: 1;
+    transition: none;
+    height: 27px;
+    margin-left: 2px;
+  }
+}

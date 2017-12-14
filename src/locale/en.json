@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "balloon",
+    "title": "Balloon",
     "disclaimer": "balloon v2.0.0-dev 2017"
   },
   "login": {
@@ -10,6 +10,7 @@
     "logout": "Logout",
     "events": "Events",
     "profile": "Profile",
+    "settings": "Settings",
     "error": {
       "server": "The balloon server reports an ongoing incident, please try it again later.",
       "basic": "Wrong username or password given.",
@@ -34,10 +35,11 @@
       "restore": "Restore",
       "search": "Search...",
       "toggle_menu": "Toggle Menu",
-      "copy": "Copy",   
+      "copy": "Copy",
       "cut": "Cut",
       "paste": "Paste",
-      "filter": "Filter"
+      "filter": "Filter",
+      "rename": "Rename"
     },
     "view": {
       "preview": "Preview",
@@ -90,7 +92,7 @@
   },
   "user": {
     "disk_space": "Disk space:",
-    "quota_left": "(%s left)",
+    "quota_left": "%s left",
     "quota_detail": "User quota: %s / %s (%s%%) => %s left"
   },
   "time": {

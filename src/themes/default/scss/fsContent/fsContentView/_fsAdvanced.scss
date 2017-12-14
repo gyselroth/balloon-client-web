@@ -1,0 +1,18 @@
+#fs-advanced {
+
+  .fs-advanced-group {
+    border-top: 1px solid $colorBrightGrey;
+    padding-bottom: 17px;
+    padding-top: 18px;
+
+    &:last-child {
+      padding-bottom: 0;
+    }
+
+    &:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+  }
+
+}

@@ -1,0 +1,23 @@
+// TDOO pixtron - implement this
+
+#fs-prompt-window {
+  display: none;
+
+  ul {
+      margin: 8px 0;
+      max-height: 300px;
+      overflow-y: auto;
+  }
+
+  #fs-prompt-window-content ul {
+    background: none;
+  }
+
+  #fs-prompt-window-content li {
+    font-weight: lighter;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 300px;
+  }
+}

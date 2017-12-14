@@ -20,6 +20,7 @@
     "i18next-xhr-backend": "*",
     "jquery-i18next": "*",
     "kendo-ui-core": "*",
+    "svgxuse": "^1.2.6",
     "ubuntu-fontface": "^0.1.13"
   },
   "devDependencies": {

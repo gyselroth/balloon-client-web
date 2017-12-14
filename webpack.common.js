@@ -3,6 +3,11 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+const extractSass = new ExtractTextPlugin({
+    filename: "[name].[contenthash].css",
+    disable: false
+});
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
@@ -34,6 +39,17 @@ module.exports = {
         loader: 'eslint-loader',
         exclude: /node_modules/
       },
+      {
+        test: /\.scss$/,
+        use: extractSass.extract({
+          use: [{
+            loader: "css-loader"
+          }, {
+            loader: "sass-loader"
+          }],
+          fallback: "style-loader"
+        })
+      }
     ]
   },
   plugins: [
@@ -45,10 +61,15 @@ module.exports = {
       filename: "balloon.css",
       allChunks: true
     }),
+    extractSass,
     new HtmlWebpackPlugin({
       hash: true,
       filename: 'index.html',
       template: 'index.html',
+      minify: {
+        collapseWhitespace: true,
+        preserveLineBreaks: false,
+      }
     })
   ]
 };

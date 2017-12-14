@@ -1,0 +1,24 @@
+// TDOO pixtron - implement this
+
+#fs-browser-layout {
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    z-index: 10;
+
+    .k-splitbar{
+      /*background: transparent;*/
+      border: none;
+      background-color: #FFF;
+      -webkit-box-shadow: inset 8px 0 4px -4px rgba(0, 0, 0, 0.08);
+      -moz-box-shadow:    inset 8px 0 4px -4px rgba(0, 0, 0, 0.08);
+      box-shadow:         inset 8px 0 4px -4px rgba(0, 0, 0, 0.08);
+
+      .gr-icon{
+          display: none;
+      }
+    }
+}

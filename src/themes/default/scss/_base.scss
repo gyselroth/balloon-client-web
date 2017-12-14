@@ -1,0 +1,96 @@
+input,
+select,
+textarea,
+button {
+  font-family: Ubuntu, arial, verdana, sans-serif !important;
+  display: block;
+  margin-bottom: 10px;
+}
+
+input,
+textarea,
+select {
+  border-radius: 4px;
+  border: 1px solid $colorLightGrey;
+  box-sizing: border-box;
+  width: 100%;
+  outline: none;
+  margin: 0;
+  line-height: 16px;
+  font-weight: 300;
+  color: $colorDarkGrey;
+}
+
+input,
+textarea {
+  padding: 6px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  width: auto;
+}
+
+input[type="checkbox"] {
+  display: inline;
+  opacity: 0;
+  width: 0;
+  margin: 0;
+  -webkit-appearance: none;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  & + label {
+    position: relative;
+    padding-left: 30px;
+    line-height: 17px;
+    display: inline-block;
+    vertical-align: text-top;
+    min-height: 20px;
+    margin-top: -3px;
+
+    &:before {
+      @include checkbox(18px);
+
+      content: "";
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      left: 0;
+      text-align: center;
+    }
+  }
+
+  &:checked + label,
+  &:checked:hover + label {
+
+    &:before,
+    &:hover:before {
+      @include checkboxChecked;
+    }
+  }
+}
+
+button,
+input[type="button"],
+input[type="submit"] {
+  border: 1px solid $colorLightGrey;
+  color: $colorActiveBlue;
+  line-height: 15px;
+  padding: 7px 14px 8px 14px;
+  width: auto;
+  cursor: pointer;
+
+  &.fs-button-primary {
+    border: none;
+    background-color: $colorActiveBlue;
+    font-weight: 400;
+    color: $colorWhite;
+    padding: 12px 14px 13px 14px;
+  }
+}
+
+//TODO pixtron - button hover
