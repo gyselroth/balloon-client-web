@@ -31,7 +31,7 @@ var balloon = {
   /**
    * API Version
    */
-  BALLOON_API_VERSION: 1,
+  BALLOON_API_VERSION: 2,
 
 
   /**
@@ -3478,8 +3478,13 @@ var balloon = {
     }
 
     balloon.resetDom('share-collection');
+    var $fs_share_collection     = $('#fs-share-collection'),
+      $fs_share_collection_tbl   = $fs_share_collection.find('table'),
+      $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
+      $share_name = $fs_share_collection.find("input[name=share_name]");
 
     if(!node.shared && !node.reference) {
+      $share_name.val(node.name);
       return balloon.prepareShare(node, []);
     }
 
@@ -3549,19 +3554,15 @@ var balloon = {
       $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
       $share_name = $fs_share_collection.find("input[name=share_name]");
 
-    /*if(data.data.acl === false) {
-      $share_name.val(node.name);
-    } */
-
     $fs_share_collection_tbl.off('click', '.gr-i-trash').on('click', '.gr-i-trash', function() {
       var $that = $(this),
         $parent = $that.parent().parent(),
         role = $parent.attr('fs-acl-name'),
         type = $parent.attr('fs-acl-type');
 
-      for(var i in acl[type]) {
-        if(acl[type][i][type] == role) {
-          acl[type].splice(acl[type].indexOf(acl[type][i]), 1);
+      for(var i in acl) {
+        if(acl[i].id == role) {
+          acl.splice(acl.indexOf(acl[i]), 1);
         }
       }
 
