@@ -21,11 +21,6 @@ if [[ ! -f /etc/ssl/balloon/key.pem && ! -f /etc/ssl/balloon/chain.pem ]]; then
   mv chain.pem /etc/ssl/balloon
 fi
 
-if [ ! -f /etc/nginx/sites-available/balloon ]; then
-  cp /usr/share/balloon-web/nginx/nginx.conf /etc/nginx/sites-available/balloon
+if [ ! -f /etc/nginx/conf.d/balloon.conf ]; then
+  cp /usr/share/balloon-web/nginx/nginx.conf /etc/nginx/conf.d/balloon.conf
 fi
-
-if [ ! -f /etc/nginx/sites-enabled/balloon ]; then
-  ln -s /etc/nginx/sites-available/balloon /etc/nginx/sites-enabled/balloon
-fi
-
