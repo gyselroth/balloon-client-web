@@ -64,8 +64,11 @@ $(DIST_DIR)/balloon-web-%-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
 	@mkdir -p $(PACK_DIR)/DEBIAN
 	@cp $(BASE_DIR)/packaging/debian/control-$* $(PACK_DIR)/DEBIAN/control
 	@sed -i s/'{version}'/$(VERSION)/g $(PACK_DIR)/DEBIAN/control
+	@if [ $* == "full" ]; then cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst; fi
 	@mkdir -p $(PACK_DIR)/usr/share/balloon-web
 	@cp -Rp $(BUILD_DIR)/* $(PACK_DIR)/usr/share/balloon-web
+	@mkdir $(PACK_DIR)/usr/share/balloon-web/nginx
+	@cp -Rp $(BASE_DIR)/packaging/nginx.conf $(PACK_DIR)/usr/share/balloon-web/nginx
 	@-test -d $(DIST_DIR) || mkdir $(DIST_DIR)
 	@dpkg-deb --build $(PACK_DIR) $@
 	@rm -rf $(PACK_DIR)
