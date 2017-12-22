@@ -1,4 +1,4 @@
-Package: balloon-web
+Package: balloon-web-full
 Version: {version}
 Architecture: all
 Maintainer: Raffael Sahli <sahli@gyselroth.com>
