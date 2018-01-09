@@ -21,6 +21,7 @@
     "quota_max": "Total Speicherplatz:",
     "quota_left": "Freier Speicherplatz:",
     "quota_used": "Benutzter Speicherplatz:",
+    "quota_unlimited": "Unlimitiert",
     "user": "Benutzer"
   },
   "nav": {
@@ -91,7 +92,8 @@
   "user": {
     "disk_space": "Speicherplatz:",
     "quota_left": "(%s übrig)",
-    "quota_detail": "Speicherplatz: %s / %s (%s%%) => %s übrig"
+    "quota_detail": "Speicherplatz: %s / %s (%s%%) => %s übrig",
+    "quota_unlimited": "%s von unlimitiert"
   },
   "time": {
     "year": "{{count}} Jahr",

@@ -18,3 +18,4 @@ First relese of the extracted web ui from the core server.
 * [FEATURE] Possibility to configure share node name https://github.com/gyselroth/balloon/issues/94
 * [FIX] Changeable node properties in readonly shares are not visible anymore (Only as readable decleration)
 * [FIX] share collection tab is not visible for sub share nodes
+* [FEATURE] Possibility to handle unlimited quota

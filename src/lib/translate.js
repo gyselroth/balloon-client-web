@@ -1,11 +1,10 @@
 /**
- * Balloon
+ * balloon
  *
- * @author    Raffael Sahli <sahli@gyselroth.net>
  * @copyright Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
  * @license   GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
-import * as $ from "jquery";
+import $ from "jquery";
 import i18next from 'i18next';
 import i18nextXHRBackend from 'i18next-xhr-backend';
 import i18nextBrowserLanguageDetector from 'i18next-browser-languagedetector';

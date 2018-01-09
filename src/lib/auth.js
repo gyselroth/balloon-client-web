@@ -1,12 +1,11 @@
 /**
- * Balloon
+ * balloon
  *
- * @author    Raffael Sahli <sahli@gyselroth.net>
  * @copyright Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
  * @license   GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
 
-import * as $ from "jquery";
+import $ from "jquery";
 import balloon from './core.js';
 const {AuthorizationServiceConfiguration} = require('@openid/appauth/built/authorization_service_configuration.js');
 const {AuthorizationRequest} = require('@openid/appauth/built/authorization_request.js');

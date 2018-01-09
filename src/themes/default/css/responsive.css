@@ -1,7 +1,6 @@
 /**
- * Balloon
+ * balloon
  *
- * @author      Raffael Sahli <sahli@gyselroth.net>
  * @copyright   Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
  * @license     GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
@@ -10,11 +9,11 @@
     #fs-search-reset-button {
         display: block !important;
     }
-    
+
     #fs-browser-layout #fs-action-search {
         width: 193px;
     }
-    
+
     #fs-action-search input {
         width: 166px;
     }
@@ -26,7 +25,7 @@
     #fs-action-filter-select .fs-onoffswitch-label {
         height: 24px;
     }
-      
+
     #fs-action-filter-select .fs-onoffswitch-label:before {
         width: 20px;
         right: 24px;
@@ -49,16 +48,16 @@
         z-index: 20;
         width: 200px !important;
     }
-    
+
     #fs-content {
         position: inherit !important;
         width: 100% !important;
     }
-        
+
     body {
         min-width: 800px !important;
     }
-    
+
     #fs-action-menu {
         display: none !important;
     }
@@ -99,7 +98,7 @@
     #fs-upload {
         display: none;
     }
-    
+
     .k-splittbar {
         display: none !important;
     }
@@ -112,7 +111,7 @@
 
     #fs-action-file {
         display: none !important;
-    }    
+    }
 
     #fs-identity-username {
         margin-top: 1px;
@@ -128,18 +127,18 @@
     #fs-browser-top-bar .fs-i-cloud {
         top: 7px;
         left: 10px;
-    }    
+    }
 
     #fs-identity .fs-icon {
         position: relative;
         top: -4px !important;
-    }    
+    }
 
     #fs-title  {
         left: 40px;
         top: 12px;
         font-size: 1em;
-    }    
+    }
 
     #fs-action-search .fs-i-search {
         filter: invert(0%);
@@ -148,7 +147,7 @@
 
     #fs-crumb {
         display: none;
-    } 
+    }
 
     #fs-hint-window, #fs-prompt-window {
         display: none;
@@ -171,8 +170,8 @@
     #fs-search-reset-button {
         top: 45px;
         margin-right: 8px;
-        font-size: 1.5em;    
-    }    
+        font-size: 1.5em;
+    }
 
     .k-overlay {
         opacity: 1 !important;
@@ -188,7 +187,7 @@
         width: inherit !important;
         background-color: #f4f4f4 !important;
     }
-    
+
     #fs-error-window {
         height: 100% !important;
     }
@@ -205,7 +204,7 @@
         background-color: #FFF;
         height: 51px !important;
     }
-    
+
     #fs-browser-select-action {
         background-color: #FFF;
     }
@@ -224,11 +223,11 @@
 
     #fs-browser-action .fs-icon, #fs-browser-select-action .fs-icon {
         transform: scale(1.5);
-    }   
+    }
 
     #fs-browser-tree .fs-icon {
         transform: scale(1.2);
-    }   
+    }
 
     #fs-browser-action li {
         margin-left: 15px !important;
@@ -239,7 +238,7 @@
         height: 25px;
         margin-top: 37px;
     }
-    
+
     .k-treeview .fs-browser-name {
         max-width: calc(100% - 100px) !important;
     }
@@ -282,7 +281,7 @@
     #fs-action-upload {
         margin-bottom: 2px !important;
     }
-    
+
     #fs-action-folder {
         margin-right: 4px !important;
     }
@@ -343,7 +342,7 @@
     }
 
     #fs-upload-progress-more {
-        font-size: 15px; 
+        font-size: 15px;
     }
 
     .fs-progress-filename {

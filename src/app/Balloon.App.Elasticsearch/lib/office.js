@@ -22,10 +22,10 @@ balloon.office = {
             balloon.office.promptSelectSessionJoin(node, doc);
           }
         }
-      } 
+      }
     });
   },
-    
+
   promptSelectSessionJoin: function(node, doc) {
     $("#fs-office-join-prompt").remove();
 
@@ -46,10 +46,10 @@ balloon.office = {
         +'</div>');
     $("#fs-namespace").append($div);
     $div.find('input[name=session]:first').attr('checked', true);
-        
+
     $div.find('input[name=join]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $div.data('kendoWindow').close(); 
+      $div.data('kendoWindow').close();
       balloon.office.joinSession(node, doc, $div.find('input[name=session]:checked').val());
     });
 
@@ -71,13 +71,13 @@ balloon.office = {
     $div.unbind('keydown').keydown(function(e) {
       if(e.keyCode === 27) {
         e.stopImmediatePropagation();
-        $k_prompt.close(); 
+        $k_prompt.close();
       }
     });
-    
+
     $div.find('input[name=new]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $k_prompt.close(); 
+      $k_prompt.close();
       balloon.office.newSession(node, doc);
     });
   },
@@ -93,13 +93,13 @@ balloon.office = {
             +'</div>'
         +'</div>');
     $("#fs-namespace").append($div);
-        
+
     $div.find('input[name=join]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $div.data('kendoWindow').close(); 
+      $div.data('kendoWindow').close();
       balloon.office.joinSession(node, doc, session.id);
     });
-            
+
     balloon.office.sessionPrompt($div, node, doc);
   },
 
@@ -109,7 +109,7 @@ balloon.office = {
       type: 'POST',
       success: function(session) {
         balloon.office.initLibreOffice(node, doc, session);
-      } 
+      }
     });
   },
 
@@ -120,7 +120,7 @@ balloon.office = {
       success: function(session) {
         session.data.id = session_id;
         balloon.office.initLibreOffice(node, doc, session);
-      } 
+      }
     });
   },
 
@@ -153,8 +153,8 @@ balloon.office = {
         });
       },
       open: function(e) {
-        balloon.office.showStartupPrompt();   
-            
+        balloon.office.showStartupPrompt();
+
         $('#fs-edit-office_wnd_title').html(
           $('#fs-browser-tree').find('li[fs-id="'+node.id+'"]').find('.k-in').find('> span').clone()
         );
@@ -162,7 +162,7 @@ balloon.office = {
         var src = 'https://'+window.location.hostname+balloon.base+'/app/office/wopi/document/'+session.data.id,
           src = encodeURIComponent(src),
           url = doc.loleaflet+'?WOPISrc='+src+'&title='+node.name+'&lang='+i18next.language+'&closebutton=0&revisionhistory=0';
-                
+
         $div.append(
           '<form method="post" action="'+url+'" target="loleafletframe">'+
                     '<input type="hidden" name="access_token" value="'+session.data.access_token+'"/>'+
@@ -196,9 +196,9 @@ balloon.office = {
     if(localStorage.app_office_hide_prompt == "true") {
       return;
     }
-        
+
     $("#fs-libreoffice-prompt").remove();
-        
+
     var $div = $('<div id="fs-libreoffice-prompt" class="fs-prompt-window" title="'+i18next.t('app.office.startup_prompt.title')+'">'
             +'<div id="fs-prompt-window-content">'+i18next.t('app.office.startup_prompt.message')+'</div>'
             +'<div id="fs-prompt-window-button-wrapper">'
@@ -207,7 +207,7 @@ balloon.office = {
             +'</div>'
         +'</div>');
     $("#fs-namespace").append($div);
-        
+
     var $k_prompt = $div.kendoWindow({
       title: $div.attr('title'),
       resizable: false,
@@ -222,23 +222,23 @@ balloon.office = {
     setTimeout(function(){
       $k_prompt.center().open();
     }, 700);
-        
+
     $div.unbind('keydown').keydown(function(e) {
       if(e.keyCode === 27) {
         e.stopImmediatePropagation();
-        $k_prompt.close(); 
+        $k_prompt.close();
       }
     });
 
     $div.find('input[name=close]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $k_prompt.close(); 
+      $k_prompt.close();
     });
-    
+
     $div.find('input[name=hide]').unbind('click').click(function(e) {
       localStorage.app_office_hide_prompt = true;
       e.stopImmediatePropagation();
-      $k_prompt.close(); 
+      $k_prompt.close();
     });
   }
 };
@@ -247,24 +247,24 @@ balloon._treeDblclick = function(e) {
   if(balloon.last.directory === true) {
     balloon.resetDom('selected');
   }
-        
+
   var supported_office = [
     'csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'
   ];
-    
+
   if(balloon.last !== null && balloon.last.directory) {
     balloon.togglePannel('content', true);
 
     var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
-        
+
     if(balloon.last.id == '_FOLDERUP') {
       var params = {},
         id     = balloon.getPreviousCollectionId();
 
       if(id !== null) {
-        params.id = id;    
+        params.id = id;
         balloon.refreshTree('/collection/children', params, null, {action: '_FOLDERUP'});
-      } else {    
+      } else {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       }
     } else {
@@ -272,7 +272,7 @@ balloon._treeDblclick = function(e) {
     }
 
     balloon.resetDom(
-      ['selected','properties','preview','action-bar','multiselect','view-bar', 
+      ['selected','properties','preview','action-bar','multiselect','view-bar',
         'history','share-collection','share-link']
     );
   } else if(supported_office.indexOf(balloon.getFileExtension(balloon.last.name)) > -1 && !balloon.isMobileViewPort()) {
@@ -280,7 +280,7 @@ balloon._treeDblclick = function(e) {
   } else if(balloon.isEditable(balloon.last.mime)) {
     balloon.editFile(balloon.getCurrentNode());
   } else if(balloon.isViewable(balloon.last.mime)) {
-    balloon.displayFile(balloon.getCurrentNode());            
+    balloon.displayFile(balloon.getCurrentNode());
   } else {
     balloon.downloadNode(balloon.getCurrentNode());
   }
@@ -293,7 +293,7 @@ balloon.addTextFile = balloon.addFile;
 balloon.addFile = function() {
   var $box = $('#fs-new-file');
   if($box.is(':visible')) {
-    $box.remove(); 
+    $box.remove();
     return;
   }
 
@@ -304,7 +304,7 @@ balloon.addFile = function() {
             '<li><span class="fs-i-file-word fs-icon"></span><span>'+i18next.t('app.office.word_document')+'</span></li>'+
             '<li><span class="fs-i-file-excel fs-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span></li>'+
             '<li><span class="fs-i-file-powerpoint fs-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span></li>'+
-        '</ul>'+    
+        '</ul>'+
     '</div>');
 
   var $bar = $('#fs-browser-action');
@@ -322,7 +322,7 @@ balloon.addFile = function() {
       balloon.addOfficeFile('xlsx');
     } else if($type.hasClass('fs-i-file-powerpoint')) {
       balloon.addOfficeFile('pptx');
-    } 
+    }
 
     $box.remove();
   });
@@ -334,7 +334,7 @@ balloon.addFile = function() {
 
     var $box = $('#fs-new-file');
     if($box.is(':visible')) {
-      $box.remove(); 
+      $box.remove();
     }
   });
 };
@@ -342,13 +342,13 @@ balloon.addFile = function() {
 balloon.addOfficeFile = function(type) {
   var new_name = i18next.t('tree.new_file'),
     name = new_name+'.'+type;
-    
+
   if(balloon.nodeExists(name)) {
     name = new_name+' ('+balloon.randomString(4)+').'+type;
   }
-    
+
   name = encodeURI(name);
-    
+
   balloon.xmlHttpRequest({
     url: balloon.base+'/app/office/document?type='+type+'&name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
     type: 'PUT',
