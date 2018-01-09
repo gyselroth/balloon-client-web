@@ -9,7 +9,8 @@ notifications:
 script: make
 before_deploy:
 - export version=$TRAVIS_TAG
-- if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export deb_distribution=stable; fi;
+- if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export
+  deb_distribution=stable; fi;
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then export deb_distribution=nightly; fi;
 - export date=$(date +%Y-%m-%d)
 - cp packaging/debian/bintray.json bintray.json
@@ -18,27 +19,31 @@ before_deploy:
 - sed -i s/'{deb_distribution}'/$deb_distribution/g bintray.json
 - cat bintray.json
 deploy:
-  - provider: releases
-    api_key:
-      secure: WXsFv62P7BYeM0s32rcGx/LqdwECQRvUJWJ8YDZ4jdv8w4O4vlCLURiwW/65WNi7peKiMpPmv7q/NOtNrXT1PDIMyeMeJvToHGELyepGex0v1goqfURExpIEm8ddC2HiJf7ctgk7V5CichL/1DpJ2BWzCMUi1OnhLfjWpXQz4OZN8X5XwcgtMjUzEy/Ry1xMbbhrBs4a3IKyBJsbN7TRWibHsJHfl5pvk5qq7xL2s8/5/vEwMDZYFdK8BraF9AOUSqTqrDv2dfdkQrbZNiS2vPGAHdP+YRGGlbZoyHU10wIYJ3zEJ5zVtnAxa7TawZaomPVo6eglr9EuE5D79LVQVHLpBiSfAUViYuZkgxaAgeh4lpgpHgjeIYbetZ4arAcpov3Dnkpqc2Iu95M2jN5ehFtSP23OBoSxseJ3aHwQEnKJy9N6Yhww+l6E6HGqUaa+cVlVdP2zhu462oWH/4HVb1V9yrXij5+/Lo/JWYw58t86gpQTL3DmQQ0SSSj/iwaTN/qpJtzRv2ZfTY7RDS/MUiCZLf8zJ4c+BzBUVBRhIvq8LGusVhszOUhkHqndtaGHGI0+anNvvCTLUv09tOhp1m7uLB6xRloxQPdIcYfNN20+WL/zUYqOLmUx3wc0bpLh8LCHj8wbGYW7RbYcKQw66BmKgfLxUdBEBISDkgKuYx0=
-    file_glob: true
-    file: dist/*
-    skip_cleanup: true
-    on:
-      master: true
-  - provider: bintray
-    file: bintray.json
-    user: raffis
-    key:
-      secure: dqYiouXasiWqN2J+OeZGVnyNkpP3In3+WL55OctHYdJJmUACxlfc4yislhtYZVLNJB3BP2GI/HXpgmGDMjP/X8qaFsup8FnHGge/3k/S8TEUP5NneFaGXXfWKi3yac0cYvO1FOi1B2rp50XvXco2ydg9ETD8ZSPzMiVysP3/iAzTeyAVvjkOIGUMNYH4XKVfuVg4ba6qeHGa3/GdIwF5OvDdj9T58cPjN7LHIUjDE1xEFtzgs4R0vclKfIJglOVHWmv2a6nOi9CQfaiVi6evGhHSoO9G25ragR1Nsiluijx/ASjPuTiG7ZU/1p7VlsKv5HVTVi/7ARtJZAkg9LjFp8T2DeWuA5kzt2v8rNU18bouSMZu49NGky4l0S4qJsYtB1Nof+Ti2tEBfifv1v//Ey5gRFVfLWPzJ7td55xm3JN5KynPIoIuW9XcgkLIlCZyGSsuxggqPnIUzGS79yybps1UQH6VrN2Hn94kO7aLrRahe61EkvgqUB6WYOM35OyaGinvVM+FIGeWWxtDXRzYLLoxxq6AP4CczSgSt3nUcdVVnwRg0m0vz/IKwg4SG4XEsLBleCNe8FJkdC8VN3mQyww1kgyxpxumE9WgebXFPBxRILqS+zcD33X0Rc5hrKy7A5fm0bfvFqMut+H+kvNlzVHtf0/gVd3h+p46pF2sr08=
-    on:
-      master: false
-      tags: true
-  - provider: bintray
-    file: bintray.json
-    user: raffis
-    on:
-      tags: true
-    key:
-      secure: dqYiouXasiWqN2J+OeZGVnyNkpP3In3+WL55OctHYdJJmUACxlfc4yislhtYZVLNJB3BP2GI/HXpgmGDMjP/X8qaFsup8FnHGge/3k/S8TEUP5NneFaGXXfWKi3yac0cYvO1FOi1B2rp50XvXco2ydg9ETD8ZSPzMiVysP3/iAzTeyAVvjkOIGUMNYH4XKVfuVg4ba6qeHGa3/GdIwF5OvDdj9T58cPjN7LHIUjDE1xEFtzgs4R0vclKfIJglOVHWmv2a6nOi9CQfaiVi6evGhHSoO9G25ragR1Nsiluijx/ASjPuTiG7ZU/1p7VlsKv5HVTVi/7ARtJZAkg9LjFp8T2DeWuA5kzt2v8rNU18bouSMZu49NGky4l0S4qJsYtB1Nof+Ti2tEBfifv1v//Ey5gRFVfLWPzJ7td55xm3JN5KynPIoIuW9XcgkLIlCZyGSsuxggqPnIUzGS79yybps1UQH6VrN2Hn94kO7aLrRahe61EkvgqUB6WYOM35OyaGinvVM+FIGeWWxtDXRzYLLoxxq6AP4CczSgSt3nUcdVVnwRg0m0vz/IKwg4SG4XEsLBleCNe8FJkdC8VN3mQyww1kgyxpxumE9WgebXFPBxRILqS+zcD33X0Rc5hrKy7A5fm0bfvFqMut+H+kvNlzVHtf0/gVd3h+p46pF2sr08=
-
+- provider: releases
+  api_key:
+    secure: WXsFv62P7BYeM0s32rcGx/LqdwECQRvUJWJ8YDZ4jdv8w4O4vlCLURiwW/65WNi7peKiMpPmv7q/NOtNrXT1PDIMyeMeJvToHGELyepGex0v1goqfURExpIEm8ddC2HiJf7ctgk7V5CichL/1DpJ2BWzCMUi1OnhLfjWpXQz4OZN8X5XwcgtMjUzEy/Ry1xMbbhrBs4a3IKyBJsbN7TRWibHsJHfl5pvk5qq7xL2s8/5/vEwMDZYFdK8BraF9AOUSqTqrDv2dfdkQrbZNiS2vPGAHdP+YRGGlbZoyHU10wIYJ3zEJ5zVtnAxa7TawZaomPVo6eglr9EuE5D79LVQVHLpBiSfAUViYuZkgxaAgeh4lpgpHgjeIYbetZ4arAcpov3Dnkpqc2Iu95M2jN5ehFtSP23OBoSxseJ3aHwQEnKJy9N6Yhww+l6E6HGqUaa+cVlVdP2zhu462oWH/4HVb1V9yrXij5+/Lo/JWYw58t86gpQTL3DmQQ0SSSj/iwaTN/qpJtzRv2ZfTY7RDS/MUiCZLf8zJ4c+BzBUVBRhIvq8LGusVhszOUhkHqndtaGHGI0+anNvvCTLUv09tOhp1m7uLB6xRloxQPdIcYfNN20+WL/zUYqOLmUx3wc0bpLh8LCHj8wbGYW7RbYcKQw66BmKgfLxUdBEBISDkgKuYx0=
+  file_glob: true
+  file: dist/*
+  skip_cleanup: true
+  on:
+    master: true
+- provider: bintray
+  file: bintray.json
+  user: raffis
+  key:
+    secure: dqYiouXasiWqN2J+OeZGVnyNkpP3In3+WL55OctHYdJJmUACxlfc4yislhtYZVLNJB3BP2GI/HXpgmGDMjP/X8qaFsup8FnHGge/3k/S8TEUP5NneFaGXXfWKi3yac0cYvO1FOi1B2rp50XvXco2ydg9ETD8ZSPzMiVysP3/iAzTeyAVvjkOIGUMNYH4XKVfuVg4ba6qeHGa3/GdIwF5OvDdj9T58cPjN7LHIUjDE1xEFtzgs4R0vclKfIJglOVHWmv2a6nOi9CQfaiVi6evGhHSoO9G25ragR1Nsiluijx/ASjPuTiG7ZU/1p7VlsKv5HVTVi/7ARtJZAkg9LjFp8T2DeWuA5kzt2v8rNU18bouSMZu49NGky4l0S4qJsYtB1Nof+Ti2tEBfifv1v//Ey5gRFVfLWPzJ7td55xm3JN5KynPIoIuW9XcgkLIlCZyGSsuxggqPnIUzGS79yybps1UQH6VrN2Hn94kO7aLrRahe61EkvgqUB6WYOM35OyaGinvVM+FIGeWWxtDXRzYLLoxxq6AP4CczSgSt3nUcdVVnwRg0m0vz/IKwg4SG4XEsLBleCNe8FJkdC8VN3mQyww1kgyxpxumE9WgebXFPBxRILqS+zcD33X0Rc5hrKy7A5fm0bfvFqMut+H+kvNlzVHtf0/gVd3h+p46pF2sr08=
+  on:
+    master: false
+    tags: true
+- provider: bintray
+  file: bintray.json
+  user: raffis
+  on:
+    tags: true
+  key:
+    secure: dqYiouXasiWqN2J+OeZGVnyNkpP3In3+WL55OctHYdJJmUACxlfc4yislhtYZVLNJB3BP2GI/HXpgmGDMjP/X8qaFsup8FnHGge/3k/S8TEUP5NneFaGXXfWKi3yac0cYvO1FOi1B2rp50XvXco2ydg9ETD8ZSPzMiVysP3/iAzTeyAVvjkOIGUMNYH4XKVfuVg4ba6qeHGa3/GdIwF5OvDdj9T58cPjN7LHIUjDE1xEFtzgs4R0vclKfIJglOVHWmv2a6nOi9CQfaiVi6evGhHSoO9G25ragR1Nsiluijx/ASjPuTiG7ZU/1p7VlsKv5HVTVi/7ARtJZAkg9LjFp8T2DeWuA5kzt2v8rNU18bouSMZu49NGky4l0S4qJsYtB1Nof+Ti2tEBfifv1v//Ey5gRFVfLWPzJ7td55xm3JN5KynPIoIuW9XcgkLIlCZyGSsuxggqPnIUzGS79yybps1UQH6VrN2Hn94kO7aLrRahe61EkvgqUB6WYOM35OyaGinvVM+FIGeWWxtDXRzYLLoxxq6AP4CczSgSt3nUcdVVnwRg0m0vz/IKwg4SG4XEsLBleCNe8FJkdC8VN3mQyww1kgyxpxumE9WgebXFPBxRILqS+zcD33X0Rc5hrKy7A5fm0bfvFqMut+H+kvNlzVHtf0/gVd3h+p46pF2sr08=
+after_deploy:
+ - "curl -s -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Travis-API-Version: 3' -H 'Authorization: token $TRAVIS_API_TOKEN' -d '{\"request\":{\"message\":\"trigger build\", \"branch\":\"master\", \"config\":{\"env\":{\"matrix\":[\"VERSION=$version\"]}}}}' \"https://api.travis-ci.org/repo/gyselroth%2Fballoon-docker-web/requests\""
+env:
+  global:
+    secure: oeOYZD7XO7STFP8j+DKanUCVD3aU2STZ6uBIChWU0GTvAzHWC9uHLOD5qcN5DI7jSBV2tnDu7DLhFsWesnBautGUz1WkG3/i+QepDmlFd+znFmLr3i0D1dlkkwPdIbvjhCUStfszbVvaiQxPBm5Hq1mz5iVuW7BGXhCcetRxqPlQdjcY5WH05sUDI21fH3ESzhg5B6v1TR39f2CnvhbLgnIng6PavQRbKMLCPITsM6Fcw+Ou6jRgTCKZkyxntzSbDZuXVje1waZU3nOCyqzONQbxhTuhlu1u4PmRE5QxaVnvRGbf3wp+xgQN89QQxVQqCGahQEbt78Qjo4ahbTjiAPnxHKwJGOyJzxPrTIXs+UD61LKZ6U4QkzWw22ugk0VD4WnZh7fmgXGVGWweEU+m4VdwNGcDE3SJqL+KOZ4kHOt1MWTzIBVHo2uvYF5M/p0Th9y3yE3v4+Vg2W0ZoReH/vzBkT/sPM07kUCeS71WBcFHeZDkhW9kA7WOC0xgAt1xt1GtjrGBOaIBS06YRePCzhjzbiRa2mvrkzTaA1bKJxBb7trCr3xObuJ4FdcxcYjtgtdJYGRJPxaKvjITspfm5oQFsFtk2jAUomHRz4rFwUs+srjaDVYf3hEVLoDHavdNi2GoDBKBVfoM6oEoytHciU0/e5F5D+gP6mpr7jKj/xM=
