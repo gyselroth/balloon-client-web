@@ -9,7 +9,7 @@ PACK_DIR = $(BASE_DIR)/pack
 
 # VERSION
 ifeq ($(VERSION),)
-VERSION := "nightly"
+VERSION := "0.0.1"
 endif
 
 # PACKAGES
