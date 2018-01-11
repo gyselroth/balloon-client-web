@@ -10,6 +10,7 @@ script: make
 before_deploy:
 - export version=$TRAVIS_TAG
 - if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export
+- if [[ "${version:0:1}" == "v" ]]; then version=${version:1}; fi;
   deb_distribution=stable; fi;
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then export deb_distribution=nightly; fi;
 - export date=$(date +%Y-%m-%d)
