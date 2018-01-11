@@ -6,11 +6,12 @@ os:
 - linux
 notifications:
   email: false
-script: make
-before_deploy:
+before_install:
 - export version=$TRAVIS_TAG
-- if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export
 - if [[ "${version:0:1}" == "v" ]]; then version=${version:1}; fi;
+script: make VERSION=$version
+before_deploy:
+- if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export
   deb_distribution=stable; fi;
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then export deb_distribution=nightly; fi;
 - export date=$(date +%Y-%m-%d)
