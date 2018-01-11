@@ -8,7 +8,9 @@ BUILD_DIR = $(BASE_DIR)/build
 PACK_DIR = $(BASE_DIR)/pack
 
 # VERSION
-VERSION = $(shell cat $(BASE_DIR)/package.json | grep '"version"' | cut -d '"' -f4)
+ifeq ($(VERSION),)
+VERSION := "nightly"
+endif
 
 # PACKAGES
 DEB_LIGHT = $(DIST_DIR)/balloon-web-light-$(VERSION).deb
@@ -25,7 +27,6 @@ WEBPACK_TARGET = $(BUILD_DIR)
 ESLINT_TARGET = $(BASE_DIR)
 CHANGELOG_TARGET = $(PACK_DIR)/DEBIAN/changelog
 BUILD_TARGET = $(ESLINT_TARGET) $(WEBPACK_TARGET)
-
 
 # TARGETS
 .PHONY: all
