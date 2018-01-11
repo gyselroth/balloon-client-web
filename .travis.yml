@@ -9,7 +9,7 @@ notifications:
 before_install:
 - export version=$TRAVIS_TAG
 - if [[ "${version:0:1}" == "v" ]]; then version=${version:1}; fi;
-script: make VERSION=$version
+script: if [ "$version" == "" ]; then make; else make VERSION=$version; fi;
 before_deploy:
 - if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export
   deb_distribution=stable; fi;
