@@ -8,8 +8,9 @@ notifications:
   email: false
 before_install:
 - export version=$TRAVIS_TAG
-- if [[ "${version:0:1}" == "v" ]]; then version=${version:1}; fi;
-script: if [ "$version" == "" ]; then make; else make VERSION=$version; fi;
+- if [ "${version:0:1}" == "v" ]; then version=${version:1}; fi;
+- if [ "$version" == "" ]; then version=$TRAVIS_BUILD_NUMBER; fi;
+script: make VERSION=$version
 before_deploy:
 - if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export
   deb_distribution=stable; fi;
