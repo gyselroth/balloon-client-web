@@ -1,10 +1,10 @@
 /**
- * Balloon
+ * balloon
  *
- * @author      Raffael Sahli <sahli@gyselroth.net>
  * @copyright   Copryright (c) 2012-2018 gyselroth GmbH (https://gyselroth.com)
- * @license     GPLv3 https://opensource.org/licenses/GPL-3.0
+ * @license     GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
+
 import $ from "jquery";
 import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';

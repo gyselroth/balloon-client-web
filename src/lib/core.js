@@ -1259,9 +1259,6 @@ var balloon = {
 
         balloon.xmlHttpRequest({
           url: balloon.base+'/user/attributes',
-          data: {
-            attributes: ['id','username','mail','created','last_attr_sync','avatar']
-          },
           type: 'GET',
           success: function(body) {
             var $table = $('#fs-profile-user').find('table');
@@ -2282,11 +2279,7 @@ var balloon = {
             return;
           }
 
-          var attributes = [
-            'id', 'name', 'mime', 'deleted', 'meta.color', 'meta.tags',
-            'directory', 'changed', 'file.size', 'filtered',
-            'shared', 'share.id', 'share.name', 'sharelink', 'hash', 'reference', 'access', 'readonly', 'destroy'
-          ];
+          var attributes = [];
 
           if(balloon.datasource._ds_params === undefined) {
             balloon.datasource._ds_params = {action: '', nostate: false};
@@ -3762,10 +3755,15 @@ var balloon = {
         '</tr>'
     );
 
+    var privilege = 'rw';
+    if(item.privilege) {
+      privilege = item.privilege;
+    }
+
     acl.push({
       type: item.type,
       id: item.role.id,
-      privilege: 'rw',
+      privilege: privilege,
     });
 
     if($fs_share_collection_tbody.find('tr').length > 0) {
@@ -3797,6 +3795,7 @@ var balloon = {
       },
       statusCode: {
         201: function(e) {
+          node.shared = true;
           balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share-collection');
@@ -5442,11 +5441,6 @@ var balloon = {
                 $field.val(data.data.meta[meta_attr]);
                 break;
 
-              case 'coordinate':
-                $field = $('#fs-properties-'+meta_attr).find('input');
-                $field.val(data.data.meta[meta_attr]);
-                break;
-
               default:
                 $field = $('#fs-properties-'+meta_attr).find('input');
                 $field.val(data.data.meta[meta_attr]);
@@ -5461,12 +5455,12 @@ var balloon = {
         case 'share':
           if(data.data[prop] !== undefined && 'shareowner' in data.data) {
             var access = i18next.t('view.share.privilege_'+data.data.access);
-            var msg = i18next.t('view.prop.head.share_value', data.data.share.name, data.data.shareowner.username, access);
+            var msg = i18next.t('view.prop.head.share_value', data.data.share.name, data.data.shareowner.name, access);
             $field.html(msg)
               .parent().parent().css('display','table-row');
 
             var sclass = '';
-            if(data.data.shareowner == login.username) {
+            if(data.data.shareowner.name == login.username) {
               sclass = 'gr-icon gr-i-folder-shared';
             } else {
               sclass = 'gr-icon gr-i-folder-received';
@@ -5516,7 +5510,6 @@ var balloon = {
       'meta.license',
       'meta.description',
       'meta.copyright',
-      'meta.coordinate',
       'meta.author',
       'created',
       'version',

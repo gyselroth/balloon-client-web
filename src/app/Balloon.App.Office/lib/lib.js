@@ -1,10 +1,10 @@
 /**
- * Balloon
+ * balloon
  *
- * @author      Raffael Sahli <sahli@gyselroth.net>
  * @copyright   Copryright (c) 2012-2018 gyselroth GmbH (https://gyselroth.com)
- * @license     GPLv3 https://opensource.org/licenses/GPL-3.0
+ * @license     GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
+
 import $ from "jquery";
 import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
@@ -28,7 +28,7 @@ var app = {
     $('#fs-edit-office').remove();
 
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/app/office/document?id='+app.balloon.id(node),
+      url: app.balloon.base+'/office/document?id='+app.balloon.id(node),
       success: function(data) {
         var doc = data.data;
         if(doc.session.length === 0) {
@@ -122,7 +122,7 @@ var app = {
 
   newSession: function(node, doc) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/app/office/session?id='+app.balloon.id(node),
+      url: app.balloon.base+'/office/session?id='+app.balloon.id(node),
       type: 'POST',
       success: function(session) {
         app.initLibreOffice(node, doc, session);
@@ -132,7 +132,7 @@ var app = {
 
   joinSession: function(node, doc, session_id) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/app/office/session/join?id='+session_id,
+      url: app.balloon.base+'/office/session/join?id='+session_id,
       type: 'POST',
       success: function(session) {
         session.data.id = session_id;
@@ -159,7 +159,7 @@ var app = {
         var msg  = i18next.t('app.office.close_edit_file', node.name);
         app.balloon.promptConfirm(msg, function(){
           app.balloon.xmlHttpRequest({
-            url: app.balloon.base+'/app/office/session?id='+session.data.id+'&access_token='+session.data.access_token,
+            url: app.balloon.base+'/office/session?id='+session.data.id+'&access_token='+session.data.access_token,
             type: 'DELETE',
             error: function(){},
             complete: function() {
@@ -176,7 +176,7 @@ var app = {
           $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
         );
 
-        var src = 'https://'+window.location.hostname+app.balloon.base+'/app/office/wopi/document/'+session.data.id,
+        var src = session.data.wopi_url+app.balloon.base+'/office/wopi/document/'+session.data.id,
           src = encodeURIComponent(src),
           url = doc.loleaflet+'?WOPISrc='+src+'&title='+node.name+'&lang='+i18next.language+'&closebutton=0&revisionhistory=0';
 
@@ -195,7 +195,7 @@ var app = {
           var msg  = i18next.t('app.office.close_edit_file', node.name);
           app.balloon.promptConfirm(msg, function(){
             app.balloon.xmlHttpRequest({
-              url: app.balloon.base+'/app/office/session?id='+session.data.id+'&access_token='+session.data.access_token,
+              url: app.balloon.base+'/office/session?id='+session.data.id+'&access_token='+session.data.access_token,
               type: 'DELETE',
               error: function(){},
               complete: function() {
@@ -364,7 +364,7 @@ var app = {
     name = encodeURI(name);
 
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/app/office/document?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
+      url: app.balloon.base+'/office/document?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
       type: 'PUT',
       complete: function() {
         $('#fs-new-file').remove();
