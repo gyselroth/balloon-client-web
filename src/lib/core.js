@@ -851,15 +851,10 @@ var balloon = {
           break;
 
         case 'tag':
-          var color = node.meta.color,
-            color_tag;
-          if(typeof color != "undefined"){
-            color_tag = '<span style="background-color: '+color+';" class="fs-color-tag"></span>';
-          }            else{
-            color_tag = '<span style="background-color: transparent;" class="fs-color-tag"></span>';
+          if(balloon.isValidColor(node.meta.color)) {
+            var color_tag = '<span class="fs-color-tag fs-color-'+node.meta.color+'"></span>';
+            html_children.push(color_tag);
           }
-
-          html_children.push(color_tag);
 
           break;
         }
@@ -1830,9 +1825,6 @@ var balloon = {
       break;
     case 'history':
       balloon.displayHistory(balloon.getCurrentNode());
-      break;
-    case 'share-collection-read':
-      balloon.displayShare(balloon.getCurrentNode());
       break;
     case 'share-collection':
       balloon.shareCollection(balloon.getCurrentNode());
@@ -3411,62 +3403,6 @@ var balloon = {
     }
   },
 
-
-  /**
-   * Display share (readonly)
-   *
-   * @param   object|string node
-   * @return  void
-   */
-  displayShare: function(node) {
-    if(node.directory === false) {
-      return false;
-    }
-
-    balloon.resetDom('share-collection-read');
-
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/collection/share',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-      },
-      success: function(data) {
-        var acl = [];
-
-        var $fs_share_collection     = $('#fs-share-collection-read'),
-          $fs_share_collection_tbl   = $fs_share_collection.find('table'),
-          $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
-          $share_name = $fs_share_collection.find(".share-name");
-
-        $share_name.find('span').html(data.data.name);
-
-        for(var i in data.data.acl) {
-          let icon, name, privilege;
-          if(data.data.acl[i].type === 'user') {
-            icon = 'person';
-            name = data.data.acl[i].role.username;
-          } else if(item.type === 'group') {
-            icon = 'group';
-            name = data.data.acl[i].role.name;
-          }
-
-          privilege = i18next.t('view.share.privilege_'+data.data.acl[i].privilege);
-
-          $fs_share_collection_tbody.append(
-           '<tr>'+
-             '<td><div class="gr-icon gr-i-'+icon+'"></div></td>'+
-             '<td class="fs-role-name">'+name+'</td>'+
-             '<td>'+privilege+'</td>'+
-           '</tr>'
-          );
-        }
-      }
-    });
-  },
-
-
   /**
    * Share node
    *
@@ -4057,7 +3993,9 @@ var balloon = {
           children = [];
 
         for(var i in colors) {
-          children.push('<li data-item="'+colors[i]._id+'" style="background-color: '+colors[i]._id+'"></li>');
+          if(balloon.isValidColor(colors[i]._id)) {
+            children.push('<li data-item="'+colors[i]._id+'" class="fs-color-'+colors[i]._id+'"></li>');
+          }
         }
 
         if(children.length >= 1) {
@@ -5409,9 +5347,7 @@ var balloon = {
               case 'color':
                 if(data.data[prop].color != undefined) {
                   var $fs_prop_color = $('#fs-properties-'+prop+'-color');
-                  var color = 'fs-color-'+data.data[prop].color.substr(1);
-                  $fs_prop_color.find('.'+color).addClass('fs-color-selected');
-
+                  $fs_prop_color.find('.fs-color-'+data.data[prop].color).addClass('fs-color-selected');
                 }
                 break;
 
@@ -5480,7 +5416,7 @@ var balloon = {
 
       var $fs_prop_color = $("#fs-properties-meta-color");
       $fs_prop_color.find("li").unbind('click').click(function(e){
-        var color = '#'+$(this).attr('class').substr(9, 6);
+        var color = $(this).attr('class').substr(9, 6);
 
         $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
 
@@ -5489,7 +5425,7 @@ var balloon = {
           $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', 'transparent');
         } else {
           $(this).addClass('fs-color-selected');
-          $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', color);
+          $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', $(this).css('background-color'));
         }
 
         balloon.saveMetaAttributes(balloon.getCurrentNode(), {color: color});
@@ -5531,6 +5467,22 @@ var balloon = {
     });
   },
 
+  /**
+   * Check if valid color tag is given
+   *
+   * @return string
+   */
+  isValidColor: function(color) {
+    var map = [
+      'magenta',
+      'purple',
+      'blue',
+      'green',
+      'yellow',
+    ];
+
+    return map.indexOf(color) !== -1
+  },
 
   /**
    * Auto complete tags
@@ -5757,12 +5709,12 @@ var balloon = {
     balloon.xmlHttpRequest({
       url: balloon.base+'/node/meta-attributes?id='+balloon.id(node),
       type: 'POST',
-      data: meta,
+      data: {attributes: meta},
       success: function() {
         for(var attr in meta) {
           if(meta[attr] == '') {
             delete node.meta[attr];
-          }          else {
+          } else {
             node.meta[attr] = meta[attr];
           }
         }
