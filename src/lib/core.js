@@ -831,10 +831,10 @@ var balloon = {
           break;
 
         case 'size':
-          if(!node.directory) {
-            html_children.push('<span class="fs-meta-info">'+balloon.getReadableFileSizeString(node.size)+'</span>');
+          if(node.directory) {
+            html_children.push('<span class="fs-meta-info">'+i18next.t('view.prop.data.childcount', {count: node.size})+'</span>');
           } else {
-            html_children.push('<span class="fs-meta-info"></span>');
+            html_children.push('<span class="fs-meta-info">'+balloon.getReadableFileSizeString(node.size)+'</span>');
           }
           break;
 
@@ -1077,7 +1077,7 @@ var balloon = {
         self: true
       },
       success: function(body) {
-        balloon._repopulateCrumb(body.data.reverse());
+        balloon._repopulateCrumb(body.reverse());
       },
     });
   },
@@ -1224,16 +1224,16 @@ var balloon = {
           type: 'GET',
           dataType: 'json',
           success: function(data) {
-            var used = balloon.getReadableFileSizeString(data.data.used);
+            var used = balloon.getReadableFileSizeString(data.used);
             var max;
             var free;
 
-            if(data.data.hard_quota === -1) {
+            if(data.hard_quota === -1) {
               $fs_quota_usage.hide();
               max = i18next.t('profile.quota_unlimited');
               free = max;
             } else {
-              var percentage = Math.round(data.data.used/data.data.hard_quota*100);
+              var percentage = Math.round(data.used/data.hard_quota*100);
               $k_progress.value(percentage);
 
               if(percentage >= 90) {
@@ -1242,8 +1242,8 @@ var balloon = {
                 $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
               }
 
-              max  = balloon.getReadableFileSizeString(data.data.hard_quota),
-              free = balloon.getReadableFileSizeString(data.data.hard_quota - data.data.used);
+              max  = balloon.getReadableFileSizeString(data.hard_quota),
+              free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
             }
 
             $('#fs-profile-quota-used').find('td').html(used);
@@ -1257,11 +1257,11 @@ var balloon = {
           type: 'GET',
           success: function(body) {
             var $table = $('#fs-profile-user').find('table');
-            for(var attribute in body.data) {
+            for(var attribute in body) {
               switch(attribute) {
               case 'created':
               case 'last_attr_sync':
-                var ts   = body.data[attribute].sec*1000,
+                var ts   = body[attribute].sec*1000,
                   date   = new Date(ts),
                   format = kendo.toString(date, kendo.culture().calendar.patterns.g),
                   since  = balloon.timeSince(date);
@@ -1271,11 +1271,11 @@ var balloon = {
 
               case 'avatar':
                 var $avatar = $('#fs-profile-avatar');
-                $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body.data[attribute]+')');
+                $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body[attribute]+')');
                 break;
 
               default:
-                $table.append('<tr><th>'+attribute+'</th><td>'+body.data[attribute]+'</td></tr>')
+                $table.append('<tr><th>'+attribute+'</th><td>'+body[attribute]+'</td></tr>')
                 break;
               }
             }
@@ -1339,32 +1339,32 @@ var balloon = {
           date,
           that = this;
 
-        if(body.data.length === 0) {
+        if(body.length === 0) {
           balloon._event_limit = true;
         }
 
-        if(body.data.length === 0 && $elements.length === 0) {
+        if(body.length === 0 && $elements.length === 0) {
           $dom.append('<li>'+i18next.t('events.no_events')+'</li>');
           return;
         }
 
-        for(var log in body.data) {
-          if(body.data[log].user === null) {
+        for(var log in body) {
+          if(body[log].user === null) {
             username = '<user removed>';
-          } else if(body.data[log].user.username == login.getUsername()) {
-            username = body.data[log].user.username+' ('+i18next.t('events.you')+')';
+          } else if(body[log].user.username == login.getUsername()) {
+            username = body[log].user.username+' ('+i18next.t('events.you')+')';
           } else {
-            username = body.data[log].user.username;
+            username = body[log].user.username;
           }
 
           undo    = false;
-          date    = kendo.toString(new Date((body.data[log].timestamp.sec*1000)), kendo.culture().calendar.patterns.g);
-          operation = balloon.camelCaseToUnderline(body.data[log].operation);
+          date    = kendo.toString(new Date((body[log].timestamp.sec*1000)), kendo.culture().calendar.patterns.g);
+          operation = balloon.camelCaseToUnderline(body[log].operation);
           $node   = $('<li></li>');
           $icon  = $('<div class="gr-icon"></div>');
           $node.append($icon);
 
-          switch(body.data[log].operation) {
+          switch(body[log].operation) {
           case 'deleteCollectionReference':
           case 'deleteCollectionShare':
           case 'deleteCollection':
@@ -1433,49 +1433,49 @@ var balloon = {
           }
 
 
-          if(body.data[log].share !== null && share_events.indexOf(body.data[log].operation) == -1) {
+          if(body[log].share !== null && share_events.indexOf(body[log].operation) == -1) {
             $node.append(i18next.t('events.share', {
-              share:  body.data[log].share.name,
+              share:  body[log].share.name,
             })+' ');
           }
 
-          if(body.data[log].parent !== null && body.data[log].parent.name === null) {
-            body.data[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
+          if(body[log].parent !== null && body[log].parent.name === null) {
+            body[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
           }
 
-          if(body.data[log].previous !== null && body.data[log].previous.parent !== undefined && body.data[log].previous.parent !== null) {
-            if(body.data[log].previous.parent.name === null) {
-              body.data[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
+          if(body[log].previous !== null && body[log].previous.parent !== undefined && body[log].previous.parent !== null) {
+            if(body[log].previous.parent.name === null) {
+              body[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
             }
-          } else if(body.data[log].previous !== null && body.data[log].previous.parent === null) {
-            body.data[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
+          } else if(body[log].previous !== null && body[log].previous.parent === null) {
+            body[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
-          if(body.data[log].parent === null) {
-            body.data[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
+          if(body[log].parent === null) {
+            body[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
           $node.append(i18next.t('events.'+operation, {
             user:   username,
-            name:   body.data[log].name,
-            previous: body.data[log].previous,
-            parent: body.data[log].parent
+            name:   body[log].name,
+            previous: body[log].previous,
+            parent: body[log].parent
           }));
 
-          if(body.data[log].node === null) {
+          if(body[log].node === null) {
             undo = false;
           }
 
           if(undo === true) {
             $undo = $('<div class="gr-icon gr-i-undo"></div>').unbind('click').bind('click',
-              body.data[log], balloon._undoEvent);
+              body[log], balloon._undoEvent);
             $node.append($undo);
           }
 
-          var app = body.data[log].client.type;
+          var app = body[log].client.type;
 
-          if(body.data[log].client.app !== null) {
-            app = body.data[log].client.app;
+          if(body[log].client.app !== null) {
+            app = body[log].client.app;
           }
 
           if(app === null) {
@@ -1489,8 +1489,8 @@ var balloon = {
             });
           }
 
-          if(body.data[log].client.hostname !== null) {
-            via += ' ('+body.data[log].client.hostname+')';
+          if(body[log].client.hostname !== null) {
+            via += ' ('+body[log].client.hostname+')';
           }
 
           $node.append('<span class="fs-event-time">'+via+'</span>');
@@ -1570,25 +1570,25 @@ var balloon = {
       };
     }
 
-    switch(e.data.operation) {
+    switch(e.operation) {
     case 'deleteCollectionReference':
     case 'deleteCollectionShare':
     case 'deleteCollection':
     case 'deleteFile':
-      var msg  = i18next.t('events.prompt.trash_restore', e.data.node.name);
+      var msg  = i18next.t('events.prompt.trash_restore', e.node.name);
       balloon.promptConfirm(msg, [
         {
           action: 'undelete',
-          params: [e.data.node.id]
+          params: [e.node.id]
         }, successAction
       ]);
       break;
     case 'addCollectionShare':
-      var msg  = i18next.t('events.prompt.unshare', e.data.node.name);
+      var msg  = i18next.t('events.prompt.unshare', e.node.name);
       balloon.promptConfirm(msg, [
         {
           action: '_shareCollection',
-          params: [e.data.node, {options: {shared: false}}]
+          params: [e.node, {options: {shared: false}}]
         }, successAction
       ]);
       break;
@@ -1606,21 +1606,21 @@ var balloon = {
         successAction = null;
       }
 
-      var msg  = i18next.t('events.prompt.trash_delete', e.data.node.name);
+      var msg  = i18next.t('events.prompt.trash_delete', e.node.name);
       balloon.promptConfirm(msg, [
         {
           action: 'remove',
-          params: [e.data.node.id]
+          params: [e.node.id]
         }, successAction
       ]);
       break;
     case 'editFile':
     case 'restoreFile':
-      var msg  = i18next.t('events.prompt.restore', e.data.node.name, e.data.previous.version);
+      var msg  = i18next.t('events.prompt.restore', e.node.name, e.previous.version);
       balloon.promptConfirm(msg, [
         {
           action: 'restoreVersion',
-          params: [e.data.node.id, e.data.previous.version]
+          params: [e.node.id, e.previous.version]
         }, successAction
       ]);
       break;
@@ -1628,11 +1628,11 @@ var balloon = {
     case 'renameCollection':
     case 'renameCollectionShare':
     case 'renameCollectionReference':
-      var msg  = i18next.t('events.prompt.rename', e.data.node.name, e.data.previous.name);
+      var msg  = i18next.t('events.prompt.rename', e.node.name, e.previous.name);
       balloon.promptConfirm(msg, [
         {
           action: 'rename',
-          params: [e.data.node.id, e.data.previous.name]
+          params: [e.node.id, e.previous.name]
         }, successAction
       ]);
       break;
@@ -1640,11 +1640,11 @@ var balloon = {
     case 'moveCollection':
     case 'moveCollectionReference':
     case 'moveCollectionShare':
-      var msg  = i18next.t('events.prompt.move', e.data.node.name, e.data.previous.parent.name);
+      var msg  = i18next.t('events.prompt.move', e.node.name, e.previous.parent.name);
       balloon.promptConfirm(msg, [
         {
           action: 'move',
-          params: [e.data.node.id, e.data.previous.parent]
+          params: [e.node.id, e.previous.parent]
         }, successAction
       ]);
       break;
@@ -2297,7 +2297,7 @@ var balloon = {
           var collection = balloon.getURLParam('collection');
 
           if(collection !== null && balloon.last === null && !('id' in params)) {
-            operation.data.id = collection;
+            operation.id = collection;
           }
 
           if(balloon.datasource._ds_params.sort === true) {
@@ -2319,11 +2319,11 @@ var balloon = {
             contentType: 'application/json',
             data: JSON.stringify(operation.data),
             processData: false,
-            success: function(data, msg, http) {
+            success: function(pool, msg, http) {
               if(http.status === 204) {
-                data = {data:[]};
+                pool = [];
               }
-              var pool = data.data;
+
               for(var node in pool) {
                 pool[node].spriteCssClass = balloon.getSpriteClass(pool[node]);
               }
@@ -2353,7 +2353,7 @@ var balloon = {
                 $('#fs-browser-fresh').hide();
               }
 
-              if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.data.id !== null) {
+              if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.id !== null) {
                 pool.unshift({
                   id: '_FOLDERUP',
                   name: "..",
@@ -2981,27 +2981,27 @@ var balloon = {
       }
 
       if(body != false) {
-        if(body.data instanceof Array) {
+        if(body instanceof Array) {
           $fs_error_multi.show();
           var dom;
 
-          for(var i in body.data) {
+          for(var i in body) {
             dom = '<li><table>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.node')+'</th>'+
-                  '<td>'+body.data[i].name+'</td>'+
+                  '<td>'+body[i].name+'</td>'+
                 '</tr>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.classification')+'</th>'+
-                  '<td>'+body.data[i].error+'</td>'+
+                  '<td>'+body[i].error+'</td>'+
                 '</tr>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.code')+'</th>'+
-                  '<td>'+body.data[i].code+'</td>'+
+                  '<td>'+body[i].code+'</td>'+
                 '</tr>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.message')+'</th>'+
-                  '<td>'+body.data[i].message+'</td>'+
+                  '<td>'+body[i].message+'</td>'+
                 '</tr>'+
                 '</table></li>';
 
@@ -3010,9 +3010,9 @@ var balloon = {
         } else {
           $fs_error_single.show();
           $("#fs-error-status").html(response.status);
-          $("#fs-error-code").html(body.data.code);
-          $("#fs-error-error").html(body.data.error);
-          $("#fs-error-message").html(body.data.message);
+          $("#fs-error-code").html(body.code);
+          $("#fs-error-error").html(body.error);
+          $("#fs-error-message").html(body.message);
         }
       } else {
         $fs_error_single.show();
@@ -3331,7 +3331,7 @@ var balloon = {
       dataType: 'json',
       success: function(data) {
         balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data.data;
+        balloon.added_rename = data;
       },
     });
   },
@@ -3356,7 +3356,7 @@ var balloon = {
       type: 'PUT',
       success: function(data) {
         balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data.data;
+        balloon.added_rename = data;
       },
     });
   },
@@ -3450,24 +3450,24 @@ var balloon = {
         var checked,
           $acl_role;
 
-        $share_name.val(data.data.name);
+        $share_name.val(data.name);
 
-        for(var i in data.data.acl) {
+        for(var i in data.acl) {
           checked = '';
-          if(data.data.acl[i].privilege == 'r') {
+          if(data.acl[i].privilege == 'r') {
             checked = "checked='checked'";
           }
 
-          balloon._addShareRole(data.data.acl[i], acl);
+          balloon._addShareRole(data.acl[i], acl);
 
-          $fs_share_collection.find('tr[fs-acl-name="'+data.data.acl[i].id+'"]')
-            .find('input[value="'+data.data.acl[i].privilege+'"]').prop('checked', true);
+          $fs_share_collection.find('tr[fs-acl-name="'+data.acl[i].id+'"]')
+            .find('input[value="'+data.acl[i].privilege+'"]').prop('checked', true);
 
 
           $fs_share_collection_tbody.append($acl_role);
         }
 
-        if(data.data.acl.length > 0) {
+        if(data.acl.length > 0) {
           $fs_share_collection_tbl.show().css('display', 'table');
           $fs_share_collection.find('input[name=share]').val(i18next.t('view.share.update'));
         }
@@ -3547,7 +3547,7 @@ var balloon = {
           },
           success: function(data) {
             $share_role.val('').focus();
-            acl = balloon._addShareRole(data.data, acl);
+            acl = balloon._addShareRole(data, acl);
           }
         });
       }
@@ -3582,9 +3582,6 @@ var balloon = {
           dir: 'asc',
           field: 'name'
         },
-        schema: {
-          data:"data",
-        }
       }),
       dataBound: function(e) {
         $(e.sender.ul).find('li').each(function(n) {
@@ -3769,19 +3766,19 @@ var balloon = {
           $fs_share_expr = $fs_share_link.find('input[name=share_expiration]'),
           $fs_share_pw   = $fs_share_link.find('input[name=share_password]');
 
-        if(data.data !== false && data.data.token != undefined) {
+        if(data !== false && data.token != undefined) {
           $fs_share_link.find('.fs-share-remove').show();
 
           $('#fs-link-options').show();
-          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share?t='+data.data.token).show().
+          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share?t='+data.token).show().
             unbind('click').bind('click', function(){
               this.select();
               document.execCommand("copy");
             });
 
-          token = data.data.token;
-          if('expiration' in data.data && data.data.expiration != '' && data.data.expiration != null) {
-            var ts = data.data.expiration;
+          token = data.token;
+          if('expiration' in data && data.expiration != '' && data.expiration != null) {
+            var ts = data.expiration;
             var date = new Date(parseInt(ts) * 1000);
             var formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
 
@@ -3989,7 +3986,7 @@ var balloon = {
       },
       success: function(body) {
         var $color_list = $('#fs-search-filter-color').find('div'),
-          colors = body.data['meta.color'],
+          colors = body['meta.color'],
           children = [];
 
         for(var i in colors) {
@@ -4003,7 +4000,7 @@ var balloon = {
         }
 
         var $tag_list = $('#fs-search-filter-tags').find('div'),
-          tags = body.data['meta.tags'],
+          tags = body['meta.tags'],
           children = [];
 
         for(var i in tags) {
@@ -4015,7 +4012,7 @@ var balloon = {
         }
 
         var $mime_list = $('#fs-search-filter-mime').find('div'),
-          mimes = body.data['mime'],
+          mimes = body['mime'],
           children = [];
 
         for(var i in mimes) {
@@ -4457,7 +4454,7 @@ var balloon = {
         if(data === false || data.status != 400 && data.status != 404) {
           balloon.displayError(response);
         } else {
-          switch(data.data.code) {
+          switch(data.code) {
           case 0:
           case 21:
             setTimeout(function(){
@@ -4530,12 +4527,12 @@ var balloon = {
         balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
       },
       error: function(data) {
-        if(data.status === 400 && data.responseJSON && data.responseJSON.data.code === 19 && conflict !== 2) {
+        if(data.status === 400 && data.responseJSON && data.responseJSON.code === 19 && conflict !== 2) {
           var body = data.responseJSON;
           if(typeof(balloon.id(source)) == 'string') {
             var nodes = [source];
           } else {
-            var nodes = body.data;
+            var nodes = body;
           }
 
           var id   = [];
@@ -4960,15 +4957,15 @@ var balloon = {
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        var used = balloon.getReadableFileSizeString(data.data.used),
-          max  = balloon.getReadableFileSizeString(data.data.hard_quota),
-          free = balloon.getReadableFileSizeString(data.data.hard_quota - data.data.used);
+        var used = balloon.getReadableFileSizeString(data.used),
+          max  = balloon.getReadableFileSizeString(data.hard_quota),
+          free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
 
-        if(data.data.hard_quota === -1) {
+        if(data.hard_quota === -1) {
           $('#fs-quota-usage').hide();
           $('#fs-quota-total').html(i18next.t('user.quota_unlimited', used));
         } else {
-          var percentage = Math.round(data.data.used/data.data.hard_quota*100);
+          var percentage = Math.round(data.used/data.hard_quota*100);
           $k_progress.value(percentage);
 
           if(percentage >= 90) {
@@ -4977,7 +4974,7 @@ var balloon = {
             $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
           }
 
-          balloon.quota = data.data;
+          balloon.quota = data;
 
           $('#fs-quota-total').html(i18next.t('user.quota_left', free));
           $('#fs-quota').attr('title', i18next.t('user.quota_detail', used, max,
@@ -5156,10 +5153,10 @@ var balloon = {
       },
       success: function(data) {
         var icon, dom_node, ts, since, radio;
-        data.data.reverse();
+        data.reverse();
 
-        for(var i in data.data) {
-          switch(data.data[i].type) {
+        for(var i in data) {
+          switch(data[i].type) {
           case 0:
             icon = '<div class="gr-icon gr-i-add">'+ i18next.t('view.history.added')+'</div>';
             break;
@@ -5169,8 +5166,8 @@ var balloon = {
             break;
 
           case 2:
-            if(data.data[i].origin != undefined) {
-              icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data.data[i].origin)+'</div>';
+            if(data[i].origin != undefined) {
+              icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data[i].origin)+'</div>';
             }              else {
               icon = '<div class="gr-icon gr-i-restore">'+ i18next.t('view.history.restored')+'</div>';
             }
@@ -5185,24 +5182,31 @@ var balloon = {
             break;
           }
 
-          since = balloon.timeSince(new Date((data.data[i].changed.sec*1000))),
-          ts = kendo.toString(new Date((data.data[i].changed.sec*1000)), kendo.culture().calendar.patterns.g)
+          since = balloon.timeSince(new Date((data[i].changed.sec*1000))),
+          ts = kendo.toString(new Date((data[i].changed.sec*1000)), kendo.culture().calendar.patterns.g)
 
           if(i != 0) {
-            radio = '<input type="radio" name="version" value="'+data.data[i].version+'"/>';
+            radio = '<input type="radio" name="version" value="'+data[i].version+'"/>';
           } else {
-            radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data.data[i].version+'"/>';
+            radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data[i].version+'"/>';
+          }
+
+          if(data[i].user) {
+            var username = data[i].user.name;
+          } else {
+            var username = i18next.t('view.history.user_deleted');
+
           }
 
           dom_node = '<li>'+radio+
-            '<div class="fs-history-version">'+i18next.t('view.history.version', data.data[i].version)+'</div>'+
-            icon+'<div class="fs-history-label">'+i18next.t('view.history.changed_by', data.data[i].user, since, ts)+'</div></li>';
+            '<div class="fs-history-version">'+i18next.t('view.history.version', data[i].version)+'</div>'+
+            icon+'<div class="fs-history-label">'+i18next.t('view.history.changed_by', username, since, ts)+'</div></li>';
 
           $fs_history.append(dom_node);
         }
 
         var $submit = $view.find('input[type=submit]');
-        if(data.data.length > 1) {
+        if(data.length > 1) {
           $submit.show();
         }
 
@@ -5285,15 +5289,15 @@ var balloon = {
 
     var success = function(data) {
       var $field;
-      data.data = $.extend(true, data.data, node.toJSON());
+      data = $.extend(true, data, node.toJSON());
 
-      if(data.data.reference || data.data.shared) {
-        data.data.share = data.data;
+      if(data.reference || data.shared) {
+        data.share = data;
       }
 
-      for(var prop in data.data) {
+      for(var prop in data) {
         $field = $('#fs-properties-'+prop).find('.fs-value');
-        if(data.data[prop] != '' && data.data[prop] !== null) {
+        if(data[prop] != '' && data[prop] !== null) {
           $('#fs-properties-'+prop).parent().show();
         }
 
@@ -5301,8 +5305,8 @@ var balloon = {
         case 'changed':
         case 'deleted':
         case 'created':
-          if(typeof data.data[prop] === 'object' && data.data[prop] !== null) {
-            var ts   = data.data[prop].sec*1000,
+          if(typeof data[prop] === 'object' && data[prop] !== null) {
+            var ts   = data[prop].sec*1000,
               date   = new Date(ts),
               format = kendo.toString(date, kendo.culture().calendar.patterns.g),
               since  = balloon.timeSince(date);
@@ -5313,9 +5317,9 @@ var balloon = {
 
         case 'size':
           if(node.directory === true) {
-            $field.html(i18next.t('view.prop.data.childcount', {count: data.data[prop]}));
+            $field.html(i18next.t('view.prop.data.childcount', {count: data[prop]}));
           } else {
-            $field.html(i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(data.data[prop]), data.data[prop]));
+            $field.html(i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(data[prop]), data[prop]));
           }
           break;
 
@@ -5327,27 +5331,27 @@ var balloon = {
             .addClass(node.spriteCssClass);
 
           $field.parent().unbind('click').click(balloon.initRenameProperties);
-          var ext = balloon.getFileExtension(data.data);
+          var ext = balloon.getFileExtension(data);
 
           if(ext != null && node.directory == false) {
             $fs_prop_name.find(".fs-ext").html('[.'+ext+']').show();
-            $field.html(data.data[prop].substr(0, data.data[prop].length-ext.length-1));
+            $field.html(data[prop].substr(0, data[prop].length-ext.length-1));
           } else {
             $fs_prop_name.find(".fs-ext").html('');
-            $field.html(data.data[prop]);
+            $field.html(data[prop]);
           }
           break;
 
         case 'meta':
           try {
-            for(var meta_attr in data.data.meta) {
+            for(var meta_attr in data.meta) {
               $field = $('#fs-properties-'+meta_attr).find('.fs-value');
 
               switch(meta_attr) {
               case 'color':
-                if(data.data[prop].color != undefined) {
+                if(data[prop].color != undefined) {
                   var $fs_prop_color = $('#fs-properties-'+prop+'-color');
-                  $fs_prop_color.find('.fs-color-'+data.data[prop].color).addClass('fs-color-selected');
+                  $fs_prop_color.find('.fs-color-'+data[prop].color).addClass('fs-color-selected');
                 }
                 break;
 
@@ -5365,8 +5369,8 @@ var balloon = {
                 });
 
                 $fs_prop_tags.find('li').remove();
-                for(var tag in data.data.meta.tags) {
-                  children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+data.data.meta.tags[tag]+'</div></li>');
+                for(var tag in data.meta.tags) {
+                  children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+data.meta.tags[tag]+'</div></li>');
                 }
 
                 $fs_prop_tags.find('ul').html(children.join(''));
@@ -5374,12 +5378,12 @@ var balloon = {
 
               case 'description':
                 $field = $('#fs-properties-'+meta_attr).find('textarea');
-                $field.val(data.data.meta[meta_attr]);
+                $field.val(data.meta[meta_attr]);
                 break;
 
               default:
                 $field = $('#fs-properties-'+meta_attr).find('input');
-                $field.val(data.data.meta[meta_attr]);
+                $field.val(data.meta[meta_attr]);
                 break;
               }
             }
@@ -5389,14 +5393,14 @@ var balloon = {
           break;
 
         case 'share':
-          if(data.data[prop] !== undefined && 'shareowner' in data.data) {
-            var access = i18next.t('view.share.privilege_'+data.data.access);
-            var msg = i18next.t('view.prop.head.share_value', data.data.share.name, data.data.shareowner.name, access);
+          if(data[prop] !== undefined && 'shareowner' in data) {
+            var access = i18next.t('view.share.privilege_'+data.access);
+            var msg = i18next.t('view.prop.head.share_value', data.share.name, data.shareowner.name, access);
             $field.html(msg)
               .parent().parent().css('display','table-row');
 
             var sclass = '';
-            if(data.data.shareowner.name == login.username) {
+            if(data.shareowner.name == login.username) {
               sclass = 'gr-icon gr-i-folder-shared';
             } else {
               sclass = 'gr-icon gr-i-folder-received';
@@ -5408,7 +5412,7 @@ var balloon = {
 
         default:
           if($field.length != 0 && prop !== 'access' && prop != 'shareowner') {
-            $field.html(data.data[prop]);
+            $field.html(data[prop]);
           }
           break;
         }
@@ -5416,7 +5420,7 @@ var balloon = {
 
       var $fs_prop_color = $("#fs-properties-meta-color");
       $fs_prop_color.find("li").unbind('click').click(function(e){
-        var color = $(this).attr('class').substr(9, 6);
+        var color = $(this).attr('class').substr(9);
 
         $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
 
@@ -5506,8 +5510,8 @@ var balloon = {
                 attributes: ['meta.tags']
               },
               success: function(data) {
-                data.data['meta.tags'].sort();
-                operation.success(data.data['meta.tags']);
+                data['meta.tags'].sort();
+                operation.success(data['meta.tags']);
               }
             });
           }
@@ -6648,7 +6652,7 @@ var balloon = {
         if(data === false || data.status != 403) {
           balloon.displayError(response);
         } else {
-          if(data.data.code === 40) {
+          if(data.code === 40) {
             var new_name = balloon.getCloneName(file.blob.name);
             var new_file = {
               name: new_name,

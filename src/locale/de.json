@@ -183,7 +183,8 @@
       "restored_from": "(Wiederhergestellt von v%s)",
       "restored_to": "Datei auf Version %s wiederhergestellt",
       "changed_by": "Geändert von %s vor %s (%s)",
-      "changed_since": "Vor %s (%s)"
+      "changed_since": "Vor %s (%s)",
+      "user_deleted": "[gelöschter User]"
     },
     "advanced": {
       "destroyable": "Selbstzerstörung: (Die Datei/Ordner wird sich, nachdem die angegebene Datum/Zeit abgelaufen ist, selber löschen (Nicht wiederherstellbar!)):",

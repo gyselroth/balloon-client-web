@@ -182,7 +182,8 @@
       "restored_from": "(Restored from v%s)",
       "restored_to": "Restored file to version %s",
       "changed_by": "Changed by %s %s ago (%s)",
-      "changed_since": "%s ago (%s)"
+      "changed_since": "%s ago (%s)",
+      "user_deleted": "[user deleted]"
     },
     "advanced": {
       "destroyable": "Self-Destruction: (The node will destroy itself at the time specified (Not-restorable!)):",

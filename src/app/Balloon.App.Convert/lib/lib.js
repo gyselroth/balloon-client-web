@@ -104,7 +104,7 @@ var app = {
           $add = $view.find('.gr-i-add'),
           $select = $view.find('select');
 
-        if(data.data.length === 0) {
+        if(data.length === 0) {
           $view.find('.fs-shadow-not-supported').show();
           return;
         }

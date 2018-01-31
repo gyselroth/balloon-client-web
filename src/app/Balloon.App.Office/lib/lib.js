@@ -135,7 +135,7 @@ var app = {
       url: app.balloon.base+'/office/session/join?id='+session_id,
       type: 'POST',
       success: function(session) {
-        session.data.id = session_id;
+        session.id = session_id;
         app.initLibreOffice(node, doc, session);
       }
     });
@@ -159,7 +159,7 @@ var app = {
         var msg  = i18next.t('app.office.close_edit_file', node.name);
         app.balloon.promptConfirm(msg, function(){
           app.balloon.xmlHttpRequest({
-            url: app.balloon.base+'/office/session?id='+session.data.id+'&access_token='+session.data.access_token,
+            url: app.balloon.base+'/office/session?id='+session.id+'&access_token='+session.access_token,
             type: 'DELETE',
             error: function(){},
             complete: function() {
@@ -176,14 +176,14 @@ var app = {
           $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
         );
 
-        var src = session.data.wopi_url+app.balloon.base+'/office/wopi/document/'+session.data.id,
+        var src = session.wopi_url+app.balloon.base+'/office/wopi/document/'+session.id,
           src = encodeURIComponent(src),
           url = doc.loleaflet+'?WOPISrc='+src+'&title='+node.name+'&lang='+i18next.language+'&closebutton=0&revisionhistory=0';
 
         $div.append(
           '<form method="post" action="'+url+'" target="loleafletframe">'+
-                    '<input type="hidden" name="access_token" value="'+session.data.access_token+'"/>'+
-                    '<input type="hidden" name="access_token_ttl" value="'+session.data.access_token_ttl+'"/>'+
+                    '<input type="hidden" name="access_token" value="'+session.access_token+'"/>'+
+                    '<input type="hidden" name="access_token_ttl" value="'+session.access_token_ttl+'"/>'+
                   '</form>'+
                   '<iframe style="width: 100%; height: calc(100% - 40px);" name="loleafletframe"/>'
         );
@@ -195,7 +195,7 @@ var app = {
           var msg  = i18next.t('app.office.close_edit_file', node.name);
           app.balloon.promptConfirm(msg, function(){
             app.balloon.xmlHttpRequest({
-              url: app.balloon.base+'/office/session?id='+session.data.id+'&access_token='+session.data.access_token,
+              url: app.balloon.base+'/office/session?id='+session.id+'&access_token='+session.access_token,
               type: 'DELETE',
               error: function(){},
               complete: function() {

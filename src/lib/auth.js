@@ -200,9 +200,9 @@ var login = {
       dataType: 'json',
       cache: false,
       success: function(body) {
-        login.username = body.data;
+        login.username = body;
         localStorage.username = login.username;
-        $('#fs-identity').show().find('#fs-identity-username').html(body.data);
+        $('#fs-identity').show().find('#fs-identity-username').html(body);
       }
     });
   },
@@ -300,7 +300,7 @@ var login = {
 
         case 200:
           login.adapter = 'basic';
-          login.username = response.responseJSON.data;
+          login.username = response.responseJSON;
           localStorage.username = login.username;
           $('#fs-identity').show().find('#fs-identity-username').html(login.username);
           login.initBrowser();

@@ -1,0 +1,12 @@
+#fs-clamav {
+    margin: 10px 0;
+    padding: 8px;
+}
+
+.fs-clamav-positive {
+    background-color: #ff0000;
+}
+
+.fs-clamav-negative {
+    background-color: #7FFF00;
+}
