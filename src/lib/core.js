@@ -815,9 +815,7 @@ var balloon = {
           break;
 
         case 'changed':
-          var ts  = node.changed.sec*1000,
-            date  = new Date(ts),
-            since = balloon.timeSince(date);
+          var since = balloon.timeSince(new Date(node.changed));
 
           html_children.push('<span class="fs-meta-info">'+since+'</span>');
           break;
@@ -1261,8 +1259,7 @@ var balloon = {
               switch(attribute) {
               case 'created':
               case 'last_attr_sync':
-                var ts   = body[attribute].sec*1000,
-                  date   = new Date(ts),
+                  var date   = new Date(body[attribute]),
                   format = kendo.toString(date, kendo.culture().calendar.patterns.g),
                   since  = balloon.timeSince(date);
 
@@ -1351,14 +1348,14 @@ var balloon = {
         for(var log in body) {
           if(body[log].user === null) {
             username = '<user removed>';
-          } else if(body[log].user.username == login.getUsername()) {
-            username = body[log].user.username+' ('+i18next.t('events.you')+')';
+          } else if(body[log].user.name == login.getUsername()) {
+            username = body[log].user.name+' ('+i18next.t('events.you')+')';
           } else {
-            username = body[log].user.username;
+            username = body[log].user.name;
           }
 
           undo    = false;
-          date    = kendo.toString(new Date((body[log].timestamp.sec*1000)), kendo.culture().calendar.patterns.g);
+          date    = kendo.toString(new Date((body[log].timestamp)), kendo.culture().calendar.patterns.g);
           operation = balloon.camelCaseToUnderline(body[log].operation);
           $node   = $('<li></li>');
           $icon  = $('<div class="gr-icon"></div>');
@@ -1433,7 +1430,7 @@ var balloon = {
           }
 
 
-          if(body[log].share !== null && share_events.indexOf(body[log].operation) == -1) {
+          if(body[log].share && share_events.indexOf(body[log].operation) == -1) {
             $node.append(i18next.t('events.share', {
               share:  body[log].share.name,
             })+' ');
@@ -1862,8 +1859,7 @@ var balloon = {
       formatted    = '';
 
     if(node.destroy !== undefined) {
-      var ts = node.destroy.sec,
-        date = new Date(parseInt(ts) * 1000);
+      var date = new Date(node.destroy);
       formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
 
       $fs_destroy_at.val(formatted);
@@ -2491,8 +2487,8 @@ var balloon = {
         aname = parseInt(a.size);
         bname = parseInt(b.size);
       } else if(field == 'changed') {
-        aname = parseInt(a[field].sec);
-        bname = parseInt(b[field].sec);
+        aname = a[field];
+        bname = b[field];
       }
 
       if(dir == 'asc') {
@@ -5182,8 +5178,8 @@ var balloon = {
             break;
           }
 
-          since = balloon.timeSince(new Date((data[i].changed.sec*1000))),
-          ts = kendo.toString(new Date((data[i].changed.sec*1000)), kendo.culture().calendar.patterns.g)
+          since = balloon.timeSince(new Date((data[i].changed))),
+          ts = kendo.toString(new Date((data[i].changed)), kendo.culture().calendar.patterns.g)
 
           if(i != 0) {
             radio = '<input type="radio" name="version" value="'+data[i].version+'"/>';
@@ -5305,9 +5301,8 @@ var balloon = {
         case 'changed':
         case 'deleted':
         case 'created':
-          if(typeof data[prop] === 'object' && data[prop] !== null) {
-            var ts   = data[prop].sec*1000,
-              date   = new Date(ts),
+          if(data[prop]) {
+            var date   = new Date(data[prop]),
               format = kendo.toString(date, kendo.culture().calendar.patterns.g),
               since  = balloon.timeSince(date);
 
