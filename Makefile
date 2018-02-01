@@ -88,8 +88,6 @@ $(TAR): $(BUILD_TARGET)
 	@tar -czvf $(TAR) -C $(PACK_DIR) .
 	@rm -rf $(PACK_DIR)
 
-	@echo "package available at $(TAR)"
-	@echo "MD5 CHECKSUM: `md5sum $(TAR) | cut -d' ' -f1`"
 	@touch $@
 
 

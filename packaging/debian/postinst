@@ -4,7 +4,7 @@ if [ ! -d /var/log/balloon ]; then
   mkdir /var/log/balloon
 fi
 
-chown www-data. /var/log/balloon
+chown -R www-data. /var/log/balloon
 
 if [ ! -d /etc/ssl/balloon ]; then
   mkdir /etc/ssl/balloon
@@ -24,3 +24,5 @@ fi
 if [ ! -f /etc/nginx/conf.d/balloon.conf ]; then
   cp /usr/share/balloon-web/nginx/nginx.conf /etc/nginx/conf.d/balloon.conf
 fi
+
+service nginx restart
