@@ -200,7 +200,7 @@ var login = {
       dataType: 'json',
       cache: false,
       success: function(body) {
-        login.username = body;
+        login.username = body.name;
         localStorage.username = login.username;
         $('#fs-identity').show().find('#fs-identity-username').html(body);
       }
@@ -283,7 +283,7 @@ var login = {
       username: username,
       password: password,
       dataType: 'json',
-      url: '/api/v1/user/whoami',
+      url: '/api/v2/user/whoami',
       beforeSend: function() {
         $username_input.removeClass('error');
         $password_input.removeClass('error');
@@ -300,7 +300,7 @@ var login = {
 
         case 200:
           login.adapter = 'basic';
-          login.username = response.responseJSON;
+          login.username = response.responseJSON.name;
           localStorage.username = login.username;
           $('#fs-identity').show().find('#fs-identity-username').html(login.username);
           login.initBrowser();

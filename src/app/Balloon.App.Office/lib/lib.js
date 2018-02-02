@@ -29,8 +29,7 @@ var app = {
 
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/office/document?id='+app.balloon.id(node),
-      success: function(data) {
-        var doc = data.data;
+      success: function(doc) {
         if(doc.session.length === 0) {
           app.newSession(node, doc);
         } else {

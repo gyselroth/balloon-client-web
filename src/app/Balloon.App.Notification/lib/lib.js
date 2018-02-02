@@ -6,7 +6,6 @@
  */
 
 import $ from "jquery";
-import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
 import css from '../styles/style.css';
 

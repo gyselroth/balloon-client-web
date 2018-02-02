@@ -9,12 +9,14 @@ import office from '../app/Balloon.App.Office/lib/lib.js';
 import convert from '../app/Balloon.App.Convert/lib/lib.js';
 import notification from '../app/Balloon.App.Notification/lib/lib.js';
 import clamav from '../app/Balloon.App.ClamAv/lib/lib.js';
+import desktop from '../app/Balloon.App.DesktopClient/lib/lib.js';
 
 var apps = [
   office,
   convert,
   notification,
   clamav,
+  desktop
 ]
 
 var app = {

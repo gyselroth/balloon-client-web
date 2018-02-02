@@ -770,7 +770,7 @@ var balloon = {
         node.meta.tags = $.makeArray(node.meta.tags);
       }
 
-      if(node.deleted !== false) {
+      if(node.deleted) {
         $that.addClass('fs-node-deleted');
       }
 
@@ -821,7 +821,7 @@ var balloon = {
           break;
 
         case 'deleted':
-          if(node.deleted !== false) {
+          if(node.deleted) {
             html_children.push('<div class="fs-node-shared gr-icon gr-i-trash"></div>');
           } else {
             html_children.push('<div>&nbsp;</div>');
@@ -1251,7 +1251,7 @@ var balloon = {
         });
 
         balloon.xmlHttpRequest({
-          url: balloon.base+'/user/attributes',
+          url: balloon.base+'/user',
           type: 'GET',
           success: function(body) {
             var $table = $('#fs-profile-user').find('table');
@@ -3893,7 +3893,7 @@ var balloon = {
       name += '&name=selected.zip';
     }
 
-    var url = balloon.base+'/node?'+balloon.param('id', id)+''+name;
+    var url = balloon.base+'/node/stream?'+balloon.param('id', id)+''+name;
 
     if(typeof(login) === 'object' && login.getAccessToken() !== false) {
       url += '&access_token='+login.getAccessToken();
@@ -4239,7 +4239,7 @@ var balloon = {
           trash_msg += '<li>'+node[n].name+'</li>';
         }
       }
-    } else if(node.deleted !== false || ignore_flag === true) {
+    } else if(node.deleted || ignore_flag === true) {
       todelete++;
       delete_msg += '<li>'+node.name+'</li>';
     }
@@ -4396,7 +4396,7 @@ var balloon = {
           untouched_msg += '<li>'+node[n].name+'</li>';
         }
       }
-    } else if(node.deleted !== false) {
+    } else if(node.deleted) {
       torestore++;
       clean = node;
       restore_msg += '<li>'+node.name+'</li>';
@@ -5455,7 +5455,7 @@ var balloon = {
     ];
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/attributes',
+      url: balloon.base+'/node',
       type: 'GET',
       dataType: 'json',
       data: {
