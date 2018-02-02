@@ -10,9 +10,7 @@ import i18next from 'i18next';
 import css from '../styles/style.css';
 
 var app = {
-  render: function(core) {
-    this.balloon = core;
-
+  render: function() {
     var $node = $('<li id="fs-view-shadow" style="display: inline-block;" class="fs-view-bar-active">'
                 +'<span>'+i18next.t('app.balloon_app_convert.menu_title')+'</span>'
             +'</li>');
@@ -32,17 +30,17 @@ var app = {
 
     $('#fs-content-data').append($view);
 
+    this.$view = $view;
+  },
 
-    $view.find('ul').on('click', '.gr-i-remove', function(){
+  init: function(core)  {
+    this.balloon = core;
+    $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
+
+    this.$view.find('ul').on('click', '.gr-i-remove', function(){
       var id = $(this).parent().attr('data-id');
       app.deleteSlave(app.balloon.last, id);
     });
-
-    app.$view = $view;
-  },
-
-  init: function()  {
-    $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
   },
 
   resetView: function() {
@@ -78,11 +76,11 @@ var app = {
         var $view = app.$view,
           $ul = $view.find('ul');
 
-        for(var slave in data.data) {
-          let sprite = app.balloon.getSpriteClass(data.data[slave].format);
+        for(var slave in data) {
+          let sprite = app.balloon.getSpriteClass(data[slave].format);
           $ul.append('<li data-id="'+slave+'"><span class="k-sprite gr-i-remove gr-icon"></span>'
                     +'<span class="k-sprite '+sprite+' gr-icon"></span>'
-                    +'<span>'+data.data[slave].format+'</span></li>');
+                    +'<span>'+data[slave].format+'</span></li>');
         }
       }
     })
@@ -110,10 +108,10 @@ var app = {
 
         $select.find('option[value]').remove();
 
-        for(var format in data.data) {
-          let sprite = app.balloon.getSpriteClass(data.data[format]);
-          $select.append('<option value="'+data.data[format]+'" class="'+sprite+' gr-icon">'
-                    +data.data[format]+'</option>');
+        for(var format in data) {
+          let sprite = app.balloon.getSpriteClass(data[format]);
+          $select.append('<option value="'+data[format]+'" class="'+sprite+' gr-icon">'
+                    +data[format]+'</option>');
         }
 
         $add.unbind('click').bind('click', function() {

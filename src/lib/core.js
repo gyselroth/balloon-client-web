@@ -131,12 +131,9 @@ var balloon = {
    * @return void
    */
   init: function() {
-    app.render(this);
-
     if(balloon.isInitialized()) {
       balloon.resetDom();
-    } else
- {
+    } else {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 

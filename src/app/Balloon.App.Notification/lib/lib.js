@@ -10,15 +10,13 @@ import i18next from 'i18next';
 import css from '../styles/style.css';
 
 var app = {
-  render: function(core) {
-    this.balloon = core;
-
+  render: function() {
     var $node = $('<li id="fs-view-notification" style="display: inline-block;" class="fs-view-bar-active">'
                 +'<span>'+i18next.t('app.balloon_app_notification.menu_title')+'</span>'
             +'</li>');
 
     $('#fs-view-bar').find('ul').append($node);
-    app.$menu = $node;
+    this.$menu = $node;
 
     var $view = $('<div id="fs-notification" class="fs-view-content">'
                 +'<div id="fs-notification-description">'+i18next.t('app.balloon_app_notification.description')+'</div>'
@@ -29,8 +27,15 @@ var app = {
             +'</div>');
 
     $('#fs-content-data').prepend($view);
+    this.$view = $view;
+    this.resetView();
+  },
 
-    $view.find('input[type=submit]').on('click', function(){
+  init: function(core)  {
+    $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
+    this.balloon = core;
+
+    this.$view.find('input[type=submit]').on('click', function(){
       var id = $(this).parent().attr('data-id');
       app.subscribe(app.balloon.last,
         $view.find('input[name=subscribe]').is(':checked'),
@@ -38,13 +43,6 @@ var app = {
         $view.find('input[name=recursive]').is(':checked')
       );
     });
-
-    app.$view = $view;
-    app.resetView();
-  },
-
-  init: function()  {
-    $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
   },
 
   resetView: function() {

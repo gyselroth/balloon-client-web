@@ -11,12 +11,12 @@ import i18next from 'i18next';
 import css from '../styles/style.css';
 
 var app = {
-  render: function(core) {
-    this.balloon = core;
-    app.balloon._treeDblclick = app.treeDblclick;
+  render: function() {
   },
 
   init: function(core)  {
+    this.balloon = core;
+    app.balloon._treeDblclick = app.treeDblclick;
     app.addTextFile = app.balloon.addFile;
     app.balloon.addFile = app.addFile;
   },

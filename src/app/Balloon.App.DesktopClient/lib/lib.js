@@ -12,10 +12,9 @@ import css from '../styles/style.css';
 import login from '../../../lib/auth.js';
 
 var app = {
-  render: function(core) {
-    this.balloon = core;
+  render: function() {
     this.$menu = $('<li>'
-      +'<span class="gr-icon gr-i-favourite"></span>'
+      +'<span class="gr-icon gr-i-laptop"></span>'
       +'<span>'+i18next.t('app.balloon_app_desktopclient.menu')+'</span>'
     +'</li>');
 
@@ -24,7 +23,7 @@ var app = {
     this.$menu.insertAfter('#fs-menu-user-events');
   },
 
-  init: function()  {
+  init: function(core)  {
     this.$menu.unbind('click').bind('click', function(){
       app.openPopup();
     });

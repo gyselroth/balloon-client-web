@@ -170,7 +170,7 @@ var login = {
 
   verifyOidcAuthentication: function() {
     login.xmlHttpRequest({
-      url: '/api/auth',
+      url: '/api/v2/user/whoami',
       cache: false,
       complete: function(response) {
         switch(response.status) {
@@ -179,8 +179,11 @@ var login = {
           $('#login-oidc-error').show();
           break;
 
-        case 400:
-          login.fetchIdentity();
+        case 200:
+          login.username = response.responseJSON.name;
+          localStorage.username = login.username;
+          $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+
           login.initBrowser();
           break;
 

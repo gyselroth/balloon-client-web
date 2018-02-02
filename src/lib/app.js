@@ -22,7 +22,7 @@ var apps = [
 var app = {
   render: function(core) {
     for(let app in apps) {
-      apps[app].render(core);
+      apps[app].render();
     }
   },
 

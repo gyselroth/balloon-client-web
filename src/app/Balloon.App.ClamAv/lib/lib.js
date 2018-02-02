@@ -10,11 +10,11 @@ import i18next from 'i18next';
 import css from '../styles/style.css';
 
 var app = {
-  render: function(core) {
-    this.balloon = core;
+  render: function() {
   },
 
-  init: function()  {
+  init: function(core)  {
+    this.balloon = core;
     $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
   },
 

@@ -12,6 +12,7 @@ import i18nextLocalStorageCache from 'i18next-localstorage-cache';
 import i18nextSprintfPostProcessor from 'i18next-sprintf-postprocessor';
 import jqueryI18next from 'jquery-i18next';
 import login from './auth.js'
+import app from './app.js'
 
 var translate = {
   config: {},
@@ -106,6 +107,7 @@ var translate = {
 
         $('[data-i18n]').localize();
 
+        app.render();
         login.init(translate.config);
 
         var current = localStorage.i18nextLng;
