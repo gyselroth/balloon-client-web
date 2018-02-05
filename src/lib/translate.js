@@ -18,7 +18,14 @@ var translate = {
   config: {},
   load: function(url, options, callback, data) {
     try {
-      require('bundle-loader!../../build/locale/'+url+'.json')((locale) => {
+      var base;
+      if(process.env.NODE_ENV === 'production') {
+        base = 'locale';
+      } else {
+        base = '../../build/locale';
+      }
+
+      require('bundle-loader!'+base+'/'+url+'.json')((locale) => {
         locale = JSON.stringify(locale);
         callback(locale, {status: '200'});
       });

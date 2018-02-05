@@ -3,8 +3,8 @@
   "description": "Balloon Web UI",
   "title": "balloon",
   "scripts": {
-    "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js",
+    "start": "NODE_ENV=development webpack-dev-server --open --config webpack.dev.js",
+    "build": "NODE_ENV=production webpack --config webpack.prod.js",
     "install": "napa StefH/bower-kendo-ui-web:kendo-ui-web",
     "postinstall": "echo > node_modules/kendo-ui-web/scripts/kendo.data.min.js; echo > node_modules/kendo-ui-web/scripts/kendo.draganddrop.min.js"
   },
