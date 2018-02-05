@@ -17,21 +17,15 @@ import app from './app.js'
 var translate = {
   config: {},
   load: function(url, options, callback, data) {
-    try {
-      var base;
-      if(process.env.NODE_ENV === 'production') {
-        base = 'locale';
-      } else {
-        base = '../../build/locale';
+    $.ajax({
+      url: '/locale/'+url+'.json',
+      success: function(body, responseText, response) {
+        callback(response.responseText, {status: '200'});
+      },
+      error: function() {
+        callback(null, {status: '404'});
       }
-
-      require('bundle-loader!'+base+'/'+url+'.json')((locale) => {
-        locale = JSON.stringify(locale);
-        callback(locale, {status: '200'});
-      });
-    } catch (e) {
-      callback(null, {status: '404'});
-    }
+    });
   },
 
   loadCulture: function(locale) {

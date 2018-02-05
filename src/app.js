@@ -12,13 +12,15 @@ import kendo_theme from './themes/default/css/kendo_theme.css';
 import layout from './themes/default/css/layout.css';
 import responsive from './themes/default/css/responsive.css';
 import icons from '@gyselroth/icon-collection/src/icons.css';
+import $ from "jquery";
 import translate from './lib/translate.js';
 
-try {
-  let wait = require('bundle-loader!../config.json');
-  wait((config) => {
-    translate.init(config);
-  })
-} catch (e) {
-  translate.init({});
-}
+$.ajax({
+   url: '/config.json',
+   success: function(body, responseText, response) {
+      translate.init(body);
+   },
+   error: function() {
+      translate.init({});
+  }
+});

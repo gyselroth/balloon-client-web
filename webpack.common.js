@@ -53,7 +53,6 @@ module.exports = {
       'process.env.VERSION': JSON.stringify(gitRevisionPlugin.version()),
       'process.env.COMMITHASH': JSON.stringify(gitRevisionPlugin.commithash()),
       'process.env.BRANCH': JSON.stringify(gitRevisionPlugin.branch()),
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
     }),
     new MergeJsonWebpackPlugin({
       "output": {
