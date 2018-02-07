@@ -137,6 +137,7 @@ var balloon = {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
+    app.preInit(this);
     balloon.kendoFixes();
 
     var $fs_browser_layout = $("#fs-browser-layout");
@@ -265,7 +266,7 @@ var balloon = {
 
     balloon.showHint();
     balloon.initialized = true;
-    app.init(this);
+    app.postInit(this);
   },
 
 
@@ -378,7 +379,7 @@ var balloon = {
     options.complete = function(jqXHR, textStatus) {
       balloon.hideLoader();
 
-      var valid = ['POST', 'PUT', 'DELETE'],
+      var valid = ['POST', 'PUT', 'DELETE', 'PATCH'],
         show  = (valid.indexOf(options.type) > -1);
 
       if(show && jqXHR.status.toString().substr(0, 1) === '2') {
@@ -848,8 +849,11 @@ var balloon = {
         case 'tag':
           if(balloon.isValidColor(node.meta.color)) {
             var color_tag = '<span class="fs-color-tag fs-color-'+node.meta.color+'"></span>';
-            html_children.push(color_tag);
+          } else {
+            var color_tag = '<span class="fs-color-tag"></span>';
           }
+
+          html_children.push(color_tag);
 
           break;
         }
@@ -1038,7 +1042,7 @@ var balloon = {
 
     if(collection !== null) {
       balloon.menuLeftAction(menu, false);
-      balloon.refreshTree('/collection/children', {id: collection}, null, {nostate: true});
+      balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
     } else {
       balloon.menuLeftAction(menu);
     }
@@ -1063,7 +1067,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/parents',
+      url: balloon.base+'/nodes/parents',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -1215,7 +1219,7 @@ var balloon = {
         }
 
         balloon.xmlHttpRequest({
-          url: balloon.base+'/user/quota-usage',
+          url: balloon.base+'/users/quota-usage',
           type: 'GET',
           dataType: 'json',
           success: function(data) {
@@ -1248,7 +1252,7 @@ var balloon = {
         });
 
         balloon.xmlHttpRequest({
-          url: balloon.base+'/user',
+          url: balloon.base+'/users/whoami',
           type: 'GET',
           success: function(body) {
             var $table = $('#fs-profile-user').find('table');
@@ -1320,7 +1324,7 @@ var balloon = {
     ];
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/event-log',
+      url: balloon.base+'/nodes/event-log',
       data: params,
       type: 'GET',
       success: function(body) {
@@ -1433,19 +1437,19 @@ var balloon = {
             })+' ');
           }
 
-          if(body[log].parent !== null && body[log].parent.name === null) {
+          if(body[log].parent && !body[log].parent.name) {
             body[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
           }
 
-          if(body[log].previous !== null && body[log].previous.parent !== undefined && body[log].previous.parent !== null) {
-            if(body[log].previous.parent.name === null) {
+          if(body[log].previous && body[log].previous.parent) {
+            if(!body[log].previous.parent.name) {
               body[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
             }
-          } else if(body[log].previous !== null && body[log].previous.parent === null) {
+          } else if(body[log].previous && !body[log].previous.parent) {
             body[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
-          if(body[log].parent === null) {
+          if(!body[log].parent) {
             body[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
@@ -1456,13 +1460,14 @@ var balloon = {
             parent: body[log].parent
           }));
 
-          if(body[log].node === null) {
+          if(!body[log].node) {
             undo = false;
           }
 
           if(undo === true) {
-            $undo = $('<div class="gr-icon gr-i-undo"></div>').unbind('click').bind('click',
-              body[log], balloon._undoEvent);
+            $undo = $('<div class="gr-icon gr-i-undo"></div>').off('click')
+              .on('click', null, body[log], balloon._undoEvent);
+
             $node.append($undo);
           }
 
@@ -1564,25 +1569,25 @@ var balloon = {
       };
     }
 
-    switch(e.operation) {
+    switch(e.data.operation) {
     case 'deleteCollectionReference':
     case 'deleteCollectionShare':
     case 'deleteCollection':
     case 'deleteFile':
-      var msg  = i18next.t('events.prompt.trash_restore', e.node.name);
+      var msg  = i18next.t('events.prompt.trash_restore', e.data.node.name);
       balloon.promptConfirm(msg, [
         {
           action: 'undelete',
-          params: [e.node.id]
+          params: [e.data.node.id]
         }, successAction
       ]);
       break;
     case 'addCollectionShare':
-      var msg  = i18next.t('events.prompt.unshare', e.node.name);
+      var msg  = i18next.t('events.prompt.unshare', e.data.node.name);
       balloon.promptConfirm(msg, [
         {
           action: '_shareCollection',
-          params: [e.node, {options: {shared: false}}]
+          params: [e.data.node, {options: {shared: false}}]
         }, successAction
       ]);
       break;
@@ -1600,21 +1605,21 @@ var balloon = {
         successAction = null;
       }
 
-      var msg  = i18next.t('events.prompt.trash_delete', e.node.name);
+      var msg  = i18next.t('events.prompt.trash_delete', e.data.node.name);
       balloon.promptConfirm(msg, [
         {
           action: 'remove',
-          params: [e.node.id]
+          params: [e.data.node.id]
         }, successAction
       ]);
       break;
     case 'editFile':
     case 'restoreFile':
-      var msg  = i18next.t('events.prompt.restore', e.node.name, e.previous.version);
+      var msg  = i18next.t('events.prompt.restore', e.data.node.name, e.data.previous.version);
       balloon.promptConfirm(msg, [
         {
           action: 'restoreVersion',
-          params: [e.node.id, e.previous.version]
+          params: [e.data.node.id, e.data.previous.version]
         }, successAction
       ]);
       break;
@@ -1622,11 +1627,11 @@ var balloon = {
     case 'renameCollection':
     case 'renameCollectionShare':
     case 'renameCollectionReference':
-      var msg  = i18next.t('events.prompt.rename', e.node.name, e.previous.name);
+      var msg  = i18next.t('events.prompt.rename', e.data.node.name, e.data.previous.name);
       balloon.promptConfirm(msg, [
         {
           action: 'rename',
-          params: [e.node.id, e.previous.name]
+          params: [e.data.node.id, e.data.previous.name]
         }, successAction
       ]);
       break;
@@ -1634,11 +1639,11 @@ var balloon = {
     case 'moveCollection':
     case 'moveCollectionReference':
     case 'moveCollectionShare':
-      var msg  = i18next.t('events.prompt.move', e.node.name, e.previous.parent.name);
+      var msg  = i18next.t('events.prompt.move', e.data.node.name, e.data.previous.parent.name);
       balloon.promptConfirm(msg, [
         {
           action: 'move',
-          params: [e.node.id, e.previous.parent]
+          params: [e.data.node.id, e.data.previous.parent]
         }, successAction
       ]);
       break;
@@ -1773,24 +1778,24 @@ var balloon = {
 
     switch(action) {
     case 'cloud':
-      balloon.refreshTree('/collection/children', {}, {});
+      balloon.refreshTree('/collections/children', {}, {});
       break;
 
     case 'shared_for_me':
-      balloon.refreshTree('/node/query', {filter: {shared: true, reference: {$exists: 1}}}, {});
+      balloon.refreshTree('/nodes/query', {filter: {shared: true, reference: {$exists: 1}}}, {});
       break;
 
     case 'shared_from_me':
-      balloon.refreshTree('/node/query', {filter: {shared: true, reference: {$exists: 0}}}, {});
+      balloon.refreshTree('/nodes/query', {filter: {shared: true, reference: {$exists: 0}}}, {});
       break;
 
     case 'shared_link':
-      balloon.refreshTree('/node/query', {filter: {sharelink: {$exists: 1}}}, {});
+      balloon.refreshTree('/nodes/query', {filter: {sharelink: {$exists: 1}}}, {});
       break;
 
     case 'trash':
       balloon.tree.filter.deleted = 1;
-      balloon.refreshTree('/node/trash', {}, {});
+      balloon.refreshTree('/nodes/trash', {}, {});
       break;
 
     case 'search':
@@ -1886,7 +1891,7 @@ var balloon = {
       if(node.readonly !== $fs_readonly.is(':checked')) {
         node.readonly = $fs_readonly.is(':checked');
         balloon.xmlHttpRequest({
-          url: balloon.base+'/node/readonly',
+          url: balloon.base+'/nodes/readonly',
           type: 'POST',
           data: {
             id: balloon.id(node),
@@ -1914,9 +1919,9 @@ var balloon = {
         ts = Math.round(ts.getTime() / 1000);
       }
 
-      url = balloon.base+'/node?id='+balloon.id(node)+'&'+'at='+ts;
+      url = balloon.base+'/nodes?id='+balloon.id(node)+'&'+'at='+ts;
     } else {
-      url = balloon.base+'/node?id='+balloon.id(node)+'&at=0';
+      url = balloon.base+'/nodes?id='+balloon.id(node)+'&at=0';
     }
 
     balloon.xmlHttpRequest({
@@ -2135,13 +2140,13 @@ var balloon = {
 
         if(id !== null) {
           params.id = id;
-          balloon.refreshTree('/collection/children', params, null, {action: '_FOLDERUP'});
+          balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
         } else {
 
           balloon.menuLeftAction(balloon.getCurrentMenu());
         }
       } else {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
       }
 
       balloon.resetDom(
@@ -2206,7 +2211,7 @@ var balloon = {
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
       'view-bar', 'history', 'share-collection', 'share-link', 'search']);
 
-    balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+    balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
   },
 
 
@@ -2257,7 +2262,7 @@ var balloon = {
         read: function(operation, a) {
           balloon.resetDom('upload');
           if(balloon.datasource._url == undefined) {
-            balloon.datasource._url = balloon.base+'/collection/children';
+            balloon.datasource._url = balloon.base+'/collections/children';
           }
 
           if(balloon.isSystemNode(operation.data)) {
@@ -2771,7 +2776,7 @@ var balloon = {
    */
   rename: function(node, new_name) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/name?id='+balloon.id(node),
+      url: balloon.base+'/nodes/name?id='+balloon.id(node),
       type: 'POST',
       dataType: 'json',
       data: {
@@ -2795,7 +2800,7 @@ var balloon = {
           );
         }
 
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.rename_node = null;
       },
       error: function(response) {
@@ -3136,7 +3141,7 @@ var balloon = {
       if(id === '') {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
-        balloon.refreshTree('/collection/children', {id: id}, null, {action: false});
+        balloon.refreshTree('/collections/children', {id: id}, null, {action: false});
       }
 
       var $next = $that.nextAll();
@@ -3315,7 +3320,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/collection',
+      url: balloon.base+'/collections',
       type: 'POST',
       data: {
         id:   balloon.getCurrentCollectionId(),
@@ -3323,8 +3328,8 @@ var balloon = {
       },
       dataType: 'json',
       success: function(data) {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data;
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.added_rename = data.id;
       },
     });
   },
@@ -3345,11 +3350,11 @@ var balloon = {
     name = encodeURI(name);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
+      url: balloon.base+'/files?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
       type: 'PUT',
       success: function(data) {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data;
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.added_rename = data.id;
       },
     });
   },
@@ -3419,7 +3424,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/collection/share',
+      url: balloon.base+'/collections/share',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -3630,7 +3635,7 @@ var balloon = {
    * @return void
    */
   deleteShare: function(node) {
-    var url = balloon.base+'/collection/share?id='+balloon.id(node);
+    var url = balloon.base+'/collections/share?id='+balloon.id(node);
 
     balloon.xmlHttpRequest({
       url: url,
@@ -3638,7 +3643,7 @@ var balloon = {
       dataType: 'json',
       statusCode: {
         204: function(e) {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share-collection');
           }
@@ -3709,7 +3714,7 @@ var balloon = {
    * @return  void
    */
   _shareCollection: function(node, acl, name) {
-    var url = balloon.base+'/collection/share?id='+balloon.id(node);
+    var url = balloon.base+'/collections/share?id='+balloon.id(node);
 
     balloon.xmlHttpRequest({
       url: url,
@@ -3722,13 +3727,13 @@ var balloon = {
       statusCode: {
         201: function(e) {
           node.shared = true;
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share-collection');
           }
         },
         204: function(e) {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share-collection');
           }
@@ -3747,7 +3752,7 @@ var balloon = {
   shareLink: function(node) {
     balloon.resetDom('share-link');
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/share-link',
+      url: balloon.base+'/nodes/share-link',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -3833,7 +3838,7 @@ var balloon = {
 
           options.statusCode = {
             204: function(e) {
-              balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+              balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
               balloon.switchView('share-link');
             },
           }
@@ -3890,7 +3895,7 @@ var balloon = {
       name += '&name=selected.zip';
     }
 
-    var url = balloon.base+'/node/stream?'+balloon.param('id', id)+''+name;
+    var url = balloon.base+'/nodes/content?'+balloon.param('id', id)+''+name;
 
     if(typeof(login) === 'object' && login.getAccessToken() !== false) {
       url += '&access_token='+login.getAccessToken();
@@ -3971,7 +3976,7 @@ var balloon = {
       .unbind('keyup').bind('keyup', balloon.buildExtendedSearchQuery);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/user/node-attribute-summary',
+      url: balloon.base+'/users/node-attribute-summary',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -4095,7 +4100,7 @@ var balloon = {
       return;
     }
 
-    balloon.refreshTree('/file/search', {query: query});
+    balloon.refreshTree('/files/search', {query: query});
   },
 
 
@@ -4192,7 +4197,7 @@ var balloon = {
       return;
     }
 
-    balloon.refreshTree('/file/search', {query: query});
+    balloon.refreshTree('/files/search', {query: query});
   },
 
 
@@ -4329,7 +4334,7 @@ var balloon = {
     node = balloon.id(node);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node?ignore_flag='+ignore_flag+'&force='+force+'&'+balloon.param('id', node),
+      url: balloon.base+'/nodes?ignore_flag='+ignore_flag+'&force='+force+'&'+balloon.param('id', node),
       type: 'DELETE',
       dataType: 'json',
       beforeSend: function() {
@@ -4359,7 +4364,7 @@ var balloon = {
         if(balloon.getCurrentCollectionId() === null) {
           balloon.menuLeftAction(balloon.getCurrentMenu());
         } else {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         }
       },
     });
@@ -4422,7 +4427,7 @@ var balloon = {
     node = balloon.id(node);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/undelete?'+balloon.param('id', node),
+      url: balloon.base+'/nodes/undelete?'+balloon.param('id', node),
       type: 'POST',
       data: {
         move: move,
@@ -4439,7 +4444,7 @@ var balloon = {
         if(balloon.getCurrentCollectionId() === null) {
           balloon.menuLeftAction(balloon.getCurrentMenu());
         } else {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         }
       },
       error: function(response) {
@@ -4500,7 +4505,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/'+action,
+      url: balloon.base+'/nodes/'+action,
       type: 'POST',
       dataType: 'json',
       data: {
@@ -4517,7 +4522,7 @@ var balloon = {
           count = source.length;
         }
 
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
       error: function(data) {
         if(data.status === 400 && data.responseJSON && data.responseJSON.code === 19 && conflict !== 2) {
@@ -4746,7 +4751,7 @@ var balloon = {
       $textarea = $div.find('textarea');
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file/',
+      url: balloon.base+'/files/',
       type: 'GET',
       data: {
         id: balloon.id(node),
@@ -4833,7 +4838,7 @@ var balloon = {
    */
   saveFile: function(node, content) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file?id='+balloon.id(node),
+      url: balloon.base+'/files?id='+balloon.id(node),
       type: 'PUT',
       data: content,
       success: function(data) {
@@ -4880,7 +4885,7 @@ var balloon = {
       var $k_display = $div.kendoWindow(options).data("kendoWindow").open().maximize();
     }
 
-    var url = balloon.base+'/file?id='+node.id+'&hash='+node.hash;
+    var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
     if(typeof(login) === 'object' && login.getAccessToken() !== false) {
       url += '&access_token='+login.getAccessToken();
     }
@@ -4946,7 +4951,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/user/quota-usage',
+      url: balloon.base+'/users/quota-usage',
       type: 'GET',
       dataType: 'json',
       success: function(data) {
@@ -5139,7 +5144,7 @@ var balloon = {
 
     balloon.xmlHttpRequest({
       dataType: "json",
-      url: balloon.base+'/file/history',
+      url: balloon.base+'/files/history',
       type: "GET",
       data: {
         id: balloon.id(node)
@@ -5223,14 +5228,14 @@ var balloon = {
    */
   restoreVersion: function(node, version) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file/restore?id='+balloon.id(node),
+      url: balloon.base+'/files/restore?id='+balloon.id(node),
       type: 'POST',
       dataType: 'json',
       data: {
         version: version
       },
       success: function(data) {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.displayHistory(node);
       }
     });
@@ -5263,7 +5268,7 @@ var balloon = {
    * @param   object data
    * @return  void
    */
-  displayProperties: function(node, data) {
+  displayProperties: function(node, ) {
     balloon.resetDom('properies');
 
     var $fs_prop_collection = $("#fs-properties-collection").hide(),
@@ -5280,9 +5285,10 @@ var balloon = {
     var $fs_prop_tags = $("#fs-properties-meta-tags").show();
     $("#fs-properties-node").show();
 
-    var success = function(data) {
+    //var success = function(data) {
       var $field;
-      data = $.extend(true, data, node.toJSON());
+      //data = $.extend(true, data, node.toJSON());
+console.log(data);
 
       if(data.reference || data.shared) {
         data.share = data;
@@ -5352,6 +5358,7 @@ var balloon = {
                   $fs_prop_tags_parent = $fs_prop_tags.parent();
 
                 $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
+console.log(1);
                   balloon.initMetaTagCompletion();
                   $('#fs-preview-add-tag').show();
                   $fs_prop_tags_parent
@@ -5428,9 +5435,9 @@ var balloon = {
       });
 
       balloon.handleTags(node);
-    };
+/*    };*/
 
-
+    /*
     if(data !== undefined) {
       success(data);
       return;
@@ -5452,7 +5459,7 @@ var balloon = {
     ];
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node',
+      url: balloon.base+'/nodes',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -5460,7 +5467,7 @@ var balloon = {
         attributes: attributes
       },
       success: success,
-    });
+    });*/
   },
 
   /**
@@ -5497,7 +5504,7 @@ var balloon = {
         transport: {
           read: function(operation) {
             balloon.xmlHttpRequest({
-              url: balloon.base+'/user/node-attribute-summary',
+              url: balloon.base+'/users/node-attribute-summary',
               data: {
                 attributes: ['meta.tags']
               },
@@ -5560,7 +5567,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file/preview?encode=base64&id='+balloon.id(node),
+      url: balloon.base+'/files/preview?encode=base64&id='+balloon.id(node),
       type: 'GET',
       timeout: 5000,
       beforeSend: function() {
@@ -5684,13 +5691,7 @@ var balloon = {
       e.preventDefault();
     }
 
-    var allowed = new RegExp("^[a-zA-Z0-9\-\_]+$");
-    if (allowed.test(strcode) || code == 8) {
-      return true;
-    }
-
-    e.preventDefault();
-    return false;
+    return true;
   },
 
 
@@ -5703,8 +5704,8 @@ var balloon = {
    */
   saveMetaAttributes: function(node, meta) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/meta-attributes?id='+balloon.id(node),
-      type: 'POST',
+      url: balloon.base+'/nodes/meta?id='+balloon.id(node),
+      type: 'PATCH',
       data: {attributes: meta},
       success: function() {
         for(var attr in meta) {
@@ -5841,7 +5842,7 @@ var balloon = {
       if(balloon.getCurrentCollectionId() === null) {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       }
       break;
 
@@ -6335,7 +6336,6 @@ var balloon = {
           transfered_bytes: 0,
           success:  Math.ceil(file.blob.size / balloon.BYTES_PER_CHUNK),
           slices:   Math.ceil(file.blob.size / balloon.BYTES_PER_CHUNK),
-          chunkgroup: balloon.UUIDv4(),
           manager:  balloon.upload_manager,
           request:  null,
           status:   1,
@@ -6504,7 +6504,7 @@ var balloon = {
       );
 
       $(".fs-status-loader").hide();
-      balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+      balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       balloon.displayQuota();
 
       setTimeout(function() {
@@ -6513,20 +6513,6 @@ var balloon = {
     }
   },
 
-
-  /**
-   * Create uuid v4 conform string
-   *
-   * @return string
-   */
-  UUIDv4: function() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
-  },
-
-
   /**
    * transfer selected files to the server
    *
@@ -6534,8 +6520,12 @@ var balloon = {
    * @return  void
    */
   _chunkUpload: function(file) {
-    var url = balloon.base + '/file/chunk?name=' + encodeURI(file.name) + '&index=' +
-      file.index + '&chunks=' + file.slices + '&chunkgroup=' + file.chunkgroup+'&size=' + file.blob.size;
+    var url = balloon.base + '/files/chunk?name=' + encodeURI(file.name) + '&index=' +
+      file.index + '&chunks=' + file.slices + '&size=' + file.blob.size;
+
+    if(file.session) {
+      url += '&session='+file.session;
+    }
 
     if(file.manager.parent_node !== null) {
       url += '&collection='+balloon.id(file.manager.parent_node);
@@ -6616,7 +6606,8 @@ var balloon = {
         $('#fs-uploadmgr-bytes > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
         $('#fs-upload-info > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
       },
-      success: function() {
+      success: function(response) {
+        file.session = response.session;
         balloon._chunkUploadManager(file);
         balloon._checkUploadEnd();
       },
