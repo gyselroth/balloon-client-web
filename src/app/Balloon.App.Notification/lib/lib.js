@@ -31,16 +31,16 @@ var app = {
     this.resetView();
   },
 
-  init: function(core)  {
+  postInit: function(core)  {
     $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
     this.balloon = core;
 
     this.$view.find('input[type=submit]').on('click', function(){
       var id = $(this).parent().attr('data-id');
       app.subscribe(app.balloon.last,
-        $view.find('input[name=subscribe]').is(':checked'),
-        $view.find('input[name=exclude_me]').is(':checked'),
-        $view.find('input[name=recursive]').is(':checked')
+        app.$view.find('input[name=subscribe]').is(':checked'),
+        app.$view.find('input[name=exclude_me]').is(':checked'),
+        app.$view.find('input[name=recursive]').is(':checked')
       );
     });
   },
@@ -60,6 +60,7 @@ var app = {
       app.resetView();
       $('.fs-view-content').hide();
       $('#fs-view-bar').find('li').removeClass('fs-view-bar-active');
+      $('#fs-view-notification').addClass('fs-view-bar-active');
       app.$view.show();
       app.$view.find('input[name=subscribe]').prop('checked', app.balloon.last.subscription);
       app.$view.find('input[name=exclude_me]').prop('checked', app.balloon.last.subscription_exclude_me);
@@ -69,7 +70,7 @@ var app = {
 
   subscribe: function(node, subscription, exclude_me, recursive) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/notification/subscribe',
+      url: app.balloon.base+'/notifications/subscribe',
       type: 'POST',
       dataType: 'json',
       data: {
@@ -78,6 +79,9 @@ var app = {
         exclude_me: exclude_me,
         recursive: recursive
       },
+      success: function(node) {
+        app.balloon.last = node;
+      }
     });
   }
 };

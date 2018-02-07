@@ -58,57 +58,6 @@ td input {
     margin-bottom: 0;
 }
 
-/*
-.fs-onoffswitch {
-    position: relative;
-    width: 45px;
-    -webkit-user-select:none;
-    -moz-user-select:none;
-    -ms-user-select: none;
-}
-
-.fs-onoffswitch-checkbox {
-    display: none !important;
-}
-
-.fs-onoffswitch-label {
-    display: block;
-    overflow: hidden;
-    cursor: pointer;
-    height: 20px;
-    padding: 0;
-    line-height: 20px;
-    border: none;
-    border-radius: 20px;
-    background-color: #000;
-    transition: background-color 0.3s ease-in;
-}
-
-.fs-onoffswitch-label:before {
-    content: "";
-    display: block;
-    width: 16px;
-    margin: 0px;
-    background: #FFFFFF;
-    position: absolute; top: 0; bottom: 0;
-    right: 25px;
-    border: 2px solid #000;
-    border-radius: 20px;
-    transition: all 0.3s ease-in 0s;
-}
-
-.fs-onoffswitch-checkbox:checked + .fs-onoffswitch-label {
-    background-color: #47991f;
-}
-
-.fs-onoffswitch-checkbox:checked + .fs-onoffswitch-label, .fs-onoffswitch-checkbox:checked + .fs-onoffswitch-label:before {
-   border-color: #47991f;
-}
-
-.fs-onoffswitch-checkbox:checked + .fs-onoffswitch-label:before {
-    right: 0px !important;
-}*/
-
 button:hover,
 button:focus,
 button:active,
@@ -184,6 +133,7 @@ select {
 
 #login-oidc img {
     max-height: 50px;
+    max-width: 250px;
     margin: 5px auto 0 auto;
     cursor: pointer;
 }
@@ -348,17 +298,30 @@ td {
     display: none;
 }
 
-#login-header {
-    margin: 5px 0 20px 0;
-    font-weight: bold;
-    font-size: 1.3em;
-}
-
-#login-header .gr-icon {
+#login-logo {
+    background: url(../img/icon_black.svg) no-repeat center;
+    display: block;
+    width: 20px;
+    height: 20px;
     display: inline-block;
     position: relative;
     top: 5px;
     margin-right: 3px;
+}
+
+#fs-logo {
+    background: url(../img/icon_white.svg) no-repeat center;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 20px;
+    top: 18px;
+}
+
+#login-header {
+    margin: 5px 0 20px 0;
+    font-weight: bold;
+    font-size: 1.3em;
 }
 
 #login-box {
@@ -990,14 +953,6 @@ td {
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
-}
-
-#fs-browser-top-bar .gr-i-cloud {
-    filter: invert(100%);
-    -webkit-filter: invert(100%);
-    position: absolute;
-    left: 20px;
-    top: 15px;
 }
 
 #fs-title {
@@ -2236,8 +2191,12 @@ td {
     color: #555;
 }
 
-#fs-properties-share .gr-icon {
+#fs-properties-shared .gr-icon {
     margin-top: -4px;
+}
+
+#fs-properties-shared .fs-value {
+    line-height: 25px;
 }
 
 .k-autocomplete .k-i-close {

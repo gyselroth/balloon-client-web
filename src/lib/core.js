@@ -772,7 +772,7 @@ var balloon = {
         $that.addClass('fs-node-deleted');
       }
 
-      var order = ['name', 'shared', 'deleted', 'sharelink', 'readonly', 'destroy', 'tag', 'size', 'changed'];
+      var order = ['name', 'shared', 'deleted', 'sharelink_token', 'readonly', 'destroy', 'color_tag', 'size', 'changed'];
       $that.attr('fs-id', balloon.id(node));
 
       if(node.directory === true) {
@@ -788,8 +788,8 @@ var balloon = {
 
       for(var prop in order) {
         switch(order[prop]) {
-        case 'sharelink':
-          if(node.sharelink === true) {
+        case 'sharelink_token':
+          if(node.sharelink_token) {
             html_children.push('<div class="fs-node-shared gr-icon gr-i-hyperlink"></div>');
           } else {
             html_children.push('<div>&nbsp;</div>');
@@ -846,7 +846,7 @@ var balloon = {
           }
           break;
 
-        case 'tag':
+        case 'color_tag':
           if(balloon.isValidColor(node.meta.color)) {
             var color_tag = '<span class="fs-color-tag fs-color-'+node.meta.color+'"></span>';
           } else {
@@ -881,7 +881,7 @@ var balloon = {
     });
 
     if(rename_match !== false) {
-      var dom_node = $('li[data-uid='+rename_match.uid+']');
+      var dom_node = $('li[fs-id='+rename_match.id+']');
       $k_tree.select(dom_node);
       $k_tree.trigger('select', {node: dom_node});
 
@@ -904,7 +904,7 @@ var balloon = {
     $('.k-in').removeClass('fs-rename');
 
     var id   = $(e.node).attr('data-uid'),
-      node = balloon.datasource.getByUid(id);
+      node = balloon.datasource.getByUid(id)._childrenOptions.data;
 
     if(balloon.id(node) === balloon.id(balloon.last)) {
       balloon.last = node;
@@ -960,14 +960,7 @@ var balloon = {
       'share-link',
     ]);
 
-    balloon.displayProperties(node,
-      {
-        data: {
-          name: node.name,
-        }
-      }
-    );
-
+    balloon.displayProperties(node);
     var view  = balloon.getURLParam('view');
 
     if(balloon.previous !== null && balloon.previous.id !== balloon.last.id
@@ -983,7 +976,7 @@ var balloon = {
     $('#fs-view-'+view).addClass('fs-view-bar-active');
     var views = ['preview', 'properties', 'events'];
 
-    if(balloon.last.deleted === false) {
+    if(!balloon.last.deleted) {
       views.push('share-link')
     }
 
@@ -993,15 +986,13 @@ var balloon = {
 
     if(balloon.last.directory && balloon.last.access === 'm' && !balloon.last.share) {
       views.push('share-collection');
-    } else if(balloon.last.directory && !balloon.last.share) {
-      views.push('share-collection-read');
     }
 
     if(balloon.last.access != 'r') {
       views.push('advanced');
     }
 
-    if(balloon.last.access != 'r' && balloon.last.deleted === false) {
+    if(balloon.last.access != 'r' && !balloon.last.deleted) {
       views.push('advanced', 'share-link');
     }
 
@@ -2590,7 +2581,7 @@ var balloon = {
    */
   initRenameBrowser: function(node) {
     balloon.rename_node = node;
-    var $target = $('li[data-uid='+node.uid+']').find('.k-in')
+    var $target = $('li[fs-id='+node.id+']').find('.k-in')
       .addClass('fs-rename');
 
     $target.find('.fs-ext').hide();
@@ -2786,18 +2777,7 @@ var balloon = {
         if(typeof(node) === 'object') {
           node.name = new_name;
           node.spriteCssClass = balloon.getSpriteClass(node);
-
-          balloon.displayProperties(node,
-            {
-              data: {
-                name: node.name,
-                meta: {
-                  color: node.meta.color,
-                  tags: node.meta.tags,
-                }
-              }
-            }
-          );
+          balloon.displayProperties(node);
         }
 
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
@@ -3751,33 +3731,24 @@ var balloon = {
    */
   shareLink: function(node) {
     balloon.resetDom('share-link');
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/nodes/share-link',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-      },
-      success: function(data) {
         var token,
           $fs_share_link = $('#fs-share-link'),
           $fs_share_expr = $fs_share_link.find('input[name=share_expiration]'),
           $fs_share_pw   = $fs_share_link.find('input[name=share_password]');
 
-        if(data !== false && data.token != undefined) {
+        if(node.sharelink_token) {
           $fs_share_link.find('.fs-share-remove').show();
 
           $('#fs-link-options').show();
-          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share?t='+data.token).show().
+          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share?t='+node.sharelink_token).show().
             unbind('click').bind('click', function(){
               this.select();
               document.execCommand("copy");
             });
 
-          token = data.token;
-          if('expiration' in data && data.expiration != '' && data.expiration != null) {
-            var ts = data.expiration;
-            var date = new Date(parseInt(ts) * 1000);
+          token = node.sharelink_token;
+          if(node.sharelink_expire) {
+            var date = new Date(node.sharelink_expire);
             var formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
 
             $fs_share_expr.val(formatted);
@@ -3814,12 +3785,12 @@ var balloon = {
             },
           };
 
-          var url = url = balloon.base+'/node/share-link';
+          var url = url = balloon.base+'/nodes/share-link';
 
           if(shared === true) {
             var options = {
               type: 'POST',
-              url: balloon.base+'/node/share-link',
+              url: balloon.base+'/nodes/share-link',
               data: {
                 id: balloon.id(node),
                 options: {
@@ -3831,7 +3802,7 @@ var balloon = {
             };
           } else {
             var options = {
-              url: balloon.base+'/node/share-link?id='+balloon.id(node),
+              url: balloon.base+'/nodes/share-link?id='+balloon.id(node),
               type: 'DELETE',
             };
           }
@@ -3845,8 +3816,6 @@ var balloon = {
 
           balloon.xmlHttpRequest(options);
         });
-      },
-    });
   },
 
 
@@ -5265,12 +5234,9 @@ var balloon = {
    * Display properties of one node
    *
    * @param   object node
-   * @param   object data
    * @return  void
    */
-  displayProperties: function(node, ) {
-    balloon.resetDom('properies');
-
+  displayProperties: function(node) {
     var $fs_prop_collection = $("#fs-properties-collection").hide(),
       $fs_prop_file     = $("#fs-properties-file").hide();
 
@@ -5284,40 +5250,27 @@ var balloon = {
 
     var $fs_prop_tags = $("#fs-properties-meta-tags").show();
     $("#fs-properties-node").show();
-
-    //var success = function(data) {
       var $field;
-      //data = $.extend(true, data, node.toJSON());
-console.log(data);
+      for(var attribute in node) {
+        $field = $('#fs-properties-'+attribute).find('.fs-value');
+        $('#fs-properties-'+attribute).parent().show();
 
-      if(data.reference || data.shared) {
-        data.share = data;
-      }
-
-      for(var prop in data) {
-        $field = $('#fs-properties-'+prop).find('.fs-value');
-        if(data[prop] != '' && data[prop] !== null) {
-          $('#fs-properties-'+prop).parent().show();
-        }
-
-        switch(prop) {
+        switch(attribute) {
         case 'changed':
         case 'deleted':
         case 'created':
-          if(data[prop]) {
-            var date   = new Date(data[prop]),
+            var date   = new Date(node[attribute]),
               format = kendo.toString(date, kendo.culture().calendar.patterns.g),
               since  = balloon.timeSince(date);
 
             $field.html(i18next.t('view.history.changed_since', since, format));
-          }
           break;
 
         case 'size':
           if(node.directory === true) {
-            $field.html(i18next.t('view.prop.data.childcount', {count: data[prop]}));
+            $field.html(i18next.t('view.prop.data.childcount', {count: node[attribute]}));
           } else {
-            $field.html(i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(data[prop]), data[prop]));
+            $field.html(i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(node[attribute]), node[attribute]));
           }
           break;
 
@@ -5329,77 +5282,47 @@ console.log(data);
             .addClass(node.spriteCssClass);
 
           $field.parent().unbind('click').click(balloon.initRenameProperties);
-          var ext = balloon.getFileExtension(data);
+          var ext = balloon.getFileExtension(node);
 
           if(ext != null && node.directory == false) {
             $fs_prop_name.find(".fs-ext").html('[.'+ext+']').show();
-            $field.html(data[prop].substr(0, data[prop].length-ext.length-1));
+            $field.html(node[attribute].substr(0, node[attribute].length-ext.length-1));
           } else {
             $fs_prop_name.find(".fs-ext").html('');
-            $field.html(data[prop]);
+            $field.html(node[attribute]);
           }
           break;
 
         case 'meta':
-          try {
-            for(var meta_attr in data.meta) {
-              $field = $('#fs-properties-'+meta_attr).find('.fs-value');
-
-              switch(meta_attr) {
-              case 'color':
-                if(data[prop].color != undefined) {
-                  var $fs_prop_color = $('#fs-properties-'+prop+'-color');
-                  $fs_prop_color.find('.fs-color-'+data[prop].color).addClass('fs-color-selected');
-                }
-                break;
-
-              case 'tags':
-                var children = [],
-                  $fs_prop_tags_parent = $fs_prop_tags.parent();
-
-                $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
-console.log(1);
-                  balloon.initMetaTagCompletion();
-                  $('#fs-preview-add-tag').show();
-                  $fs_prop_tags_parent
-                    .find('input:text')
-                    .focus()
-                    .data('kendoAutoComplete').search();
-                });
-
-                $fs_prop_tags.find('li').remove();
-                for(var tag in data.meta.tags) {
-                  children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+data.meta.tags[tag]+'</div></li>');
-                }
-
-                $fs_prop_tags.find('ul').html(children.join(''));
-                break;
-
+          for(var meta_attr in node.meta) {
+            $field = $('#fs-properties-'+meta_attr).find('.fs-value');
+            switch(meta_attr) {
               case 'description':
                 $field = $('#fs-properties-'+meta_attr).find('textarea');
-                $field.val(data.meta[meta_attr]);
-                break;
+                $field.val(node.meta[meta_attr]);
+              break;
+
+              case 'color':
+              case 'tags':
+              break;
 
               default:
                 $field = $('#fs-properties-'+meta_attr).find('input');
-                $field.val(data.meta[meta_attr]);
-                break;
-              }
+                $field.val(node.meta[meta_attr]);
+              break;
             }
-          }             catch(err) {
-
           }
-          break;
+        break;
 
-        case 'share':
-          if(data[prop] !== undefined && 'shareowner' in data) {
-            var access = i18next.t('view.share.privilege_'+data.access);
-            var msg = i18next.t('view.prop.head.share_value', data.share.name, data.shareowner.name, access);
+        case 'shared':
+          if('shareowner' in node) {
+            var access = i18next.t('view.share.privilege_'+node.access);
+            var msg = i18next.t('view.prop.head.share_value', node.sharename, node.shareowner.name, access);
             $field.html(msg)
               .parent().parent().css('display','table-row');
 
             var sclass = '';
-            if(data.shareowner.name == login.username) {
+            if(node.shareowner.name == login.username) {
               sclass = 'gr-icon gr-i-folder-shared';
             } else {
               sclass = 'gr-icon gr-i-folder-received';
@@ -5410,64 +5333,12 @@ console.log(1);
           break;
 
         default:
-          if($field.length != 0 && prop !== 'access' && prop != 'shareowner') {
-            $field.html(data[prop]);
+          if($field.length != 0 && attribute !== 'access' && attribute != 'shareowner') {
+            $field.html(node[attribute]);
           }
           break;
         }
       }
-
-      var $fs_prop_color = $("#fs-properties-meta-color");
-      $fs_prop_color.find("li").unbind('click').click(function(e){
-        var color = $(this).attr('class').substr(9);
-
-        $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
-
-        if(color === balloon.getCurrentNode().meta.color) {
-          color = null;
-          $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', 'transparent');
-        } else {
-          $(this).addClass('fs-color-selected');
-          $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', $(this).css('background-color'));
-        }
-
-        balloon.saveMetaAttributes(balloon.getCurrentNode(), {color: color});
-      });
-
-      balloon.handleTags(node);
-/*    };*/
-
-    /*
-    if(data !== undefined) {
-      success(data);
-      return;
-    }
-
-    var attributes = [
-      'path',
-      'size',
-      'meta.license',
-      'meta.description',
-      'meta.copyright',
-      'meta.author',
-      'created',
-      'version',
-      'shareowner',
-      'sharename',
-      'master',
-      'scan'
-    ];
-
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/nodes',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-        attributes: attributes
-      },
-      success: success,
-    });*/
   },
 
   /**
@@ -5545,17 +5416,50 @@ console.log(1);
   displayPreview: function(node) {
     balloon.resetDom('preview');
 
-    balloon.displayProperties(node,
-      {
-        data: {
-          name: node.name,
-          meta: {
-            color: node.meta.color,
-            tags: node.meta.tags,
-          }
-        }
+    if(node.meta.color) {
+      var $fs_prop_color = $('#fs-properties-meta-color');
+      $fs_prop_color.find('.fs-color-'+node.meta.color).addClass('fs-color-selected');
+    }
+
+    if(node.meta.tags) {
+      var children = [],
+      $fs_prop_tags_parent = $fs_prop_tags.parent();
+
+      $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
+        balloon.initMetaTagCompletion();
+        $('#fs-preview-add-tag').show();
+        $fs_prop_tags_parent
+         .find('input:text')
+         .focus()
+         .data('kendoAutoComplete').search();
+      });
+
+      $fs_prop_tags.find('li').remove();
+      for(var tag in node.meta.tags) {
+        children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+node.meta.tags[tag]+'</div></li>');
       }
-    );
+
+      $fs_prop_tags.find('ul').html(children.join(''));
+    }
+
+    var $fs_prop_color = $("#fs-properties-meta-color");
+    $fs_prop_color.find("li").unbind('click').click(function(e){
+      var color = $(this).attr('class').substr(9);
+
+      $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
+
+      if(color === balloon.getCurrentNode().meta.color) {
+        color = null;
+        $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', 'transparent');
+      } else {
+        $(this).addClass('fs-color-selected');
+        $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', $(this).css('background-color'));
+      }
+
+      balloon.saveMetaAttributes(balloon.getCurrentNode(), {color: color});
+    });
+
+    balloon.handleTags(node);
 
     var $fs_preview_outer = $("#fs-preview-thumb"),
       $fs_preview     = $fs_preview_outer.find("div");
@@ -5938,7 +5842,6 @@ console.log(1);
         'view-bar',
         'history',
         'share-collection',
-        'share-collection-read',
         'share-link',
         'advanced',
         'search',
@@ -6101,12 +6004,6 @@ console.log(1);
           .removeClass('fs-multiselected')
           .removeClass('k-state-selected');
         break;
-
-      case 'share-collection-read':
-        var $collection = $('#fs-share-collection-read');
-        $collection.find('tbody tr').remove();
-        $collection.find('.share_name').html('');
-      break;
 
       case 'share-collection':
         var $collection = $('#fs-share-collection');

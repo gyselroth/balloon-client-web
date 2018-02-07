@@ -13,7 +13,7 @@ var app = {
   render: function() {
   },
 
-  init: function(core)  {
+  postInit: function(core)  {
     this.balloon = core;
     $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
   },

@@ -170,7 +170,7 @@ var login = {
 
   verifyOidcAuthentication: function() {
     login.xmlHttpRequest({
-      url: '/api/v2/user/whoami',
+      url: '/api/v2/users/whoami',
       cache: false,
       complete: function(response) {
         switch(response.status) {
@@ -199,7 +199,7 @@ var login = {
 
   fetchIdentity: function() {
     login.xmlHttpRequest({
-      url: '/api/v'+balloon.BALLOON_API_VERSION+'/user/whoami',
+      url: '/api/v'+balloon.BALLOON_API_VERSION+'/users/whoami',
       dataType: 'json',
       cache: false,
       success: function(body) {
@@ -286,7 +286,7 @@ var login = {
       username: username,
       password: password,
       dataType: 'json',
-      url: '/api/v2/user/whoami',
+      url: '/api/v2/users/whoami',
       beforeSend: function() {
         $username_input.removeClass('error');
         $password_input.removeClass('error');

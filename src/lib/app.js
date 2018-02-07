@@ -20,15 +20,27 @@ var apps = [
 ]
 
 var app = {
-  render: function(core) {
+  render: function() {
     for(let app in apps) {
-      apps[app].render();
+      if(apps[app]['render']) {
+        apps[app].render();
+      }
     }
   },
 
-  init: function(core) {
+  preInit: function(core) {
     for(let app in apps) {
-      apps[app].init(core);
+      if(apps[app]['preInit']) {
+        apps[app].preInit(core);
+      }
+    }
+  },
+
+  postInit: function(core) {
+    for(let app in apps) {
+      if(apps[app]['postInit']) {
+        apps[app].postInit(core);
+      }
     }
   }
 };

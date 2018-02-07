@@ -13,7 +13,7 @@ import login from '../../../lib/auth.js';
 
 var app = {
   render: function() {
-    this.$menu = $('<li>'
+    this.$menu = $('<li id="fs-menu-user-desktop">'
       +'<span class="gr-icon gr-i-laptop"></span>'
       +'<span>'+i18next.t('app.balloon_app_desktopclient.menu')+'</span>'
     +'</li>');
@@ -23,7 +23,8 @@ var app = {
     this.$menu.insertAfter('#fs-menu-user-events');
   },
 
-  init: function(core)  {
+  preInit: function(core)  {
+    this.balloon = core;
     this.$menu.unbind('click').bind('click', function(){
       app.openPopup();
     });
@@ -45,6 +46,7 @@ var app = {
 
     $('body').append($div);
 
+
     this.$k_popup = $div.kendoWindow({
       resizable: false,
       title: i18next.t('app.balloon_app_desktopclient.menu'),
@@ -52,20 +54,22 @@ var app = {
       draggable: true,
       open: function(e) {
       }
-    }).data('kendoWindow').open().center();
+    }).data('kendoWindow');
+
+    this.$k_popup.open().center();
   },
 
   download: function(e) {
     var format = $(this).attr('id').substr(11);
     var $iframe = $("#fs-fetch-file");
-    var url = app.balloon.base+'/desktop-client/'+format+'/stream';
+    var url = app.balloon.base+'/desktop-clients/'+format+'/content';
 
     if(typeof(login) === 'object' && login.getAccessToken()) {
       url += '?access_token='+login.getAccessToken();
     }
 
     $iframe.attr("src", url).load();
-    app.$k_popup.close();
+    this.$k_popup.close();
   }
 }
 

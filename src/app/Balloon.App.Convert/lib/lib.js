@@ -33,7 +33,7 @@ var app = {
     this.$view = $view;
   },
 
-  init: function(core)  {
+  postInit: function(core)  {
     this.balloon = core;
     $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
 
@@ -66,7 +66,7 @@ var app = {
 
   loadSlaves: function(node) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/file/convert/slaves',
+      url: app.balloon.base+'/files/convert/slaves',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -88,7 +88,7 @@ var app = {
 
   loadSupportedFormats: function(node) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/file/convert/supported-formats',
+      url: app.balloon.base+'/files/convert/supported-formats',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -129,7 +129,7 @@ var app = {
 
   addSlave: function(node, format) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/file/convert/slave',
+      url: app.balloon.base+'/files/convert/slaves',
       type: 'POST',
       data: {
         id: app.balloon.id(node),
@@ -146,7 +146,7 @@ var app = {
 
   deleteSlave: function(node, slave) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/file/convert/slave?id='+app.balloon.id(node)+'&slave='+slave,
+      url: app.balloon.base+'/files/convert/slaves?id='+app.balloon.id(node)+'&slave='+slave,
       type: 'DELETE',
       success: function() {
         app.$view.find('li[data-id='+slave+']').remove();

@@ -14,7 +14,7 @@ var app = {
   render: function() {
   },
 
-  init: function(core)  {
+  preInit: function(core)  {
     this.balloon = core;
     app.balloon._treeDblclick = app.treeDblclick;
     app.addTextFile = app.balloon.addFile;
@@ -28,7 +28,7 @@ var app = {
     $('#fs-edit-office').remove();
 
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/document?id='+app.balloon.id(node),
+      url: app.balloon.base+'/office/documents?id='+app.balloon.id(node),
       success: function(doc) {
         if(doc.session.length === 0) {
           app.newSession(node, doc);
@@ -121,7 +121,7 @@ var app = {
 
   newSession: function(node, doc) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/session?id='+app.balloon.id(node),
+      url: app.balloon.base+'/office/sessions?id='+app.balloon.id(node),
       type: 'POST',
       success: function(session) {
         app.initLibreOffice(node, doc, session);
@@ -131,7 +131,7 @@ var app = {
 
   joinSession: function(node, doc, session_id) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/session/join?id='+session_id,
+      url: app.balloon.base+'/office/sessions/join?id='+session_id,
       type: 'POST',
       success: function(session) {
         session.id = session_id;
@@ -158,7 +158,7 @@ var app = {
         var msg  = i18next.t('app.office.close_edit_file', node.name);
         app.balloon.promptConfirm(msg, function(){
           app.balloon.xmlHttpRequest({
-            url: app.balloon.base+'/office/session?id='+session.id+'&access_token='+session.access_token,
+            url: app.balloon.base+'/office/sessions?id='+session.id+'&access_token='+session.access_token,
             type: 'DELETE',
             error: function(){},
             complete: function() {
@@ -194,7 +194,7 @@ var app = {
           var msg  = i18next.t('app.office.close_edit_file', node.name);
           app.balloon.promptConfirm(msg, function(){
             app.balloon.xmlHttpRequest({
-              url: app.balloon.base+'/office/session?id='+session.id+'&access_token='+session.access_token,
+              url: app.balloon.base+'/office/sessions?id='+session.id+'&access_token='+session.access_token,
               type: 'DELETE',
               error: function(){},
               complete: function() {
@@ -278,12 +278,12 @@ var app = {
 
         if(id !== null) {
           params.id = id;
-          app.balloon.refreshTree('/collection/children', params, null, {action: '_FOLDERUP'});
+          app.balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
         } else {
           app.balloon.menuLeftAction(app.balloon.getCurrentMenu());
         }
       } else {
-        app.balloon.refreshTree('/collection/children', {id: app.balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
+        app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
       }
 
       app.balloon.resetDom(
@@ -363,14 +363,14 @@ var app = {
     name = encodeURI(name);
 
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/document?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
+      url: app.balloon.base+'/office/documents?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
       type: 'PUT',
       complete: function() {
         $('#fs-new-file').remove();
       },
       success: function(data) {
-        app.balloon.refreshTree('/collection/children', {id: app.balloon.getCurrentCollectionId()});
-        app.balloon.added_rename = data.data;
+        app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
+        app.balloon.added_rename = data.id;
       }
     });
   }

@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
 
 var gitRevisionPlugin = new GitRevisionPlugin();
 
