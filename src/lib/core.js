@@ -2044,8 +2044,9 @@ var balloon = {
         }
       } else if(e.shiftKey) {
         balloon.resetDom('multiselect');
-        var last_pos  = balloon.datasource._data.indexOf(balloon.getCurrentNode());
-        var prev_pos  = balloon.datasource._data.indexOf(balloon.previous);
+
+        var last_pos  = balloon.datasource._pristineData.indexOf(balloon.getCurrentNode());
+        var prev_pos  = balloon.datasource._pristineData.indexOf(balloon.previous);
 
         if(prev_pos == -1) {
           prev_pos = last_pos;
@@ -3872,7 +3873,7 @@ var balloon = {
 
     if((node.directory == true || !balloon.isMobileViewPort()) && !balloon.isiOS()) {
       url += "&download=true";
-      $iframe.attr("src", url).load();
+      $iframe.attr('src', url).load(url);
     } else {
       window.location.href = url;
     }
@@ -4720,7 +4721,7 @@ var balloon = {
       $textarea = $div.find('textarea');
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/files/',
+      url: balloon.base+'/files/content',
       type: 'GET',
       data: {
         id: balloon.id(node),
@@ -4875,11 +4876,11 @@ var balloon = {
     }
     $div_content.show().html($element);
 
-    var index = node.index;
-    var data = this.datasource.data();
+    var index = balloon.datasource._pristineData.indexOf(node);
+    var data = balloon.datasource._pristineData;
 
     for(var i=++index; i<=data.length; i++) {
-      if(i in data && balloon.isViewable(data[i].mime)) {
+      if(i in data && data[i].mime && balloon.isViewable(data[i].mime)) {
         $('#fs-display-right').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i]);
         });
@@ -4887,9 +4888,10 @@ var balloon = {
       }
     }
 
-    index = node.index;
+    index = data.indexOf(node) ;
+
     for(var i2=--index; i2!=-1; i2--) {
-      if(i2 in data && balloon.isViewable(data[i2].mime)) {
+      if(i2 in data && data[i2].mime && balloon.isViewable(data[i2].mime)) {
         $('#fs-display-left').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i2]);
         });
@@ -5248,7 +5250,6 @@ var balloon = {
       $fs_prop_file.show();
     }
 
-    var $fs_prop_tags = $("#fs-properties-meta-tags").show();
     $("#fs-properties-node").show();
       var $field;
       for(var attribute in node) {
@@ -5314,10 +5315,22 @@ var balloon = {
           }
         break;
 
+        case 'share':
         case 'shared':
           if('shareowner' in node) {
+            $field = $('#fs-properties-share').find('.fs-value');
+            $('#fs-properties-share').parent().show();
+
             var access = i18next.t('view.share.privilege_'+node.access);
-            var msg = i18next.t('view.prop.head.share_value', node.sharename, node.shareowner.name, access);
+
+            if(node.shared === true) {
+              var msg = i18next.t('view.prop.head.share_value', node.sharename, node.shareowner.name, access);
+            } else if(node.share) {
+              var msg = i18next.t('view.prop.head.share_value', node.share.name, node.shareowner.name, access);
+            } else {
+              continue;
+            }
+
             $field.html(msg)
               .parent().parent().css('display','table-row');
 
@@ -5420,6 +5433,9 @@ var balloon = {
       var $fs_prop_color = $('#fs-properties-meta-color');
       $fs_prop_color.find('.fs-color-'+node.meta.color).addClass('fs-color-selected');
     }
+
+    var $fs_prop_tags = $('#fs-properties-meta-tags').show(),
+      $fs_prop_tags_parent = $fs_prop_tags.parent();
 
     if(node.meta.tags) {
       var children = [],
@@ -5906,6 +5922,7 @@ var balloon = {
         $fs_prop.find('textarea').val('');
         $fs_prop.find('input').val('');
         $fs_prop.find('select').val('');
+        $fs_prop.find('.fs-searchable').hide();
         $fs_prop.hide();
         $fs_prop.find("span").html('');
         $('#fs-properties-root').hide();
@@ -6242,7 +6259,7 @@ var balloon = {
           return this.nodeType == 3; //Node.TEXT_NODE
         }).remove();
         progressnode.append('<div class="fs-progress-filename">'+file.name+'</div>');
-        progressnode.append('<div class="fs-progress-stop gr-icon gr-i-cancel"></div>');
+        progressnode.append('<div class="fs-progress-stop gr-icon gr-i-clear"></div>');
 
         balloon.upload_manager.upload_bytes += file.blob.size;
       }
@@ -6349,7 +6366,7 @@ var balloon = {
         file.manager.count.success++;
         file.manager.progress.mgr_chunk.value(file.manager.count.transfer);
 
-        file.progress.find('.fs-progress-stop').removeClass('gr-i-cancel').addClass('gr-i-tick');
+        file.progress.find('.fs-progress-stop').removeClass('gr-i-clear').addClass('gr-i-checkmark');
 
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
           file.manager.count.success.toString(), file.manager.count.upload)
@@ -6522,7 +6539,7 @@ var balloon = {
         }
 
         file.progress.find('.k-state-selected').addClass('fs-progress-error');
-        file.progress.find('.fs-progress-stop').removeClass('gr-i-cancel').addClass('gr-i-exception');
+        file.progress.find('.fs-progress-stop').removeClass('gr-i-clear').addClass('gr-i-error');
 
         file.status = 2;
         file.manager.count.transfer++;

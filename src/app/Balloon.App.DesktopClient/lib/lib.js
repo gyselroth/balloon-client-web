@@ -47,7 +47,7 @@ var app = {
     $('body').append($div);
 
 
-    this.$k_popup = $div.kendoWindow({
+    app.$k_popup = $div.kendoWindow({
       resizable: false,
       title: i18next.t('app.balloon_app_desktopclient.menu'),
       modal: true,
@@ -68,8 +68,8 @@ var app = {
       url += '?access_token='+login.getAccessToken();
     }
 
-    $iframe.attr("src", url).load();
-    this.$k_popup.close();
+    $iframe.attr('src', url).load(url);
+    app.$k_popup.close();
   }
 }
 

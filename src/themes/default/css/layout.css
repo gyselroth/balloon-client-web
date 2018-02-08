@@ -1272,6 +1272,12 @@ td {
     background-repeat: no-repeat;
 }
 
+#fs-upload-list .gr-icon {
+    margin: 0 -10px;
+    width: 20px;
+    height: 20px;
+}
+
 #fs-uploadmgr .fs-status-loader {
     float: right;
     margin: -6px 4px 0;
@@ -2289,6 +2295,7 @@ td {
     border-radius: 2px;
     height: 28px;
     margin-bottom: 0;
+    width: 100%;
 }
 
 #content{
