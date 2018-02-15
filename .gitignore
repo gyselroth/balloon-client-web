@@ -4,3 +4,5 @@ pack
 node_modules
 npm-debug.log
 config.json
+.idea
+package-lock.json

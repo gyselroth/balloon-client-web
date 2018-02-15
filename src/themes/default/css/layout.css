@@ -87,7 +87,7 @@ button:active,
     -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-*/
+
 button + button,
 .btn + .btn {
     margin-left: 10px;
@@ -248,11 +248,14 @@ label.multirow {
     margin-bottom: 3px !important;
 }
 
-label {
+#fs-action-filter-select label {
     margin-bottom: 6px;
-    display: block;
     color: #333;
-    font-weight: bold;
+    cursor: pointer;
+}
+
+input.fs-onoffswitch-checkbox {
+    cursor: pointer;
 }
 
 input.inline,
@@ -277,7 +280,7 @@ fieldset:after {
 
 legend {
     width: 100%;
-    border-bottom: 1px s;
+    border-bottom: 1px solid #aaa;
 }
 
 input.submit {
@@ -798,6 +801,11 @@ td {
     transition: none;
     height: 27px;
     margin-left: 2px;
+    z-index: 0;
+    position: relative;
+    -webkit-box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
 }
 
 #fs-action-filter-select {
@@ -837,13 +845,11 @@ td {
 
 #fs-action-filter-select > div:last-child {
     background-color: #f4f4f4;
-    padding: 5px;
     float: left;
 }
 
 #fs-action-filter-select span:first-child {
     position: relative;
-    top: 2px;
 }
 
 #fs-action-filter li {
@@ -978,8 +984,30 @@ td {
     user-select: none;
 }
 
-#fs-browser-action ul{
+#fs-browser-action ul {
     float: left;
+}
+
+#fs-action-filter-select ul {
+    margin: 0;
+    padding: 0.4em;
+    -webkit-box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
+    -moz-box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
+    position: relative;
+    z-index: 1;
+}
+
+#fs-action-filter-select ul:before {
+    background: #f4f4f4;
+    display: block;
+    content: ".";
+    font-size: 0;
+    width: 7px;
+    height: 27px;
+    position: absolute;
+    left: -5px;
+    top: 0;
 }
 
 #fs-browser-action li.fs-action-element {
