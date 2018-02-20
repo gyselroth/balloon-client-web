@@ -6,7 +6,7 @@
       "save": "Save",
       "exclude_me": "Exclude my own changes",
       "recursive": "Subscribe to sub folders",
-      "description": "Subscribe for any updates which occur on this node."
+      "description": "Get notified if something gets changed in this node."
     }
   }
 }

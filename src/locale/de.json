@@ -1,7 +1,6 @@
 {
   "app": {
-    "title": "balloon",
-    "disclaimer": "balloon v2.0.0-dev 2017"
+    "title": "balloon"
   },
   "login": {
     "username": "Benutzername",
@@ -187,9 +186,9 @@
       "user_deleted": "[gelöschter User]"
     },
     "advanced": {
-      "destroyable": "Selbstzerstörung: (Die Datei/Ordner wird sich, nachdem die angegebene Datum/Zeit abgelaufen ist, selber löschen (Nicht wiederherstellbar!)):",
+      "destroyable": "Automatische Löschung: Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
       "prompt_destroy": "Möchtest du wirklich, dass am %s die die Datei/Ordner %s gelöscht wird?",
-      "readonly": "Nur lesen: (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden):"
+      "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)"
     }
   },
   "error": {

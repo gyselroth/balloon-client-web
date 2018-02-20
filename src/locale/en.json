@@ -1,7 +1,6 @@
 {
   "app": {
-    "title": "balloon",
-    "disclaimer": "balloon v2.0.0-dev 2017"
+    "title": "balloon"
   },
   "login": {
     "username": "Username",
@@ -188,7 +187,7 @@
     "advanced": {
       "destroyable": "Self-Destruction: (The node will destroy itself at the time specified (Not-restorable!)):",
       "prompt_destroy": "Would you really like to set the date/time %s for node %s for self destruction?",
-      "readonly": "Readonly: (No content changes can be made anymore, but you can still modify meta data):"
+      "readonly": "Readonly (No content changes can be made anymore, but you can still modify meta data)"
     }
   },
   "error": {

@@ -20,9 +20,9 @@ var app = {
 
     var $view = $('<div id="fs-notification" class="fs-view-content">'
                 +'<div id="fs-notification-description">'+i18next.t('app.balloon_app_notification.description')+'</div>'
-                +'<div>'+i18next.t('app.balloon_app_notification.subscribe')+' <input type="checkbox" name="subscribe" value="1"/></div>'
-                +'<div>'+i18next.t('app.balloon_app_notification.exclude_me')+' <input type="checkbox" name="exclude_me" value="1"/></div>'
-                +'<div>'+i18next.t('app.balloon_app_notification.recursive')+' <input type="checkbox" name="recursive" value="1"/></div>'
+                +'<div><input type="checkbox" name="subscribe" value="1"/> '+i18next.t('app.balloon_app_notification.subscribe')+'</div>'
+                +'<div><input type="checkbox" checked="checked" name="exclude_me" value="1"/> '+i18next.t('app.balloon_app_notification.exclude_me')+'</div>'
+                +'<div> <input type="checkbox" name="recursive" value="1"/> '+i18next.t('app.balloon_app_notification.recursive')+'</div>'
                 +'<input type="submit" value="'+i18next.t('app.balloon_app_notification.save')+'">'
             +'</div>');
 

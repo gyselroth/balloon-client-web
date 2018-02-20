@@ -1459,6 +1459,10 @@ td {
     float: left;
 }
 
+#fs-advanced .fs-onoffswitch {
+    float: left;
+}
+
 #fs-browser-tree {
     height: 100%;
     overflow-y: auto;

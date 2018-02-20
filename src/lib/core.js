@@ -137,6 +137,7 @@ var balloon = {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
+    $('#fs-disclaimer').html('balloon ' + process.env.VERSION);
     app.preInit(this);
     balloon.kendoFixes();
 
@@ -1210,36 +1211,12 @@ var balloon = {
         }
 
         balloon.xmlHttpRequest({
-          url: balloon.base+'/users/quota-usage',
+          url: balloon.base+'/users/avatar',
           type: 'GET',
-          dataType: 'json',
-          success: function(data) {
-            var used = balloon.getReadableFileSizeString(data.used);
-            var max;
-            var free;
-
-            if(data.hard_quota === -1) {
-              $fs_quota_usage.hide();
-              max = i18next.t('profile.quota_unlimited');
-              free = max;
-            } else {
-              var percentage = Math.round(data.used/data.hard_quota*100);
-              $k_progress.value(percentage);
-
-              if(percentage >= 90) {
-                $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
-              } else {
-                $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
-              }
-
-              max  = balloon.getReadableFileSizeString(data.hard_quota),
-              free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
-            }
-
-            $('#fs-profile-quota-used').find('td').html(used);
-            $('#fs-profile-quota-max').find('td').html(max);
-            $('#fs-profile-quota-left').find('td').html(free);
-          },
+          success: function(body) {
+            var $avatar = $('#fs-profile-avatar');
+            $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+          }
         });
 
         balloon.xmlHttpRequest({
@@ -1258,10 +1235,33 @@ var balloon = {
                 $table.append('<tr><th>'+attribute+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
                 break;
 
-              case 'avatar':
-                var $avatar = $('#fs-profile-avatar');
-                $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body[attribute]+')');
-                break;
+              case 'quota':
+                var used = balloon.getReadableFileSizeString(body.quota.used);
+                var max;
+                var free;
+
+                if(body.quota.hard_quota === -1) {
+                  $fs_quota_usage.hide();
+                  max = i18next.t('profile.quota_unlimited');
+                  free = max;
+                } else {
+                  var percentage = Math.round(body.quota.used/body.quota.hard_quota*100);
+                  $k_progress.value(percentage);
+
+                  if(percentage >= 90) {
+                    $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+                  } else {
+                    $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+                  }
+
+                  max  = balloon.getReadableFileSizeString(body.quota.hard_quota),
+                  free = balloon.getReadableFileSizeString(body.quota.hard_quota - body.quota.used);
+                }
+
+                $('#fs-profile-quota-used').find('td').html(used);
+                $('#fs-profile-quota-max').find('td').html(max);
+                $('#fs-profile-quota-left').find('td').html(free);
+              break;
 
               default:
                 $table.append('<tr><th>'+attribute+'</th><td>'+body[attribute]+'</td></tr>')
@@ -1328,32 +1328,32 @@ var balloon = {
           date,
           that = this;
 
-        if(body.length === 0) {
+        if(body.data.length === 0) {
           balloon._event_limit = true;
         }
 
-        if(body.length === 0 && $elements.length === 0) {
+        if(body.data.length === 0 && $elements.length === 0) {
           $dom.append('<li>'+i18next.t('events.no_events')+'</li>');
           return;
         }
 
-        for(var log in body) {
-          if(body[log].user === null) {
+        for(var log in body.data) {
+          if(body.data[log].user === null) {
             username = '<user removed>';
-          } else if(body[log].user.name == login.getUsername()) {
-            username = body[log].user.name+' ('+i18next.t('events.you')+')';
+          } else if(body.data[log].user.name == login.getUsername()) {
+            username = body.data[log].user.name+' ('+i18next.t('events.you')+')';
           } else {
-            username = body[log].user.name;
+            username = body.data[log].user.name;
           }
 
           undo    = false;
-          date    = kendo.toString(new Date((body[log].timestamp)), kendo.culture().calendar.patterns.g);
-          operation = balloon.camelCaseToUnderline(body[log].operation);
+          date    = kendo.toString(new Date((body.data[log].timestamp)), kendo.culture().calendar.patterns.g);
+          operation = balloon.camelCaseToUnderline(body.data[log].operation);
           $node   = $('<li></li>');
           $icon  = $('<div class="gr-icon"></div>');
           $node.append($icon);
 
-          switch(body[log].operation) {
+          switch(body.data[log].operation) {
           case 'deleteCollectionReference':
           case 'deleteCollectionShare':
           case 'deleteCollection':
@@ -1422,50 +1422,50 @@ var balloon = {
           }
 
 
-          if(body[log].share && share_events.indexOf(body[log].operation) == -1) {
+          if(body.data[log].share && share_events.indexOf(body.data[log].operation) == -1) {
             $node.append(i18next.t('events.share', {
-              share:  body[log].share.name,
+              share:  body.data[log].share.name,
             })+' ');
           }
 
-          if(body[log].parent && !body[log].parent.name) {
-            body[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
+          if(body.data[log].parent && !body.data[log].parent.name) {
+            body.data[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
           }
 
-          if(body[log].previous && body[log].previous.parent) {
-            if(!body[log].previous.parent.name) {
-              body[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
+          if(body.data[log].previous && body.data[log].previous.parent) {
+            if(!body.data[log].previous.parent.name) {
+              body.data[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
             }
-          } else if(body[log].previous && !body[log].previous.parent) {
-            body[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
+          } else if(body.data[log].previous && !body.data[log].previous.parent) {
+            body.data[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
-          if(!body[log].parent) {
-            body[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
+          if(!body.data[log].parent) {
+            body.data[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
           $node.append(i18next.t('events.'+operation, {
             user:   username,
-            name:   body[log].name,
-            previous: body[log].previous,
-            parent: body[log].parent
+            name:   body.data[log].name,
+            previous: body.data[log].previous,
+            parent: body.data[log].parent
           }));
 
-          if(!body[log].node) {
+          if(!body.data[log].node) {
             undo = false;
           }
 
           if(undo === true) {
             $undo = $('<div class="gr-icon gr-i-undo"></div>').off('click')
-              .on('click', null, body[log], balloon._undoEvent);
+              .on('click', null, body.data[log], balloon._undoEvent);
 
             $node.append($undo);
           }
 
-          var app = body[log].client.type;
+          var app = body.data[log].client.type;
 
-          if(body[log].client.app !== null) {
-            app = body[log].client.app;
+          if(body.data[log].client.app !== null) {
+            app = body.data[log].client.app;
           }
 
           if(app === null) {
@@ -1479,8 +1479,8 @@ var balloon = {
             });
           }
 
-          if(body[log].client.hostname !== null) {
-            via += ' ('+body[log].client.hostname+')';
+          if(body.data[log].client.hostname !== null) {
+            via += ' ('+body.data[log].client.hostname+')';
           }
 
           $node.append('<span class="fs-event-time">'+via+'</span>');
@@ -1773,15 +1773,15 @@ var balloon = {
       break;
 
     case 'shared_for_me':
-      balloon.refreshTree('/nodes/query', {filter: {shared: true, reference: {$exists: 1}}}, {});
+      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 1}}}, {});
       break;
 
     case 'shared_from_me':
-      balloon.refreshTree('/nodes/query', {filter: {shared: true, reference: {$exists: 0}}}, {});
+      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 0}}}, {});
       break;
 
     case 'shared_link':
-      balloon.refreshTree('/nodes/query', {filter: {sharelink: {$exists: 1}}}, {});
+      balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
       break;
 
     case 'trash':
@@ -2310,12 +2310,8 @@ var balloon = {
             data: JSON.stringify(operation.data),
             processData: false,
             success: function(pool, msg, http) {
-              if(http.status === 204) {
-                pool = [];
-              }
-
-              for(var node in pool) {
-                pool[node].spriteCssClass = balloon.getSpriteClass(pool[node]);
+              for(var node in pool.data) {
+                pool.data[node].spriteCssClass = balloon.getSpriteClass(pool.data[node]);
               }
 
               if(balloon.datasource._ds_params.action == '_FOLDERDOWN') {
@@ -2337,14 +2333,14 @@ var balloon = {
               var depth = balloon.getFolderDepth(),
                 param_col = balloon.getURLParam('collection');
 
-              if(pool.length == 0 && depth == 1 && param_col  === null) {
+              if(pool.count == 0 && depth == 1 && param_col  === null) {
                 $('#fs-browser-fresh').show();
               } else {
                 $('#fs-browser-fresh').hide();
               }
 
               if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.id !== null) {
-                pool.unshift({
+                pool.data.unshift({
                   id: '_FOLDERUP',
                   name: "..",
                   directory: true,
@@ -2352,9 +2348,9 @@ var balloon = {
                 });
               }
 
-              balloon.datasource._raw_data = pool;
+              balloon.datasource._raw_data = pool.data;
               balloon._sortDatasource(
-                balloon._filterDatasource(pool, balloon.tree.filter),
+                balloon._filterDatasource(pool.data, balloon.tree.filter),
                 balloon.tree.sort.field,
                 balloon.tree.sort.dir,
                 operation
@@ -3516,25 +3512,48 @@ var balloon = {
           return;
         }
 
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/resource/acl-roles',
-          data: {
-            q: function(){
-              return $share_role.data("kendoAutoComplete").value();
-            },
-            single: true,
-          },
-          success: function(data) {
-            $share_role.val('').focus();
-            acl = balloon._addShareRole(data, acl);
-          }
-        });
+            var filter = JSON.stringify({'filter': {'name': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/groups?'+filter,
+              contentType: "application/json",
+              success: function(data) {
+                if(data.length > 1) {
+                  return;
+                }
+
+                $share_role.val('').focus();
+                acl = balloon._addShareRole(data, acl);
+              }
+            });
+
+            filter = JSON.stringify({'filter': {'username': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/users?'+filter,
+              contentType: "application/json",
+              dataType: 'json',
+              success: function(data) {
+                if(data.length > 1) {
+                  return;
+                }
+
+                $share_role.val('').focus();
+                acl = balloon._addShareRole(data, acl);
+              }
+            });
       }
     });
 
     $share_role.kendoAutoComplete({
       minLength: 3,
-      dataTextField: "role.name",
+      dataTextField: "name",
       filter: "contains",
       dataSource: new kendo.data.DataSource({
         serverFiltering: true,
@@ -3546,13 +3565,50 @@ var balloon = {
               return;
             }
 
+            var filter = JSON.stringify({'query': {'name': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            var roles = null;
+
             balloon.xmlHttpRequest({
-              url: balloon.base+'/resource/acl-roles',
-              data: {
-                q: value
-              },
+              url: balloon.base+'/groups?'+filter,
+              contentType: "application/json",
               success: function(data) {
-                operation.success(data);
+                for(var i in data.data) {
+                  data.data[i].type = 'group';
+                  data.data[i].role = $.extend({}, data.data[i]);
+                }
+
+                if(roles !== null) {
+                  operation.success(data.data.concat(roles));
+                } else {
+                  roles = data.data;
+                }
+              }
+            });
+
+            filter = JSON.stringify({'query': {'username': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/users?'+filter,
+              contentType: "application/json",
+              dataType: 'json',
+              success: function(data) {
+                for(var i in data.data) {
+                  data.data[i].type = 'user';
+                  data.data[i].role = $.extend({}, data.data[i]);
+                }
+
+                if(roles !== null) {
+                  operation.success(data.data.concat(roles));
+                } else {
+                  roles = data.data;
+                }
               }
             });
           }
@@ -3641,7 +3697,7 @@ var balloon = {
    * @param  object acl
    * @return object
    */
-  _addShareRole: function(item, acl) {
+  _addShareRole: function(item, acl, type) {
     var $fs_share_collection     = $('#fs-share-collection'),
       $fs_share_collection_tbl   = $fs_share_collection.find('table'),
       $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
@@ -4922,10 +4978,14 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/users/quota-usage',
+      url: balloon.base+'/users/whoami',
+      data: {
+        attributes: ['quota']
+      },
       type: 'GET',
       dataType: 'json',
       success: function(data) {
+        data = data.quota;
         var used = balloon.getReadableFileSizeString(data.used),
           max  = balloon.getReadableFileSizeString(data.hard_quota),
           free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
@@ -5122,10 +5182,10 @@ var balloon = {
       },
       success: function(data) {
         var icon, dom_node, ts, since, radio;
-        data.reverse();
+        data.data.reverse();
 
-        for(var i in data) {
-          switch(data[i].type) {
+        for(var i in data.data) {
+          switch(data.data[i].type) {
           case 0:
             icon = '<div class="gr-icon gr-i-add">'+ i18next.t('view.history.added')+'</div>';
             break;
@@ -5135,8 +5195,8 @@ var balloon = {
             break;
 
           case 2:
-            if(data[i].origin != undefined) {
-              icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data[i].origin)+'</div>';
+            if(data.data[i].origin != undefined) {
+              icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data.data[i].origin)+'</div>';
             }              else {
               icon = '<div class="gr-icon gr-i-restore">'+ i18next.t('view.history.restored')+'</div>';
             }
@@ -5151,31 +5211,31 @@ var balloon = {
             break;
           }
 
-          since = balloon.timeSince(new Date((data[i].changed))),
-          ts = kendo.toString(new Date((data[i].changed)), kendo.culture().calendar.patterns.g)
+          since = balloon.timeSince(new Date((data.data[i].changed))),
+          ts = kendo.toString(new Date((data.data[i].changed)), kendo.culture().calendar.patterns.g)
 
           if(i != 0) {
-            radio = '<input type="radio" name="version" value="'+data[i].version+'"/>';
+            radio = '<input type="radio" name="version" value="'+data.data[i].version+'"/>';
           } else {
-            radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data[i].version+'"/>';
+            radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data.data[i].version+'"/>';
           }
 
-          if(data[i].user) {
-            var username = data[i].user.name;
+          if(data.data[i].user) {
+            var username = data.data[i].user.name;
           } else {
             var username = i18next.t('view.history.user_deleted');
 
           }
 
           dom_node = '<li>'+radio+
-            '<div class="fs-history-version">'+i18next.t('view.history.version', data[i].version)+'</div>'+
+            '<div class="fs-history-version">'+i18next.t('view.history.version', data.data[i].version)+'</div>'+
             icon+'<div class="fs-history-label">'+i18next.t('view.history.changed_by', username, since, ts)+'</div></li>';
 
           $fs_history.append(dom_node);
         }
 
         var $submit = $view.find('input[type=submit]');
-        if(data.length > 1) {
+        if(data.data.length > 1) {
           $submit.show();
         }
 

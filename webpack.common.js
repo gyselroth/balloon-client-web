@@ -50,7 +50,7 @@ module.exports = {
       template: 'index.html',
     }),
     new webpack.DefinePlugin({
-      'process.env.VERSION': JSON.stringify(gitRevisionPlugin.version()),
+      'process.env.VERSION': JSON.stringify(process.env.VERSION || gitRevisionPlugin.version()),
       'process.env.COMMITHASH': JSON.stringify(gitRevisionPlugin.commithash()),
       'process.env.BRANCH': JSON.stringify(gitRevisionPlugin.branch()),
     }),
