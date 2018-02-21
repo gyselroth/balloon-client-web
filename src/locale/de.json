@@ -1,7 +1,6 @@
 {
   "app": {
-    "title": "balloon",
-    "disclaimer": "balloon v2.0.0-dev 2017"
+    "title": "balloon"
   },
   "login": {
     "username": "Benutzername",
@@ -63,9 +62,9 @@
       "color": "Farbe",
       "tags": "Tags",
       "mime": "Dateityp",
-      "no_tags": "&lt;Es wurden keine Tags gefunden&gt;",
-      "no_mime": "&lt;Es wurden keine Dateien gefunden&gt;",
-      "no_color": "&lt;Es wurden keine Farbmarkierungen gefunden&gt;"
+      "no_tags": "<Es wurden keine Tags gefunden>",
+      "no_mime": "<Es wurden keine Dateien gefunden>",
+      "no_color": "<Es wurden keine Farbmarkierungen gefunden>"
     }
   },
   "tree": {
@@ -187,9 +186,9 @@
       "user_deleted": "[gelöschter User]"
     },
     "advanced": {
-      "destroyable": "Selbstzerstörung: (Die Datei/Ordner wird sich, nachdem die angegebene Datum/Zeit abgelaufen ist, selber löschen (Nicht wiederherstellbar!)):",
+      "destroyable": "Automatische Löschung: Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
       "prompt_destroy": "Möchtest du wirklich, dass am %s die die Datei/Ordner %s gelöscht wird?",
-      "readonly": "Nur lesen: (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden):"
+      "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)"
     }
   },
   "error": {
@@ -208,7 +207,6 @@
     "waitlist": "Warteliste",
     "progress": "Fortschritt",
     "transfer": "Transfer",
-    "max_upload_size": "(Maximale Dateigrösse: %s)",
     "files_uploaded": "%s / %s Dateien hochgeladen",
     "files_uploaded_plural": "%s / %s Dateien hochgeladen",
     "time_left": "%s übrig",

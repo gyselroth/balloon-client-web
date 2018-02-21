@@ -1,6 +1,6 @@
 #fs-shadow select {
     margin-top: 10px;
-    width: 150px; 
+    width: 150px;
     float: left;
 }
 
@@ -20,4 +20,10 @@
 
 #fs-shadow-not-supported {
     display: none;
+}
+
+#fs-slave-node {
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #ADD8E6;
 }

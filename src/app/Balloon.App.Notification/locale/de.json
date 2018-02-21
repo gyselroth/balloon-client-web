@@ -1,12 +1,12 @@
 {
   "app": {
     "balloon_app_notification": {
-      "menu_title": "Abonieren",
-      "subscribe": "Abonieren",
+      "menu_title": "Abonnieren",
+      "subscribe": "Abonnieren",
       "save": "Speichern",
       "exclude_me": "Meine eigenen Änderungen ausschliessen",
       "recursive": "Verschachtelte Elemente einschliessen",
-      "description": "Aboniere alle Updates welche in oder an dieser Datei/Verzeichnis auftreten."
+      "description": "Erhalte eine Benachrichtung, falls diese Datei/dieser Ordner aktualisiert wird."
     }
   }
 }

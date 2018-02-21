@@ -83,7 +83,9 @@ var login = {
 
     var login_helper = function(e) {
       login.destroyBrowser();
+
       var $login = $('#login').show();
+
       $('#fs-namespace').hide();
       $login.find('input[type=submit]').off('click').on('click', login.initBasicAuth);
 
@@ -108,6 +110,8 @@ var login = {
       url: '/api/auth',
       cache: false,
       complete: function(response) {
+        $('#login-loader').hide();
+
         switch(response.status) {
         case 401:
         case 403:

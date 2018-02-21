@@ -111,6 +111,18 @@ select {
     outline: none;
 }
 
+#login-loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
 #login .error-message {
     text-align: center;
     margin: 10px 0;
@@ -1223,7 +1235,7 @@ td {
 }
 
 .fs-loader {
-  background-image: url("../../../themes/default/img/loading.gif");
+    background-image: url("../../../themes/default/img/loading.gif");
     background-position: center center;
     background-repeat: no-repeat;
     height: 20px;
@@ -1487,6 +1499,10 @@ td {
     float: left;
 }
 
+#fs-advanced .fs-onoffswitch {
+    float: left;
+}
+
 #fs-browser-tree {
     height: 100%;
     overflow-y: auto;
@@ -1554,15 +1570,15 @@ td {
     height: 30px;
     background: url('../../../themes/default/css/img/loading.gif') no-repeat center;
     position: absolute;
-    right: 200px;
+    right: 240px;
     top: 2px;
 }
 
 #fs-request-success {
     position: absolute;
-    right: 238px;
+    right: 278px;
     top: 7px;
-    margin: 8px 15px 5px 10px;
+    margin: 7px 15px 5px 10px;
     display: none;
     filter: invert(100%);
     -webkit-filter: invert(100%);
@@ -1655,9 +1671,6 @@ td {
 .fs-value {
     display: block;
     float: left;
-    /*max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;*/
     white-space: nowrap;
 }
 
@@ -1788,12 +1801,10 @@ td {
 }
 
 #fs-properties-meta-tags .fs-delete {
-    border-radius: 50%;
-    padding: 0 5px;
     margin: 3px 0 0 10px;
-    border: solid #999 1px;
     font-size: 0.7em;
     float: right;
+    font-weight: bold;
 }
 
 #fs-properties-meta-tags .tag-name {
@@ -1876,22 +1887,25 @@ td {
     margin-right: 5px;
 }
 
-#fs-browser-layout #fs-action-search {
-    width: 140px;
-    float: right;
-    margin: 7px 7px 0 0;
-    position: relative;
+#fs-search-container-small {
+    display: none;
 }
 
-#fs-action-search input {
-    background-color: #EEE;
-    border: 1px solid #5d5d5d;
-    border-left: none;
-    height: 21px;
-    padding: 2px 17px 2px 4px;
+#fs-search-container {
+    background-color: #eaeaea;
+}
+
+#fs-search-container > * {
+    margin: 25px;
+}
+
+#fs-search-input input {
+    background-color: #FFF;
+    border: solid 1px #dddddd;
+    height: 40px;
+    padding: 2px 17px 2px 40px;
     margin-bottom: 0;
 
-    width: 90px;
     display: inline-block;
 
     vertical-align: middle;
@@ -1899,84 +1913,50 @@ td {
     -webkit-border-radius: 0;
 }
 
-#fs-action-search input:focus{
+#fs-search-input {
+    margin-bottom: 20px;
+}
+
+#fs-search-input input:focus{
     background: #FFF;
 }
 
-#fs-search-button {
-    margin-top: 0;
-    vertical-align: middle;
-    float: left;
-
-    background-color: #000;
-    border: solid 1px #000;
-    padding: 0 10px 0 10px;
-    height: 21px;
-
-    border-radius: 0;
-    -webkit-border-radius: 0;
-    margin-right: -3px;
+#fs-search-container .gr-i-search {
+    position: absolute;
+    top: 33px;
+    margin-left: 10px;
 }
 
-#fs-action-search .gr-icon:hover {
-    cursor: pointer;
-}
-
-#fs-search-button:hover, #fs-action-search .gr-icon:hover + #fs-search-button{
-    background-color: #0361ab;
-}
-
-#fs-search-reset-button{
+.fs-search-reset-button {
     background: none;
     border-radius: 0;
     -webkit-border-radius: 0;
     position: absolute;
     width: 26px !important;
-    right: 4px;
-    top: 0;
-    font-size: 1.1em;
+    right: 30px;
+    top: 35px;
+    font-size: 1.2em;
     color: #5d5d5d;
-    margin-top: 0;
     padding: 0;
-    display: none;
+    display: block;
+    cursor: pointer;
 }
 
-#fs-action-search input::-ms-clear {
-    display: none;
+#fs-search-container label {
+    margin-bottom: 10px;
 }
 
-#fs-search-reset-button:hover{
-    color: #0361ab;
+#fs-search-container fieldset {
+    padding-bottom: 20px;
+    border-bottom: solid 1px #CCC;
 }
 
-#fs-search-extend {
-    background-color: #eaeaea;
-    display: block !important;
-}
-
-#fs-search-extend fieldset {
-    margin: 20px;
-}
-
-#fs-search-extend .gr-i-search {
+#fs-action-search {
     position: absolute;
-    top: 6px;
-    left: 2px;
-}
-
-#fs-action-search .gr-i-search {
-    filter: invert(100%);
+    right: 220px;
+    top: 15px;
     -webkit-filter: invert(100%);
-}
-
-#fs-browser-action .gr-i-search {
-    background-position: 0 calc(92 * -18px);
-    background-size: 18px auto;
-    height: 16px;
-    left: 2px;
-    position: absolute;
-    top: 2px;
-    width: 16px;
+    filter: invert(100%);
 }
 
 #fs-search-filter-tags li,  #fs-search-filter-mime li {
@@ -2013,37 +1993,12 @@ td {
     border-radius: 50%;
 }
 
-#fs-search-extend li:hover {
-    cursor: pointer;
-}
-
-#fs-search-extend #fs-action-search {
-    width: 100% !important;
-    float: none;
-    margin: 0;
-}
-
-#fs-search-extend #fs-action-search input {
-    width: calc(100% - 32px);
-    height: 36px;
-    margin-left: 5px;
-}
-
-#fs-search-extend #fs-action-search button#fs-search-reset-button{
-    display: block;
-    padding: 2px 5px;
-    right: 8px;
-    top: 5px;
-}
-
-#fs-search-extend #fs-search-button{
-    height: 36px;
-    margin-right: -5px;
-    padding: 0 10px 0 14px;
-}
-
 .fs-search-filter-selected {
     border-color: #3399FF !important;
+}
+
+#fs-layout-left .k-splitbar[aria-expanded=false] {
+    display: none;
 }
 
 .fs-view-content {

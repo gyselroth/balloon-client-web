@@ -54,3 +54,8 @@
     background-image: url(../img/debian.svg);
 }
 
+@media only screen and (max-width:800px) {
+    #fs-menu-user-desktop {
+        display: none !important;
+    }
+}

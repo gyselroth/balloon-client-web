@@ -46,9 +46,21 @@ var app = {
   resetView: function() {
     app.$view.find('li, option[value]').remove();
     app.$view.find('.fs-shadow-not-supported').hide();
+    $('#fs-slave-node').remove();
   },
 
   selectNode: function() {
+    app.resetView();
+
+    if(app.balloon.last.master) {
+      var $node = $('<div id="fs-slave-node">'
+          +'<span>'+i18next.t('app.balloon_app_convert.slave_node', {node: app.balloon.last})+'</span>'
+        +'</li>');
+
+      $('#fs-properties').prepend($node);
+    }
+
+
     if(app.balloon.last.directory || app.balloon.last.deleted) {
       return;
     }

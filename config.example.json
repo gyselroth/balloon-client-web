@@ -1,4 +1,5 @@
 var config = {
+  localScript: '/path/to/local_script.js',
   default_lang: 'en',
   auth: {
     basic: true,

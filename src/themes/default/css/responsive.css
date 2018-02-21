@@ -5,41 +5,6 @@
  * @license     GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
 
-@media only screen and (max-width:1200px) {
-    #fs-search-reset-button {
-        display: block !important;
-    }
-
-    #fs-browser-layout #fs-action-search {
-        width: 193px;
-    }
-
-    #fs-action-search input {
-        width: 166px;
-    }
-/*
-    #fs-action-filter-select .fs-onoffswitch {
-        width: 45px;
-    }
-
-    #fs-action-filter-select .fs-onoffswitch-label {
-        height: 24px;
-    }
-
-    #fs-action-filter-select .fs-onoffswitch-label:before {
-        width: 20px;
-        right: 24px;
-        height: 20px;
-    }
-
-    #fs-action-filter-select li > span {
-        margin-left: 5px;
-        line-height: 26px;
-        font-size: 1.2em;
-    }
-*/
-}
-
 @media only screen and (max-width:1023px) {
     #fs-menu-left {
         display: none !important;
@@ -105,8 +70,18 @@
 }
 
 @media only screen and (max-width:550px) {
+    #fs-logo {
+        top: 10px;
+        left: 10px;
+    }
+
+    #fs-action-search {
+        display: none;
+    }
+
     #fs-layout-left {
         background-color: #FFF;
+        border: none;
     }
 
     #fs-action-file {
@@ -120,8 +95,9 @@
     }
 
     #fs-browser-layout {
-        top: 40px;
+        top: 38px;
         border: none !important;
+        padding-top: 4px;
     }
 
     #fs-browser-top-bar .fs-i-cloud {
@@ -129,7 +105,7 @@
         left: 10px;
     }
 
-    #fs-identity .fs-icon {
+    #fs-identity .gr-icon {
         position: relative;
         top: -4px !important;
     }
@@ -138,11 +114,6 @@
         left: 40px;
         top: 12px;
         font-size: 1em;
-    }
-
-    #fs-action-search .fs-i-search {
-        filter: invert(0%);
-        -webkit-filter: invert(0%);
     }
 
     #fs-crumb {
@@ -163,14 +134,8 @@
         border-color: #999;
     }
 
-    #fs-browser-top, #fs-search-button {
+    #fs-browser-top {
         display: none;
-    }
-
-    #fs-search-reset-button {
-        top: 45px;
-        margin-right: 8px;
-        font-size: 1.5em;
     }
 
     .k-overlay {
@@ -202,7 +167,6 @@
 
     #fs-browser-action {
         background-color: #FFF;
-        height: 51px !important;
     }
 
     #fs-browser-select-action {
@@ -215,17 +179,14 @@
     }
 
     #fs-browser-summary {
-        /*position: fixed;
-        top: 48px;
-        right: 10px;*/
         display: none !important;
     }
 
-    #fs-browser-action .fs-icon, #fs-browser-select-action .fs-icon {
+    #fs-browser-action .gr-icon, #fs-browser-select-action .gr-icon {
         transform: scale(1.5);
     }
 
-    #fs-browser-tree .fs-icon {
+    #fs-browser-tree .gr-icon {
         transform: scale(1.2);
     }
 
@@ -255,21 +216,28 @@
         top: 35px;
     }
 
-    #fs-browser-layout #fs-action-search {
-        padding-top: 10px;
-        float: none !important;
-        margin: 28px 0 5px 0 !important;
-        clear: both !important;
-        position: inherit !important;
+    #fs-tree-container {
+        top: 5px !important;
+    }
+
+    #fs-search-container-small {
+        display: block;
+        margin: 5px 0 5px 0 !important;
         width: 100% !important;
     }
 
-    #fs-action-search .fs-icon {
-        top: 50px;
+    #fs-search-container-small .gr-i-search {
+        top: 47px;
+        position: absolute;
         margin-left: 8px;
     }
 
-    #fs-action-search input {
+    #fs-search-container-small .fs-search-reset-button {
+        top: 49px;
+        position: absolute;
+    }
+
+    #fs-search-container-small input {
         height: 40px;
         border-radius: none !important;
         width: 100% !important;

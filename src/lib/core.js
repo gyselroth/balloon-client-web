@@ -44,13 +44,6 @@ var balloon = {
    */
   BYTES_PER_CHUNK: 4194304,
 
-
-  /**
-   * Chunk upload size (1GB)
-   */
-  MAX_FILE_UPLOAD_SIZE: 1073741824,
-
-
   /**
    * API Base url
    *
@@ -137,6 +130,7 @@ var balloon = {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
+    $('#fs-disclaimer').html('balloon ' + process.env.VERSION);
     app.preInit(this);
     balloon.kendoFixes();
 
@@ -147,6 +141,16 @@ var balloon = {
           { collapsible: true, size: "13%", min: "13%" },
           { collapsible: true, size: "50%", min: "25%" },
           { collapsible: true, size: "37%", min: "35%", collapsed: true },
+        ],
+        scrollable: false,
+        collapsed: true,
+      });
+
+      $('#fs-layout-left').kendoSplitter({
+        orientation: "vertical",
+        panes: [
+          { collapsible: true, size: "50%", collapsed: true },
+          { collapsible: false, size: "50%"}
         ],
         scrollable: false,
         collapsed: true,
@@ -214,21 +218,19 @@ var balloon = {
 
     balloon.displayQuota();
 
-    $('#fs-action-search').find('input:text')
-      .unbind('focus').bind('focus', function(){
-        balloon.menuLeftAction('search')
-      })
-      .unbind('keyup').keyup(balloon._searchKeyup);
-
-    $('#fs-search-button').unbind('click').bind('click', function(e) {
-      if($(window).width() <= 800) {
-        balloon.menuLeftAction('search');
+    $('#fs-action-search').unbind('click').bind('click', function(){
+      if(!$('#fs-search-container').hasClass('k-state-collapsed')) {
+        balloon.resetSearch();
       } else {
-        balloon.search($(this).parent().find('input').val());
+        balloon.datasource.data([]);
+        balloon.advancedSearch();
       }
     });
 
-    $('#fs-search-reset-button').unbind('click').click(balloon._searchResetClick);
+    $('#fs-search-container-small').find('input:text')
+      .unbind('keyup').keyup(balloon._searchKeyup);
+
+    $('#fs-search-container-small').find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
       e.preventDefault();
@@ -1069,7 +1071,7 @@ var balloon = {
         self: true
       },
       success: function(body) {
-        balloon._repopulateCrumb(body.reverse());
+        balloon._repopulateCrumb(body.data.reverse());
       },
     });
   },
@@ -1212,36 +1214,12 @@ var balloon = {
         }
 
         balloon.xmlHttpRequest({
-          url: balloon.base+'/users/quota-usage',
+          url: balloon.base+'/users/avatar',
           type: 'GET',
-          dataType: 'json',
-          success: function(data) {
-            var used = balloon.getReadableFileSizeString(data.used);
-            var max;
-            var free;
-
-            if(data.hard_quota === -1) {
-              $fs_quota_usage.hide();
-              max = i18next.t('profile.quota_unlimited');
-              free = max;
-            } else {
-              var percentage = Math.round(data.used/data.hard_quota*100);
-              $k_progress.value(percentage);
-
-              if(percentage >= 90) {
-                $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
-              } else {
-                $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
-              }
-
-              max  = balloon.getReadableFileSizeString(data.hard_quota),
-              free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
-            }
-
-            $('#fs-profile-quota-used').find('td').html(used);
-            $('#fs-profile-quota-max').find('td').html(max);
-            $('#fs-profile-quota-left').find('td').html(free);
-          },
+          success: function(body) {
+            var $avatar = $('#fs-profile-avatar');
+            $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+          }
         });
 
         balloon.xmlHttpRequest({
@@ -1260,10 +1238,33 @@ var balloon = {
                 $table.append('<tr><th>'+attribute+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
                 break;
 
-              case 'avatar':
-                var $avatar = $('#fs-profile-avatar');
-                $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body[attribute]+')');
-                break;
+              case 'quota':
+                var used = balloon.getReadableFileSizeString(body.quota.used);
+                var max;
+                var free;
+
+                if(body.quota.hard_quota === -1) {
+                  $fs_quota_usage.hide();
+                  max = i18next.t('profile.quota_unlimited');
+                  free = max;
+                } else {
+                  var percentage = Math.round(body.quota.used/body.quota.hard_quota*100);
+                  $k_progress.value(percentage);
+
+                  if(percentage >= 90) {
+                    $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+                  } else {
+                    $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+                  }
+
+                  max  = balloon.getReadableFileSizeString(body.quota.hard_quota),
+                  free = balloon.getReadableFileSizeString(body.quota.hard_quota - body.quota.used);
+                }
+
+                $('#fs-profile-quota-used').find('td').html(used);
+                $('#fs-profile-quota-max').find('td').html(max);
+                $('#fs-profile-quota-left').find('td').html(free);
+              break;
 
               default:
                 $table.append('<tr><th>'+attribute+'</th><td>'+body[attribute]+'</td></tr>')
@@ -1330,32 +1331,32 @@ var balloon = {
           date,
           that = this;
 
-        if(body.length === 0) {
+        if(body.data.length === 0) {
           balloon._event_limit = true;
         }
 
-        if(body.length === 0 && $elements.length === 0) {
+        if(body.data.length === 0 && $elements.length === 0) {
           $dom.append('<li>'+i18next.t('events.no_events')+'</li>');
           return;
         }
 
-        for(var log in body) {
-          if(body[log].user === null) {
+        for(var log in body.data) {
+          if(body.data[log].user === null) {
             username = '<user removed>';
-          } else if(body[log].user.name == login.getUsername()) {
-            username = body[log].user.name+' ('+i18next.t('events.you')+')';
+          } else if(body.data[log].user.name == login.getUsername()) {
+            username = body.data[log].user.name+' ('+i18next.t('events.you')+')';
           } else {
-            username = body[log].user.name;
+            username = body.data[log].user.name;
           }
 
           undo    = false;
-          date    = kendo.toString(new Date((body[log].timestamp)), kendo.culture().calendar.patterns.g);
-          operation = balloon.camelCaseToUnderline(body[log].operation);
+          date    = kendo.toString(new Date((body.data[log].timestamp)), kendo.culture().calendar.patterns.g);
+          operation = balloon.camelCaseToUnderline(body.data[log].operation);
           $node   = $('<li></li>');
           $icon  = $('<div class="gr-icon"></div>');
           $node.append($icon);
 
-          switch(body[log].operation) {
+          switch(body.data[log].operation) {
           case 'deleteCollectionReference':
           case 'deleteCollectionShare':
           case 'deleteCollection':
@@ -1424,50 +1425,50 @@ var balloon = {
           }
 
 
-          if(body[log].share && share_events.indexOf(body[log].operation) == -1) {
+          if(body.data[log].share && share_events.indexOf(body.data[log].operation) == -1) {
             $node.append(i18next.t('events.share', {
-              share:  body[log].share.name,
+              share:  body.data[log].share.name,
             })+' ');
           }
 
-          if(body[log].parent && !body[log].parent.name) {
-            body[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
+          if(body.data[log].parent && !body.data[log].parent.name) {
+            body.data[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
           }
 
-          if(body[log].previous && body[log].previous.parent) {
-            if(!body[log].previous.parent.name) {
-              body[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
+          if(body.data[log].previous && body.data[log].previous.parent) {
+            if(!body.data[log].previous.parent.name) {
+              body.data[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
             }
-          } else if(body[log].previous && !body[log].previous.parent) {
-            body[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
+          } else if(body.data[log].previous && !body.data[log].previous.parent) {
+            body.data[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
-          if(!body[log].parent) {
-            body[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
+          if(!body.data[log].parent) {
+            body.data[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
           $node.append(i18next.t('events.'+operation, {
             user:   username,
-            name:   body[log].name,
-            previous: body[log].previous,
-            parent: body[log].parent
+            name:   body.data[log].name,
+            previous: body.data[log].previous,
+            parent: body.data[log].parent
           }));
 
-          if(!body[log].node) {
+          if(!body.data[log].node) {
             undo = false;
           }
 
           if(undo === true) {
             $undo = $('<div class="gr-icon gr-i-undo"></div>').off('click')
-              .on('click', null, body[log], balloon._undoEvent);
+              .on('click', null, body.data[log], balloon._undoEvent);
 
             $node.append($undo);
           }
 
-          var app = body[log].client.type;
+          var app = body.data[log].client.type;
 
-          if(body[log].client.app !== null) {
-            app = body[log].client.app;
+          if(body.data[log].client.app !== null) {
+            app = body.data[log].client.app;
           }
 
           if(app === null) {
@@ -1481,8 +1482,8 @@ var balloon = {
             });
           }
 
-          if(body[log].client.hostname !== null) {
-            via += ' ('+body[log].client.hostname+')';
+          if(body.data[log].client.hostname !== null) {
+            via += ' ('+body.data[log].client.hostname+')';
           }
 
           $node.append('<span class="fs-event-time">'+via+'</span>');
@@ -1736,21 +1737,12 @@ var balloon = {
     if(balloon.getCurrentMenu() != action) {
       $("#fs-action-filter-select").find('input[name=deleted]').prop('checked', false);
       balloon.tree.filter.deleted = 0;
-    } else if(action === 'search' && exec !== false) {
-      if($('#fs-search-extend').is(':visible')) {
-        return balloon.buildExtendedSearchQuery();
-      } else {
-        return balloon.search($('#fs-action-search').find('input').val());
-      }
     }
 
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
     balloon.togglePannel('content', true);
-
-    if(action != 'search') {
-      balloon.resetDom(['search']);
-    }
+    balloon.resetDom(['search']);
 
     if(action === 'cloud') {
       balloon.resetDom('breadcrumb-home');
@@ -1775,25 +1767,20 @@ var balloon = {
       break;
 
     case 'shared_for_me':
-      balloon.refreshTree('/nodes/query', {filter: {shared: true, reference: {$exists: 1}}}, {});
+      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 1}}}, {});
       break;
 
     case 'shared_from_me':
-      balloon.refreshTree('/nodes/query', {filter: {shared: true, reference: {$exists: 0}}}, {});
+      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 0}}}, {});
       break;
 
     case 'shared_link':
-      balloon.refreshTree('/nodes/query', {filter: {sharelink: {$exists: 1}}}, {});
+      balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
       break;
 
     case 'trash':
       balloon.tree.filter.deleted = 1;
       balloon.refreshTree('/nodes/trash', {}, {});
-      break;
-
-    case 'search':
-      balloon.datasource.data([]);
-      balloon._extendedSearch();
       break;
     }
   },
@@ -2170,14 +2157,6 @@ var balloon = {
       balloon.search($(this).val());
       return;
     }
-
-    var $target = $(e.target);
-
-    if($target.val().length > 0) {
-      $('#fs-search-reset-button').show();
-    } else {
-      $('#fs-search-reset-button').hide();
-    }
   },
 
 
@@ -2187,15 +2166,8 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-  _searchResetClick: function(e) {
-    var $input = $('#fs-action-search').find('input:text')
-      .val('');
-
-    if(typeof e != "undefined") {
-      $(e.target).hide();
-    }
-
-    balloon.menuLeftAction('cloud');
+  resetSearch: function(e) {
+    balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-crumb-home-list').show();
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list').hide();
@@ -2204,8 +2176,6 @@ var balloon = {
 
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
       'view-bar', 'history', 'share-collection', 'share-link', 'search']);
-
-    balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
   },
 
 
@@ -2313,12 +2283,8 @@ var balloon = {
             data: JSON.stringify(operation.data),
             processData: false,
             success: function(pool, msg, http) {
-              if(http.status === 204) {
-                pool = [];
-              }
-
-              for(var node in pool) {
-                pool[node].spriteCssClass = balloon.getSpriteClass(pool[node]);
+              for(var node in pool.data) {
+                pool.data[node].spriteCssClass = balloon.getSpriteClass(pool.data[node]);
               }
 
               if(balloon.datasource._ds_params.action == '_FOLDERDOWN') {
@@ -2340,23 +2306,25 @@ var balloon = {
               var depth = balloon.getFolderDepth(),
                 param_col = balloon.getURLParam('collection');
 
-              if(pool.length == 0 && depth == 1 && param_col  === null) {
+              if(pool.count == 0 && depth == 1 && param_col  === null) {
                 $('#fs-browser-fresh').show();
               } else {
                 $('#fs-browser-fresh').hide();
               }
 
               if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.id !== null) {
-                pool.unshift({
+                pool.data.unshift({
                   id: '_FOLDERUP',
                   name: "..",
                   directory: true,
                   spriteCssClass: 'gr-icon gr-i-folder',
                 });
               }
-              balloon.datasource._raw_data = pool;
+              
+              balloon.datasource._raw_data = pool.data;
+
               balloon._sortDatasource(
-                balloon._filterDatasource(pool, balloon.tree.filter),
+                balloon._filterDatasource(pool.data, balloon.tree.filter),
                 balloon.tree.sort.field,
                 balloon.tree.sort.dir,
                 operation
@@ -3521,25 +3489,48 @@ var balloon = {
           return;
         }
 
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/resource/acl-roles',
-          data: {
-            q: function(){
-              return $share_role.data("kendoAutoComplete").value();
-            },
-            single: true,
-          },
-          success: function(data) {
-            $share_role.val('').focus();
-            acl = balloon._addShareRole(data, acl);
-          }
-        });
+            var filter = JSON.stringify({'filter': {'name': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/groups?'+filter,
+              contentType: "application/json",
+              success: function(data) {
+                if(data.length > 1) {
+                  return;
+                }
+
+                $share_role.val('').focus();
+                acl = balloon._addShareRole(data, acl);
+              }
+            });
+
+            filter = JSON.stringify({'filter': {'username': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/users?'+filter,
+              contentType: "application/json",
+              dataType: 'json',
+              success: function(data) {
+                if(data.length > 1) {
+                  return;
+                }
+
+                $share_role.val('').focus();
+                acl = balloon._addShareRole(data, acl);
+              }
+            });
       }
     });
 
     $share_role.kendoAutoComplete({
       minLength: 3,
-      dataTextField: "role.name",
+      dataTextField: "name",
       filter: "contains",
       dataSource: new kendo.data.DataSource({
         serverFiltering: true,
@@ -3551,13 +3542,50 @@ var balloon = {
               return;
             }
 
+            var filter = JSON.stringify({'query': {'name': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            var roles = null;
+
             balloon.xmlHttpRequest({
-              url: balloon.base+'/resource/acl-roles',
-              data: {
-                q: value
-              },
+              url: balloon.base+'/groups?'+filter,
+              contentType: "application/json",
               success: function(data) {
-                operation.success(data);
+                for(var i in data.data) {
+                  data.data[i].type = 'group';
+                  data.data[i].role = $.extend({}, data.data[i]);
+                }
+
+                if(roles !== null) {
+                  operation.success(data.data.concat(roles));
+                } else {
+                  roles = data.data;
+                }
+              }
+            });
+
+            filter = JSON.stringify({'query': {'username': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/users?'+filter,
+              contentType: "application/json",
+              dataType: 'json',
+              success: function(data) {
+                for(var i in data.data) {
+                  data.data[i].type = 'user';
+                  data.data[i].role = $.extend({}, data.data[i]);
+                }
+
+                if(roles !== null) {
+                  operation.success(data.data.concat(roles));
+                } else {
+                  roles = data.data;
+                }
               }
             });
           }
@@ -3646,7 +3674,7 @@ var balloon = {
    * @param  object acl
    * @return object
    */
-  _addShareRole: function(item, acl) {
+  _addShareRole: function(item, acl, type) {
     var $fs_share_collection     = $('#fs-share-collection'),
       $fs_share_collection_tbl   = $fs_share_collection.find('table'),
       $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
@@ -3872,7 +3900,7 @@ var balloon = {
 
     var url = balloon.base+'/nodes/content?'+balloon.param('id', id)+''+name;
 
-    if(typeof(login) === 'object' && login.getAccessToken() !== false) {
+    if(typeof(login) === 'object' && !login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
 
@@ -3891,60 +3919,21 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-  _extendedSearch: function(e) {
-    var $fs_search_extend = $('#fs-search-extend');
+  advancedSearch: function(e) {
+    balloon.resetDom(['breadcrumb-search']);
+    $('#fs-crumb-home-list').hide();
+    $('#fs-crumb-search-list').show();
+    $('#fs-crumb-search').find('div:first-child').html(i18next.t('menu.search'));
 
-    if($fs_search_extend.is(':visible')) {
-      return;
-    }
+    balloon.showAction([]);
 
-    if($(window).width() < 1200) {
-      $('#fs-action-search').find('input:text')
-        .unbind('keyup').bind('keyup', function() {
-          if($(this).val().length > 2) {
-            balloon.search($(this).val());
-          }
-        });
+    $('#fs-search-container').find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
 
-      return;
-    }
+    var $fs_search_extend = $('#fs-search-container');
+    $('#fs-browser-action').hide();
 
-    var $k_splitter = $('#fs-browser-layout').data('kendoSplitter'),
-      $pane     = $k_splitter.insertAfter({ size: "100px" }, ".k-pane:last");
-
-    var html = '<div class="fs-browser-top"></div>'+
-           '<div id="fs-action-search" style="display: none;">'+
-             '<div class="gr-icon gr-i-search"></div>'+
-             '<button id="fs-search-button" type="button"></button>'+
-             '<input accesskey="s" type="text" placeholder="'+i18next.t('nav.action.search')+'"/>'+
-             '<button id="fs-search-reset-button" type="button">x</button>'+
-           '</div>'+
-           '<div>'+
-            '<fieldset id="fs-search-filter-color">'+
-              '<label>'+i18next.t('search.filter.color')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_color')+'</div>'+
-            '</fieldset>'+
-            '<fieldset id="fs-search-filter-tags">'+
-              '<label>'+i18next.t('search.filter.tags')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_tags')+'</div>'+
-             '</fieldset>'+
-            '<fieldset id="fs-search-filter-mime">'+
-              '<label>'+i18next.t('search.filter.mime')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_mime')+'</div>'+
-             '</fieldset>'+
-           '</div>'+
-           '</div>';
-
-    $pane.html(html).attr('id', 'fs-search-extend');
-
-    $fs_search_extend = $('#fs-search-extend');
-    $k_splitter.size("#fs-layout-left", "35%");
-    $k_splitter.size("#fs-content", "30%");
-    $k_splitter.size("#fs-search-extend", "25%");
-
-    $('#fs-browser-action #fs-action-search').hide("slide",{duration: 400, direction: 'right'});
-    $('#fs-search-extend #fs-action-search').show("slide",{duration: 400, direction: 'left'});
-    $('#fs-search-extend #fs-search-reset-button').unbind('click').click(balloon._searchResetClick);
+    var $k_splitter = $('#fs-layout-left').data('kendoSplitter');
+    $k_splitter.expand($fs_search_extend);
 
     $fs_search_extend.find('input:text')
       .focus()
@@ -4050,7 +4039,7 @@ var balloon = {
     $('#fs-search-filter-color').find('li.fs-search-filter-selected').each(function(){
       should3.push({
         match: {
-          'meta.color': $(this).attr('data-item').substr(1)
+          'meta.color': $(this).attr('data-item')
         }
       });
     });
@@ -4061,10 +4050,8 @@ var balloon = {
       {bool: {should: should3}},
     ];
 
-    var content = $('#fs-search-extend').find('input:text').val();
+    var content = $('#fs-search-container').find('input:text').val();
     var query   = balloon.buildQuery(content, must);
-
-    balloon.menuLeftAction('search', false);
 
     if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
       query = undefined;
@@ -4164,7 +4151,6 @@ var balloon = {
       query = balloon.buildQuery(search_query);
     }
 
-    balloon.menuLeftAction('search', false);
     $('#fs-search').show();
     $('#fs-action-search').find('input:text').val(search_query);
 
@@ -4182,7 +4168,7 @@ var balloon = {
    * @return bool
    */
   isSearch: function() {
-    return $('#fs-crumb-search-list').is(':visible') || $('#fs-action-search').find('input').val().length > 0;
+    return $('#fs-crumb-search-list').is(':visible') || $('#fs-search-container-small').find('input').val().length > 0;
   },
 
 
@@ -4861,7 +4847,7 @@ var balloon = {
     }
 
     var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
-    if(typeof(login) === 'object' && login.getAccessToken() !== false) {
+    if(typeof(login) === 'object' && !login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
     var $div_content = $('#fs-display-content').html('').hide(),
@@ -4927,10 +4913,14 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/users/quota-usage',
+      url: balloon.base+'/users/whoami',
+      data: {
+        attributes: ['quota']
+      },
       type: 'GET',
       dataType: 'json',
       success: function(data) {
+        data = data.quota;
         var used = balloon.getReadableFileSizeString(data.used),
           max  = balloon.getReadableFileSizeString(data.hard_quota),
           free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
@@ -5127,10 +5117,10 @@ var balloon = {
       },
       success: function(data) {
         var icon, dom_node, ts, since, radio;
-        data.reverse();
+        data.data.reverse();
 
-        for(var i in data) {
-          switch(data[i].type) {
+        for(var i in data.data) {
+          switch(data.data[i].type) {
           case 0:
             icon = '<div class="gr-icon gr-i-add">'+ i18next.t('view.history.added')+'</div>';
             break;
@@ -5140,8 +5130,8 @@ var balloon = {
             break;
 
           case 2:
-            if(data[i].origin != undefined) {
-              icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data[i].origin)+'</div>';
+            if(data.data[i].origin != undefined) {
+              icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data.data[i].origin)+'</div>';
             }              else {
               icon = '<div class="gr-icon gr-i-restore">'+ i18next.t('view.history.restored')+'</div>';
             }
@@ -5156,31 +5146,31 @@ var balloon = {
             break;
           }
 
-          since = balloon.timeSince(new Date((data[i].changed))),
-          ts = kendo.toString(new Date((data[i].changed)), kendo.culture().calendar.patterns.g)
+          since = balloon.timeSince(new Date((data.data[i].changed))),
+          ts = kendo.toString(new Date((data.data[i].changed)), kendo.culture().calendar.patterns.g)
 
           if(i != 0) {
-            radio = '<input type="radio" name="version" value="'+data[i].version+'"/>';
+            radio = '<input type="radio" name="version" value="'+data.data[i].version+'"/>';
           } else {
-            radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data[i].version+'"/>';
+            radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data.data[i].version+'"/>';
           }
 
-          if(data[i].user) {
-            var username = data[i].user.name;
+          if(data.data[i].user) {
+            var username = data.data[i].user.name;
           } else {
             var username = i18next.t('view.history.user_deleted');
 
           }
 
           dom_node = '<li>'+radio+
-            '<div class="fs-history-version">'+i18next.t('view.history.version', data[i].version)+'</div>'+
+            '<div class="fs-history-version">'+i18next.t('view.history.version', data.data[i].version)+'</div>'+
             icon+'<div class="fs-history-label">'+i18next.t('view.history.changed_by', username, since, ts)+'</div></li>';
 
           $fs_history.append(dom_node);
         }
 
         var $submit = $view.find('input[type=submit]');
-        if(data.length > 1) {
+        if(data.data.length > 1) {
           $submit.show();
         }
 
@@ -5446,15 +5436,6 @@ var balloon = {
       var children = [],
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
-      $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
-        balloon.initMetaTagCompletion();
-        $('#fs-preview-add-tag').show();
-        $fs_prop_tags_parent
-         .find('input:text')
-         .focus()
-         .data('kendoAutoComplete').search();
-      });
-
       $fs_prop_tags.find('li').remove();
       for(var tag in node.meta.tags) {
         children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+node.meta.tags[tag]+'</div></li>');
@@ -5537,6 +5518,15 @@ var balloon = {
       $fs_prop_tags = $('#fs-properties-meta-tags'),
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
+    $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
+      balloon.initMetaTagCompletion();
+      $('#fs-preview-add-tag').show();
+      $fs_prop_tags_parent
+       .find('input:text')
+       .focus()
+       .data('kendoAutoComplete').search();
+    });
+
     $fs_prop_tags.unbind('click').on('click', 'li', function(e) {
       if($(e.target).attr('class') == 'fs-delete') {
         $(this).remove();
@@ -5553,10 +5543,8 @@ var balloon = {
         return;
       }
 
-      balloon._extendedSearch();
+      balloon.advancedSearch();
       var value = 'meta.tags:'+$(this).find('.tag-name').text();
-
-      $('#fs-action-search').find('input:text').val(value);
       balloon.search(value);
     });
 
@@ -5569,6 +5557,8 @@ var balloon = {
 
       last_tag = $(this);
       return balloon._metaTagHandler(node, e, last_tag);
+    }).unbind('focusout').bind('focusout', function() {
+      $('#fs-preview-add-tag').hide();
     });
   },
 
@@ -6002,14 +5992,15 @@ var balloon = {
         break;
 
       case 'search':
-        $('#fs-browser-action #fs-action-search').show();
-        $('#fs-browser-fresh').hide();
+        var $k_splitter = $('#fs-layout-left').data('kendoSplitter'),
+            $container = $('#fs-search-container');
 
-        var $k_splitter = $('#fs-browser-layout').data('kendoSplitter');
+        $('#fs-browser-action').show();
+        $('#fs-search-container-small').find('input:text').val('');
+
         if($k_splitter != undefined) {
-          $k_splitter.remove('#fs-search-extend');
-          $k_splitter.size("#fs-layout-left", "50%");
-          $k_splitter.size("#fs-content", "37%");
+          $k_splitter.collapse('#fs-search-container');
+          $container.find('input:text').val('');
         }
         break;
 
@@ -6187,11 +6178,6 @@ var balloon = {
       title: $div.attr('title'),
       resizable: false,
       modal: true,
-      activate: function() {
-        $div.find('p').html(i18next.t('uploadmgr.max_upload_size',
-          balloon.getReadableFileSizeString(balloon.MAX_FILE_UPLOAD_SIZE)
-        ));
-      }
     }).data("kendoWindow");
 
     balloon.resetDom(['upload-progress', 'uploadmgr-progress']);
@@ -6232,9 +6218,7 @@ var balloon = {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
       } else if(file.blob.size+balloon.quota.used > balloon.quota.hard_quota) {
         balloon.displayError(new Error('Quota is too low to upload this file'));
-      } else if(file.blob.size > balloon.MAX_FILE_UPLOAD_SIZE) {
-        balloon.displayError(new Error('File has exceeded the maximum upload size of '+balloon.MAX_FILE_UPLOAD_SIZE+' Bytes'));
-      } else if(file.blob.size != 0 && file.blob.size <= balloon.MAX_FILE_UPLOAD_SIZE) {
+      } else if(file.blob.size != 0) {
         progressnode = $('<div id="fs-upload-'+last+'">'+file.name+'</div>');
         $('#fs-upload-list').append(progressnode);
 
