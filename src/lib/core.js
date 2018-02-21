@@ -152,6 +152,16 @@ var balloon = {
         scrollable: false,
         collapsed: true,
       });
+
+      $('#fs-layout-left').kendoSplitter({
+        orientation: "vertical",
+        panes: [
+          { collapsible: true, size: "50%", collapsed: true },
+          { collapsible: false, size: "50%"}
+        ],
+        scrollable: false,
+        collapsed: true,
+      });
     }
 
     $("#fs-menu-left").off('click').on('click', 'li', balloon.menuLeftAction);
@@ -215,21 +225,17 @@ var balloon = {
 
     balloon.displayQuota();
 
-    $('#fs-action-search').find('input:text')
+    $('#fs-action-search').unbind('click').bind('click', function(){
+      balloon.datasource.data([]);
+      balloon._extendedSearch();
+    });
+
+    $('#fs-search-container-small').find('input:text')
       .unbind('focus').bind('focus', function(){
-        balloon.menuLeftAction('search')
       })
       .unbind('keyup').keyup(balloon._searchKeyup);
 
-    $('#fs-search-button').unbind('click').bind('click', function(e) {
-      if($(window).width() <= 800) {
-        balloon.menuLeftAction('search');
-      } else {
-        balloon.search($(this).parent().find('input').val());
-      }
-    });
-
-    $('#fs-search-reset-button').unbind('click').click(balloon._searchResetClick);
+    $('#fs-search-container-small').find('.fs-search-reset-button').unbind('click').bind('click', balloon._searchResetClick);
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
       e.preventDefault();
@@ -1068,7 +1074,7 @@ var balloon = {
         self: true
       },
       success: function(body) {
-        balloon._repopulateCrumb(body.reverse());
+        balloon._repopulateCrumb(body.data.reverse());
       },
     });
   },
@@ -1734,21 +1740,12 @@ var balloon = {
     if(balloon.getCurrentMenu() != action) {
       $("#fs-action-filter-select").find('input[name=deleted]').prop('checked', false);
       balloon.tree.filter.deleted = 0;
-    } else if(action === 'search' && exec !== false) {
-      if($('#fs-search-extend').is(':visible')) {
-        return balloon.buildExtendedSearchQuery();
-      } else {
-        return balloon.search($('#fs-action-search').find('input').val());
-      }
     }
 
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
     balloon.togglePannel('content', true);
-
-    if(action != 'search') {
-      balloon.resetDom(['search']);
-    }
+    balloon.resetDom(['search']);
 
     if(action === 'cloud') {
       balloon.resetDom('breadcrumb-home');
@@ -1787,11 +1784,6 @@ var balloon = {
     case 'trash':
       balloon.tree.filter.deleted = 1;
       balloon.refreshTree('/nodes/trash', {}, {});
-      break;
-
-    case 'search':
-      balloon.datasource.data([]);
-      balloon._extendedSearch();
       break;
     }
   },
@@ -2186,14 +2178,15 @@ var balloon = {
    * @return  void
    */
   _searchResetClick: function(e) {
-    var $input = $('#fs-action-search').find('input:text')
+    console.log("RESET");
+    /*var $input = $('#fs-action-search').find('input:text')
       .val('');
 
     if(typeof e != "undefined") {
       $(e.target).hide();
-    }
+    }*/
 
-    balloon.menuLeftAction('cloud');
+    balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-crumb-home-list').show();
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list').hide();
@@ -2203,7 +2196,7 @@ var balloon = {
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
       'view-bar', 'history', 'share-collection', 'share-link', 'search']);
 
-    balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+    //balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
   },
 
 
@@ -3923,7 +3916,7 @@ var balloon = {
 
     var url = balloon.base+'/nodes/content?'+balloon.param('id', id)+''+name;
 
-    if(typeof(login) === 'object' && login.getAccessToken() !== false) {
+    if(typeof(login) === 'object' && !login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
 
@@ -3943,59 +3936,17 @@ var balloon = {
    * @return  void
    */
   _extendedSearch: function(e) {
-    var $fs_search_extend = $('#fs-search-extend');
+    console.log("extended search");
 
-    if($fs_search_extend.is(':visible')) {
-      return;
-    }
+    balloon.showAction([]);
 
-    if($(window).width() < 1200) {
-      $('#fs-action-search').find('input:text')
-        .unbind('keyup').bind('keyup', function() {
-          if($(this).val().length > 2) {
-            balloon.search($(this).val());
-          }
-        });
+    $('#fs-search-container').find('.fs-search-reset-button').unbind('click').bind('click', balloon._searchResetClick);
 
-      return;
-    }
+    var $fs_search_extend = $('#fs-search-container');
+    $('#fs-browser-action').hide();
 
-    var $k_splitter = $('#fs-browser-layout').data('kendoSplitter'),
-      $pane     = $k_splitter.insertAfter({ size: "100px" }, ".k-pane:last");
-
-    var html = '<div class="fs-browser-top"></div>'+
-           '<div id="fs-action-search" style="display: none;">'+
-             '<div class="gr-icon gr-i-search"></div>'+
-             '<button id="fs-search-button" type="button"></button>'+
-             '<input accesskey="s" type="text" placeholder="'+i18next.t('nav.action.search')+'"/>'+
-             '<button id="fs-search-reset-button" type="button">x</button>'+
-           '</div>'+
-           '<div>'+
-            '<fieldset id="fs-search-filter-color">'+
-              '<label>'+i18next.t('search.filter.color')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_color')+'</div>'+
-            '</fieldset>'+
-            '<fieldset id="fs-search-filter-tags">'+
-              '<label>'+i18next.t('search.filter.tags')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_tags')+'</div>'+
-             '</fieldset>'+
-            '<fieldset id="fs-search-filter-mime">'+
-              '<label>'+i18next.t('search.filter.mime')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_mime')+'</div>'+
-             '</fieldset>'+
-           '</div>'+
-           '</div>';
-
-    $pane.html(html).attr('id', 'fs-search-extend');
-
-    $fs_search_extend = $('#fs-search-extend');
-    $k_splitter.size("#fs-layout-left", "35%");
-    $k_splitter.size("#fs-content", "30%");
-    $k_splitter.size("#fs-search-extend", "25%");
-
-    $('#fs-browser-action #fs-action-search').hide("slide",{duration: 400, direction: 'right'});
-    $('#fs-search-extend #fs-action-search').show("slide",{duration: 400, direction: 'left'});
-    $('#fs-search-extend #fs-search-reset-button').unbind('click').click(balloon._searchResetClick);
+    var $k_splitter = $('#fs-layout-left').data('kendoSplitter');
+    $k_splitter.toggle($fs_search_extend);
 
     $fs_search_extend.find('input:text')
       .focus()
@@ -4101,7 +4052,7 @@ var balloon = {
     $('#fs-search-filter-color').find('li.fs-search-filter-selected').each(function(){
       should3.push({
         match: {
-          'meta.color': $(this).attr('data-item').substr(1)
+          'meta.color': $(this).attr('data-item')
         }
       });
     });
@@ -4112,10 +4063,8 @@ var balloon = {
       {bool: {should: should3}},
     ];
 
-    var content = $('#fs-search-extend').find('input:text').val();
+    var content = $('#fs-search-container').find('input:text').val();
     var query   = balloon.buildQuery(content, must);
-
-    balloon.menuLeftAction('search', false);
 
     if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
       query = undefined;
@@ -4215,7 +4164,6 @@ var balloon = {
       query = balloon.buildQuery(search_query);
     }
 
-    balloon.menuLeftAction('search', false);
     $('#fs-search').show();
     $('#fs-action-search').find('input:text').val(search_query);
 
@@ -4233,7 +4181,7 @@ var balloon = {
    * @return bool
    */
   isSearch: function() {
-    return $('#fs-crumb-search-list').is(':visible') || $('#fs-action-search').find('input').val().length > 0;
+    return $('#fs-crumb-search-list').is(':visible') || $('#fs-search-container-small').find('input').val().length > 0;
   },
 
 
@@ -4912,7 +4860,7 @@ var balloon = {
     }
 
     var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
-    if(typeof(login) === 'object' && login.getAccessToken() !== false) {
+    if(typeof(login) === 'object' && !login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
     var $div_content = $('#fs-display-content').html('').hide(),
@@ -6057,14 +6005,16 @@ var balloon = {
         break;
 
       case 'search':
-        $('#fs-browser-action #fs-action-search').show();
-        $('#fs-browser-fresh').hide();
+        var $k_splitter = $('#fs-browser-layout').data('kendoSplitter'),
+            $container = $('#fs-search-container');
 
-        var $k_splitter = $('#fs-browser-layout').data('kendoSplitter');
+        $('#fs-browser-action').show();
+        $('#fs-search-container-small').find('input:text').val('');
+
         if($k_splitter != undefined) {
-          $k_splitter.remove('#fs-search-extend');
-          $k_splitter.size("#fs-layout-left", "50%");
-          $k_splitter.size("#fs-content", "37%");
+          console.log("collapse");
+          $k_splitter.collapse('#fs-search-container');
+          $container.find('input:text').val('');
         }
         break;
 

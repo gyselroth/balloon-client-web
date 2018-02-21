@@ -52,10 +52,11 @@
 
         <div id="fs-request-success" class="gr-icon gr-i-check"></div>
         <div id="fs-loader"></div>
+        <div id="fs-action-search"></div>
 
         <div id="fs-identity">
             <div class="gr-icon gr-i-person"></div>
-                <div id="fs-identity-username"></div>
+            <div id="fs-identity-username"></div>
 
             <div id="fs-identity-menu">
                 <div id="fs-quota" data-i18n="[title]user.disk_space">
@@ -79,98 +80,121 @@
                 <li id="fs-menu-shared_for_me"><div class="gr-icon gr-i-folder-received"></div><div data-i18n="menu.shared_for_me"></div></li>
                 <li id="fs-menu-shared_from_me"><div class="gr-icon gr-i-folder-shared"></div><div data-i18n="menu.shared_from_me"></div></li>
                 <li id="fs-menu-shared_link"><div class="gr-icon gr-i-hyperlink"></div><div data-i18n="menu.shared_link"></div></li>
-                <li id="fs-menu-search"><div class="gr-icon gr-i-search"></div><div data-i18n="menu.search"></div></li>
                 <li id="fs-menu-trash"><div class="gr-icon gr-i-trash"></div><div data-i18n="menu.trash"></div></li>
             </ul>
 
             <div id="fs-disclaimer"></div>
         </div>
         <div id="fs-layout-left">
-            <div id="fs-browser-action">
-                <ul>
-                    <li id="fs-action-menu" class="gr-icon gr-i-menu fs-action-element" data-i18n="[title]nav.action.toggle_menu"></li>
-                    <li id="fs-action-file" class="gr-icon gr-i-file-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_file"></li>
-                    <li id="fs-action-folder" class="gr-icon gr-i-folder-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_folder"></li>
-                    <li id="fs-action-upload" class="gr-icon gr-i-cloud-upload fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.upload"></li>
-                    <li id="fs-action-filter" class="gr-icon gr-i-filter fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.filter"></li>
-                </ul>
-
-                <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
-
-                <div id="fs-action-search">
+            <div id="fs-search-container">
+                <div id="fs-search-input">
                     <div class="gr-icon gr-i-search"></div>
-                    <button id="fs-search-button" type="button"></button>
                     <input accesskey="s" type="text" data-i18n="[placeholder]nav.action.search"/>
-                    <button id="fs-search-reset-button" type="button">x</button>
+                    <div class="fs-search-reset-button">x</div>
                 </div>
-                <div id="fs-action-filter-select">
-                    <div class="gr-icon gr-i-filter"></div>
-                    <div>
-                        <ul>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="directory" class="fs-onoffswitch-checkbox" id="fs-filter-directory" checked>
-                                    <label for="fs-filter-directory" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.directories"></span>
-                            </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="file" class="fs-onoffswitch-checkbox" id="fs-filter-file" checked>
-                                    <label for="fs-filter-file" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.files"></span>
-                            </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="share" class="fs-onoffswitch-checkbox" id="fs-filter-share" checked>
-                                    <label for="fs-filter-share" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.shares"></span>
-                            </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="deleted" class="fs-onoffswitch-checkbox" id="fs-filter-deleted">
-                                    <label for="fs-filter-deleted" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.deleted"></span>
-                            </li>
-                            <li>
-                                <div class="fs-onoffswitch">
-                                    <input type="checkbox" name="hidden" class="fs-onoffswitch-checkbox" id="fs-filter-hidden">
-                                    <label for="fs-filter-hidden" class="fs-onoffswitch-label"/>
-                                </div>
-                                <span data-i18n="tree.filter.hidden"></span>
-                            </li>
-                        </ul>
-                    </div>
-                    </div>
-                </div>
-                <div id="fs-browser">
-                    <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
-                    <div id="fs-browser-header">
-                    <div id="fs-browser-header-name"><div data-i18n="tree.column.name"></div><span class="k-icon k-i-arrow-s"></span></div>
-                    <div id="fs-browser-header-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
-                    <div id="fs-browser-header-size"><div data-i18n="tree.column.size"></div><span></span></div>
-                </div>
-
-                <div id="fs-browser-tree"></div>
-
-                <div id="fs-browser-select-action">
-                    <div id="fs-action-refresh" class="gr-icon gr-i-refresh fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.refresh"></div>
-                    <div id="fs-browser-summary"></div>
-                    <ul>
-                        <li id="fs-action-download" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.download"><div class="gr-icon gr-i-download"></div></li>
-                        <li id="fs-action-delete" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.delete"><div class="gr-icon gr-i-trash"></div></li>
-                        <li id="fs-action-restore" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.restore"><div class="gr-icon gr-i-restore-trash"></div></li>
-                        <li id="fs-action-copy" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.copy"><div class="gr-icon gr-i-copy"></div></li>
-                        <li id="fs-action-cut" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.cut"><div class="gr-icon gr-i-cut"></div></li>
-                        <li id="fs-action-paste" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.paste"><div class="gr-icon gr-i-paste"></div></li>
-                    </ul>
+                <div>
+                    <fieldset id="fs-search-filter-color">
+                      <label data-i18n="search.filter.color"></label>
+                      <div data-i18n="search.filter.no_color"></div>
+                    </fieldset>
+                    <fieldset id="fs-search-filter-tags">
+                      <label data-i18n="search.filter.tags"></label>
+                      <div data-i18n="search.filter.no_tags"></div>
+                     </fieldset>
+                    <fieldset id="fs-search-filter-mime">
+                      <label data-i18n="search.filter.mime"></label>
+                      <div data-i18n="search.filter.no_mime"></div>
+                    </fieldset>
                 </div>
             </div>
 
-            <div id="fs-upload"></div>
+            <div id="fs-tree-container">
+                <div id="fs-browser-action">
+                    <ul>
+                        <li id="fs-action-menu" class="gr-icon gr-i-menu fs-action-element" data-i18n="[title]nav.action.toggle_menu"></li>
+                        <li id="fs-action-file" class="gr-icon gr-i-file-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_file"></li>
+                        <li id="fs-action-folder" class="gr-icon gr-i-folder-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_folder"></li>
+                        <li id="fs-action-upload" class="gr-icon gr-i-cloud-upload fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.upload"></li>
+                        <li id="fs-action-filter" class="gr-icon gr-i-filter fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.filter"></li>
+                    </ul>
+
+                    <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
+
+                    <div id="fs-action-filter-select">
+                        <div class="gr-icon gr-i-filter"></div>
+                        <div>
+                            <ul>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="directory" class="fs-onoffswitch-checkbox" id="fs-filter-directory" checked>
+                                        <label for="fs-filter-directory" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.directories"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="file" class="fs-onoffswitch-checkbox" id="fs-filter-file" checked>
+                                        <label for="fs-filter-file" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.files"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="share" class="fs-onoffswitch-checkbox" id="fs-filter-share" checked>
+                                        <label for="fs-filter-share" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.shares"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="deleted" class="fs-onoffswitch-checkbox" id="fs-filter-deleted">
+                                        <label for="fs-filter-deleted" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.deleted"></span>
+                                </li>
+                                <li>
+                                    <div class="fs-onoffswitch">
+                                        <input type="checkbox" name="hidden" class="fs-onoffswitch-checkbox" id="fs-filter-hidden">
+                                        <label for="fs-filter-hidden" class="fs-onoffswitch-label"/>
+                                    </div>
+                                    <span data-i18n="tree.filter.hidden"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div id="fs-search-container-small">
+                        <div class="gr-icon gr-i-search"></div>
+                        <input accesskey="s" type="text" data-i18n="[placeholder]nav.action.search"/>
+                        <div class="fs-search-reset-button">x</div>
+                    </div>
+
+                    <div id="fs-browser">
+                        <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
+                        <div id="fs-browser-header">
+                        <div id="fs-browser-header-name"><div data-i18n="tree.column.name"></div><span class="k-icon k-i-arrow-s"></span></div>
+                        <div id="fs-browser-header-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
+                        <div id="fs-browser-header-size"><div data-i18n="tree.column.size"></div><span></span></div>
+                    </div>
+
+                    <div id="fs-browser-tree"></div>
+
+                    <div id="fs-browser-select-action">
+                        <div id="fs-action-refresh" class="gr-icon gr-i-refresh fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.refresh"></div>
+                        <div id="fs-browser-summary"></div>
+                        <ul>
+                            <li id="fs-action-download" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.download"><div class="gr-icon gr-i-download"></div></li>
+                            <li id="fs-action-delete" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.delete"><div class="gr-icon gr-i-trash"></div></li>
+                            <li id="fs-action-restore" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.restore"><div class="gr-icon gr-i-restore-trash"></div></li>
+                            <li id="fs-action-copy" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.copy"><div class="gr-icon gr-i-copy"></div></li>
+                            <li id="fs-action-cut" class="fs-action-element fs-action-select-only" data-i18n="[title]nav.action.cut"><div class="gr-icon gr-i-cut"></div></li>
+                            <li id="fs-action-paste" class="fs-action-element fs-action-select-only fs-action-disabled" data-i18n="[title]nav.action.paste"><div class="gr-icon gr-i-paste"></div></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="fs-upload"></div>
+            </div>
         </div>
 
         <div id="fs-content">

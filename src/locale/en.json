@@ -62,7 +62,7 @@
       "color": "Color",
       "tags": "Tags",
       "mime": "File type",
-      "no_tags": "&lt;No tags were found&gt;",
+      "no_tags": "<No tags were found>",
       "no_mime": "&lt;No files were found&gt;",
       "no_color": "&lt;No color marks were found&gt;"
     }
