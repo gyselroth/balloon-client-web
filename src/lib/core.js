@@ -44,13 +44,6 @@ var balloon = {
    */
   BYTES_PER_CHUNK: 4194304,
 
-
-  /**
-   * Chunk upload size (1GB)
-   */
-  MAX_FILE_UPLOAD_SIZE: 1073741824,
-
-
   /**
    * API Base url
    *
@@ -226,16 +219,18 @@ var balloon = {
     balloon.displayQuota();
 
     $('#fs-action-search').unbind('click').bind('click', function(){
-      balloon.datasource.data([]);
-      balloon._extendedSearch();
+      if(!$('#fs-search-container').hasClass('k-state-collapsed')) {
+        balloon.resetSearch();
+      } else {
+        balloon.datasource.data([]);
+        balloon.advancedSearch();
+      }
     });
 
     $('#fs-search-container-small').find('input:text')
-      .unbind('focus').bind('focus', function(){
-      })
       .unbind('keyup').keyup(balloon._searchKeyup);
 
-    $('#fs-search-container-small').find('.fs-search-reset-button').unbind('click').bind('click', balloon._searchResetClick);
+    $('#fs-search-container-small').find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
       e.preventDefault();
@@ -2160,14 +2155,6 @@ var balloon = {
       balloon.search($(this).val());
       return;
     }
-
-    var $target = $(e.target);
-
-    if($target.val().length > 0) {
-      $('#fs-search-reset-button').show();
-    } else {
-      $('#fs-search-reset-button').hide();
-    }
   },
 
 
@@ -2177,15 +2164,7 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-  _searchResetClick: function(e) {
-    console.log("RESET");
-    /*var $input = $('#fs-action-search').find('input:text')
-      .val('');
-
-    if(typeof e != "undefined") {
-      $(e.target).hide();
-    }*/
-
+  resetSearch: function(e) {
     balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-crumb-home-list').show();
 
@@ -2195,8 +2174,6 @@ var balloon = {
 
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
       'view-bar', 'history', 'share-collection', 'share-link', 'search']);
-
-    //balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
   },
 
 
@@ -3935,18 +3912,21 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-  _extendedSearch: function(e) {
-    console.log("extended search");
+  advancedSearch: function(e) {
+    balloon.resetDom(['breadcrumb-search']);
+    $('#fs-crumb-home-list').hide();
+    $('#fs-crumb-search-list').show();
+    $('#fs-crumb-search').find('div:first-child').html(i18next.t('menu.search'));
 
     balloon.showAction([]);
 
-    $('#fs-search-container').find('.fs-search-reset-button').unbind('click').bind('click', balloon._searchResetClick);
+    $('#fs-search-container').find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
 
     var $fs_search_extend = $('#fs-search-container');
     $('#fs-browser-action').hide();
 
     var $k_splitter = $('#fs-layout-left').data('kendoSplitter');
-    $k_splitter.toggle($fs_search_extend);
+    $k_splitter.expand($fs_search_extend);
 
     $fs_search_extend.find('input:text')
       .focus()
@@ -5449,15 +5429,6 @@ var balloon = {
       var children = [],
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
-      $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
-        balloon.initMetaTagCompletion();
-        $('#fs-preview-add-tag').show();
-        $fs_prop_tags_parent
-         .find('input:text')
-         .focus()
-         .data('kendoAutoComplete').search();
-      });
-
       $fs_prop_tags.find('li').remove();
       for(var tag in node.meta.tags) {
         children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+node.meta.tags[tag]+'</div></li>');
@@ -5540,6 +5511,15 @@ var balloon = {
       $fs_prop_tags = $('#fs-properties-meta-tags'),
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
+    $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
+      balloon.initMetaTagCompletion();
+      $('#fs-preview-add-tag').show();
+      $fs_prop_tags_parent
+       .find('input:text')
+       .focus()
+       .data('kendoAutoComplete').search();
+    });
+
     $fs_prop_tags.unbind('click').on('click', 'li', function(e) {
       if($(e.target).attr('class') == 'fs-delete') {
         $(this).remove();
@@ -5556,10 +5536,8 @@ var balloon = {
         return;
       }
 
-      balloon._extendedSearch();
+      balloon.advancedSearch();
       var value = 'meta.tags:'+$(this).find('.tag-name').text();
-
-      $('#fs-action-search').find('input:text').val(value);
       balloon.search(value);
     });
 
@@ -5572,6 +5550,8 @@ var balloon = {
 
       last_tag = $(this);
       return balloon._metaTagHandler(node, e, last_tag);
+    }).unbind('focusout').bind('focusout', function() {
+      $('#fs-preview-add-tag').hide();
     });
   },
 
@@ -6005,14 +5985,13 @@ var balloon = {
         break;
 
       case 'search':
-        var $k_splitter = $('#fs-browser-layout').data('kendoSplitter'),
+        var $k_splitter = $('#fs-layout-left').data('kendoSplitter'),
             $container = $('#fs-search-container');
 
         $('#fs-browser-action').show();
         $('#fs-search-container-small').find('input:text').val('');
 
         if($k_splitter != undefined) {
-          console.log("collapse");
           $k_splitter.collapse('#fs-search-container');
           $container.find('input:text').val('');
         }
@@ -6192,11 +6171,6 @@ var balloon = {
       title: $div.attr('title'),
       resizable: false,
       modal: true,
-      activate: function() {
-        $div.find('p').html(i18next.t('uploadmgr.max_upload_size',
-          balloon.getReadableFileSizeString(balloon.MAX_FILE_UPLOAD_SIZE)
-        ));
-      }
     }).data("kendoWindow");
 
     balloon.resetDom(['upload-progress', 'uploadmgr-progress']);
@@ -6237,9 +6211,7 @@ var balloon = {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
       } else if(file.blob.size+balloon.quota.used > balloon.quota.hard_quota) {
         balloon.displayError(new Error('Quota is too low to upload this file'));
-      } else if(file.blob.size > balloon.MAX_FILE_UPLOAD_SIZE) {
-        balloon.displayError(new Error('File has exceeded the maximum upload size of '+balloon.MAX_FILE_UPLOAD_SIZE+' Bytes'));
-      } else if(file.blob.size != 0 && file.blob.size <= balloon.MAX_FILE_UPLOAD_SIZE) {
+      } else if(file.blob.size != 0) {
         progressnode = $('<div id="fs-upload-'+last+'">'+file.name+'</div>');
         $('#fs-upload-list').append(progressnode);
 

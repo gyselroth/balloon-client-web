@@ -24,3 +24,4 @@ First relese of the extracted web ui from the core server.
 * [FEATURE] Implemented interface for server app Balloon.App.DesktopClient (Download the balloon desktop client)
 * [FEATURE] Possibility to define localScript in config.js
 * [FEATURE] Added loader unter the whole DOM is rendered
+* [CHANGE] New search design

@@ -63,8 +63,8 @@
       "tags": "Tags",
       "mime": "File type",
       "no_tags": "<No tags were found>",
-      "no_mime": "&lt;No files were found&gt;",
-      "no_color": "&lt;No color marks were found&gt;"
+      "no_mime": "<No files were found>",
+      "no_color": "<No color marks were found>"
     }
   },
   "tree": {
@@ -206,7 +206,6 @@
     "waitlist": "Waitlist",
     "progress": "Progress",
     "transfer": "Transfer",
-    "max_upload_size": "(Max Upload File Size: %s)",
     "files_uploaded": "%s / %s file uploaded",
     "files_uploaded_plural": "%s / %s files uploaded",
     "time_left": "%s left",

@@ -62,9 +62,9 @@
       "color": "Farbe",
       "tags": "Tags",
       "mime": "Dateityp",
-      "no_tags": "&lt;Es wurden keine Tags gefunden&gt;",
-      "no_mime": "&lt;Es wurden keine Dateien gefunden&gt;",
-      "no_color": "&lt;Es wurden keine Farbmarkierungen gefunden&gt;"
+      "no_tags": "<Es wurden keine Tags gefunden>",
+      "no_mime": "<Es wurden keine Dateien gefunden>",
+      "no_color": "<Es wurden keine Farbmarkierungen gefunden>"
     }
   },
   "tree": {
@@ -207,7 +207,6 @@
     "waitlist": "Warteliste",
     "progress": "Fortschritt",
     "transfer": "Transfer",
-    "max_upload_size": "(Maximale Dateigrösse: %s)",
     "files_uploaded": "%s / %s Dateien hochgeladen",
     "files_uploaded_plural": "%s / %s Dateien hochgeladen",
     "time_left": "%s übrig",

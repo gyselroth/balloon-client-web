@@ -56,6 +56,6 @@
 
 @media only screen and (max-width:800px) {
     #fs-menu-user-desktop {
-        display: hide;
+        display: none !important;
     }
 }

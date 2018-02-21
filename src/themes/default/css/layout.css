@@ -1542,15 +1542,15 @@ td {
     height: 30px;
     background: url('../../../themes/default/css/img/loading.gif') no-repeat center;
     position: absolute;
-    right: 200px;
+    right: 240px;
     top: 2px;
 }
 
 #fs-request-success {
     position: absolute;
-    right: 238px;
+    right: 278px;
     top: 7px;
-    margin: 8px 15px 5px 10px;
+    margin: 7px 15px 5px 10px;
     display: none;
     filter: invert(100%);
     -webkit-filter: invert(100%);
@@ -1643,9 +1643,6 @@ td {
 .fs-value {
     display: block;
     float: left;
-    /*max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;*/
     white-space: nowrap;
 }
 
@@ -1776,12 +1773,10 @@ td {
 }
 
 #fs-properties-meta-tags .fs-delete {
-    border-radius: 50%;
-    padding: 0 5px;
     margin: 3px 0 0 10px;
-    border: solid #999 1px;
     font-size: 0.7em;
     float: right;
+    font-weight: bold;
 }
 
 #fs-properties-meta-tags .tag-name {
@@ -1928,14 +1923,10 @@ td {
     border-bottom: solid 1px #CCC;
 }
 
-#fs-action-search input::-ms-clear {
-    display: none;
-}
-
 #fs-action-search {
     position: absolute;
-    right: 180px;
-    top: 12px;
+    right: 220px;
+    top: 15px;
     -webkit-filter: invert(100%);
     filter: invert(100%);
 }
