@@ -10,7 +10,7 @@ var gitRevisionPlugin = new GitRevisionPlugin();
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
-    app: './app.js',
+    app: './main.js',
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -38,7 +38,7 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery"
+      jQuery: "jquery",
     }),
     new ExtractTextPlugin({
       filename: "balloon.css",

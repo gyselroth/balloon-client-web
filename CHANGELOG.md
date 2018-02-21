@@ -19,3 +19,8 @@ First relese of the extracted web ui from the core server.
 * [FIX] Changeable node properties in readonly shares are not visible anymore (Only as readable decleration)
 * [FIX] share collection tab is not visible for sub share nodes
 * [FEATURE] Possibility to handle unlimited quota
+* [FEATURE] Implemented interface for server app Balloon.App.Notification (Subscribe for changes & receive notifications)
+* [FEATURE] Implemented interface for server app Balloon.App.Convert (Automatically clone nodes and convert to other formats)
+* [FEATURE] Implemented interface for server app Balloon.App.DesktopClient (Download the balloon desktop client)
+* [FEATURE] Possibility to define localScript in config.js
+* [FEATURE] Added loader unter the whole DOM is rendered

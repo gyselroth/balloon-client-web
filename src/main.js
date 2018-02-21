@@ -18,6 +18,10 @@ import translate from './lib/translate.js';
 $.ajax({
    url: '/config.json',
    success: function(body, responseText, response) {
+      if(body.localScript) {
+        $.getScript(body.localScript);
+      }
+
       translate.init(body);
    },
    error: function() {
