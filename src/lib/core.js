@@ -888,6 +888,7 @@ var balloon = {
       $k_tree.trigger('select', {node: dom_node});
 
       balloon.initRenameBrowser(rename_match);
+
       balloon.added_rename = null;
       rename_match = false;
     }
@@ -937,6 +938,7 @@ var balloon = {
     }
 
     balloon.showAction(actions);
+
     $('.fs-action-select-only').css('display','inline-block');
 
     if(balloon.isSystemNode(node) || balloon.isMultiSelect()) {
@@ -2223,6 +2225,7 @@ var balloon = {
       transport: {
         read: function(operation, a) {
           balloon.resetDom('upload');
+
           if(balloon.datasource._url == undefined) {
             balloon.datasource._url = balloon.base+'/collections/children';
           }
@@ -2317,8 +2320,9 @@ var balloon = {
                   spriteCssClass: 'gr-icon gr-i-folder',
                 });
               }
-
+              
               balloon.datasource._raw_data = pool.data;
+
               balloon._sortDatasource(
                 balloon._filterDatasource(pool.data, balloon.tree.filter),
                 balloon.tree.sort.field,
@@ -2469,8 +2473,11 @@ var balloon = {
         }
       }
     });
-
     operation.success(data);
+      if (balloon.post_rename_reload) {
+        balloon.showAction(['menu','file','folder','upload','filter','refresh','download','delete','restore','copy','cut']);
+        balloon.post_rename_reload = false;
+      }
   },
 
 
@@ -2576,7 +2583,7 @@ var balloon = {
       if(node.id == balloon.rename_node.id) {
         balloon.rename_input.parent().removeClass('fs-rename');
       }
-
+      balloon.post_rename_reload = true;
       balloon._rename();
     });
 
@@ -2589,7 +2596,7 @@ var balloon = {
         if(node.id == balloon.rename_node.id) {
           balloon.rename_input.parent().removeClass('fs-rename');
         }
-
+        balloon.post_rename_reload = true;
         balloon._rename();
       }
     });
