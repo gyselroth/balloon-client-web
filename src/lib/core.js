@@ -3731,19 +3731,11 @@ var balloon = {
         acl: acl,
         name: name
       },
-      statusCode: {
-        201: function(e) {
-          node.shared = true;
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-          if(balloon.id(node) == balloon.id(balloon.last)) {
-            balloon.switchView('share-collection');
-          }
-        },
-        204: function(e) {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-          if(balloon.id(node) == balloon.id(balloon.last)) {
-            balloon.switchView('share-collection');
-          }
+      success: function() {
+        node.shared = true;
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        if(balloon.id(node) == balloon.id(balloon.last)) {
+          balloon.switchView('share-collection');
         }
       },
     });
@@ -3825,20 +3817,23 @@ var balloon = {
                   token: token,
                   password: $fs_share_pw.val()
                 },
+              },
+              success: function(body) {
+                balloon.last = body;
+                balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+                balloon.switchView('share-link');
               }
             };
           } else {
             var options = {
               url: balloon.base+'/nodes/share-link?id='+balloon.id(node),
               type: 'DELETE',
+              success: function(body) {
+                delete balloon.last.sharelink_token;
+                balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+                balloon.switchView('share-link');
+              }
             };
-          }
-
-          options.statusCode = {
-            204: function(e) {
-              balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-              balloon.switchView('share-link');
-            },
           }
 
           balloon.xmlHttpRequest(options);
