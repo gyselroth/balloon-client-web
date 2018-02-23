@@ -1069,7 +1069,7 @@ var balloon = {
         self: true
       },
       success: function(body) {
-        balloon._repopulateCrumb(body.data.reverse());
+        balloon._repopulateCrumb(body.reverse());
       },
     });
   },
