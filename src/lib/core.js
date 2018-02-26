@@ -2471,6 +2471,10 @@ var balloon = {
     });
 
     operation.success(data);
+    if (balloon.post_rename_reload) {
+      balloon.showAction(['menu','file','folder','upload','filter','refresh','download','delete','restore','copy','cut']);
+      balloon.post_rename_reload = false;
+    }
   },
 
 
@@ -2576,6 +2580,7 @@ var balloon = {
       if(node.id == balloon.rename_node.id) {
         balloon.rename_input.parent().removeClass('fs-rename');
       }
+      balloon.post_rename_reload = true;
 
       balloon._rename();
     });
@@ -2589,6 +2594,7 @@ var balloon = {
         if(node.id == balloon.rename_node.id) {
           balloon.rename_input.parent().removeClass('fs-rename');
         }
+        balloon.post_rename_reload = true;
 
         balloon._rename();
       }
