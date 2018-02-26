@@ -88,11 +88,11 @@ var app = {
         var $view = app.$view,
           $ul = $view.find('ul');
 
-        for(var slave in data) {
-          let sprite = app.balloon.getSpriteClass(data[slave].format);
-          $ul.append('<li data-id="'+slave+'"><span class="k-sprite gr-i-remove gr-icon"></span>'
+        for(var slave in data.data) {
+          let sprite = app.balloon.getSpriteClass(data.data[slave].format);
+          $ul.append('<li data-id="'+data.data[slave].id+'"><span class="k-sprite gr-i-remove gr-icon"></span>'
                     +'<span class="k-sprite '+sprite+' gr-icon"></span>'
-                    +'<span>'+data[slave].format+'</span></li>');
+                    +'<span>'+data.data[slave].format+'</span></li>');
         }
       }
     })
