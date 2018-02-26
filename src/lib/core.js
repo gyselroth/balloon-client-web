@@ -1217,6 +1217,9 @@ var balloon = {
           success: function(body) {
             var $avatar = $('#fs-profile-avatar');
             $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+          },
+          error: function() {
+            //no action
           }
         });
 

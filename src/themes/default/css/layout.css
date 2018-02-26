@@ -1899,6 +1899,10 @@ td {
     margin: 25px;
 }
 
+#fs-search-container label {
+    font-weight: bold;
+}
+
 #fs-search-input input {
     background-color: #FFF;
     border: solid 1px #dddddd;
