@@ -2255,9 +2255,8 @@ var balloon = {
           balloon.datasource._dynamic_request_params = {};
 
           var collection = balloon.getURLParam('collection');
-
           if(collection !== null && balloon.last === null && !('id' in params)) {
-            operation.id = collection;
+            operation.data.id = collection;
           }
 
           if(balloon.datasource._ds_params.sort === true) {
@@ -2290,7 +2289,6 @@ var balloon = {
                 var crumbs = balloon.getCrumb().find('li').filter(':hidden').get()/*.reverse()*/;
                 crumbs = crumbs.slice(-1);
                 $(crumbs).show();
-                //balloon.resetDom('search');
                 balloon.getCrumb().find('li:last-child').remove();
               }
 
@@ -5435,11 +5433,11 @@ var balloon = {
     var $fs_prop_color = $("#fs-properties-meta-color");
     $fs_prop_color.find("li").unbind('click').click(function(e){
       var color = $(this).attr('class').substr(9);
-
+      var current = $(this).hasClass('fs-color-selected');
       $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
 
-      if(color === balloon.getCurrentNode().meta.color) {
-        color = null;
+      if(current) {
+        var color = null;
         $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', 'transparent');
       } else {
         $(this).addClass('fs-color-selected');
