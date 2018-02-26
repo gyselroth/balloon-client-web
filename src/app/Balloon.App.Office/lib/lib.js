@@ -12,6 +12,7 @@ import css from '../styles/style.css';
 
 var app = {
     render: function(core) {
+console.log(core);
         this.balloon = core;
         app.balloon._treeDblclick = app.treeDblclick;
     },

@@ -2299,7 +2299,7 @@ var balloon = {
 
           var attributes = [
             'id', 'name', 'mime', 'deleted', 'meta.color', 'meta.tags',
-            'directory', 'changed', 'file.size', 'filtered',
+            'directory', 'changed', 'size', 'filtered',
             'shared', 'sharelink', 'hash', 'reference', 'share', 'access'
           ];
 
