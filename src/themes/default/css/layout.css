@@ -111,6 +111,19 @@ select {
     outline: none;
 }
 
+#login {
+    background-image: url(../../../themes/default/img/teaser/teaser-image-blue_right.svg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
 #login-loader {
     position: absolute;
     top: 0;
