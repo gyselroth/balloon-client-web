@@ -140,7 +140,6 @@ var balloon = {
         panes: [
           { collapsible: true, size: "13%", min: "13%" },
           { collapsible: true, size: "50%", min: "25%" },
-          { collapsible: true, size: "37%", min: "35%", collapsed: true },
         ],
         scrollable: false,
         collapsed: true,
@@ -149,8 +148,17 @@ var balloon = {
       $('#fs-layout-left').kendoSplitter({
         orientation: "vertical",
         panes: [
-          { collapsible: true, size: "50%", collapsed: true },
-          { collapsible: false, size: "50%"}
+          { collapsible: true, size: "125px", collapsed: true },
+          { collapsible: false }
+        ],
+        scrollable: false,
+        collapsed: true,
+      });
+
+      $('#fs-node-container').kendoSplitter({
+        panes: [
+          { collapsible: false, size: "50%" },
+          { collapsible: true, size: "50%", collapsed: true}
         ],
         scrollable: false,
         collapsed: true,
@@ -1872,8 +1880,8 @@ var balloon = {
       if(node.readonly !== $fs_readonly.is(':checked')) {
         node.readonly = $fs_readonly.is(':checked');
         balloon.xmlHttpRequest({
-          url: balloon.base+'/nodes/readonly',
-          type: 'POST',
+          url: balloon.base+'/nodes',
+          type: 'PATCH',
           data: {
             id: balloon.id(node),
             readonly: node.readonly
@@ -2273,6 +2281,8 @@ var balloon = {
 
             return;
           }
+
+          operation.data.limit = 1000;
 
           balloon.xmlHttpRequest({
             url: balloon.datasource._url,
@@ -2741,8 +2751,8 @@ var balloon = {
    */
   rename: function(node, new_name) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/nodes/name?id='+balloon.id(node),
-      type: 'POST',
+      url: balloon.base+'/nodes?id='+balloon.id(node),
+      type: 'PATCH',
       dataType: 'json',
       data: {
         name: new_name,
@@ -3766,7 +3776,7 @@ var balloon = {
           $fs_share_link.find('.fs-share-remove').show();
 
           $('#fs-link-options').show();
-          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share?t='+node.sharelink_token).show().
+          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share/'+node.sharelink_token).show().
             unbind('click').bind('click', function(){
               this.select();
               document.execCommand("copy");
@@ -3922,9 +3932,25 @@ var balloon = {
 
     balloon.showAction([]);
 
-    $('#fs-search-container').find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
+    var $fs_search_filter = $('#fs-search-filter');
+    var $k_splitter = $('#fs-layout-left').data('kendoSplitter')
+
+    $('#fs-search-show-filter').unbind('click').bind('click', function() {
+      if($fs_search_filter.is(':visible')) {
+        $k_splitter.size(".k-pane:first", '120px');
+        $(this).find('div:first-child').html(i18next.t('search.hide_filter'));
+        $(this).find('.gr-icon').removeClass('gr-i-arrowhead-n').addClass('gr-i-arrowhead-s');
+      } else {
+        $k_splitter.size(".k-pane:first", $fs_search_filter.height()+120+'px');
+        $(this).find('div:first-child').html(i18next.t('search.show_filter'));
+        $(this).find('.gr-icon').removeClass('gr-i-arrowhead-s').addClass('gr-i-arrowhead-n');
+      }
+
+      $fs_search_filter.toggle();
+    });
 
     var $fs_search_extend = $('#fs-search-container');
+    $fs_search_extend.find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
     $('#fs-browser-action').hide();
 
     var $k_splitter = $('#fs-layout-left').data('kendoSplitter');
@@ -5614,9 +5640,9 @@ var balloon = {
    */
   saveMetaAttributes: function(node, meta) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/nodes/meta?id='+balloon.id(node),
+      url: balloon.base+'/nodes?id='+balloon.id(node),
       type: 'PATCH',
-      data: {attributes: meta},
+      data: {meta: meta},
       success: function() {
         for(var attr in meta) {
           if(meta[attr] == '') {
