@@ -8,7 +8,9 @@ BUILD_DIR = $(BASE_DIR)/build
 PACK_DIR = $(BASE_DIR)/pack
 
 # VERSION
-VERSION = $(shell cat $(BASE_DIR)/package.json | grep '"version"' | cut -d '"' -f4)
+ifeq ($(VERSION),)
+VERSION := "0.0.1"
+endif
 
 # PACKAGES
 DEB_LIGHT = $(DIST_DIR)/balloon-web-light-$(VERSION).deb
@@ -17,13 +19,14 @@ TAR = $(DIST_DIR)/balloon-web-$(VERSION).tar.gz
 
 # NPM STUFF
 NPM_BIN = npm
+ESLINT_BIN = $(NODE_MODULES_DIR)/.bin/eslint
 
 # TARGET ALIASES
 NPM_TARGET = $(NODE_MODULES_DIR)
 WEBPACK_TARGET = $(BUILD_DIR)
+ESLINT_TARGET = $(BASE_DIR)
 CHANGELOG_TARGET = $(PACK_DIR)/DEBIAN/changelog
-BUILD_TARGET = $(WEBPACK_TARGET)
-
+BUILD_TARGET = $(ESLINT_TARGET) $(WEBPACK_TARGET)
 
 # TARGETS
 .PHONY: all
@@ -62,8 +65,11 @@ $(DIST_DIR)/balloon-web-%-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
 	@mkdir -p $(PACK_DIR)/DEBIAN
 	@cp $(BASE_DIR)/packaging/debian/control-$* $(PACK_DIR)/DEBIAN/control
 	@sed -i s/'{version}'/$(VERSION)/g $(PACK_DIR)/DEBIAN/control
+	@if [ $* == "full" ]; then cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst; fi
 	@mkdir -p $(PACK_DIR)/usr/share/balloon-web
 	@cp -Rp $(BUILD_DIR)/* $(PACK_DIR)/usr/share/balloon-web
+	@mkdir $(PACK_DIR)/usr/share/balloon-web/nginx
+	@cp -Rp $(BASE_DIR)/packaging/nginx.conf $(PACK_DIR)/usr/share/balloon-web/nginx
 	@-test -d $(DIST_DIR) || mkdir $(DIST_DIR)
 	@dpkg-deb --build $(PACK_DIR) $@
 	@rm -rf $(PACK_DIR)
@@ -82,8 +88,6 @@ $(TAR): $(BUILD_TARGET)
 	@tar -czvf $(TAR) -C $(PACK_DIR) .
 	@rm -rf $(PACK_DIR)
 
-	@echo "package available at $(TAR)"
-	@echo "MD5 CHECKSUM: `md5sum $(TAR) | cut -d' ' -f1`"
 	@touch $@
 
 
@@ -159,6 +163,13 @@ $(NPM_TARGET) : $(BASE_DIR)/package.json
 	$(NPM_BIN) update
 	@touch $@
 
+
+.PHONY: eslint
+eslint: $(ESLINT_TARGET)
+
+$(ESLINT_TARGET) : $(NPM_TARGET)
+	$(ESLINT_BIN) src *.js
+	@touch $@
 
 .PHONY: webpack
 webpack: $(WEBPACK_TARGET)
