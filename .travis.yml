@@ -29,7 +29,7 @@ deploy:
   file: dist/*
   skip_cleanup: true
   on:
-    master: true
+    tags: true
 - provider: bintray
   file: bintray.json
   user: raffis
