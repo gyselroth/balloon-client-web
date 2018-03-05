@@ -364,7 +364,7 @@ var app = {
 
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/office/documents?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
-      type: 'PUT',
+      type: 'POST',
       complete: function() {
         $('#fs-new-file').remove();
       },
