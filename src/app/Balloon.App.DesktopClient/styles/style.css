@@ -1,0 +1,61 @@
+#fs-desktop {
+    width: 660px;
+    height: 450px;
+    display: none;
+}
+
+#fs-desktop li {
+    width: 130px;
+    height: 130px;
+    padding: 20px;
+    border: solid 1px #CCC;
+    margin: 20px;
+    float: left;
+    background-color: #EEE;
+}
+
+#fs-desktop li:hover {
+    cursor: pointer;
+    background-color: #DDD;
+}
+
+#fs-desktop span {
+    margin: 10px auto;
+    text-align: center;
+    display: block;
+}
+
+#fs-desktop li div {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#fs-desktop-exe div {
+    background-image: url(../img/windows.svg);
+}
+
+#fs-desktop-zip div {
+    background-image: url(../img/tux.svg);
+}
+
+#fs-desktop-pkg div {
+    background-image: url(../img/osx.svg);
+}
+
+#fs-desktop-rpm div {
+    background-image: url(../img/fedora.svg);
+}
+
+#fs-desktop-deb div {
+    background-image: url(../img/debian.svg);
+}
+
+@media only screen and (max-width:800px) {
+    #fs-menu-user-desktop {
+        display: none !important;
+    }
+}

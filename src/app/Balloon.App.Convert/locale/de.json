@@ -1,0 +1,11 @@
+{
+  "app": {
+    "balloon_app_convert": {
+      "slave_node": "Diese Datei ist eine Kopie von {{node.master.master.name}} und wird automatisch aktuallisiert wenn {{node.master.master.name}} angepasst wird.",
+      "menu_title": "Schatten",
+      "choose_format": "Format auswählen",
+      "description": "Erstelle Dateiklone dieser Datei, welche sich automatisch aktualisieren. Es ist auch möglich den Inhalt in ein anderes Dateiformat konventieren zu lassen.",
+      "not_supported": "Dieser Dateityp ist nicht unterstützt."
+    }
+  }
+}

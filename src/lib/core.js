@@ -1,12 +1,11 @@
 /**
- * Balloon
+ * balloon
  *
- * @author    Raffael Sahli <sahli@gyselroth.net>
- * @copyright   Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
+ * @copyright Copryright (c) 2012-2018 gyselroth GmbH (https://gyselroth.com)
  * @license   GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
 
-import * as $ from "jquery";
+import $ from "jquery";
 import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import kendoAutoComplete from 'kendo-ui-core/js/kendo.autocomplete.js';
 import kendoProgressBar from 'kendo-ui-core/js/kendo.progressbar.js';
@@ -29,15 +28,9 @@ var balloon = {
 
 
   /**
-   * Version
-   */
-  BALLOON_VERSION: '2.0.0-dev',
-
-
-  /**
    * API Version
    */
-  BALLOON_API_VERSION: 1,
+  BALLOON_API_VERSION: 2,
 
 
   /**
@@ -50,13 +43,6 @@ var balloon = {
    * Chunk upload size (4MB Chunk)
    */
   BYTES_PER_CHUNK: 4194304,
-
-
-  /**
-   * Chunk upload size (1GB)
-   */
-  MAX_FILE_UPLOAD_SIZE: 1073741824,
-
 
   /**
    * API Base url
@@ -138,14 +124,14 @@ var balloon = {
    * @return void
    */
   init: function() {
-    app.render(this);
-
     if(balloon.isInitialized()) {
       balloon.resetDom();
     } else {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
+    $('#fs-disclaimer').html('balloon ' + process.env.VERSION);
+    app.preInit(this);
     balloon.kendoFixes();
 
     var $fs_browser_layout = $("#fs-browser-layout");
@@ -154,7 +140,25 @@ var balloon = {
         panes: [
           { collapsible: true, size: "13%", min: "13%" },
           { collapsible: true, size: "50%", min: "25%" },
-          { collapsible: true, size: "37%", min: "35%", collapsed: true },
+        ],
+        scrollable: false,
+        collapsed: true,
+      });
+
+      $('#fs-layout-left').kendoSplitter({
+        orientation: "vertical",
+        panes: [
+          { collapsible: true, size: "125px", collapsed: true },
+          { collapsible: false }
+        ],
+        scrollable: false,
+        collapsed: true,
+      });
+
+      $('#fs-node-container').kendoSplitter({
+        panes: [
+          { collapsible: false, size: "50%" },
+          { collapsible: true, size: "50%", collapsed: true}
         ],
         scrollable: false,
         collapsed: true,
@@ -175,11 +179,11 @@ var balloon = {
       e.stopPropagation();
       e.preventDefault();
     })
-    .unbind('dragover').on('dragover', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-    })
-    .unbind('keyup').bind('keyup', balloon._treeKeyup);
+      .unbind('dragover').on('dragover', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+      })
+      .unbind('keyup').bind('keyup', balloon._treeKeyup);
 
     var menu = balloon.getURLParam('menu');
     if(menu != 'cloud' && menu !== null) {
@@ -222,19 +226,19 @@ var balloon = {
 
     balloon.displayQuota();
 
-    $('#fs-action-search').find('input:text')
-      .unbind('focus').bind('focus', function(){balloon.menuLeftAction('search')})
-      .unbind('keyup').keyup(balloon._searchKeyup);
-
-    $('#fs-search-button').unbind('click').bind('click', function(e) {
-      if($(window).width() <= 800) {
-        balloon.menuLeftAction('search');
+    $('#fs-action-search').unbind('click').bind('click', function(){
+      if(!$('#fs-search-container').hasClass('k-state-collapsed')) {
+        balloon.resetSearch();
       } else {
-        balloon.search($(this).parent().find('input').val());
+        balloon.datasource.data([]);
+        balloon.advancedSearch();
       }
     });
 
-    $('#fs-search-reset-button').unbind('click').click(balloon._searchResetClick);
+    $('#fs-search-container-small').find('input:text')
+      .unbind('keyup').keyup(balloon._searchKeyup);
+
+    $('#fs-search-container-small').find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
       e.preventDefault();
@@ -255,22 +259,24 @@ var balloon = {
       if($target.parents('#fs-browser-tree').length !== 0) {
         $target.addClass('fs-file-drop');
       }
-     })
-    .unbind('dragleave').on('dragleave', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      $fs_browser_tree.removeClass('fs-file-dropable');
-      $fs_browser_tree.find('.fs-file-drop').removeClass('fs-file-drop');
-    });
+    })
+      .unbind('dragleave').on('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $fs_browser_tree.removeClass('fs-file-dropable');
+        $fs_browser_tree.find('.fs-file-drop').removeClass('fs-file-drop');
+      });
 
     $(window).unbind('popstate').bind('popstate', balloon._statePop);
     balloon.buildCrumb(balloon.getURLParam('collection'));
 
-    $('#fs-title').unbind('click').bind('click', function(){balloon.menuLeftAction('cloud')});
+    $('#fs-title').unbind('click').bind('click', function(){
+      balloon.menuLeftAction('cloud')
+    });
 
     balloon.showHint();
     balloon.initialized = true;
-    app.init(this);
+    app.postInit(this);
   },
 
 
@@ -287,10 +293,10 @@ var balloon = {
 
     var $fs_hint_win = $('#fs-hint-window');
     var $k_hint = $fs_hint_win.kendoWindow({
-       title: $fs_hint_win.attr('title'),
-       resizable: false,
-       modal: true,
-       open: function() {
+      title: $fs_hint_win.attr('title'),
+      resizable: false,
+      modal: true,
+      open: function() {
         balloon._showHint();
         setTimeout(function(){
           $fs_hint_win.find('input[name=next]').focus();
@@ -305,7 +311,7 @@ var balloon = {
         $fs_hint_win.find('input[name=next]').focus().off('click').on('click', function(){
           balloon._showHint();
         });
-       }
+      }
     }).data('kendoWindow').center().open();
 
     $fs_hint_win.unbind('keydown').keydown(function(e) {
@@ -349,39 +355,6 @@ var balloon = {
         }
       };
     }(kendo.ui.Window.fn._keydown);
-
-    window.kendo.ui.AutoComplete.fn.search = function (word) {
-      var that = this,
-      options = that.options,
-      ignoreCase = options.ignoreCase,
-      separator = options.separator,
-      length;
-
-      word = word || that.value();
-
-      that._current = null;
-
-      clearTimeout(that._typing);
-
-      if (separator) {
-        word = wordAtCaret(caretPosition(that.element[0]), word, separator);
-      }
-
-      length = word.length;
-
-      if (!length && !length == 0) {
-        that.popup.close();
-      } else if (length >= that.options.minLength) {
-        that._open = true;
-
-        that.dataSource.filter({
-          value: ignoreCase ? word.toLowerCase() : word,
-          operator: options.filter,
-          field: options.dataTextField,
-          ignoreCase: ignoreCase
-        });
-      }
-    };
   },
 
 
@@ -416,7 +389,7 @@ var balloon = {
     options.complete = function(jqXHR, textStatus) {
       balloon.hideLoader();
 
-      var valid = ['POST', 'PUT', 'DELETE'],
+      var valid = ['POST', 'PUT', 'DELETE', 'PATCH'],
         show  = (valid.indexOf(options.type) > -1);
 
       if(show && jqXHR.status.toString().substr(0, 1) === '2') {
@@ -437,7 +410,7 @@ var balloon = {
     }
 
     options.headers = {
-      'X-Client': 'Webinterface|'+balloon.BALLOON_VERSION
+      'X-Client': 'Webinterface|'+process.env.VERSION+'-'+process.env.COMMITHASH
     }
 
     return login.xmlHttpRequest(options);
@@ -526,8 +499,7 @@ var balloon = {
         if(next >= balloon.datasource._data.length) {
           next--;
         }
-      }
-      else if(e.keyCode === 38) {
+      } else if(e.keyCode === 38) {
         next--;
         if(0 > next) {
           next = 0;
@@ -544,8 +516,7 @@ var balloon = {
 
       if(balloon.datasource._data[next].id == '_FOLDERUP') {
         $node = $fs_browser_tree.find('.k-first');
-      }
-      else {
+      } else {
         $node = $fs_browser_tree.find('.k-item[fs-id='+balloon.datasource._data[next].id+']');
       }
 
@@ -576,78 +547,78 @@ var balloon = {
    */
   _keyAction: function(e) {
     switch(e.keyCode) {
-      //delete/shift+delete
-      case 46:
-        if(balloon.last !== undefined) {
-          if(e.shiftKey) {
-            balloon.deletePrompt(balloon.getSelected(balloon.last), true);
-          } else {
-            balloon.deletePrompt(balloon.getSelected(balloon.last));
-          }
+    //delete/shift+delete
+    case 46:
+      if(balloon.last !== undefined) {
+        if(e.shiftKey) {
+          balloon.deletePrompt(balloon.getSelected(balloon.last), true);
+        } else {
+          balloon.deletePrompt(balloon.getSelected(balloon.last));
         }
+      }
       break;
 
       //cut node (shift+x)
-      case 88:
-        if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-          balloon.doAction('cut');
-        }
+    case 88:
+      if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
+        balloon.doAction('cut');
+      }
       break;
 
       //copy node (shift+c)
-      case 67:
-        if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-          balloon.doAction('copy');
-        }
+    case 67:
+      if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
+        balloon.doAction('copy');
+      }
       break;
 
       //paste node (shift+v)
-      case 86:
-        if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-          balloon.doAction('paste');
-        }
+    case 86:
+      if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
+        balloon.doAction('paste');
+      }
       break;
 
       //add folder (shift+n)
-      case 78:
-        if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-          balloon.doAction('folder');
-        }
+    case 78:
+      if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
+        balloon.doAction('folder');
+      }
       break;
 
       //add file (shift+a)
-      case 65:
-        if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-          balloon.doAction('file');
-        }
+    case 65:
+      if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
+        balloon.doAction('file');
+      }
       break;
 
       //upload (shift+u)
-      case 85:
-        if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-          balloon.doAction('upload');
-        }
+    case 85:
+      if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
+        balloon.doAction('upload');
+      }
       break;
 
       //download (shift+d)
-      case 68:
-        if(e.shiftKey && balloon.last !== undefined) {
-          balloon.doAction('download');
-        }
+    case 68:
+      if(e.shiftKey && balloon.last !== undefined) {
+        balloon.doAction('download');
+      }
       break;
 
       //download (shift+r)
-      case 82:
-        if(e.shiftKey && balloon.last !== undefined) {
-          balloon.doAction('restore');
-        }
+    case 82:
+      if(e.shiftKey && balloon.last !== undefined) {
+        balloon.doAction('restore');
+      }
       break;
 
       //rename node (F2)
-      case 113:
-        if(balloon.last !== undefined) {
-          balloon.initRenameBrowser(balloon.last);
-        }
+    case 113:
+      if(balloon.last !== undefined) {
+        balloon.initRenameBrowser(balloon.last);
+      }
       break;
     }
   },
@@ -744,8 +715,7 @@ var balloon = {
       if(e.dropPosition != 'over') {
         dest = dest_parent;
       }
-    }
-    else if(dest === undefined) {
+    }    else if(dest === undefined) {
       if($(e.dropTarget).attr('fs-id') != null) {
         dest = $(e.dropTarget).attr('fs-id');
       } else if($(e.dropTarget).parent().attr('fs-id') != null) {
@@ -808,11 +778,11 @@ var balloon = {
         node.meta.tags = $.makeArray(node.meta.tags);
       }
 
-      if(node.deleted !== false) {
-         $that.addClass('fs-node-deleted');
+      if(node.deleted) {
+        $that.addClass('fs-node-deleted');
       }
 
-      var order = ['name', 'shared', 'deleted', 'sharelink', 'tag', 'size', 'changed'];
+      var order = ['name', 'shared', 'deleted', 'sharelink_token', 'readonly', 'destroy', 'color_tag', 'size', 'changed'];
       $that.attr('fs-id', balloon.id(node));
 
       if(node.directory === true) {
@@ -828,60 +798,72 @@ var balloon = {
 
       for(var prop in order) {
         switch(order[prop]) {
-          case 'sharelink':
-            if(node.sharelink === true) {
-              html_children.push('<div class="fs-node-shared gr-icon gr-i-hyperlink"></div>');
-            } else {
-              html_children.push('<div>&nbsp;</div>');
-            }
+        case 'sharelink_token':
+          if(node.sharelink_token) {
+            html_children.push('<div class="fs-node-shared gr-icon gr-i-hyperlink"></div>');
+          } else {
+            html_children.push('<div>&nbsp;</div>');
+          }
           break;
 
-          case 'changed':
-            var ts  = node.changed.sec*1000,
-              date  = new Date(ts),
-              since = balloon.timeSince(date);
-
-            html_children.push('<span class="fs-meta-info">'+since+'</span>');
+        case 'readonly':
+          if(node.readonly === true) {
+            html_children.push('<div class="fs-node-readonly gr-icon gr-i-lock"></div>');
+          } else {
+            html_children.push('<div>&nbsp;</div>');
+          }
           break;
 
-          case 'deleted':
-            if(node.deleted !== false) {
-              html_children.push('<div class="fs-node-shared gr-icon gr-i-trash"></div>');
-            } else {
-              html_children.push('<div>&nbsp;</div>');
-            }
+        case 'destroy':
+          if(node.destroy !== undefined) {
+            html_children.push('<div class="fs-node-destroy gr-icon gr-i-flag"></div>');
+          } else {
+            html_children.push('<div>&nbsp;</div>');
+          }
           break;
 
-          case 'size':
-            if(!node.directory) {
-              html_children.push('<span class="fs-meta-info">'+balloon.getReadableFileSizeString(node.size)+'</span>');
-            }
+        case 'changed':
+          var since = balloon.timeSince(new Date(node.changed));
+
+          html_children.push('<span class="fs-meta-info">'+since+'</span>');
           break;
 
-          case 'name':
-            var ext = balloon.getFileExtension(node);
-            if(ext != null && !node.directory) {
-              var sprite = $that.find('.k-sprite').addClass('gr-icon')[0].outerHTML;
-              var name = '<span class="fs-browser-name">'+node.name.substr(0, node.name.length-ext.length-1)+'</span> <span class="fs-ext">[.'+ext+']</span>';
-              $that_k_in.html(sprite+name+$(this).find('.k-in > .fs-browser-meta')[0].outerHTML);
-            }
-            else {
-               var sprite = $(this).find('.k-sprite').addClass('gr-icon')[0].outerHTML;
-               $that_k_in.html(sprite+'<span class="fs-browser-name">'+node.name+'</span>'+$that.find('.fs-browser-meta')[0].outerHTML);
-            }
+        case 'deleted':
+          if(node.deleted) {
+            html_children.push('<div class="fs-node-shared gr-icon gr-i-trash"></div>');
+          } else {
+            html_children.push('<div>&nbsp;</div>');
+          }
           break;
 
-          case 'tag':
-            var color = node.meta.color,
-              color_tag;
-            if(typeof color != "undefined"){
-              color_tag = '<span style="background-color: '+color+';" class="fs-color-tag"></span>';
-            }
-            else{
-              color_tag = '<span style="background-color: transparent;" class="fs-color-tag"></span>';
-            }
+        case 'size':
+          if(node.directory) {
+            html_children.push('<span class="fs-meta-info">'+i18next.t('view.prop.data.childcount', {count: node.size})+'</span>');
+          } else {
+            html_children.push('<span class="fs-meta-info">'+balloon.getReadableFileSizeString(node.size)+'</span>');
+          }
+          break;
 
-            html_children.push(color_tag);
+        case 'name':
+          var ext = balloon.getFileExtension(node);
+          if(ext != null && !node.directory) {
+            var sprite = $that.find('.k-sprite').addClass('gr-icon')[0].outerHTML;
+            var name = '<span class="fs-browser-name">'+node.name.substr(0, node.name.length-ext.length-1)+'</span> <span class="fs-ext">[.'+ext+']</span>';
+            $that_k_in.html(sprite+name+$(this).find('.k-in > .fs-browser-meta')[0].outerHTML);
+          }            else {
+            var sprite = $(this).find('.k-sprite').addClass('gr-icon')[0].outerHTML;
+            $that_k_in.html(sprite+'<span class="fs-browser-name">'+node.name+'</span>'+$that.find('.fs-browser-meta')[0].outerHTML);
+          }
+          break;
+
+        case 'color_tag':
+          if(balloon.isValidColor(node.meta.color)) {
+            var color_tag = '<span class="fs-color-tag fs-color-'+node.meta.color+'"></span>';
+          } else {
+            var color_tag = '<span class="fs-color-tag"></span>';
+          }
+
+          html_children.push(color_tag);
 
           break;
         }
@@ -909,7 +891,7 @@ var balloon = {
     });
 
     if(rename_match !== false) {
-      var dom_node = $('li[data-uid='+rename_match.uid+']');
+      var dom_node = $('li[fs-id='+rename_match.id+']');
       $k_tree.select(dom_node);
       $k_tree.trigger('select', {node: dom_node});
 
@@ -932,7 +914,7 @@ var balloon = {
     $('.k-in').removeClass('fs-rename');
 
     var id   = $(e.node).attr('data-uid'),
-      node = balloon.datasource.getByUid(id);
+      node = balloon.datasource.getByUid(id)._childrenOptions.data;
 
     if(balloon.id(node) === balloon.id(balloon.last)) {
       balloon.last = node;
@@ -941,8 +923,8 @@ var balloon = {
 
     balloon.resetDom(
       ['properties','preview','view-bar', 'action-bar',
-      'history','share-collection','share-link'
-    ]);
+        'history','share-collection','share-link'
+      ]);
 
     var copy   = balloon.last;
     balloon.last   = node;
@@ -966,8 +948,8 @@ var balloon = {
     $('.fs-action-select-only').css('display','inline-block');
 
     if(balloon.isSystemNode(node) || balloon.isMultiSelect()) {
-       e.preventDefault();
-       return;
+      e.preventDefault();
+      return;
     }
 
     if(typeof(balloon.last_click_event) == 'object' && balloon.last_click_event.ctrlKey == false
@@ -988,14 +970,7 @@ var balloon = {
       'share-link',
     ]);
 
-    balloon.displayProperties(node,
-      {
-        data: {
-          name: node.name,
-        }
-      }
-    );
-
+    balloon.displayProperties(node);
     var view  = balloon.getURLParam('view');
 
     if(balloon.previous !== null && balloon.previous.id !== balloon.last.id
@@ -1009,22 +984,29 @@ var balloon = {
     var $fs_view_bar_li = $('#fs-view-bar').find('li');
     $fs_view_bar_li.removeClass('fs-view-bar-active');
     $('#fs-view-'+view).addClass('fs-view-bar-active');
+    var views = ['preview', 'properties', 'events'];
 
-    if(balloon.last.directory) {
-      if(balloon.last.deleted !== false) {
-        balloon.showView(['preview', 'properties', 'events', 'advanced']);
-      } else if(balloon.last.shared === false && balloon.last.share === false || (balloon.last.shared === true && balloon.last.reference === false)) {
-        balloon.showView(['preview', 'properties', 'share-collection', 'share-link', 'events', 'advanced']);
-      } else  {
-        balloon.showView(['preview', 'properties', 'share-link', 'events', 'advanced']);
-      }
-    } else {
-      if(balloon.last.deleted !== false) {
-        balloon.showView(['preview', 'properties', 'history', 'events', 'advanced']);
-      } else {
-        balloon.showView(['preview', 'properties', 'history', 'share-link', 'events', 'advanced']);
-      }
+    if(!balloon.last.deleted) {
+      views.push('share-link')
     }
+
+    if(!balloon.last.directory) {
+      views.push('history')
+    }
+
+    if(balloon.last.directory && balloon.last.access === 'm' && !balloon.last.share) {
+      views.push('share-collection');
+    }
+
+    if(balloon.last.access != 'r') {
+      views.push('advanced');
+    }
+
+    if(balloon.last.access != 'r' && !balloon.last.deleted) {
+      views.push('advanced', 'share-link');
+    }
+
+    balloon.showView(views);
 
     $fs_view_bar_li.unbind('click').click(function() {
       var $that = $(this),
@@ -1061,7 +1043,7 @@ var balloon = {
 
     if(collection !== null) {
       balloon.menuLeftAction(menu, false);
-      balloon.refreshTree('/collection/children', {id: collection}, null, {nostate: true});
+      balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
     } else {
       balloon.menuLeftAction(menu);
     }
@@ -1086,7 +1068,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/parents',
+      url: balloon.base+'/nodes/parents',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -1095,7 +1077,7 @@ var balloon = {
         self: true
       },
       success: function(body) {
-        balloon._repopulateCrumb(body.data.reverse());
+        balloon._repopulateCrumb(body.reverse());
       },
     });
   },
@@ -1193,20 +1175,17 @@ var balloon = {
       var matches = o_reg.exec(target);
       if(matches && matches[1]) {
         values.push(matches[1]);
-      }
-      else {
+      }      else {
         break;
       }
     }
 
     if(!values.length) {
       return null;
-    }
-    else if(key.slice(-4) == '\\[\\]') {
+    }    else if(key.slice(-4) == '\\[\\]') {
       return values;
-    }
-    else {
-       return values.length == 1 ? values[0] : values;
+    }    else {
+      return values.length == 1 ? values[0] : values;
     }
   },
 
@@ -1221,12 +1200,12 @@ var balloon = {
 
     var $fs_profile_win = $('#fs-profile-window');
     $fs_profile_win.kendoWindow({
-       title: $fs_profile_win.attr('title'),
-       resizable: false,
-       modal: true,
-       height: '60%',
-       width: '40%',
-       open: function() {
+      title: $fs_profile_win.attr('title'),
+      resizable: false,
+      modal: true,
+      height: '60%',
+      width: '40%',
+      open: function() {
         var $fs_quota_usage = $('#fs-profile-quota-bar'),
           $k_progress = $fs_quota_usage.data('kendoProgressBar');
 
@@ -1241,56 +1220,63 @@ var balloon = {
         }
 
         balloon.xmlHttpRequest({
-          url: balloon.base+'/user/quota-usage',
+          url: balloon.base+'/users/avatar',
           type: 'GET',
-          dataType: 'json',
-          success: function(data) {
-            var percentage = Math.round(data.data.used/data.data.hard_quota*100);
-            $k_progress.value(percentage);
-
-            if(percentage >= 90) {
-              $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
-            } else {
-              $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
-            }
-
-            var used = balloon.getReadableFileSizeString(data.data.used),
-              max  = balloon.getReadableFileSizeString(data.data.hard_quota),
-              free = balloon.getReadableFileSizeString(data.data.hard_quota - data.data.used);
-
-            $('#fs-profile-quota-used').find('td').html(used);
-            $('#fs-profile-quota-max').find('td').html(max);
-            $('#fs-profile-quota-left').find('td').html(free);
+          success: function(body) {
+            var $avatar = $('#fs-profile-avatar');
+            $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
           },
+          error: function() {
+            //no action
+          }
         });
 
         balloon.xmlHttpRequest({
-          url: balloon.base+'/user/attributes',
-          data: {
-            attributes: ['id','username','mail','created','last_attr_sync','avatar']
-          },
+          url: balloon.base+'/users/whoami',
           type: 'GET',
           success: function(body) {
             var $table = $('#fs-profile-user').find('table');
-            for(var attribute in body.data) {
+            for(var attribute in body) {
               switch(attribute) {
-                case 'created':
-                case 'last_attr_sync':
-                  var ts   = body.data[attribute].sec*1000,
-                    date   = new Date(ts),
-                    format = kendo.toString(date, kendo.culture().calendar.patterns.g),
-                    since  = balloon.timeSince(date);
+              case 'created':
+              case 'last_attr_sync':
+                  var date   = new Date(body[attribute]),
+                  format = kendo.toString(date, kendo.culture().calendar.patterns.g),
+                  since  = balloon.timeSince(date);
 
-                  $table.append('<tr><th>'+attribute+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
+                $table.append('<tr><th>'+attribute+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
                 break;
 
-                case 'avatar':
-                  var $avatar = $('#fs-profile-avatar');
-                  $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body.data[attribute]+')');
-                break;
+              case 'quota':
+                var used = balloon.getReadableFileSizeString(body.quota.used);
+                var max;
+                var free;
 
-                default:
-                  $table.append('<tr><th>'+attribute+'</th><td>'+body.data[attribute]+'</td></tr>')
+                if(body.quota.hard_quota === -1) {
+                  $fs_quota_usage.hide();
+                  max = i18next.t('profile.quota_unlimited');
+                  free = max;
+                } else {
+                  var percentage = Math.round(body.quota.used/body.quota.hard_quota*100);
+                  $k_progress.value(percentage);
+
+                  if(percentage >= 90) {
+                    $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+                  } else {
+                    $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+                  }
+
+                  max  = balloon.getReadableFileSizeString(body.quota.hard_quota),
+                  free = balloon.getReadableFileSizeString(body.quota.hard_quota - body.quota.used);
+                }
+
+                $('#fs-profile-quota-used').find('td').html(used);
+                $('#fs-profile-quota-max').find('td').html(max);
+                $('#fs-profile-quota-left').find('td').html(free);
+              break;
+
+              default:
+                $table.append('<tr><th>'+attribute+'</th><td>'+body[attribute]+'</td></tr>')
                 break;
               }
             }
@@ -1341,7 +1327,7 @@ var balloon = {
     ];
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/event-log',
+      url: balloon.base+'/nodes/event-log',
       data: params,
       type: 'GET',
       success: function(body) {
@@ -1366,107 +1352,107 @@ var balloon = {
         for(var log in body.data) {
           if(body.data[log].user === null) {
             username = '<user removed>';
-          } else if(body.data[log].user.username == login.getUsername()) {
-            username = body.data[log].user.username+' ('+i18next.t('events.you')+')';
+          } else if(body.data[log].user.name == login.getUsername()) {
+            username = body.data[log].user.name+' ('+i18next.t('events.you')+')';
           } else {
-            username = body.data[log].user.username;
+            username = body.data[log].user.name;
           }
 
           undo    = false;
-          date    = kendo.toString(new Date((body.data[log].timestamp.sec*1000)), kendo.culture().calendar.patterns.g);
+          date    = kendo.toString(new Date((body.data[log].timestamp)), kendo.culture().calendar.patterns.g);
           operation = balloon.camelCaseToUnderline(body.data[log].operation);
           $node   = $('<li></li>');
           $icon  = $('<div class="gr-icon"></div>');
           $node.append($icon);
 
           switch(body.data[log].operation) {
-            case 'deleteCollectionReference':
-            case 'deleteCollectionShare':
-            case 'deleteCollection':
-            case 'deleteFile':
-              undo = true;
-              $icon.addClass('gr-i-trash');
-              break;
-            case 'forceDeleteCollectionReference':
-            case 'forceDeleteCollectionShare':
-            case 'forceDeleteCollection':
-            case 'forceDeleteFile':
-              $icon.addClass('gr-i-trash');
-              break;
-            case 'addCollection':
-              undo = true;
-              $icon.addClass('gr-i-folder-add');
-              break;
-            case 'addFile':
-              undo = true;
-              $icon.addClass('gr-i-file-add');
-              break;
-            case 'addCollectionShare':
-            case 'addCollectionReference':
-              undo = true;
-              $icon.addClass('gr-i-group');
-              break;
-            case 'unshareCollection':
-              undo = false;
-              $icon.addClass('gr-i-group');
-              break;
-            case 'editFile':
-              undo = true;
-              $icon.addClass('gr-i-pencil');
-              break;
-            case 'undeleteFile':
-            case 'undeleteCollection':
-            case 'undeleteCollectionReference':
-            case 'undeleteCollectionShare':
-              undo = true;
-              $icon.addClass('gr-i-restore-trash');
-              break;
-            case 'restoreFile':
-              undo = true;
-              $icon.addClass('gr-i-restore');
-              break;
-            case 'renameFile':
-            case 'renameCollection':
-            case 'renameCollectionShare':
-            case 'renameCollectionReference':
-              undo = true;
-              $icon.addClass('gr-i-italic');
-              break;
-            case 'moveFile':
-            case 'moveCollection':
-            case 'moveCollectionReference':
-            case 'moveCollectionShare':
-              undo = true;
-              $icon.addClass('gr-i-paste');
-              break;
-            case 'copyFile':
-            case 'copyCollection':
-            case 'copyCollectionReference':
-              undo = true;
-              $icon.addClass('gr-i-copy');
-              break;
+          case 'deleteCollectionReference':
+          case 'deleteCollectionShare':
+          case 'deleteCollection':
+          case 'deleteFile':
+            undo = true;
+            $icon.addClass('gr-i-trash');
+            break;
+          case 'forceDeleteCollectionReference':
+          case 'forceDeleteCollectionShare':
+          case 'forceDeleteCollection':
+          case 'forceDeleteFile':
+            $icon.addClass('gr-i-trash');
+            break;
+          case 'addCollection':
+            undo = true;
+            $icon.addClass('gr-i-folder-add');
+            break;
+          case 'addFile':
+            undo = true;
+            $icon.addClass('gr-i-file-add');
+            break;
+          case 'addCollectionShare':
+          case 'addCollectionReference':
+            undo = true;
+            $icon.addClass('gr-i-group');
+            break;
+          case 'unshareCollection':
+            undo = false;
+            $icon.addClass('gr-i-group');
+            break;
+          case 'editFile':
+            undo = true;
+            $icon.addClass('gr-i-pencil');
+            break;
+          case 'undeleteFile':
+          case 'undeleteCollection':
+          case 'undeleteCollectionReference':
+          case 'undeleteCollectionShare':
+            undo = true;
+            $icon.addClass('gr-i-restore-trash');
+            break;
+          case 'restoreFile':
+            undo = true;
+            $icon.addClass('gr-i-restore');
+            break;
+          case 'renameFile':
+          case 'renameCollection':
+          case 'renameCollectionShare':
+          case 'renameCollectionReference':
+            undo = true;
+            $icon.addClass('gr-i-italic');
+            break;
+          case 'moveFile':
+          case 'moveCollection':
+          case 'moveCollectionReference':
+          case 'moveCollectionShare':
+            undo = true;
+            $icon.addClass('gr-i-paste');
+            break;
+          case 'copyFile':
+          case 'copyCollection':
+          case 'copyCollectionReference':
+            undo = true;
+            $icon.addClass('gr-i-copy');
+            break;
           }
 
 
-          if(body.data[log].share !== null && share_events.indexOf(body.data[log].operation) == -1) {
+          if(body.data[log].share && share_events.indexOf(body.data[log].operation) == -1) {
             $node.append(i18next.t('events.share', {
               share:  body.data[log].share.name,
             })+' ');
           }
 
-          if(body.data[log].parent !== null && body.data[log].parent.name === null) {
+          if(body.data[log].parent && !body.data[log].parent.name) {
             body.data[log].parent.name = "<"+i18next.t('events.root_folder')+'>';
           }
 
-          if(body.data[log].previous !== null && body.data[log].previous.parent !== undefined && body.data[log].previous.parent !== null) {
-            if(body.data[log].previous.parent.name === null) {
+          if(body.data[log].previous && body.data[log].previous.parent) {
+            if(!body.data[log].previous.parent.name) {
               body.data[log].previous.parent.name = "<"+i18next.t('events.root_folder')+'>';
             }
-          } else if(body.data[log].previous !== null && body.data[log].previous.parent === null) {
+          } else if(body.data[log].previous && !body.data[log].previous.parent) {
             body.data[log].previous.parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
-          if(body.data[log].parent === null) {
+          if(!body.data[log].parent) {
             body.data[log].parent = {name: "<"+i18next.t('events.deleted_folder')+'>'};
           }
 
@@ -1477,13 +1463,14 @@ var balloon = {
             parent: body.data[log].parent
           }));
 
-          if(body.data[log].node === null) {
+          if(!body.data[log].node) {
             undo = false;
           }
 
           if(undo === true) {
-            $undo = $('<div class="gr-icon gr-i-undo"></div>').unbind('click').bind('click',
-              body.data[log], balloon._undoEvent);
+            $undo = $('<div class="gr-icon gr-i-undo"></div>').off('click')
+              .on('click', null, body.data[log], balloon._undoEvent);
+
             $node.append($undo);
           }
 
@@ -1586,83 +1573,83 @@ var balloon = {
     }
 
     switch(e.data.operation) {
-      case 'deleteCollectionReference':
-      case 'deleteCollectionShare':
-      case 'deleteCollection':
-      case 'deleteFile':
-        var msg  = i18next.t('events.prompt.trash_restore', e.data.node.name);
-        balloon.promptConfirm(msg, [
-          {
-            action: 'undelete',
-            params: [e.data.node.id]
-          }, successAction
-        ]);
-        break;
-      case 'addCollectionShare':
-        var msg  = i18next.t('events.prompt.unshare', e.data.node.name);
-        balloon.promptConfirm(msg, [
-          {
-            action: '_shareCollection',
-            params: [e.data.node, {options: {shared: false}}]
-          }, successAction
-        ]);
-        break;
-      case 'addCollection':
-      case 'addFile':
-      case 'addCollectionReference':
-      case 'undeleteFile':
-      case 'undeleteCollection':
-      case 'undeleteCollectionReference':
-      case 'undeleteCollectionShare':
-      case 'copyCollection':
-      case 'copyCollectionReference':
-      case 'copyFile':
-        if(successAction.action == 'switchView') {
-          successAction = null;
-        }
+    case 'deleteCollectionReference':
+    case 'deleteCollectionShare':
+    case 'deleteCollection':
+    case 'deleteFile':
+      var msg  = i18next.t('events.prompt.trash_restore', e.data.node.name);
+      balloon.promptConfirm(msg, [
+        {
+          action: 'undelete',
+          params: [e.data.node.id]
+        }, successAction
+      ]);
+      break;
+    case 'addCollectionShare':
+      var msg  = i18next.t('events.prompt.unshare', e.data.node.name);
+      balloon.promptConfirm(msg, [
+        {
+          action: '_shareCollection',
+          params: [e.data.node, {options: {shared: false}}]
+        }, successAction
+      ]);
+      break;
+    case 'addCollection':
+    case 'addFile':
+    case 'addCollectionReference':
+    case 'undeleteFile':
+    case 'undeleteCollection':
+    case 'undeleteCollectionReference':
+    case 'undeleteCollectionShare':
+    case 'copyCollection':
+    case 'copyCollectionReference':
+    case 'copyFile':
+      if(successAction.action == 'switchView') {
+        successAction = null;
+      }
 
-        var msg  = i18next.t('events.prompt.trash_delete', e.data.node.name);
-        balloon.promptConfirm(msg, [
-          {
-            action: 'remove',
-            params: [e.data.node.id]
-          }, successAction
-        ]);
-        break;
-      case 'editFile':
-      case 'restoreFile':
-        var msg  = i18next.t('events.prompt.restore', e.data.node.name, e.data.previous.version);
-        balloon.promptConfirm(msg, [
-          {
-            action: 'restoreVersion',
-            params: [e.data.node.id, e.data.previous.version]
-          }, successAction
-        ]);
-        break;
-      case 'renameFile':
-      case 'renameCollection':
-      case 'renameCollectionShare':
-      case 'renameCollectionReference':
-        var msg  = i18next.t('events.prompt.rename', e.data.node.name, e.data.previous.name);
-        balloon.promptConfirm(msg, [
-          {
-            action: 'rename',
-            params: [e.data.node.id, e.data.previous.name]
-          }, successAction
-        ]);
-        break;
-      case 'moveFile':
-      case 'moveCollection':
-      case 'moveCollectionReference':
-      case 'moveCollectionShare':
-        var msg  = i18next.t('events.prompt.move', e.data.node.name, e.data.previous.parent.name);
-        balloon.promptConfirm(msg, [
-          {
-            action: 'move',
-            params: [e.data.node.id, e.data.previous.parent]
-          }, successAction
-        ]);
-        break;
+      var msg  = i18next.t('events.prompt.trash_delete', e.data.node.name);
+      balloon.promptConfirm(msg, [
+        {
+          action: 'remove',
+          params: [e.data.node.id]
+        }, successAction
+      ]);
+      break;
+    case 'editFile':
+    case 'restoreFile':
+      var msg  = i18next.t('events.prompt.restore', e.data.node.name, e.data.previous.version);
+      balloon.promptConfirm(msg, [
+        {
+          action: 'restoreVersion',
+          params: [e.data.node.id, e.data.previous.version]
+        }, successAction
+      ]);
+      break;
+    case 'renameFile':
+    case 'renameCollection':
+    case 'renameCollectionShare':
+    case 'renameCollectionReference':
+      var msg  = i18next.t('events.prompt.rename', e.data.node.name, e.data.previous.name);
+      balloon.promptConfirm(msg, [
+        {
+          action: 'rename',
+          params: [e.data.node.id, e.data.previous.name]
+        }, successAction
+      ]);
+      break;
+    case 'moveFile':
+    case 'moveCollection':
+    case 'moveCollectionReference':
+    case 'moveCollectionShare':
+      var msg  = i18next.t('events.prompt.move', e.data.node.name, e.data.previous.parent.name);
+      balloon.promptConfirm(msg, [
+        {
+          action: 'move',
+          params: [e.data.node.id, e.data.previous.parent]
+        }, successAction
+      ]);
+      break;
     }
   },
 
@@ -1674,7 +1661,9 @@ var balloon = {
    * @return  string
    */
   camelCaseToUnderline: function(string) {
-    return string.replace(/(?:^|\.?)([A-Z])/g, function (x,y){return "_" + y.toLowerCase()}).replace(/^_/, "")
+    return string.replace(/(?:^|\.?)([A-Z])/g, function (x,y){
+      return "_" + y.toLowerCase()
+    }).replace(/^_/, "")
   },
 
 
@@ -1715,12 +1704,12 @@ var balloon = {
     var action = $that.attr('id').substr(13);
 
     switch(action) {
-      case 'events':
-        balloon.displayEventsWindow();
+    case 'events':
+      balloon.displayEventsWindow();
       break;
 
-      case 'profile':
-        balloon.displayUserProfile();
+    case 'profile':
+      balloon.displayUserProfile();
       break;
     }
   },
@@ -1757,21 +1746,12 @@ var balloon = {
     if(balloon.getCurrentMenu() != action) {
       $("#fs-action-filter-select").find('input[name=deleted]').prop('checked', false);
       balloon.tree.filter.deleted = 0;
-    } else if(action === 'search' && exec !== false) {
-      if($('#fs-search-extend').is(':visible')) {
-        return balloon.buildExtendedSearchQuery();
-      } else {
-        return balloon.search($('#fs-action-search').find('input').val());
-      }
     }
 
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
     balloon.togglePannel('content', true);
-
-    if(action != 'search') {
-      balloon.resetDom(['search']);
-    }
+    balloon.resetDom(['search']);
 
     if(action === 'cloud') {
       balloon.resetDom('breadcrumb-home');
@@ -1791,30 +1771,25 @@ var balloon = {
     balloon.pushState(false, true);
 
     switch(action) {
-      case 'cloud':
-        balloon.refreshTree('/collection/children', {}, {});
+    case 'cloud':
+      balloon.refreshTree('/collections/children', {}, {});
       break;
 
-      case 'shared_for_me':
-        balloon.refreshTree('/node/query', {filter: {shared: true, reference: {$exists: 1}}}, {});
+    case 'shared_for_me':
+      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 1}}}, {});
       break;
 
-      case 'shared_from_me':
-        balloon.refreshTree('/node/query', {filter: {shared: true, reference: {$exists: 0}}}, {});
+    case 'shared_from_me':
+      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 0}}}, {});
       break;
 
-      case 'shared_link':
-        balloon.refreshTree('/node/query', {filter: {sharelink: {$exists: 1}}}, {});
+    case 'shared_link':
+      balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
       break;
 
-      case 'trash':
-        balloon.tree.filter.deleted = 1;
-        balloon.refreshTree('/node/trash', {}, {});
-      break;
-
-      case 'search':
-        balloon.datasource.data([]);
-        balloon._extendedSearch();
+    case 'trash':
+      balloon.tree.filter.deleted = 1;
+      balloon.refreshTree('/nodes/trash', {}, {});
       break;
     }
   },
@@ -1830,28 +1805,28 @@ var balloon = {
     var $view = $('#fs-'+view).show();
 
     switch(view) {
-      case 'properties':
-        balloon.displayProperties(balloon.getCurrentNode());
+    case 'properties':
+      balloon.displayProperties(balloon.getCurrentNode());
       break;
-      case 'preview':
-        balloon.displayPreview(balloon.getCurrentNode());
+    case 'preview':
+      balloon.displayPreview(balloon.getCurrentNode());
       break;
-      case 'history':
-        balloon.displayHistory(balloon.getCurrentNode());
+    case 'history':
+      balloon.displayHistory(balloon.getCurrentNode());
       break;
-      case 'share-collection':
-        balloon.shareCollection(balloon.getCurrentNode());
+    case 'share-collection':
+      balloon.shareCollection(balloon.getCurrentNode());
       break;
-      case 'share-link':
-        balloon.shareLink(balloon.getCurrentNode());
+    case 'share-link':
+      balloon.shareLink(balloon.getCurrentNode());
       break;
-      case 'events':
-        var $view_list = $view.find('ul');
-        balloon.displayEventsInfiniteScroll($view_list, balloon.getCurrentNode());
-        balloon.displayEvents($view_list, balloon.getCurrentNode());
+    case 'events':
+      var $view_list = $view.find('ul');
+      balloon.displayEventsInfiniteScroll($view_list, balloon.getCurrentNode());
+      balloon.displayEvents($view_list, balloon.getCurrentNode());
       break;
-      case 'advanced':
-        balloon.advancedOperations(balloon.getCurrentNode());
+    case 'advanced':
+      balloon.advancedOperations(balloon.getCurrentNode());
       break;
     }
 
@@ -1868,63 +1843,51 @@ var balloon = {
   advancedOperations: function(node) {
     balloon.resetDom('advanced');
 
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/node/attributes',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-        attributes: ['readonly', 'destroy']
-      },
-      success: function(data) {
-        var $fs_advanced   = $('#fs-advanced'),
-          $fs_destroy_at = $fs_advanced.find('input[name=destroy_at]'),
-          $fs_readonly   = $fs_advanced.find('input[name=readonly]'),
-          $fs_submit   = $fs_advanced.find('input[name=submit]'),
-          formatted    = '';
+    var $fs_advanced   = $('#fs-advanced'),
+      $fs_destroy_at = $fs_advanced.find('input[name=destroy_at]'),
+      $fs_readonly   = $fs_advanced.find('input[name=readonly]'),
+      $fs_submit   = $fs_advanced.find('input[name=submit]'),
+      formatted    = '';
 
-        if(data.data.destroy !== null) {
-          var ts = data.data.destroy.sec,
-            date = new Date(parseInt(ts) * 1000);
-          formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
+    if(node.destroy !== undefined) {
+      var date = new Date(node.destroy);
+      formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
 
-          $fs_destroy_at.val(formatted);
+      $fs_destroy_at.val(formatted);
+    }
+
+    if(node.readonly === true) {
+      $fs_readonly.prop('checked', true);
+    }
+
+    $fs_destroy_at.kendoDateTimePicker({
+      format: kendo.culture().calendar.patterns.g,
+      min: new Date(),
+    });
+
+    $fs_submit.off('click').on('click', function(){
+      var ts = $fs_destroy_at.val();
+      if(ts !== formatted) {
+        formatted = ts;
+        if(ts === '') {
+          balloon.selfDestroyNode(node, ts);
+        } else {
+          var msg  = i18next.t('view.advanced.prompt_destroy', ts, node.name);
+          balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts]);
         }
+      }
 
-        if(data.data.readonly === true) {
-          $fs_readonly.prop('checked', true);
-        }
-
-        $fs_destroy_at.kendoDateTimePicker({
-          format: kendo.culture().calendar.patterns.g,
-          min: new Date(),
+      if(node.readonly !== $fs_readonly.is(':checked')) {
+        node.readonly = $fs_readonly.is(':checked');
+        balloon.xmlHttpRequest({
+          url: balloon.base+'/nodes',
+          type: 'PATCH',
+          data: {
+            id: balloon.id(node),
+            readonly: node.readonly
+          },
         });
-
-        $fs_submit.off('click').on('click', function(){
-          var ts = $fs_destroy_at.val();
-          if(ts !== formatted) {
-            formatted = ts;
-            if(ts === '') {
-              balloon.selfDestroyNode(node, ts);
-            } else {
-              var msg  = i18next.t('view.advanced.prompt_destroy', ts, node.name);
-              balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts]);
-            }
-          }
-
-          if(data.data.readonly !== $fs_readonly.is(':checked')) {
-            data.data.readonly = $fs_readonly.is(':checked');
-            balloon.xmlHttpRequest({
-              url: balloon.base+'/node/readonly',
-              type: 'POST',
-              data: {
-                id: balloon.id(node),
-                readonly: data.data.readonly
-              },
-            });
-          }
-        });
-      },
+      }
     });
   },
 
@@ -1945,9 +1908,9 @@ var balloon = {
         ts = Math.round(ts.getTime() / 1000);
       }
 
-      url = balloon.base+'/node?id='+balloon.id(node)+'&'+'at='+ts;
+      url = balloon.base+'/nodes?id='+balloon.id(node)+'&'+'at='+ts;
     } else {
-      url = balloon.base+'/node?id='+balloon.id(node)+'&at=0';
+      url = balloon.base+'/nodes?id='+balloon.id(node)+'&at=0';
     }
 
     balloon.xmlHttpRequest({
@@ -1973,7 +1936,7 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-   _treeTouch: function(e) {
+  _treeTouch: function(e) {
     balloon.touch_move = false;
     balloon.long_touch = false;
 
@@ -1996,7 +1959,7 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-   _treeTouchEnd: function(e) {
+  _treeTouchEnd: function(e) {
     if(balloon.touch_move === true)  {
       clearTimeout(balloon.touch_timer);
       balloon.lock_touch_timer = false;
@@ -2040,8 +2003,7 @@ var balloon = {
 
       if(balloon.isMultiSelect()) {
         balloon.multiSelect(balloon.getCurrentNode());
-      }
-      else {
+      }      else {
         //balloon.multiSelect(balloon.previous, true);
         balloon.multiSelect(balloon.getCurrentNode());
       }
@@ -2080,8 +2042,9 @@ var balloon = {
         }
       } else if(e.shiftKey) {
         balloon.resetDom('multiselect');
-        var last_pos  = balloon.datasource._data.indexOf(balloon.getCurrentNode());
-        var prev_pos  = balloon.datasource._data.indexOf(balloon.previous);
+
+        var last_pos  = balloon.datasource._pristineData.indexOf(balloon.getCurrentNode());
+        var prev_pos  = balloon.datasource._pristineData.indexOf(balloon.previous);
 
         if(prev_pos == -1) {
           prev_pos = last_pos;
@@ -2103,8 +2066,7 @@ var balloon = {
         for(var node=prev_pos; node <= last_pos; node++) {
           balloon.multiSelect(balloon.datasource._data[node]);
         }
-      }
-      else {
+      }      else {
         balloon._shift_start = undefined;
         balloon.resetDom('multiselect');
       }
@@ -2168,18 +2130,18 @@ var balloon = {
 
         if(id !== null) {
           params.id = id;
-          balloon.refreshTree('/collection/children', params, null, {action: '_FOLDERUP'});
+          balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
         } else {
 
           balloon.menuLeftAction(balloon.getCurrentMenu());
         }
       } else {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
       }
 
       balloon.resetDom(
         ['selected','properties','preview','action-bar','multiselect','view-bar',
-        'history','share-collection','share-link']
+          'history','share-collection','share-link']
       );
     } else if(balloon.isEditable(balloon.last.mime)) {
       balloon.editFile(balloon.getCurrentNode());
@@ -2204,14 +2166,6 @@ var balloon = {
       balloon.search($(this).val());
       return;
     }
-
-    var $target = $(e.target);
-
-    if($target.val().length > 0) {
-      $('#fs-search-reset-button').show();
-    } else {
-      $('#fs-search-reset-button').hide();
-    }
   },
 
 
@@ -2221,15 +2175,8 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-  _searchResetClick: function(e) {
-    var $input = $('#fs-action-search').find('input:text')
-      .val('');
-
-    if(typeof e != "undefined") {
-      $(e.target).hide();
-    }
-
-    balloon.menuLeftAction('cloud');
+  resetSearch: function(e) {
+    balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-crumb-home-list').show();
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list').hide();
@@ -2238,8 +2185,6 @@ var balloon = {
 
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
       'view-bar', 'history', 'share-collection', 'share-link', 'search']);
-
-    balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
   },
 
 
@@ -2290,18 +2235,14 @@ var balloon = {
         read: function(operation, a) {
           balloon.resetDom('upload');
           if(balloon.datasource._url == undefined) {
-            balloon.datasource._url = balloon.base+'/collection/children';
+            balloon.datasource._url = balloon.base+'/collections/children';
           }
 
           if(balloon.isSystemNode(operation.data)) {
             return;
           }
 
-          var attributes = [
-            'id', 'name', 'mime', 'deleted', 'meta.color', 'meta.tags',
-            'directory', 'changed', 'size', 'filtered',
-            'shared', 'sharelink', 'hash', 'reference', 'share', 'access'
-          ];
+          var attributes = [];
 
           if(balloon.datasource._ds_params === undefined) {
             balloon.datasource._ds_params = {action: '', nostate: false};
@@ -2325,7 +2266,6 @@ var balloon = {
           balloon.datasource._dynamic_request_params = {};
 
           var collection = balloon.getURLParam('collection');
-
           if(collection !== null && balloon.last === null && !('id' in params)) {
             operation.data.id = collection;
           }
@@ -2342,6 +2282,8 @@ var balloon = {
             return;
           }
 
+          operation.data.limit = 1000;
+
           balloon.xmlHttpRequest({
             url: balloon.datasource._url,
             type: 'GET',
@@ -2349,13 +2291,9 @@ var balloon = {
             contentType: 'application/json',
             data: JSON.stringify(operation.data),
             processData: false,
-            success: function(data, msg, http) {
-              if(http.status === 204) {
-                data = {data:[]};
-              }
-              var pool = data.data;
-              for(var node in pool) {
-                pool[node].spriteCssClass = balloon.getSpriteClass(pool[node]);
+            success: function(pool, msg, http) {
+              for(var node in pool.data) {
+                pool.data[node].spriteCssClass = balloon.getSpriteClass(pool.data[node]);
               }
 
               if(balloon.datasource._ds_params.action == '_FOLDERDOWN') {
@@ -2364,7 +2302,6 @@ var balloon = {
                 var crumbs = balloon.getCrumb().find('li').filter(':hidden').get()/*.reverse()*/;
                 crumbs = crumbs.slice(-1);
                 $(crumbs).show();
-                //balloon.resetDom('search');
                 balloon.getCrumb().find('li:last-child').remove();
               }
 
@@ -2377,14 +2314,14 @@ var balloon = {
               var depth = balloon.getFolderDepth(),
                 param_col = balloon.getURLParam('collection');
 
-              if(pool.length == 0 && depth == 1 && param_col  === null) {
+              if(pool.count == 0 && depth == 1 && param_col  === null) {
                 $('#fs-browser-fresh').show();
               } else {
                 $('#fs-browser-fresh').hide();
               }
 
-              if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.data.id !== null) {
-                pool.unshift({
+              if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.id !== null) {
+                pool.data.unshift({
                   id: '_FOLDERUP',
                   name: "..",
                   directory: true,
@@ -2392,9 +2329,9 @@ var balloon = {
                 });
               }
 
-              balloon.datasource._raw_data = pool;
+              balloon.datasource._raw_data = pool.data;
               balloon._sortDatasource(
-                balloon._filterDatasource(pool, balloon.tree.filter),
+                balloon._filterDatasource(pool.data, balloon.tree.filter),
                 balloon.tree.sort.field,
                 balloon.tree.sort.dir,
                 operation
@@ -2521,8 +2458,8 @@ var balloon = {
         aname = parseInt(a.size);
         bname = parseInt(b.size);
       } else if(field == 'changed') {
-        aname = parseInt(a[field].sec);
-        bname = parseInt(b[field].sec);
+        aname = a[field];
+        bname = b[field];
       }
 
       if(dir == 'asc') {
@@ -2533,8 +2470,7 @@ var balloon = {
         } else {
           return 0;
         }
-      }
-      else if(dir == 'desc') {
+      }      else if(dir == 'desc') {
         if(aname > bname) {
           return -1;
         } else if(aname < bname) {
@@ -2546,6 +2482,10 @@ var balloon = {
     });
 
     operation.success(data);
+    if (balloon.post_rename_reload) {
+      balloon.showAction(['menu','file','folder','upload','filter','refresh','download','delete','restore','copy','cut']);
+      balloon.post_rename_reload = false;
+    }
   },
 
 
@@ -2577,32 +2517,32 @@ var balloon = {
         }
 
         switch(n) {
-          case 'hidden':
-            if(balloon.isHidden(data[node]) && !balloon.isSystemNode(data[node])) {
-              result = false;
-              break;
-            }
+        case 'hidden':
+          if(balloon.isHidden(data[node]) && !balloon.isSystemNode(data[node])) {
+            result = false;
+            break;
+          }
           break;
 
-          case 'directory':
-            if(data[node].directory === true  && !balloon.isSystemNode(data[node])) {
-              result = false;
-              break;
-            }
+        case 'directory':
+          if(data[node].directory === true  && !balloon.isSystemNode(data[node])) {
+            result = false;
+            break;
+          }
           break;
 
-          case 'share':
-            if(data[node].directory === true  && !balloon.isSystemNode(data[node]) && data[node].shared === true) {
-              result = false;
-              break;
-            }
+        case 'share':
+          if(data[node].directory === true  && !balloon.isSystemNode(data[node]) && data[node].shared === true) {
+            result = false;
+            break;
+          }
           break;
 
-          case 'file':
-            if(data[node].directory === false  && !balloon.isSystemNode(data[node])) {
-              result = false;
-              break;
-            }
+        case 'file':
+          if(data[node].directory === false  && !balloon.isSystemNode(data[node])) {
+            result = false;
+            break;
+          }
           break;
         }
       }
@@ -2623,7 +2563,7 @@ var balloon = {
    */
   initRenameBrowser: function(node) {
     balloon.rename_node = node;
-    var $target = $('li[data-uid='+node.uid+']').find('.k-in')
+    var $target = $('li[fs-id='+node.id+']').find('.k-in')
       .addClass('fs-rename');
 
     $target.find('.fs-ext').hide();
@@ -2637,26 +2577,27 @@ var balloon = {
     var ext = balloon.getFileExtension(node);
     balloon.rename_input = $target.find('input').focus();
     if(ext === null) {
-       balloon.rename_input.select();
+      balloon.rename_input.select();
     } else {
       var length = node.name.length - ext.length - 1;
       balloon.rename_input[0].setSelectionRange(0, length);
     }
 
     $(document).unbind('click').click(function(e) {
-       if($(e.target).attr('name') == 'rename') {
+      if($(e.target).attr('name') == 'rename') {
         return;
       }
 
       if(node.id == balloon.rename_node.id) {
         balloon.rename_input.parent().removeClass('fs-rename');
       }
+      balloon.post_rename_reload = true;
 
       balloon._rename();
     });
 
     balloon.rename_input.keyup(function(e) {
-       e.stopImmediatePropagation();
+      e.stopImmediatePropagation();
 
       if(e.which === 27) {
         balloon.resetRename(name);
@@ -2664,6 +2605,7 @@ var balloon = {
         if(node.id == balloon.rename_node.id) {
           balloon.rename_input.parent().removeClass('fs-rename');
         }
+        balloon.post_rename_reload = true;
 
         balloon._rename();
       }
@@ -2698,7 +2640,7 @@ var balloon = {
     $input.focus();
     var ext = balloon.getFileExtension(node);
     if(ext === null) {
-       $input.select();
+      $input.select();
     } else {
       var length = node.name.length - ext.length - 1;
       $input[0].setSelectionRange(0, length);
@@ -2809,8 +2751,8 @@ var balloon = {
    */
   rename: function(node, new_name) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/name?id='+balloon.id(node),
-      type: 'POST',
+      url: balloon.base+'/nodes?id='+balloon.id(node),
+      type: 'PATCH',
       dataType: 'json',
       data: {
         name: new_name,
@@ -2819,22 +2761,10 @@ var balloon = {
         if(typeof(node) === 'object') {
           node.name = new_name;
           node.spriteCssClass = balloon.getSpriteClass(node);
-
-          balloon.displayProperties(node,
-            {
-              data: {
-                name: node.name,
-                share: node.share,
-                meta: {
-                  color: node.meta.color,
-                  tags: node.meta.tags,
-                }
-              }
-            }
-          );
+          balloon.displayProperties(node);
         }
 
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.rename_node = null;
       },
       error: function(response) {
@@ -2876,8 +2806,7 @@ var balloon = {
       balloon.multiselect.splice(index, 1);
 
       $selected.removeClass('fs-multiselected');
-    }
-    else if(index <= 0) {
+    }    else if(index <= 0) {
       balloon.multiselect.push(node);
       $selected.addClass('fs-multiselected');
     }
@@ -2895,8 +2824,7 @@ var balloon = {
   isSelected: function(node) {
     if(balloon.isMultiSelect()) {
       return (balloon.multiselect.indexOf(node) >= 0);
-    }
-    else {
+    }    else {
       return (node.id === balloon.getCurrentNode().id);
     }
   },
@@ -2935,12 +2863,10 @@ var balloon = {
   getSelected: function(node) {
     if(balloon.isMultiSelect()) {
       return balloon.multiselect;
-    }
-    else {
+    }    else {
       if(node !== undefined) {
         return node;
-      }
-      else {
+      }      else {
         return balloon.getCurrentNode();
       }
     }
@@ -2956,8 +2882,7 @@ var balloon = {
   parseError: function(response) {
     if(typeof(response) === 'object' && response instanceof Error) {
       return false;
-    }
-    else {
+    }    else {
       if('XMLHttpRequest' in response) {
         response = response.XMLHttpRequest;
       }
@@ -2968,8 +2893,7 @@ var balloon = {
 
       try {
         var body = JSON.parse(response.responseText);
-      }
-      catch(err) {
+      }      catch(err) {
         body = false;
         var js_error = err.message;
       }
@@ -3019,27 +2943,27 @@ var balloon = {
       }
 
       if(body != false) {
-        if(body.data instanceof Array) {
+        if(body instanceof Array) {
           $fs_error_multi.show();
           var dom;
 
-          for(var i in body.data) {
+          for(var i in body) {
             dom = '<li><table>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.node')+'</th>'+
-                  '<td>'+body.data[i].name+'</td>'+
+                  '<td>'+body[i].name+'</td>'+
                 '</tr>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.classification')+'</th>'+
-                  '<td>'+body.data[i].error+'</td>'+
+                  '<td>'+body[i].error+'</td>'+
                 '</tr>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.code')+'</th>'+
-                  '<td>'+body.data[i].code+'</td>'+
+                  '<td>'+body[i].code+'</td>'+
                 '</tr>'+
                 '<tr>'+
                   '<th>'+i18next.t('error.message')+'</th>'+
-                  '<td>'+body.data[i].message+'</td>'+
+                  '<td>'+body[i].message+'</td>'+
                 '</tr>'+
                 '</table></li>';
 
@@ -3048,9 +2972,9 @@ var balloon = {
         } else {
           $fs_error_single.show();
           $("#fs-error-status").html(response.status);
-          $("#fs-error-code").html(body.data.code);
-          $("#fs-error-error").html(body.data.error);
-          $("#fs-error-message").html(body.data.message);
+          $("#fs-error-code").html(body.code);
+          $("#fs-error-error").html(body.error);
+          $("#fs-error-message").html(body.message);
         }
       } else {
         $fs_error_single.show();
@@ -3074,9 +2998,9 @@ var balloon = {
         $fs_error_win.parent().addClass('fs-error-window');
       },
       close: function() {
-         balloon.showAction(['file', 'menu', 'download', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
+        balloon.showAction(['file', 'menu', 'download', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
       }
-     }).data("kendoWindow").center().open();
+    }).data("kendoWindow").center().open();
   },
 
 
@@ -3092,8 +3016,7 @@ var balloon = {
   id: function(node) {
     if(node === null || node === '' || node === undefined) {
       return null;
-    }
-    else if(node instanceof Array) {
+    }    else if(node instanceof Array) {
       var id = [];
       for(var i in node) {
         if(typeof(node[i]) === 'string') {
@@ -3104,11 +3027,9 @@ var balloon = {
       }
 
       return id;
-    }
-    else if(typeof(node) == 'string') {
+    }    else if(typeof(node) == 'string') {
       return node;
-    }
-    else {
+    }    else {
       return node.id;
     }
   },
@@ -3130,11 +3051,9 @@ var balloon = {
         }
         str += attr+'[]='+value[i];
       }
-    }
-    else if(value === null || value === undefined) {
+    }    else if(value === null || value === undefined) {
       return '';
-    }
-    else {
+    }    else {
       str = attr+'='+value;
     }
 
@@ -3186,7 +3105,7 @@ var balloon = {
       if(id === '') {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
-        balloon.refreshTree('/collection/children', {id: id}, null, {action: false});
+        balloon.refreshTree('/collections/children', {id: id}, null, {action: false});
       }
 
       var $next = $that.nextAll();
@@ -3321,12 +3240,12 @@ var balloon = {
    */
   refreshTree: function(url, dynamic_params, static_params, ds_params) {
     if(typeof(ds_params) === 'object') {
-       if(!('action' in ds_params)) {
-         ds_params.action = '';
-       }
-       if(!('nostate' in ds_params)) {
-         ds_params.nostate = false;
-       }
+      if(!('action' in ds_params)) {
+        ds_params.action = '';
+      }
+      if(!('nostate' in ds_params)) {
+        ds_params.nostate = false;
+      }
     } else {
       ds_params = {action: '', nostate: false};
     }
@@ -3365,7 +3284,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/collection',
+      url: balloon.base+'/collections',
       type: 'POST',
       data: {
         id:   balloon.getCurrentCollectionId(),
@@ -3373,8 +3292,8 @@ var balloon = {
       },
       dataType: 'json',
       success: function(data) {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data.data;
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.added_rename = data.id;
       },
     });
   },
@@ -3395,11 +3314,11 @@ var balloon = {
     name = encodeURI(name);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
+      url: balloon.base+'/files?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
       type: 'PUT',
       success: function(data) {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data.data;
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.added_rename = data.id;
       },
     });
   },
@@ -3441,12 +3360,10 @@ var balloon = {
 
     if(node === null || typeof(node) != 'object') {
       return true;
-    }
-    else {
+    }    else {
       return system.indexOf(node.id) > 0;
     }
   },
-
 
   /**
    * Share node
@@ -3460,23 +3377,30 @@ var balloon = {
     }
 
     balloon.resetDom('share-collection');
+    var $fs_share_collection     = $('#fs-share-collection'),
+      $fs_share_collection_tbl   = $fs_share_collection.find('table'),
+      $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
+      $share_name = $fs_share_collection.find("input[name=share_name]");
+
+    if(!node.shared && !node.reference) {
+      $share_name.val(node.name);
+      return balloon.prepareShare(node, []);
+    }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/collection/share',
+      url: balloon.base+'/collections/share',
       type: 'GET',
       dataType: 'json',
       data: {
         id: balloon.id(node),
       },
       success: function(data) {
-        var acl = {
-          group: [],
-          user:  [],
-        };
+        var acl = [];
 
         var $fs_share_collection     = $('#fs-share-collection'),
           $fs_share_collection_tbl   = $fs_share_collection.find('table'),
-          $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
+          $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
+          $share_name = $fs_share_collection.find("input[name=share_name]");
 
         $fs_share_collection.find('th').each(function(){
           var $that = $(this);
@@ -3484,184 +3408,246 @@ var balloon = {
           $that.height(chars);
         });
 
-        if(data.data !== false ) {
-          $fs_share_collection.find('.fs-share-remove').show();
-          var checked,
-            $acl_role;
+        $fs_share_collection.find('.fs-share-remove').show();
+        var checked,
+          $acl_role;
 
-          for(var i in data.data) {
-            checked = '';
-            if(data.data[i].priv == 'r') {
-              checked = "checked='checked'";
-            }
+        $share_name.val(data.name);
 
-            if(data.data[i].type == 'user') {
-              acl.user.push({
-                user: data.data[i].id,
-                priv: data.data[i].priv,
-              });
-            } else {
-              acl.group.push({
-                group: data.data[i].id,
-                priv: data.data[i].priv,
-              });
-            }
-
-            $acl_role = $('<tr fs-acl-name="'+data.data[i].id+'" fs-acl-type="'+data.data[i].type+'">'+
-                    '<td><div class="gr-icon gr-i-'+data.data[i].type+'"></div></td>'+
-                    '<td class="fs-role-name">'+data.data[i].name+'</td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="rw" type="radio"/></td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="r" type="radio"/></td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="w" type="radio"/></td>'+
-                    '<td><input name="priv_'+data.data[i].id+'" value="w+" type="radio"/></td>'+
-                    '<td class="fs-delete-role"><div class="gr-icon gr-i-trash"></div></td>'+
-                  '</tr>');
-
-            $acl_role.find('input[value="'+data.data[i].priv+'"]').prop('checked', true);
-
-
-            $fs_share_collection_tbody.append($acl_role);
+        for(var i in data.acl) {
+          checked = '';
+          if(data.acl[i].privilege == 'r') {
+            checked = "checked='checked'";
           }
 
-          if(data.data.length > 0) {
-            $fs_share_collection_tbl.show().css('display', 'table');
-            $fs_share_collection.find('input[name=share]').val(i18next.t('view.share.update'));
-          }
+          balloon._addShareRole(data.acl[i], acl);
+
+          $fs_share_collection.find('tr[fs-acl-name="'+data.acl[i].id+'"]')
+            .find('input[value="'+data.acl[i].privilege+'"]').prop('checked', true);
+
+
+          $fs_share_collection_tbody.append($acl_role);
         }
 
-        $fs_share_collection_tbl.off('click', '.gr-i-trash').on('click', '.gr-i-trash', function() {
-          var $that = $(this),
-            $parent = $that.parent().parent(),
-            role = $parent.attr('fs-acl-name'),
-            type = $parent.attr('fs-acl-type');
+        if(data.acl.length > 0) {
+          $fs_share_collection_tbl.show().css('display', 'table');
+          $fs_share_collection.find('input[name=share]').val(i18next.t('view.share.update'));
+        }
 
-          for(var i in acl[type]) {
-            if(acl[type][i][type] == role) {
-              acl[type].splice(acl[type].indexOf(acl[type][i]), 1);
-            }
+        balloon.prepareShare(node, acl);
+      },
+    });
+  },
+
+
+  /**
+   * Prepare share functionality
+   *
+   * @param object node
+   * @param array acl
+   * @return void
+   */
+  prepareShare: function(node, acl) {
+    var $fs_share_collection     = $('#fs-share-collection'),
+      $fs_share_collection_tbl   = $fs_share_collection.find('table'),
+      $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
+      $share_name = $fs_share_collection.find("input[name=share_name]");
+
+    $fs_share_collection_tbl.off('click', '.gr-i-trash').on('click', '.gr-i-trash', function() {
+      var $that = $(this),
+        $parent = $that.parent().parent(),
+        role = $parent.attr('fs-acl-name'),
+        type = $parent.attr('fs-acl-type');
+
+      for(var i in acl) {
+        if(acl[i].id == role) {
+          acl.splice(acl.indexOf(acl[i]), 1);
+        }
+      }
+
+      $parent.remove();
+
+      if($fs_share_collection.find('tr').length === 1) {
+        $fs_share_collection_tbl.hide();
+      }
+    })
+      .off('click', 'input[type=radio]').on('click', 'input[type=radio]', function() {
+        var $that = $(this),
+          $parent = $that.parent().parent(),
+          role = $parent.attr('fs-acl-name'),
+          type = $parent.attr('fs-acl-type');
+
+        for(var i in acl) {
+          if(acl[i].id == role) {
+            acl[i].privilege = $(this).prop('value');
           }
+        }
+      });
 
-          $parent.remove();
+    var $share_role = $fs_share_collection.find("input[name=share_role]");
+    var selected = false;
 
-          if($fs_share_collection.find('tr').length === 1) {
-            $fs_share_collection_tbl.hide();
-          }
-        })
-        .off('click', 'input[type=radio]').on('click', 'input[type=radio]', function() {
-          var $that = $(this),
-            $parent = $that.parent().parent(),
-            role = $parent.attr('fs-acl-name'),
-            type = $parent.attr('fs-acl-type');
+    $share_role.unbind('keyup').bind('keyup', function(e) {
+      if(e.keyCode == 13) {
+        if(selected === true) {
+          selected = false;
+          return;
+        }
 
-          for(var i in acl[type]) {
-            if(acl[type][i][type] == role) {
-               acl[type][i].priv = $(this).prop('value');
-            }
-          }
-        });
+        var value = $share_role.data("kendoAutoComplete").value()
+        if(value === '' || value === undefined) {
+          return;
+        }
 
-        var $share_role = $fs_share_collection.find("input[name=share_role]");
-        var selected = false;
-
-        $share_role.unbind('keyup').bind('keyup', function(e) {
-          if(e.keyCode == 13) {
-            if(selected === true) {
-              selected = false;
-              return;
-            }
-
-            var value = $share_role.data("kendoAutoComplete").value()
-            if(value === '' || value === undefined) {
-              return;
-            }
+            var filter = JSON.stringify({'filter': {'name': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
 
             balloon.xmlHttpRequest({
-              url: balloon.base+'/resource/acl-roles',
-              data: {
-                q: function(){
-                  return $share_role.data("kendoAutoComplete").value();
-                },
-                single: true,
-              },
+              url: balloon.base+'/groups?'+filter,
+              contentType: "application/json",
               success: function(data) {
-                $share_role.val('').focus();
-                acl = balloon._addShareRole(data.data, acl);
-              }
-            });
-          }
-        });
-
-        $share_role.kendoAutoComplete({
-          minLength: 3,
-          dataTextField: "name",
-          dataSource: new kendo.data.DataSource({
-            serverFiltering: true,
-            transport: {
-              read: function(operation) {
-                var value = $share_role.data("kendoAutoComplete").value()
-                if(value === '' || value === undefined) {
-                  operation.success({data:[]});
+                if(data.length > 1) {
                   return;
                 }
 
-                balloon.xmlHttpRequest({
-                  url: balloon.base+'/resource/acl-roles',
-                  data: {
-                    q: value
-                  },
-                  success: function(data) {
-                    operation.success(data);
-                  }
-                });
+                $share_role.val('').focus();
+                acl = balloon._addShareRole(data, acl);
               }
-            },
-            sort: {
-              dir: 'asc',
-              field: 'name'
-            },
-            schema: {
-              data:"data",
-            }
-          }),
-          dataBound: function(e) {
-            $(e.sender.ul).find('li').each(function(n) {
-               $(this).html('<div class="gr-icon gr-i-'+e.sender.dataSource._data[n].type+'"></div>'+$(this).html());
             });
 
-            var $container =  $(e.sender.list);
-            $container.parent().css({'margin-top': '-18px'});
-          },
-          change: function(e) {
-             this.dataSource.read();
-          },
-          select: function(e) {
-            selected = true;
+            filter = JSON.stringify({'filter': {'username': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
 
-            setTimeout(function(){
-              $share_role.val('').focus();
-            },50);
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/users?'+filter,
+              contentType: "application/json",
+              dataType: 'json',
+              success: function(data) {
+                if(data.length > 1) {
+                  return;
+                }
 
-            $fs_share_collection.find("input[name=share_role]").val("");
-            var item = this.dataItem(e.item.index());
-            acl = balloon._addShareRole(item, acl);
-          }
-        });
+                $share_role.val('').focus();
+                acl = balloon._addShareRole(data, acl);
+              }
+            });
+      }
+    });
 
-        $fs_share_collection.find('input[type=submit]').unbind().click(function(){
-          if($(this).attr('name') == 'share') {
-            if(acl.user.length === 0 && acl.group.length === 0) {
-              $share_role.focus();
-            } else {
-              balloon._shareCollection(node, acl);
+    $share_role.kendoAutoComplete({
+      minLength: 3,
+      dataTextField: "name",
+      filter: "contains",
+      dataSource: new kendo.data.DataSource({
+        serverFiltering: true,
+        transport: {
+          read: function(operation) {
+            var value = $share_role.data("kendoAutoComplete").value()
+            if(value === '' || value === undefined) {
+              operation.success({data:[]});
+              return;
             }
+
+            var filter = JSON.stringify({'query': {'name': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            var roles = null;
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/groups?'+filter,
+              contentType: "application/json",
+              success: function(data) {
+                for(var i in data.data) {
+                  data.data[i].type = 'group';
+                  data.data[i].role = $.extend({}, data.data[i]);
+                }
+
+                if(roles !== null) {
+                  operation.success(data.data.concat(roles));
+                } else {
+                  roles = data.data;
+                }
+              }
+            });
+
+            filter = JSON.stringify({'query': {'username': {
+              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$options": "i"
+            }}});
+
+            balloon.xmlHttpRequest({
+              url: balloon.base+'/users?'+filter,
+              contentType: "application/json",
+              dataType: 'json',
+              success: function(data) {
+                for(var i in data.data) {
+                  data.data[i].type = 'user';
+                  data.data[i].role = $.extend({}, data.data[i]);
+                }
+
+                if(roles !== null) {
+                  operation.success(data.data.concat(roles));
+                } else {
+                  roles = data.data;
+                }
+              }
+            });
           }
-          else {
-            var msg = i18next.t('view.share.prompt_remove_share', node.name);
-            balloon.promptConfirm(msg, 'deleteShare', [node]);
+        },
+        sort: {
+          dir: 'asc',
+          field: 'name'
+        },
+      }),
+      dataBound: function(e) {
+        $(e.sender.ul).find('li').each(function(n) {
+          var icon;
+          if(e.sender.dataSource._data[n].type === 'user') {
+            icon = 'person';
+          } else if(e.sender.dataSource._data[n].type === 'group') {
+            icon = 'group';
           }
 
+          $(this).html('<div class="gr-icon gr-i-'+icon+'"></div>'+$(this).html());
         });
+
+        var $container =  $(e.sender.list);
       },
+      change: function(e) {
+        this.dataSource.read();
+      },
+      select: function(e) {
+        selected = true;
+
+        setTimeout(function(){
+          $share_role.val('').focus();
+        },50);
+
+        $fs_share_collection.find("input[name=share_role]").val("");
+        var item = this.dataItem(e.item.index());
+        acl = balloon._addShareRole(item, acl);
+      }
+    });
+
+    $fs_share_collection.find('input[type=submit]').unbind().click(function(){
+      if($(this).attr('name') == 'share') {
+        if($share_name.val() === '') {
+          $share_name.focus();
+        } else if(acl.length === 0) {
+          $share_role.focus();
+        } else {
+          balloon._shareCollection(node, acl, $share_name.val());
+        }
+      }          else {
+        var msg = i18next.t('view.share.prompt_remove_share', node.name);
+        balloon.promptConfirm(msg, 'deleteShare', [node]);
+      }
     });
   },
 
@@ -3673,7 +3659,7 @@ var balloon = {
    * @return void
    */
   deleteShare: function(node) {
-    var url = balloon.base+'/collection/share?id='+balloon.id(node);
+    var url = balloon.base+'/collections/share?id='+balloon.id(node);
 
     balloon.xmlHttpRequest({
       url: url,
@@ -3681,7 +3667,7 @@ var balloon = {
       dataType: 'json',
       statusCode: {
         204: function(e) {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share-collection');
           }
@@ -3698,59 +3684,42 @@ var balloon = {
    * @param  object acl
    * @return object
    */
-  _addShareRole: function(item, acl) {
+  _addShareRole: function(item, acl, type) {
     var $fs_share_collection     = $('#fs-share-collection'),
       $fs_share_collection_tbl   = $fs_share_collection.find('table'),
       $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
 
-    if(item.type == 'group') {
-      if($.grep(acl.group, function(e) {
-        return e.group == item.id;
-      }).length != 0) {
-        return acl;
-      }
+    var icon, name;
+    if(item.type === 'user') {
+      icon = 'person';
+      name = item.role.name;
+    } else if(item.type === 'group') {
+      icon = 'group';
+      name = item.role.name;
+    }
 
-      $fs_share_collection_tbody.append(
-        '<tr fs-acl-name="'+item.id+'" fs-acl-type="group">'+
-          '<td><div class="gr-icon gr-i-group"></div></td>'+
-          '<td class="fs-role-name">'+item.name+'</td>'+
-          '<td><input name="priv_'+item.id+'" value="rw" checked="checked" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="r" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="w" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="w+" type="radio"/></td>'+
+    $fs_share_collection_tbody.append(
+      '<tr fs-acl-name="'+item.role.id+'" fs-acl-type="'+item.type+'">'+
+          '<td><div class="gr-icon gr-i-'+icon+'"></div></td>'+
+          '<td class="fs-role-name">'+name+'</td>'+
+          '<td><input name="priv_'+item.role.id+'" value="m" type="radio"/></td>'+
+          '<td><input name="priv_'+item.role.id+'" value="rw" checked="checked" type="radio"/></td>'+
+          '<td><input name="priv_'+item.role.id+'" value="r" type="radio"/></td>'+
+          '<td><input name="priv_'+item.role.id+'" value="w+" type="radio"/></td>'+
           '<td class="fs-delete-role"><div class="gr-icon gr-i-trash"></div></td>'+
         '</tr>'
-      );
+    );
 
-      acl.group.push({
-        group: item.id,
-        priv: 'rw',
-      });
+    var privilege = 'rw';
+    if(item.privilege) {
+      privilege = item.privilege;
     }
-    else if(item.type == 'user') {
-      if($.grep(acl.user, function(e) {
-        return e.user == item.id;
-      }).length != 0) {
-        return acl;
-      }
 
-      $fs_share_collection_tbody.append(
-        '<tr fs-acl-name="'+item.id+'" fs-acl-type="user">'+
-          '<td><div class="gr-icon gr-i-person"></div></td>'+
-          '<td class="fs-role-name">'+item.name+'</td>'+
-          '<td><input name="priv_'+item.id+'" value="rw" checked="checked" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="r" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="w" type="radio"/></td>'+
-          '<td><input name="priv_'+item.id+'" value="w+" type="radio"/></td>'+
-          '<td class="fs-delete-role"><div class="gr-icon gr-i-trash"></div></td>'+
-        '</tr>'
-      );
-
-      acl.user.push({
-        user: item.id,
-        priv: 'rw',
-      });
-    }
+    acl.push({
+      type: item.type,
+      id: item.role.id,
+      privilege: privilege,
+    });
 
     if($fs_share_collection_tbody.find('tr').length > 0) {
       $fs_share_collection_tbl.show();
@@ -3764,29 +3733,26 @@ var balloon = {
    * Save share collection
    *
    * @param   object node
-   * @param   object acl
+   * @param   array acl
+   * @param   string name
    * @return  void
    */
-   _shareCollection: function(node, acl) {
-    var url = balloon.base+'/collection/share?id='+balloon.id(node);
+  _shareCollection: function(node, acl, name) {
+    var url = balloon.base+'/collections/share?id='+balloon.id(node);
 
     balloon.xmlHttpRequest({
       url: url,
       type: 'POST',
       dataType: 'json',
-      data: {acl: acl},
-      statusCode: {
-        201: function(e) {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-          if(balloon.id(node) == balloon.id(balloon.last)) {
-            balloon.switchView('share-collection');
-          }
-        },
-        204: function(e) {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-          if(balloon.id(node) == balloon.id(balloon.last)) {
-            balloon.switchView('share-collection');
-          }
+      data: {
+        acl: acl,
+        name: name
+      },
+      success: function() {
+        node.shared = true;
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        if(balloon.id(node) == balloon.id(balloon.last)) {
+          balloon.switchView('share-collection');
         }
       },
     });
@@ -3801,33 +3767,24 @@ var balloon = {
    */
   shareLink: function(node) {
     balloon.resetDom('share-link');
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/node/share-link',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-      },
-      success: function(data) {
         var token,
           $fs_share_link = $('#fs-share-link'),
           $fs_share_expr = $fs_share_link.find('input[name=share_expiration]'),
           $fs_share_pw   = $fs_share_link.find('input[name=share_password]');
 
-        if(data.data !== false && data.data.token != undefined) {
+        if(node.sharelink_token) {
           $fs_share_link.find('.fs-share-remove').show();
 
           $('#fs-link-options').show();
-          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share?t='+data.data.token).show().
+          $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share/'+node.sharelink_token).show().
             unbind('click').bind('click', function(){
               this.select();
               document.execCommand("copy");
-          });
+            });
 
-          token = data.data.token;
-          if('expiration' in data.data && data.data.expiration != '' && data.data.expiration != null) {
-            var ts = data.data.expiration;
-            var date = new Date(parseInt(ts) * 1000);
+          token = node.sharelink_token;
+          if(node.sharelink_expire) {
+            var date = new Date(node.sharelink_expire);
             var formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
 
             $fs_share_expr.val(formatted);
@@ -3855,21 +3812,21 @@ var balloon = {
             }
           }
 
-        var data = {
-          id: balloon.id(node),
-          options: {
-            expiration: date,
-            token: token,
-            password: $fs_share_pw.val()
-          },
-        };
+          var data = {
+            id: balloon.id(node),
+            options: {
+              expiration: date,
+              token: token,
+              password: $fs_share_pw.val()
+            },
+          };
 
-          var url = url = balloon.base+'/node/share-link';
+          var url = url = balloon.base+'/nodes/share-link';
 
           if(shared === true) {
             var options = {
               type: 'POST',
-              url: balloon.base+'/node/share-link',
+              url: balloon.base+'/nodes/share-link',
               data: {
                 id: balloon.id(node),
                 options: {
@@ -3877,26 +3834,27 @@ var balloon = {
                   token: token,
                   password: $fs_share_pw.val()
                 },
+              },
+              success: function(body) {
+                balloon.last = body;
+                balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+                balloon.switchView('share-link');
               }
             };
           } else {
             var options = {
-              url: balloon.base+'/node/share-link?id='+balloon.id(node),
+              url: balloon.base+'/nodes/share-link?id='+balloon.id(node),
               type: 'DELETE',
+              success: function(body) {
+                delete balloon.last.sharelink_token;
+                balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+                balloon.switchView('share-link');
+              }
             };
-          }
-
-          options.statusCode = {
-            204: function(e) {
-              balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
-              balloon.switchView('share-link');
-            },
           }
 
           balloon.xmlHttpRequest(options);
         });
-      },
-    });
   },
 
 
@@ -3945,15 +3903,15 @@ var balloon = {
       name += '&name=selected.zip';
     }
 
-    var url = balloon.base+'/node?'+balloon.param('id', id)+''+name;
+    var url = balloon.base+'/nodes/content?'+balloon.param('id', id)+''+name;
 
-    if(typeof(login) === 'object' && login.getAccessToken() !== false) {
+    if(typeof(login) === 'object' && !login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
 
     if((node.directory == true || !balloon.isMobileViewPort()) && !balloon.isiOS()) {
       url += "&download=true";
-      $iframe.attr("src", url).load();
+      $iframe.attr('src', url).load(url);
     } else {
       window.location.href = url;
     }
@@ -3966,67 +3924,44 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-  _extendedSearch: function(e) {
-    var $fs_search_extend = $('#fs-search-extend');
+  advancedSearch: function(e) {
+    balloon.resetDom(['breadcrumb-search']);
+    $('#fs-crumb-home-list').hide();
+    $('#fs-crumb-search-list').show();
+    $('#fs-crumb-search').find('div:first-child').html(i18next.t('menu.search'));
 
-    if($fs_search_extend.is(':visible')) {
-      return;
-    }
+    balloon.showAction([]);
 
-    if($(window).width() < 1200) {
-      $('#fs-action-search').find('input:text')
-        .unbind('keyup').bind('keyup', function() {
-        if($(this).val().length > 2) {
-          balloon.search($(this).val());
-        }
-      });
+    var $fs_search_filter = $('#fs-search-filter');
+    var $k_splitter = $('#fs-layout-left').data('kendoSplitter')
 
-      return;
-    }
+    $('#fs-search-show-filter').unbind('click').bind('click', function() {
+      if($fs_search_filter.is(':visible')) {
+        $k_splitter.size(".k-pane:first", '120px');
+        $(this).find('div:first-child').html(i18next.t('search.hide_filter'));
+        $(this).find('.gr-icon').removeClass('gr-i-arrowhead-n').addClass('gr-i-arrowhead-s');
+      } else {
+        $k_splitter.size(".k-pane:first", $fs_search_filter.height()+120+'px');
+        $(this).find('div:first-child').html(i18next.t('search.show_filter'));
+        $(this).find('.gr-icon').removeClass('gr-i-arrowhead-s').addClass('gr-i-arrowhead-n');
+      }
 
-    var $k_splitter = $('#fs-browser-layout').data('kendoSplitter'),
-      $pane     = $k_splitter.insertAfter({ size: "100px" }, ".k-pane:last");
+      $fs_search_filter.toggle();
+    });
 
-    var html = '<div class="fs-browser-top"></div>'+
-           '<div id="fs-action-search" style="display: none;">'+
-             '<div class="gr-icon gr-i-search"></div>'+
-             '<button id="fs-search-button" type="button"></button>'+
-             '<input accesskey="s" type="text" placeholder="'+i18next.t('nav.action.search')+'"/>'+
-             '<button id="fs-search-reset-button" type="button">x</button>'+
-           '</div>'+
-           '<div>'+
-            '<fieldset id="fs-search-filter-color">'+
-              '<label>'+i18next.t('search.filter.color')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_color')+'</div>'+
-            '</fieldset>'+
-            '<fieldset id="fs-search-filter-tags">'+
-              '<label>'+i18next.t('search.filter.tags')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_tags')+'</div>'+
-             '</fieldset>'+
-            '<fieldset id="fs-search-filter-mime">'+
-              '<label>'+i18next.t('search.filter.mime')+'</label>'+
-              '<div>'+i18next.t('search.filter.no_mime')+'</div>'+
-             '</fieldset>'+
-           '</div>'+
-           '</div>';
+    var $fs_search_extend = $('#fs-search-container');
+    $fs_search_extend.find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
+    $('#fs-browser-action').hide();
 
-    $pane.html(html).attr('id', 'fs-search-extend');
-
-    $fs_search_extend = $('#fs-search-extend');
-    $k_splitter.size("#fs-layout-left", "35%");
-    $k_splitter.size("#fs-content", "30%");
-    $k_splitter.size("#fs-search-extend", "25%");
-
-    $('#fs-browser-action #fs-action-search').hide("slide",{duration: 400, direction: 'right'});
-    $('#fs-search-extend #fs-action-search').show("slide",{duration: 400, direction: 'left'});
-    $('#fs-search-extend #fs-search-reset-button').unbind('click').click(balloon._searchResetClick);
+    var $k_splitter = $('#fs-layout-left').data('kendoSplitter');
+    $k_splitter.expand($fs_search_extend);
 
     $fs_search_extend.find('input:text')
       .focus()
       .unbind('keyup').bind('keyup', balloon.buildExtendedSearchQuery);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/user/node-attribute-summary',
+      url: balloon.base+'/users/node-attribute-summary',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -4034,11 +3969,13 @@ var balloon = {
       },
       success: function(body) {
         var $color_list = $('#fs-search-filter-color').find('div'),
-          colors = body.data['meta.color'],
+          colors = body['meta.color'],
           children = [];
 
         for(var i in colors) {
-          children.push('<li data-item="'+colors[i]._id+'" style="background-color: '+colors[i]._id+'"></li>');
+          if(balloon.isValidColor(colors[i]._id)) {
+            children.push('<li data-item="'+colors[i]._id+'" class="fs-color-'+colors[i]._id+'"></li>');
+          }
         }
 
         if(children.length >= 1) {
@@ -4046,7 +3983,7 @@ var balloon = {
         }
 
         var $tag_list = $('#fs-search-filter-tags').find('div'),
-          tags = body.data['meta.tags'],
+          tags = body['meta.tags'],
           children = [];
 
         for(var i in tags) {
@@ -4058,15 +3995,14 @@ var balloon = {
         }
 
         var $mime_list = $('#fs-search-filter-mime').find('div'),
-          mimes = body.data['mime'],
+          mimes = body['mime'],
           children = [];
 
         for(var i in mimes) {
           var ext = balloon.mapMimeToExtension(mimes[i]._id);
           if(ext !== false) {
             children.push('<li data-item="'+mimes[i]._id+'"><div class="gr-icon '+balloon.getSpriteClass(ext)+'"></div><div>['+mimes[i]._id+']</div></li>');
-          }
-          else {
+          }          else {
             children.push('<li data-item="'+mimes[i]._id+'"><div class="gr-icon gr-i-file"></div><div>['+mimes[i]._id+']</div></li>');
           }
         }
@@ -4124,7 +4060,7 @@ var balloon = {
     $('#fs-search-filter-color').find('li.fs-search-filter-selected').each(function(){
       should3.push({
         match: {
-          'meta.color': $(this).attr('data-item').substr(1)
+          'meta.color': $(this).attr('data-item')
         }
       });
     });
@@ -4135,10 +4071,8 @@ var balloon = {
       {bool: {should: should3}},
     ];
 
-    var content = $('#fs-search-extend').find('input:text').val();
+    var content = $('#fs-search-container').find('input:text').val();
     var query   = balloon.buildQuery(content, must);
-
-    balloon.menuLeftAction('search', false);
 
     if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
       query = undefined;
@@ -4149,7 +4083,7 @@ var balloon = {
       return;
     }
 
-    balloon.refreshTree('/file/search', {query: query});
+    balloon.refreshTree('/files/search', {query: query});
   },
 
 
@@ -4182,20 +4116,20 @@ var balloon = {
     } else if(attr == undefined) {
       var should = [
         {
-           match: {
+          match: {
             "content.content": {
-             query:value,
-             minimum_should_match: "90%"
+              query:value,
+              minimum_should_match: "90%"
             }
-           }
+          }
         },
         {
-           match: {
+          match: {
             name: {
-             query:value,
-             minimum_should_match: "90%"
+              query:value,
+              minimum_should_match: "90%"
             }
-           }
+          }
         }
       ];
 
@@ -4238,7 +4172,6 @@ var balloon = {
       query = balloon.buildQuery(search_query);
     }
 
-    balloon.menuLeftAction('search', false);
     $('#fs-search').show();
     $('#fs-action-search').find('input:text').val(search_query);
 
@@ -4246,7 +4179,7 @@ var balloon = {
       return;
     }
 
-    balloon.refreshTree('/file/search', {query: query});
+    balloon.refreshTree('/files/search', {query: query});
   },
 
 
@@ -4256,7 +4189,7 @@ var balloon = {
    * @return bool
    */
   isSearch: function() {
-    return $('#fs-crumb-search-list').is(':visible') || $('#fs-action-search').find('input').val().length > 0;
+    return $('#fs-crumb-search-list').is(':visible') || $('#fs-search-container-small').find('input').val().length > 0;
   },
 
 
@@ -4290,7 +4223,7 @@ var balloon = {
           trash_msg += '<li>'+node[n].name+'</li>';
         }
       }
-    } else if(node.deleted !== false || ignore_flag === true) {
+    } else if(node.deleted || ignore_flag === true) {
       todelete++;
       delete_msg += '<li>'+node.name+'</li>';
     }
@@ -4327,7 +4260,7 @@ var balloon = {
       modal: true,
       activate: function() {
         setTimeout(function() {
-        $div.find('input[name=cancel]').focus()
+          $div.find('input[name=cancel]').focus()
         },200);
       }
     }).data("kendoWindow").center().open();
@@ -4383,7 +4316,7 @@ var balloon = {
     node = balloon.id(node);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node?ignore_flag='+ignore_flag+'&force='+force+'&'+balloon.param('id', node),
+      url: balloon.base+'/nodes?ignore_flag='+ignore_flag+'&force='+force+'&'+balloon.param('id', node),
       type: 'DELETE',
       dataType: 'json',
       beforeSend: function() {
@@ -4413,7 +4346,7 @@ var balloon = {
         if(balloon.getCurrentCollectionId() === null) {
           balloon.menuLeftAction(balloon.getCurrentMenu());
         } else {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         }
       },
     });
@@ -4447,7 +4380,7 @@ var balloon = {
           untouched_msg += '<li>'+node[n].name+'</li>';
         }
       }
-    } else if(node.deleted !== false) {
+    } else if(node.deleted) {
       torestore++;
       clean = node;
       restore_msg += '<li>'+node.name+'</li>';
@@ -4476,7 +4409,7 @@ var balloon = {
     node = balloon.id(node);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/undelete?'+balloon.param('id', node),
+      url: balloon.base+'/nodes/undelete?'+balloon.param('id', node),
       type: 'POST',
       data: {
         move: move,
@@ -4491,9 +4424,9 @@ var balloon = {
         balloon.displayQuota();
 
         if(balloon.getCurrentCollectionId() === null) {
-           balloon.menuLeftAction(balloon.getCurrentMenu());
+          balloon.menuLeftAction(balloon.getCurrentMenu());
         } else {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         }
       },
       error: function(response) {
@@ -4501,22 +4434,22 @@ var balloon = {
         if(data === false || data.status != 400 && data.status != 404) {
           balloon.displayError(response);
         } else {
-          switch(data.data.code) {
-            case 0:
-            case 21:
-              setTimeout(function(){
-                balloon.promptConfirm(i18next.t('prompt.restore_to_root'), 'undelete', [node, true, null]);
-              }, 500);
+          switch(data.code) {
+          case 0:
+          case 21:
+            setTimeout(function(){
+              balloon.promptConfirm(i18next.t('prompt.restore_to_root'), 'undelete', [node, true, null]);
+            }, 500);
             break;
 
-            case 19:
-              setTimeout(function(){
-                balloon.promptConfirm(i18next.t('prompt.merge'), 'undelete', [node, move, null, 2]);
-              }, 500);
+          case 19:
+            setTimeout(function(){
+              balloon.promptConfirm(i18next.t('prompt.merge'), 'undelete', [node, move, null, 2]);
+            }, 500);
             break;
 
-            default:
-              balloon.displayError(response);
+          default:
+            balloon.displayError(response);
           }
         }
       }
@@ -4554,7 +4487,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/'+action,
+      url: balloon.base+'/nodes/'+action,
       type: 'POST',
       dataType: 'json',
       data: {
@@ -4571,15 +4504,15 @@ var balloon = {
           count = source.length;
         }
 
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
       error: function(data) {
-        if(data.status === 400 && data.responseJSON && data.responseJSON.data.code === 19 && conflict !== 2) {
+        if(data.status === 400 && data.responseJSON && data.responseJSON.code === 19 && conflict !== 2) {
           var body = data.responseJSON;
           if(typeof(balloon.id(source)) == 'string') {
             var nodes = [source];
           } else {
-            var nodes = body.data;
+            var nodes = body;
           }
 
           var id   = [];
@@ -4686,27 +4619,21 @@ var balloon = {
         if(node.filtered === true) {
           if(node.shared === true && node.reference === true) {
             return 'gr-i-folder-filter-received';
-          }
-          else if(node.shared === true) {
+          }          else if(node.shared === true) {
             return 'gr-i-folder-filter-shared';
-          }
-          else {
+          }          else {
             return 'gr-i-folder-filter';
           }
-        }
-        else if(node.shared === true && node.reference === true) {
+        }        else if(node.shared === true && node.reference === true) {
           return 'gr-i-folder-received';
-        }
-        else if(node.shared === true) {
+        }        else if(node.shared === true) {
           return 'gr-i-folder-shared';
-        }
-        else {
+        }        else {
           return 'gr-i-folder';
         }
       }
       var extension = balloon.getFileExtension(node);
-    }
-    else {
+    }    else {
       var extension = node;
     }
 
@@ -4772,8 +4699,7 @@ var balloon = {
 
     if(extension in map) {
       return map[extension];
-    }
-    else {
+    }    else {
       return 'gr-i-file-text';
     }
   },
@@ -4807,7 +4733,7 @@ var balloon = {
       $textarea = $div.find('textarea');
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file/',
+      url: balloon.base+'/files/content',
       type: 'GET',
       data: {
         id: balloon.id(node),
@@ -4894,7 +4820,7 @@ var balloon = {
    */
   saveFile: function(node, content) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file?id='+balloon.id(node),
+      url: balloon.base+'/files?id='+balloon.id(node),
       type: 'PUT',
       data: content,
       success: function(data) {
@@ -4941,8 +4867,8 @@ var balloon = {
       var $k_display = $div.kendoWindow(options).data("kendoWindow").open().maximize();
     }
 
-    var url = balloon.base+'/file?id='+node.id+'&hash='+node.hash;
-    if(typeof(login) === 'object' && login.getAccessToken() !== false) {
+    var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
+    if(typeof(login) === 'object' && !login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
     var $div_content = $('#fs-display-content').html('').hide(),
@@ -4962,11 +4888,11 @@ var balloon = {
     }
     $div_content.show().html($element);
 
-    var index = node.index;
-    var data = this.datasource.data();
+    var index = balloon.datasource._pristineData.indexOf(node);
+    var data = balloon.datasource._pristineData;
 
     for(var i=++index; i<=data.length; i++) {
-      if(i in data && balloon.isViewable(data[i].mime)) {
+      if(i in data && data[i].mime && balloon.isViewable(data[i].mime)) {
         $('#fs-display-right').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i]);
         });
@@ -4974,9 +4900,10 @@ var balloon = {
       }
     }
 
-    index = node.index;
+    index = data.indexOf(node) ;
+
     for(var i2=--index; i2!=-1; i2--) {
-      if(i2 in data && balloon.isViewable(data[i2].mime)) {
+      if(i2 in data && data[i2].mime && balloon.isViewable(data[i2].mime)) {
         $('#fs-display-left').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i2]);
         });
@@ -5007,28 +4934,37 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/user/quota-usage',
+      url: balloon.base+'/users/whoami',
+      data: {
+        attributes: ['quota']
+      },
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        var percentage = Math.round(data.data.used/data.data.hard_quota*100);
-        $k_progress.value(percentage);
+        data = data.quota;
+        var used = balloon.getReadableFileSizeString(data.used),
+          max  = balloon.getReadableFileSizeString(data.hard_quota),
+          free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
 
-        if(percentage >= 90) {
-          $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+        if(data.hard_quota === -1) {
+          $('#fs-quota-usage').hide();
+          $('#fs-quota-total').html(i18next.t('user.quota_unlimited', used));
         } else {
-          $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+          var percentage = Math.round(data.used/data.hard_quota*100);
+          $k_progress.value(percentage);
+
+          if(percentage >= 90) {
+            $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+          } else {
+            $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+          }
+
+          balloon.quota = data;
+
+          $('#fs-quota-total').html(i18next.t('user.quota_left', free));
+          $('#fs-quota').attr('title', i18next.t('user.quota_detail', used, max,
+            percentage, free));
         }
-
-        var used = balloon.getReadableFileSizeString(data.data.used),
-          max  = balloon.getReadableFileSizeString(data.data.hard_quota),
-          free = balloon.getReadableFileSizeString(data.data.hard_quota - data.data.used);
-
-        balloon.quota = data.data;
-
-        $('#fs-quota-total').html(i18next.t('user.quota_left', free));
-        $('#fs-quota').attr('title', i18next.t('user.quota_detail', used, max,
-          percentage, free));
       },
     });
   },
@@ -5169,15 +5105,13 @@ var balloon = {
     var ext;
     if(typeof(node) == 'string') {
       ext = node.split('.');
-    }
-    else {
+    }    else {
       ext = node.name.split('.');
     }
 
     if(ext.length == 1) {
       return null;
-    }
-    else {
+    }    else {
       return ext.pop();
     }
   },
@@ -5196,8 +5130,8 @@ var balloon = {
       $fs_history = $view.find("> ul");
 
     balloon.xmlHttpRequest({
-       dataType: "json",
-      url: balloon.base+'/file/history',
+      dataType: "json",
+      url: balloon.base+'/files/history',
       type: "GET",
       data: {
         id: balloon.id(node)
@@ -5208,34 +5142,33 @@ var balloon = {
 
         for(var i in data.data) {
           switch(data.data[i].type) {
-            case 0:
-              icon = '<div class="gr-icon gr-i-add">'+ i18next.t('view.history.added')+'</div>';
+          case 0:
+            icon = '<div class="gr-icon gr-i-add">'+ i18next.t('view.history.added')+'</div>';
             break;
 
-            case 1:
-              icon = '<div class="gr-icon gr-i-pencil">'+ i18next.t('view.history.modified')+'</div>';
+          case 1:
+            icon = '<div class="gr-icon gr-i-pencil">'+ i18next.t('view.history.modified')+'</div>';
             break;
 
-            case 2:
-              if(data.data[i].origin != undefined) {
-                icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data.data[i].origin)+'</div>';
-              }
-              else {
-                icon = '<div class="gr-icon gr-i-restore">'+ i18next.t('view.history.restored')+'</div>';
-              }
+          case 2:
+            if(data.data[i].origin != undefined) {
+              icon = '<div class="gr-icon gr-i-restore">'+i18next.t('view.history.restored_from', data.data[i].origin)+'</div>';
+            }              else {
+              icon = '<div class="gr-icon gr-i-restore">'+ i18next.t('view.history.restored')+'</div>';
+            }
             break;
 
-            case 3:
-              icon = '<div class="gr-icon gr-i-trash">'+ i18next.t('view.history.deleted')+'</div>';
+          case 3:
+            icon = '<div class="gr-icon gr-i-trash">'+ i18next.t('view.history.deleted')+'</div>';
             break;
 
-            case 4:
-              icon = '<div class="gr-icon gr-i-restore-trash">'+ i18next.t('view.history.undeleted')+'</div>';
+          case 4:
+            icon = '<div class="gr-icon gr-i-restore-trash">'+ i18next.t('view.history.undeleted')+'</div>';
             break;
           }
 
-          since = balloon.timeSince(new Date((data.data[i].changed.sec*1000))),
-          ts = kendo.toString(new Date((data.data[i].changed.sec*1000)), kendo.culture().calendar.patterns.g)
+          since = balloon.timeSince(new Date((data.data[i].changed))),
+          ts = kendo.toString(new Date((data.data[i].changed)), kendo.culture().calendar.patterns.g)
 
           if(i != 0) {
             radio = '<input type="radio" name="version" value="'+data.data[i].version+'"/>';
@@ -5243,9 +5176,16 @@ var balloon = {
             radio = '<input style="visibility: hidden;" type="radio" name="version" value="'+data.data[i].version+'"/>';
           }
 
+          if(data.data[i].user) {
+            var username = data.data[i].user.name;
+          } else {
+            var username = i18next.t('view.history.user_deleted');
+
+          }
+
           dom_node = '<li>'+radio+
             '<div class="fs-history-version">'+i18next.t('view.history.version', data.data[i].version)+'</div>'+
-            icon+'<div class="fs-history-label">'+i18next.t('view.history.changed_by', data.data[i].user, since, ts)+'</div></li>';
+            icon+'<div class="fs-history-label">'+i18next.t('view.history.changed_by', username, since, ts)+'</div></li>';
 
           $fs_history.append(dom_node);
         }
@@ -5275,14 +5215,14 @@ var balloon = {
    */
   restoreVersion: function(node, version) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file/restore?id='+balloon.id(node),
+      url: balloon.base+'/files/restore?id='+balloon.id(node),
       type: 'POST',
       dataType: 'json',
       data: {
         version: version
       },
       success: function(data) {
-        balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.displayHistory(node);
       }
     });
@@ -5312,12 +5252,9 @@ var balloon = {
    * Display properties of one node
    *
    * @param   object node
-   * @param   object data
    * @return  void
    */
-  displayProperties: function(node, data) {
-    balloon.resetDom('properies');
-
+  displayProperties: function(node) {
     var $fs_prop_collection = $("#fs-properties-collection").hide(),
       $fs_prop_file     = $("#fs-properties-file").hide();
 
@@ -5329,194 +5266,126 @@ var balloon = {
       $fs_prop_file.show();
     }
 
-    var $fs_prop_tags = $("#fs-properties-meta-tags").show();
     $("#fs-properties-node").show();
-
-    var success = function(data) {
       var $field;
-      data.data = $.extend(true, data.data, node.toJSON());
-      for(var prop in data.data) {
-        $field = $('#fs-properties-'+prop).find('.fs-value');
-        if(data.data[prop] != '' && data.data[prop] !== null) {
-          $('#fs-properties-'+prop).parent().show();
-        }
+      for(var attribute in node) {
+        $field = $('#fs-properties-'+attribute).find('.fs-value');
+        $('#fs-properties-'+attribute).parent().show();
 
-        switch(prop) {
-          case 'changed':
-          case 'deleted':
-          case 'created':
-            if(typeof data.data[prop] === 'object' && data.data[prop] !== null) {
-              var ts   = data.data[prop].sec*1000,
-                date   = new Date(ts),
-                format = kendo.toString(date, kendo.culture().calendar.patterns.g),
-                since  = balloon.timeSince(date);
+        switch(attribute) {
+        case 'changed':
+        case 'deleted':
+        case 'created':
+            var date   = new Date(node[attribute]),
+              format = kendo.toString(date, kendo.culture().calendar.patterns.g),
+              since  = balloon.timeSince(date);
 
-              $field.html(i18next.t('view.history.changed_since', since, format));
-            }
+            $field.html(i18next.t('view.history.changed_since', since, format));
           break;
 
-          case 'size':
-            if(node.directory === true) {
-              $field.html(i18next.t('view.prop.data.childcount', {count: data.data[prop]}));
+        case 'size':
+          if(node.directory === true) {
+            $field.html(i18next.t('view.prop.data.childcount', {count: node[attribute]}));
+          } else {
+            $field.html(i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(node[attribute]), node[attribute]));
+          }
+          break;
+
+        case 'name':
+          var $fs_prop_name = $("#fs-properties-name");
+          $fs_prop_name.find(".gr-icon:first-child")
+            .removeAttr('class')
+            .addClass('gr-icon')
+            .addClass(node.spriteCssClass);
+
+          $field.parent().unbind('click').click(balloon.initRenameProperties);
+          var ext = balloon.getFileExtension(node);
+
+          if(ext != null && node.directory == false) {
+            $fs_prop_name.find(".fs-ext").html('[.'+ext+']').show();
+            $field.html(node[attribute].substr(0, node[attribute].length-ext.length-1));
+          } else {
+            $fs_prop_name.find(".fs-ext").html('');
+            $field.html(node[attribute]);
+          }
+          break;
+
+        case 'meta':
+          for(var meta_attr in node.meta) {
+            $field = $('#fs-properties-'+meta_attr).find('.fs-value');
+            switch(meta_attr) {
+              case 'description':
+                $field = $('#fs-properties-'+meta_attr).find('textarea');
+                $field.val(node.meta[meta_attr]);
+              break;
+
+              case 'color':
+              case 'tags':
+              break;
+
+              default:
+                $field = $('#fs-properties-'+meta_attr).find('input');
+                $field.val(node.meta[meta_attr]);
+              break;
+            }
+          }
+        break;
+
+        case 'share':
+        case 'shared':
+          if('shareowner' in node) {
+            $field = $('#fs-properties-share').find('.fs-value');
+            $('#fs-properties-share').parent().show();
+
+            var access = i18next.t('view.share.privilege_'+node.access);
+
+            if(node.shared === true) {
+              var msg = i18next.t('view.prop.head.share_value', node.sharename, node.shareowner.name, access);
+            } else if(node.share) {
+              var msg = i18next.t('view.prop.head.share_value', node.share.name, node.shareowner.name, access);
             } else {
-              $field.html(i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(data.data[prop]), data.data[prop]));
+              continue;
             }
-          break;
 
-          case 'name':
-            var $fs_prop_name = $("#fs-properties-name");
-            $fs_prop_name.find(".gr-icon:first-child")
-              .removeAttr('class')
-              .addClass('gr-icon')
-              .addClass(node.spriteCssClass);
+            $field.html(msg)
+              .parent().parent().css('display','table-row');
 
-            $field.parent().unbind('click').click(balloon.initRenameProperties);
-            var ext = balloon.getFileExtension(data.data);
-
-            if(ext != null && node.directory == false) {
-              $fs_prop_name.find(".fs-ext").html('[.'+ext+']').show();
-              $field.html(data.data[prop].substr(0, data.data[prop].length-ext.length-1));
+            var sclass = '';
+            if(node.shareowner.name == login.username) {
+              sclass = 'gr-icon gr-i-folder-shared';
             } else {
-              $fs_prop_name.find(".fs-ext").html('');
-              $field.html(data.data[prop]);
+              sclass = 'gr-icon gr-i-folder-received';
             }
+
+            $field.parent().find('div:first-child').attr('class', sclass);
+          }
           break;
 
-          case 'meta':
-            try {
-            for(var meta_attr in data.data.meta) {
-              $field = $('#fs-properties-'+meta_attr).find('.fs-value');
-
-              switch(meta_attr) {
-                case 'color':
-                  if(data.data[prop].color != undefined) {
-                    var $fs_prop_color = $('#fs-properties-'+prop+'-color');
-                    var color = 'fs-color-'+data.data[prop].color.substr(1);
-                    $fs_prop_color.find('.'+color).addClass('fs-color-selected');
-
-                  }
-                break;
-
-                case 'tags':
-                  var children = [],
-                    $fs_prop_tags_parent = $fs_prop_tags.parent();
-
-                  $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
-                    balloon.initMetaTagCompletion();
-                    $('#fs-preview-add-tag').show();
-                    $fs_prop_tags_parent
-                      .find('input:text')
-                      .focus()
-                      .data('kendoAutoComplete').search();
-                  });
-
-                  $fs_prop_tags.find('li').remove();
-                  for(var tag in data.data.meta.tags) {
-                    children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+data.data.meta.tags[tag]+'</div></li>');
-                  }
-
-                  $fs_prop_tags.find('ul').html(children.join(''));
-                break;
-
-                case 'description':
-                  $field = $('#fs-properties-'+meta_attr).find('textarea');
-                  $field.val(data.data.meta[meta_attr]);
-                break;
-
-                case 'coordinate':
-                  $field = $('#fs-properties-'+meta_attr).find('input');
-                  $field.val(data.data.meta[meta_attr]);
-                break;
-
-
-                default:
-                  $field = $('#fs-properties-'+meta_attr).find('input');
-                  $field.val(data.data.meta[meta_attr]);
-                break;
-              }
-             }
-             }
-             catch(err) {
-
-             }
-          break;
-
-          case 'share':
-            if(data.data[prop] !== false && 'shareowner' in data.data) {
-              var msg = i18next.t('view.prop.head.share_value', data.data[prop], data.data.shareowner, data.data.access);
-              $field.html(msg)
-                .parent().parent().css('display','table-row');
-
-              var sclass = '';
-              if(data.data.shareowner == login.username) {
-                sclass = 'gr-icon gr-i-folder-shared';
-              } else {
-                sclass = 'gr-icon gr-i-folder-received';
-              }
-
-              $field.parent().find('div:first-child').attr('class', sclass);
-            }
-          break;
-
-          default:
-            if($field.length != 0 && prop !== 'shareaccess' && prop != 'shareowner') {
-              $field.html(data.data[prop]);
-            }
+        default:
+          if($field.length != 0 && attribute !== 'access' && attribute != 'shareowner') {
+            $field.html(node[attribute]);
+          }
           break;
         }
       }
-
-      var $fs_prop_color = $("#fs-properties-meta-color");
-      $fs_prop_color.find("li").unbind('click').click(function(e){
-        var color = '#'+$(this).attr('class').substr(9, 6);
-
-        $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
-
-        if(color === balloon.getCurrentNode().meta.color) {
-          color = null;
-          $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', 'transparent');
-        } else {
-          $(this).addClass('fs-color-selected');
-          $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', color);
-        }
-
-        balloon.saveMetaAttributes(balloon.getCurrentNode(), {color: color});
-      });
-
-      balloon.handleTags(node);
-    };
-
-
-    if(data !== undefined) {
-      success(data);
-      return;
-    }
-
-    var attributes = [
-      'path',
-      'size',
-      'meta.license',
-      'meta.description',
-      'meta.copyright',
-      'meta.coordinate',
-      'meta.author',
-      'created',
-      'version',
-      'shareowner'
-    ];
-
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/node/attributes',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-        attributes: attributes
-      },
-      success: success,
-    });
   },
 
+  /**
+   * Check if valid color tag is given
+   *
+   * @return string
+   */
+  isValidColor: function(color) {
+    var map = [
+      'magenta',
+      'purple',
+      'blue',
+      'green',
+      'yellow',
+    ];
+
+    return map.indexOf(color) !== -1
+  },
 
   /**
    * Auto complete tags
@@ -5528,20 +5397,20 @@ var balloon = {
       $meta_tags_parent = $meta_tags.parent(),
       $input = $meta_tags_parent.find('input');
 
-     $input.kendoAutoComplete({
+    $input.kendoAutoComplete({
       minLength: 0,
       dataTextField: "_id",
       dataSource: new kendo.data.DataSource({
         transport: {
           read: function(operation) {
             balloon.xmlHttpRequest({
-              url: balloon.base+'/user/node-attribute-summary',
+              url: balloon.base+'/users/node-attribute-summary',
               data: {
                 attributes: ['meta.tags']
               },
               success: function(data) {
-                data.data['meta.tags'].sort();
-                operation.success(data.data['meta.tags']);
+                data['meta.tags'].sort();
+                operation.success(data['meta.tags']);
               }
             });
           }
@@ -5552,7 +5421,7 @@ var balloon = {
         field: '_id'
       },
       change: function(e) {
-         this.dataSource.read();
+        this.dataSource.read();
       },
     });
 
@@ -5576,18 +5445,44 @@ var balloon = {
   displayPreview: function(node) {
     balloon.resetDom('preview');
 
-    balloon.displayProperties(node,
-      {
-        data: {
-          name: node.name,
-          share: node.share,
-          meta: {
-            color: node.meta.color,
-            tags: node.meta.tags,
-          }
-        }
+    if(node.meta.color) {
+      var $fs_prop_color = $('#fs-properties-meta-color');
+      $fs_prop_color.find('.fs-color-'+node.meta.color).addClass('fs-color-selected');
+    }
+
+    var $fs_prop_tags = $('#fs-properties-meta-tags').show(),
+      $fs_prop_tags_parent = $fs_prop_tags.parent();
+
+    if(node.meta.tags) {
+      var children = [],
+      $fs_prop_tags_parent = $fs_prop_tags.parent();
+
+      $fs_prop_tags.find('li').remove();
+      for(var tag in node.meta.tags) {
+        children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+node.meta.tags[tag]+'</div></li>');
       }
-    );
+
+      $fs_prop_tags.find('ul').html(children.join(''));
+    }
+
+    var $fs_prop_color = $("#fs-properties-meta-color");
+    $fs_prop_color.find("li").unbind('click').click(function(e){
+      var color = $(this).attr('class').substr(9);
+      var current = $(this).hasClass('fs-color-selected');
+      $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
+
+      if(current) {
+        var color = null;
+        $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', 'transparent');
+      } else {
+        $(this).addClass('fs-color-selected');
+        $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', $(this).css('background-color'));
+      }
+
+      balloon.saveMetaAttributes(balloon.getCurrentNode(), {color: color});
+    });
+
+    balloon.handleTags(node);
 
     var $fs_preview_outer = $("#fs-preview-thumb"),
       $fs_preview     = $fs_preview_outer.find("div");
@@ -5599,7 +5494,7 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/file/preview?encode=base64&id='+balloon.id(node),
+      url: balloon.base+'/files/preview?encode=base64&id='+balloon.id(node),
       type: 'GET',
       timeout: 5000,
       beforeSend: function() {
@@ -5644,6 +5539,15 @@ var balloon = {
       $fs_prop_tags = $('#fs-properties-meta-tags'),
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
+    $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
+      balloon.initMetaTagCompletion();
+      $('#fs-preview-add-tag').show();
+      $fs_prop_tags_parent
+       .find('input:text')
+       .focus()
+       .data('kendoAutoComplete').search();
+    });
+
     $fs_prop_tags.unbind('click').on('click', 'li', function(e) {
       if($(e.target).attr('class') == 'fs-delete') {
         $(this).remove();
@@ -5660,10 +5564,8 @@ var balloon = {
         return;
       }
 
-      balloon._extendedSearch();
+      balloon.advancedSearch();
       var value = 'meta.tags:'+$(this).find('.tag-name').text();
-
-      $('#fs-action-search').find('input:text').val(value);
       balloon.search(value);
     });
 
@@ -5676,6 +5578,8 @@ var balloon = {
 
       last_tag = $(this);
       return balloon._metaTagHandler(node, e, last_tag);
+    }).unbind('focusout').bind('focusout', function() {
+      $('#fs-preview-add-tag').hide();
     });
   },
 
@@ -5705,8 +5609,7 @@ var balloon = {
       if($last_tag.attr('name') == 'add_tag') {
         $fs_prop_tags.find('ul').append('<li><div class="fs-delete">x</div><div class="tag-name">'+value+'</div></li>');
         $last_tag.val('').focus();
-      }
-      else {
+      }      else {
         var $parent = $last_tag.parent();
         $last_tag.remove();
         $parent.html('<div class="tag-name">'+value+'</div><div class="fs-delete">x</div>');
@@ -5724,13 +5627,7 @@ var balloon = {
       e.preventDefault();
     }
 
-    var allowed = new RegExp("^[a-zA-Z0-9\-\_]+$");
-    if (allowed.test(strcode) || code == 8) {
-      return true;
-    }
-
-    e.preventDefault();
-    return false;
+    return true;
   },
 
 
@@ -5743,15 +5640,14 @@ var balloon = {
    */
   saveMetaAttributes: function(node, meta) {
     balloon.xmlHttpRequest({
-      url: balloon.base+'/node/meta-attributes?id='+balloon.id(node),
-      type: 'POST',
-      data: meta,
+      url: balloon.base+'/nodes?id='+balloon.id(node),
+      type: 'PATCH',
+      data: {meta: meta},
       success: function() {
         for(var attr in meta) {
           if(meta[attr] == '') {
             delete node.meta[attr];
-          }
-          else {
+          } else {
             node.meta[attr] = meta[attr];
           }
         }
@@ -5852,84 +5748,84 @@ var balloon = {
     }
 
     switch(name) {
-      case 'menu':
-        balloon.togglePannel('menu-left');
+    case 'menu':
+      balloon.togglePannel('menu-left');
       break;
-      case 'upload':
-        var $files = $('#fs-files');
-        $files.unbind('change').change(function(e) {
-          balloon._handleFileSelect(e, balloon.getCurrentCollectionId());
-        });
-        $files.click();
+    case 'upload':
+      var $files = $('#fs-files');
+      $files.unbind('change').change(function(e) {
+        balloon._handleFileSelect(e, balloon.getCurrentCollectionId());
+      });
+      $files.click();
       break;
-      case 'file':
-        balloon.addFile();
+    case 'file':
+      balloon.addFile();
       break;
-      case 'folder':
-        balloon.addFolder();
+    case 'folder':
+      balloon.addFolder();
       break;
-      case 'delete':
-        balloon.deletePrompt(balloon.getSelected(balloon.getCurrentNode()));
+    case 'delete':
+      balloon.deletePrompt(balloon.getSelected(balloon.getCurrentNode()));
       break;
-      case 'restore':
-        balloon.undeletePrompt(balloon.getSelected(balloon.getCurrentNode()));
+    case 'restore':
+      balloon.undeletePrompt(balloon.getSelected(balloon.getCurrentNode()));
       break;
-      case 'download':
-        balloon.downloadNode(balloon.getSelected(balloon.getCurrentNode()));
+    case 'download':
+      balloon.downloadNode(balloon.getSelected(balloon.getCurrentNode()));
       break;
-      case 'refresh':
-        balloon.displayQuota();
-        if(balloon.getCurrentCollectionId() === null) {
-          balloon.menuLeftAction(balloon.getCurrentMenu());
+    case 'refresh':
+      balloon.displayQuota();
+      if(balloon.getCurrentCollectionId() === null) {
+        balloon.menuLeftAction(balloon.getCurrentMenu());
+      } else {
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+      }
+      break;
+
+    case 'cut':
+    case 'copy':
+      balloon.selected_action.command  = name;
+      balloon.selected_action.nodes    = balloon.getSelected(balloon.getCurrentNode());
+      balloon.selected_action.collection = balloon.getCurrentCollectionId();
+      balloon.showAction('paste', false);
+      break;
+
+    case 'paste':
+      var parent;
+      if(balloon.getCurrentNode() !== null) {
+        parent = balloon.getCurrentCollectionId()
+      } else if(!balloon.isMultiSelect()) {
+        parent = balloon.getSelected(balloon.getCurrentNode());
+      }
+
+      if(balloon.selected_action.command === 'cut') {
+        if(balloon.selected_action.collection == parent) {
+          balloon.showAction(['download', 'file', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
         } else {
-          balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+          balloon.move(balloon.selected_action.nodes, parent);
         }
+      } else if(balloon.selected_action.command === 'copy') {
+        if(balloon.selected_action.collection == parent) {
+          balloon.clone(balloon.selected_action.nodes, parent, 1);
+        } else {
+          balloon.clone(balloon.selected_action.nodes, parent);
+        }
+      }
+
+      balloon.selected_action = {nodes: null, command: null, collection: null};
       break;
 
-      case 'cut':
-      case 'copy':
-        balloon.selected_action.command  = name;
-        balloon.selected_action.nodes    = balloon.getSelected(balloon.getCurrentNode());
-        balloon.selected_action.collection = balloon.getCurrentCollectionId();
-        balloon.showAction('paste', false);
-      break;
+    case 'filter':
+      $('body').off('click').on('click', function(e){
+        var $target = $(e.target);
 
-      case 'paste':
-        var parent;
-        if(balloon.getCurrentNode() !== null) {
-          parent = balloon.getCurrentCollectionId()
-        } else if(!balloon.isMultiSelect()) {
-          parent = balloon.getSelected(balloon.getCurrentNode());
+        if($target.attr('id') != "fs-action-filter") {
+          $('#fs-action-filter-select').hide();
         }
+      })
 
-        if(balloon.selected_action.command === 'cut') {
-          if(balloon.selected_action.collection == parent) {
-            balloon.showAction(['download', 'file', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
-          } else {
-            balloon.move(balloon.selected_action.nodes, parent);
-          }
-        } else if(balloon.selected_action.command === 'copy') {
-          if(balloon.selected_action.collection == parent) {
-            balloon.clone(balloon.selected_action.nodes, parent, 1);
-          } else {
-            balloon.clone(balloon.selected_action.nodes, parent);
-          }
-        }
-
-        balloon.selected_action = {nodes: null, command: null, collection: null};
-      break;
-
-      case 'filter':
-        $('body').off('click').on('click', function(e){
-          var $target = $(e.target);
-
-          if($target.attr('id') != "fs-action-filter") {
-            $('#fs-action-filter-select').hide();
-          }
-        })
-
-        $('#fs-action-filter-select').show().off('click', 'input[type=checkbox]')
-          .on('click', 'input[type=checkbox]', balloon._filterTree);
+      $('#fs-action-filter-select').show().off('click', 'input[type=checkbox]')
+        .on('click', 'input[type=checkbox]', balloon._filterTree);
       break;
     }
   },
@@ -5989,8 +5885,7 @@ var balloon = {
         'breadcrumb-search',
         'breadcrumb-home',
       ]);
-    }
-    else if(typeof(elements) == 'string') {
+    } else if(typeof(elements) == 'string') {
       return balloon.resetDom([
         elements,
       ]);
@@ -5998,206 +5893,207 @@ var balloon = {
 
     for(var element in elements) {
       switch(elements[element]) {
-        case 'upload-progress':
-          $("#fs-upload-progress-bar").find("> div").remove();
-          var $fs_upload_progress = $("#fs-upload-progress");
-          $fs_upload_progress.find(".fs-loader-small").hide();
-          $fs_upload_progress.hide().find('#fs-upload-progress-bar').append('<div class="fs-total-progress"></div>');
-          $("#fs-upload-progress-more").find("span:last-child").html('0%');
+      case 'upload-progress':
+        $("#fs-upload-progress-bar").find("> div").remove();
+        var $fs_upload_progress = $("#fs-upload-progress");
+        $fs_upload_progress.find(".fs-loader-small").hide();
+        $fs_upload_progress.hide().find('#fs-upload-progress-bar').append('<div class="fs-total-progress"></div>');
+        $("#fs-upload-progress-more").find("span:last-child").html('0%');
         break;
 
-        case 'uploadmgr-progress':
-          var $fs_up_total_prog =  $("#fs-uploadmgr-total-progress");
-          var $fs_up_files_prog =  $("#fs-uploadmgr-files-progress");
-          $fs_up_total_prog.find("> div").remove();
-          $fs_up_total_prog.append('<div></div>');
-          $fs_up_files_prog.find("> div").remove();
-          $fs_up_files_prog.append('<div></div>');
+      case 'uploadmgr-progress':
+        var $fs_up_total_prog =  $("#fs-uploadmgr-total-progress");
+        var $fs_up_files_prog =  $("#fs-uploadmgr-files-progress");
+        $fs_up_total_prog.find("> div").remove();
+        $fs_up_total_prog.append('<div></div>');
+        $fs_up_files_prog.find("> div").remove();
+        $fs_up_files_prog.append('<div></div>');
         break;
 
-        case 'uploadmgr-progress-files':
-          $("#fs-upload-list > div").remove();
+      case 'uploadmgr-progress-files':
+        $("#fs-upload-list > div").remove();
         break;
 
-        case 'user-profile':
-          $('#fs-profile-user').find('tr').remove();
-          var $win  = $('#fs-profile-window'),
-            $k_win  = $('#fs-profile-window').data('kendoWindow'),
-            $quota  = $('#fs-profile-quota-bar'),
-            $k_quota= $quota.data('kendoProgressBar');
+      case 'user-profile':
+        $('#fs-profile-user').find('tr').remove();
+        var $win  = $('#fs-profile-window'),
+          $k_win  = $('#fs-profile-window').data('kendoWindow'),
+          $quota  = $('#fs-profile-quota-bar'),
+          $k_quota= $quota.data('kendoProgressBar');
 
-          if($k_quota !== undefined) {
-            $k_quota.destroy();
-            $quota.remove();
-            $('#fs-profile-quota').prepend('<div id="fs-profile-quota-bar"></div>');
-          }
+        if($k_quota !== undefined) {
+          $k_quota.destroy();
+          $quota.remove();
+          $('#fs-profile-quota').prepend('<div id="fs-profile-quota-bar"></div>');
+        }
 
-          balloon.resetWindow('fs-profile-window');
+        balloon.resetWindow('fs-profile-window');
         break;
 
-        case 'properties':
-          balloon._rename();
-          balloon._resetRenameView();
-          var $fs_prop = $('#fs-properties');
-          $fs_prop.find('tr:not(.fs-editable)').hide();
-          $fs_prop.find('textarea').val('');
-          $fs_prop.find('input').val('');
-          $fs_prop.find('select').val('');
-          $fs_prop.hide();
-          $fs_prop.find("span").html('');
-          $('#fs-properties-root').hide();
-          $('#fs-properties-id').parent().show();
-          $('#fs-view').hide();
-          $("#fs-properties-collection").hide();
-          $("#fs-properties-file").hide();
-          $("#fs-properties-node").hide();
+      case 'properties':
+        balloon._rename();
+        balloon._resetRenameView();
+        var $fs_prop = $('#fs-properties');
+        $fs_prop.find('tr:not(.fs-editable)').hide();
+        $fs_prop.find('textarea').val('');
+        $fs_prop.find('input').val('');
+        $fs_prop.find('select').val('');
+        $fs_prop.find('.fs-searchable').hide();
+        $fs_prop.hide();
+        $fs_prop.find("span").html('');
+        $('#fs-properties-root').hide();
+        $('#fs-properties-id').parent().show();
+        $('#fs-view').hide();
+        $("#fs-properties-collection").hide();
+        $("#fs-properties-file").hide();
+        $("#fs-properties-node").hide();
         break;
 
-        case 'advanced':
-          var $fs_advanced   = $('#fs-advanced');
-          $fs_advanced.find('input[name=destroy_at]').val(''),
-          $fs_advanced.find('input[name=readonly]').prop('checked', false);
+      case 'advanced':
+        var $fs_advanced   = $('#fs-advanced');
+        $fs_advanced.find('input[name=destroy_at]').val(''),
+        $fs_advanced.find('input[name=readonly]').prop('checked', false);
         break;
 
-        case 'selected':
-          var $name = $("#fs-properties-name").hide();
-          $name.find('.fs-sprite').removeAttr('class').addClass('fs-sprite');
-          $name.find('.fs-value').html('');
-          $name.find('.fs-ext').html('');
+      case 'selected':
+        var $name = $("#fs-properties-name").hide();
+        $name.find('.fs-sprite').removeAttr('class').addClass('fs-sprite');
+        $name.find('.fs-value').html('');
+        $name.find('.fs-ext').html('');
         break;
 
-        case 'preview':
-          $('#fs-properties-share').parent().hide();
-
-          var $fs_meta_tags = $("#fs-properties-meta-tags");
-          $fs_meta_tags.hide()
-            .find('li').remove();
+      case 'preview':
+        var $fs_meta_tags = $("#fs-properties-meta-tags");
+        $fs_meta_tags.hide()
+          .find('li').remove();
 
 
-          var $fs_preview_add_tag = $('#fs-preview-add-tag').hide(),
-            $add   = $fs_preview_add_tag.find("input"),
-            $k_add = $add.data('kendoAutoComplete');
+        var $fs_preview_add_tag = $('#fs-preview-add-tag').hide(),
+          $add   = $fs_preview_add_tag.find("input"),
+          $k_add = $add.data('kendoAutoComplete');
 
-          if($k_add != undefined) {
-            $k_add.destroy();
-          }
+        if($k_add != undefined) {
+          $k_add.destroy();
+        }
 
-          $fs_preview_add_tag.html('<input type="text" name="add_tag"/>');
-          $("#fs-properties-meta-color").find('.fs-color-selected').removeClass('fs-color-selected');
-          var $fs_preview_thumb =  $("#fs-preview-thumb");
+        $fs_preview_add_tag.html('<input type="text" name="add_tag"/>');
+        $("#fs-properties-meta-color").find('.fs-color-selected').removeClass('fs-color-selected');
+        var $fs_preview_thumb =  $("#fs-preview-thumb");
 
-          $fs_preview_thumb.hide()
-            .find('.fs-hint').hide();
-          $fs_preview_thumb.find("div").html('');
+        $fs_preview_thumb.hide()
+          .find('.fs-hint').hide();
+        $fs_preview_thumb.find("div").html('');
         break;
 
-        case 'prompt':
-          balloon.resetWindow('fs-prompt-window');
-          $("#fs-prompt-window").addClass("fs-prompt-window");
+      case 'prompt':
+        balloon.resetWindow('fs-prompt-window');
+        $("#fs-prompt-window").addClass("fs-prompt-window");
         break;
 
-        case 'edit':
-          balloon.resetWindow('fs-edit-live');
+      case 'edit':
+        balloon.resetWindow('fs-edit-live');
         break;
 
-        case 'events':
-          $('#fs-events').find('li').remove();
-          $('#fs-event-window').find('li').remove();
+      case 'events':
+        $('#fs-events').find('li').remove();
+        $('#fs-event-window').find('li').remove();
         break;
 
-        case 'events-win':
-          balloon.resetWindow('fs-event-window');
+      case 'events-win':
+        balloon.resetWindow('fs-event-window');
         break;
 
-        case 'view-bar':
-          $('#fs-view-bar').find('li').hide();
+      case 'view-bar':
+        $('#fs-view-bar').find('li').hide();
         break;
 
-        case 'action-bar':
-          $('.fs-action-select-only').addClass('fs-action-disabled');
-          $('.fs-action-collection-only').addClass('fs-action-disabled');
+      case 'action-bar':
+        $('.fs-action-select-only').addClass('fs-action-disabled');
+        $('.fs-action-collection-only').addClass('fs-action-disabled');
         break;
 
-        case 'search':
-          $('#fs-browser-action #fs-action-search').show();
-          $('#fs-browser-fresh').hide();
+      case 'search':
+        var $k_splitter = $('#fs-layout-left').data('kendoSplitter'),
+            $container = $('#fs-search-container');
 
-          var $k_splitter = $('#fs-browser-layout').data('kendoSplitter');
-          if($k_splitter != undefined) {
-            $k_splitter.remove('#fs-search-extend');
-            $k_splitter.size("#fs-layout-left", "50%");
-            $k_splitter.size("#fs-content", "37%");
-          }
+        $('#fs-browser-action').show();
+        $('#fs-search-container-small').find('input:text').val('');
+
+        if($k_splitter != undefined) {
+          $k_splitter.collapse('#fs-search-container');
+          $container.find('input:text').val('');
+        }
         break;
 
-        case 'history':
-          var $view = $("#fs-history");
-          $view.find("li").remove();
-          $view.find('input[type=submit]').hide();
+      case 'history':
+        var $view = $("#fs-history");
+        $view.find("li").remove();
+        $view.find('input[type=submit]').hide();
         break;
 
-        case 'multiselect':
-          balloon.multiselect = [];
-          $('#fs-browser-summary').html('');
-          $('#fs-browser-tree').find('.fs-multiselected')
-            .removeClass('fs-multiselected')
-            .removeClass('k-state-selected');
+      case 'multiselect':
+        balloon.multiselect = [];
+        $('#fs-browser-summary').html('');
+        $('#fs-browser-tree').find('.fs-multiselected')
+          .removeClass('fs-multiselected')
+          .removeClass('k-state-selected');
         break;
 
-        case 'share-collection':
-          var $collection = $('#fs-share-collection');
-          var $complete =  $collection.find('input[name=share_role]');
+      case 'share-collection':
+        var $collection = $('#fs-share-collection');
+        var $complete =  $collection.find('input[name=share_role]');
 
-          if($complete.data('kendoAutoComplete') != undefined) {
-             $complete.data('kendoAutoComplete').destroy();
-          }
+        if($complete.data('kendoAutoComplete') != undefined) {
+          $complete.data('kendoAutoComplete').destroy();
+        }
 
-          $complete.parent().html('<input type="text" name="share_role" placeholder="'+i18next.t('view.share.search_user')+'">');
+        $complete.parent().html('<input type="text" name="share_role" placeholder="'+i18next.t('view.share.search_user')+'">');
 
-          $collection.find('input[name=share]').val(i18next.t('view.share.create'));
-          $collection.find('.fs-share-remove').hide();
-          $collection.find('tbody tr').remove();
-          $collection.find('table').hide()
-          $collection.find("input:radio").prop('checked', false);
+        $collection.find('input[name=share_name]').val('');
+        $collection.find('input[name=share]').val(i18next.t('view.share.create'));
+        $collection.find('.fs-share-remove').hide();
+        $collection.find('tbody tr').remove();
+        $collection.find('table').hide()
+        $collection.find("input:radio").prop('checked', false);
         break;
 
-        case 'share-link':
-          var $link = $('#fs-share-link');
-          $link.find('.fs-share-remove').hide();
-          $link.find('input[name=file_url]').hide();
-          $('#fs-link-options').hide();
-          $link.find("input:text").val('');
-          $link.find("input:password").val('');
-          $link.find("input:checkbox").prop('checked', false);
-          $link.find('input[name=share]').val(i18next.t('view.share.create'));
+      case 'share-link':
+        var $link = $('#fs-share-link');
+        $link.find('.fs-share-remove').hide();
+        $link.find('input[name=file_url]').hide();
+        $('#fs-link-options').hide();
+        $link.find("input:text").val('');
+        $link.find("input:password").val('');
+        $link.find("input:checkbox").prop('checked', false);
+        $link.find('input[name=share]').val(i18next.t('view.share.create'));
         break;
 
-        case 'tree':
-          var $tree   = $("#fs-browser-tree"),
-            $k_tree = $tree.data('kendoTreeView');
+      case 'tree':
+        var $tree   = $("#fs-browser-tree"),
+          $k_tree = $tree.data('kendoTreeView');
 
-          if($k_tree !== undefined) {
-            $k_tree.destroy();
-            $tree.remove();
-            $("#fs-browser").append('<div id="fs-browser-tree"></div>');
-          }
-          $('#fs-browser-fresh').hide();
+        if($k_tree !== undefined) {
+          $k_tree.destroy();
+          $tree.remove();
+          $("#fs-browser").append('<div id="fs-browser-tree"></div>');
+        }
+        $('#fs-browser-fresh').hide();
         break;
 
-        case 'breadcrumb-home':
-          var $crumb = $('#fs-crumb-home-list');
-          $crumb.find('li').remove();
-          $crumb.append('<li id="fs-crumb-home" fs-id=""><div>'+i18next.t('menu.cloud')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
+      case 'breadcrumb-home':
+        var $crumb = $('#fs-crumb-home-list');
+        $crumb.find('li').remove();
+        $crumb.append('<li id="fs-crumb-home" fs-id=""><div>'+i18next.t('menu.cloud')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
         break;
 
-        case 'breadcrumb-search':
-          var $crumb = $('#fs-crumb-search-list');
-          $crumb.find('li').remove();
-          $crumb.append('<li id="fs-crumb-search" fs-id=""><div>'+i18next.t('menu.search')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
+      case 'breadcrumb-search':
+        var $crumb = $('#fs-crumb-search-list');
+        $crumb.find('li').remove();
+        $crumb.append('<li id="fs-crumb-search" fs-id=""><div>'+i18next.t('menu.search')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
         break;
 
-        case 'shortcuts':
-          $(document).unbind('keyup');
+      case 'shortcuts':
+        $(document).unbind('keyup');
         break;
       }
     }
@@ -6303,11 +6199,6 @@ var balloon = {
       title: $div.attr('title'),
       resizable: false,
       modal: true,
-      activate: function() {
-        $div.find('p').html(i18next.t('uploadmgr.max_upload_size',
-          balloon.getReadableFileSizeString(balloon.MAX_FILE_UPLOAD_SIZE)
-        ));
-      }
     }).data("kendoWindow");
 
     balloon.resetDom(['upload-progress', 'uploadmgr-progress']);
@@ -6348,9 +6239,7 @@ var balloon = {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
       } else if(file.blob.size+balloon.quota.used > balloon.quota.hard_quota) {
         balloon.displayError(new Error('Quota is too low to upload this file'));
-      } else if(file.blob.size > balloon.MAX_FILE_UPLOAD_SIZE) {
-        balloon.displayError(new Error('File has exceeded the maximum upload size of '+balloon.MAX_FILE_UPLOAD_SIZE+' Bytes'));
-      } else if(file.blob.size != 0 && file.blob.size <= balloon.MAX_FILE_UPLOAD_SIZE) {
+      } else if(file.blob.size != 0) {
         progressnode = $('<div id="fs-upload-'+last+'">'+file.name+'</div>');
         $('#fs-upload-list').append(progressnode);
 
@@ -6371,17 +6260,16 @@ var balloon = {
           transfered_bytes: 0,
           success:  Math.ceil(file.blob.size / balloon.BYTES_PER_CHUNK),
           slices:   Math.ceil(file.blob.size / balloon.BYTES_PER_CHUNK),
-          chunkgroup: balloon.UUIDv4(),
           manager:  balloon.upload_manager,
           request:  null,
           status:   1,
         });
 
         progressnode.contents().filter(function() {
-             return this.nodeType == 3; //Node.TEXT_NODE
+          return this.nodeType == 3; //Node.TEXT_NODE
         }).remove();
         progressnode.append('<div class="fs-progress-filename">'+file.name+'</div>');
-        progressnode.append('<div class="fs-progress-stop gr-icon gr-i-cancel"></div>');
+        progressnode.append('<div class="fs-progress-stop gr-icon gr-i-clear"></div>');
 
         balloon.upload_manager.upload_bytes += file.blob.size;
       }
@@ -6488,7 +6376,7 @@ var balloon = {
         file.manager.count.success++;
         file.manager.progress.mgr_chunk.value(file.manager.count.transfer);
 
-        file.progress.find('.fs-progress-stop').removeClass('gr-i-cancel').addClass('gr-i-tick');
+        file.progress.find('.fs-progress-stop').removeClass('gr-i-clear').addClass('gr-i-checkmark');
 
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
           file.manager.count.success.toString(), file.manager.count.upload)
@@ -6536,11 +6424,11 @@ var balloon = {
     if(balloon.upload_manager.count.transfer >= balloon.upload_manager.count.upload) {
       $('#fs-uploadmgr-bandwidth').html('0B/s');
       $('#fs-uploadmgr-time').html(
-         i18next.t('uploadmgr.finished')
+        i18next.t('uploadmgr.finished')
       );
 
       $(".fs-status-loader").hide();
-      balloon.refreshTree('/collection/children', {id: balloon.getCurrentCollectionId()});
+      balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       balloon.displayQuota();
 
       setTimeout(function() {
@@ -6549,20 +6437,6 @@ var balloon = {
     }
   },
 
-
-  /**
-   * Create uuid v4 conform string
-   *
-   * @return string
-   */
-  UUIDv4: function() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
-  },
-
-
   /**
    * transfer selected files to the server
    *
@@ -6570,8 +6444,12 @@ var balloon = {
    * @return  void
    */
   _chunkUpload: function(file) {
-    var url = balloon.base + '/file/chunk?name=' + encodeURI(file.name) + '&index=' +
-      file.index + '&chunks=' + file.slices + '&chunkgroup=' + file.chunkgroup+'&size=' + file.blob.size;
+    var url = balloon.base + '/files/chunk?name=' + encodeURI(file.name) + '&index=' +
+      file.index + '&chunks=' + file.slices + '&size=' + file.blob.size;
+
+    if(file.session) {
+      url += '&session='+file.session;
+    }
 
     if(file.manager.parent_node !== null) {
       url += '&collection='+balloon.id(file.manager.parent_node);
@@ -6617,11 +6495,11 @@ var balloon = {
             }
           }
 
-         }, false);
+        }, false);
 
-         file.request = xhr;
+        file.request = xhr;
 
-         return xhr;
+        return xhr;
       },
       url: url,
       type: 'PUT',
@@ -6652,7 +6530,8 @@ var balloon = {
         $('#fs-uploadmgr-bytes > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
         $('#fs-upload-info > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
       },
-      success: function() {
+      success: function(response) {
+        file.session = response.session;
         balloon._chunkUploadManager(file);
         balloon._checkUploadEnd();
       },
@@ -6670,7 +6549,7 @@ var balloon = {
         }
 
         file.progress.find('.k-state-selected').addClass('fs-progress-error');
-        file.progress.find('.fs-progress-stop').removeClass('gr-i-cancel').addClass('gr-i-exception');
+        file.progress.find('.fs-progress-stop').removeClass('gr-i-clear').addClass('gr-i-error');
 
         file.status = 2;
         file.manager.count.transfer++;
@@ -6678,9 +6557,9 @@ var balloon = {
 
         var data = balloon.parseError(e);
         if(data === false || data.status != 403) {
-           balloon.displayError(response);
-         } else {
-          if(data.data.code === 40) {
+          balloon.displayError(response);
+        } else {
+          if(data.code === 40) {
             var new_name = balloon.getCloneName(file.blob.name);
             var new_file = {
               name: new_name,
