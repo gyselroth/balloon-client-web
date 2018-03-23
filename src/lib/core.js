@@ -130,7 +130,7 @@ var balloon = {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
-    $('#fs-disclaimer').html('balloon ' + process.env.VERSION);
+    $('#fs-disclaimer').html('balloon-client-web ' + process.env.VERSION);
     app.preInit(this);
     balloon.kendoFixes();
 
@@ -490,7 +490,7 @@ var balloon = {
         return;
       }
 
-      var next  = balloon.datasource._data.indexOf(balloon.last);
+      var next = balloon.datasource._pristineData.indexOf(balloon.last);
       var current = next;
 
       if(e.keyCode === 40) {
@@ -845,14 +845,20 @@ var balloon = {
           break;
 
         case 'name':
+          if(balloon.isSearch()) {
+            var node_name = node.path;
+          } else {
+            var node_name = node.name;
+          }
+
           var ext = balloon.getFileExtension(node);
           if(ext != null && !node.directory) {
             var sprite = $that.find('.k-sprite').addClass('gr-icon')[0].outerHTML;
-            var name = '<span class="fs-browser-name">'+node.name.substr(0, node.name.length-ext.length-1)+'</span> <span class="fs-ext">[.'+ext+']</span>';
+            var name = '<span class="fs-browser-name">'+node_name.substr(0, node_name.length-ext.length-1)+'</span> <span class="fs-ext">[.'+ext+']</span>';
             $that_k_in.html(sprite+name+$(this).find('.k-in > .fs-browser-meta')[0].outerHTML);
           }            else {
             var sprite = $(this).find('.k-sprite').addClass('gr-icon')[0].outerHTML;
-            $that_k_in.html(sprite+'<span class="fs-browser-name">'+node.name+'</span>'+$that.find('.fs-browser-meta')[0].outerHTML);
+            $that_k_in.html(sprite+'<span class="fs-browser-name">'+node_name+'</span>'+$that.find('.fs-browser-meta')[0].outerHTML);
           }
           break;
 
@@ -2320,7 +2326,7 @@ var balloon = {
                 $('#fs-browser-fresh').hide();
               }
 
-              if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.id !== null) {
+              if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.data.id !== null && operation.id !== null) {
                 pool.data.unshift({
                   id: '_FOLDERUP',
                   name: "..",
@@ -3668,6 +3674,7 @@ var balloon = {
       statusCode: {
         204: function(e) {
           balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.last.shared = false;
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share-collection');
           }
@@ -4162,7 +4169,7 @@ var balloon = {
   search: function(search_query) {
     var value = search_query, query;
     if(value == '') {
-      return balloon._searchResetClick();
+      return balloon.resetSearch();
     }
 
     balloon.showAction([]);
@@ -4431,7 +4438,8 @@ var balloon = {
       },
       error: function(response) {
         var data = balloon.parseError(response);
-        if(data === false || data.status != 400 && data.status != 404) {
+
+        if(data === false || response.status != 422 && response.status != 404) {
           balloon.displayError(response);
         } else {
           switch(data.code) {
@@ -4653,7 +4661,7 @@ var balloon = {
       gpg:  'gr-i-lock',
       pem:  'gr-i-lock',
       p12:  'gr-i-lock',
-      cert:   'gr-i-locl',
+      cert: 'gr-i-lock',
       rar:  'gr-i-file-archive',
       zip:  'gr-i-file-archive',
       xz:   'gr-i-file-archive',
@@ -5713,9 +5721,15 @@ var balloon = {
    * @return void
    */
   togglePannel: function(pannel, hide) {
-    var $fs_browser_layout = $('#fs-browser-layout'),
-      $k_splitter = $fs_browser_layout.data('kendoSplitter'),
-      $pannel  = $('#fs-'+pannel);
+    if(pannel == 'menu-left') {
+      var $k_splitter = $('#fs-browser-layout').data('kendoSplitter');
+    } else if(pannel === 'content') {
+      var $k_splitter = $('#fs-node-container').data('kendoSplitter');
+    } else {
+      return;
+    }
+
+    var $pannel  = $('#fs-'+pannel);
 
     if(hide === true) {
       if($pannel.width() !== 0) {

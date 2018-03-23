@@ -70,7 +70,7 @@ var app = {
 
   subscribe: function(node, subscription, exclude_me, recursive) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/notifications/subscribe',
+      url: app.balloon.base+'/nodes/subscription',
       type: 'POST',
       dataType: 'json',
       data: {

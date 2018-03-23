@@ -183,11 +183,11 @@
     }
 
     #fs-browser-action .gr-icon, #fs-browser-select-action .gr-icon {
-        transform: scale(1.5);
+        transform: scale(1.3);
     }
 
     #fs-browser-tree .gr-icon {
-        transform: scale(1.2);
+        transform: scale(1.1);
     }
 
     #fs-browser-action li {
@@ -234,12 +234,13 @@
 
     #fs-search-container-small .fs-search-reset-button {
         top: 49px;
+        right: 0;
         position: absolute;
     }
 
     #fs-search-container-small input {
         height: 40px;
-        border-radius: none !important;
+        border-radius: 0 !important;
         width: 100% !important;
         border: none !important;
         background-color: #EEE;

@@ -136,13 +136,18 @@ select {
     z-index: 10;
 }
 
+#login-footer {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
 #login .error-message {
     text-align: center;
     margin: 10px 0;
 }
 
-#login-oidc::before {
-    content: "-";
+#login-oidc:not(:empty) {
     display: inline-block;
     color: #BBB;
     font-size: 1.3em;
@@ -150,6 +155,7 @@ select {
     min-width: 100%;
     text-align: center;
     width: 100%;
+    border-top: 1px solid #BBB;
 }
 
 #login-oidc {
@@ -500,6 +506,10 @@ td {
 .k-progressbar .k-state-selected {
     background-color: #999;
     border-radius: 0 !important;
+}
+
+.k-i-close {
+    filter: brightness(900);
 }
 
 #fs-identity {
@@ -949,6 +959,10 @@ td {
     margin-left: 15px;
     font-size: 0.9em;
     color: #999;
+}
+
+#fs-node-container, #fs-tree-container, #fs-browser {
+    overflow: hidden;
 }
 
 #fs-menu-left li {
