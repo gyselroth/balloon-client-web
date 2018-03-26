@@ -1,3 +1,20 @@
+## 2.0.0-beta2
+**Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
+**Date**: 
+
+* [FIX] fixed error node is not a share after unshare a collection
+* [FIX] popup close icon is now brighter and better visible
+* [FIX] fixed scroll on mobile devices (mobile responsive view)
+* [FIX] fixed Balloon.App.Notification subscription exception after subscribe a node
+* [FIX] going up link gets added after a new node has been added within the root
+* [FIX] keyboard navigation through tree
+* [FIX] Exception node is not a share after unshare a collection
+* [FIX] deleted nodes can not be restored if a node with the same name exists in root
+* [CHANGE] the search mode now displays the path of a node instead the name in the tree
+* [FIX] fixed right pannel which does not always toggle
+* [FIX] auth credentials are now stored in browser cache, no login window anymore after reload
+
+
 ## 2.0.0-beta1
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Mon Mar 05 10:01:18 CET 2018

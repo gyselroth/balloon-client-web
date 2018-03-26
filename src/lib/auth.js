@@ -32,6 +32,7 @@ var login = {
       }
     }
 
+    $('#login-footer').find('span').html(process.env.VERSION);
     if(this.basic === false) {
       $('#login-basic').hide();
     }
@@ -108,10 +109,8 @@ var login = {
     var options = {
       type:'GET',
       url: '/api/auth',
-      cache: false,
       complete: function(response) {
         $('#login-loader').hide();
-
         switch(response.status) {
         case 401:
         case 403:
@@ -127,6 +126,11 @@ var login = {
 
           login.fetchIdentity();
           break;
+
+        case 200:
+        case 404:
+          login.verifyIdentity();
+        break;
 
         default:
           $('#login').show();
@@ -157,7 +161,7 @@ var login = {
         login.checkAuth();
       } else {
         $.ajax({
-          url: '/api/v'+balloon.BALLOON_API_VERSION,
+          url: '/api/logout',
           username: '_logout',
           password: 'logout',
           cache: false,
@@ -280,46 +284,52 @@ var login = {
     login.doBasicAuth(username, password);
   },
 
-  doBasicAuth: function(username, password) {
+  verifyIdentity: function() {
     var $login = $('#login');
     var $username_input = $login.find('input[type=text]');
     var $password_input = $login.find('input[type=password]');
 
     $.ajax({
       type: 'GET',
+      dataType: 'json',
+      url: '/api/v2/users/whoami',
+      complete: function(response) {
+        switch(response.status) {
+          case 401:
+          case 403:
+            $('#fs-namespace').hide();
+            $('#login-basic-error').show();
+            $username_input.addClass('error');
+            $password_input.addClass('error');
+            break;
+
+          case 200:
+          case 404:
+            login.adapter = 'basic';
+            login.username = response.responseJSON.name;
+            localStorage.username = login.username;
+            $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+            login.initBrowser();
+            break;
+
+          default:
+            $('#login').show();
+            $('#login-server-error').show();
+            $('#login-body').hide();
+            break;
+        }
+      }
+    });
+  },
+
+  doBasicAuth: function(username, password) {
+    $.ajax({
+      type: 'GET',
       username: username,
       password: password,
       dataType: 'json',
-      url: '/api/v2/users/whoami',
-      beforeSend: function() {
-        $username_input.removeClass('error');
-        $password_input.removeClass('error');
-      },
-      complete: function(response) {
-        switch(response.status) {
-        case 401:
-        case 403:
-          $('#fs-namespace').hide();
-          $('#login-basic-error').show();
-          $username_input.addClass('error');
-          $password_input.addClass('error');
-          break;
-
-        case 200:
-          login.adapter = 'basic';
-          login.username = response.responseJSON.name;
-          localStorage.username = login.username;
-          $('#fs-identity').show().find('#fs-identity-username').html(login.username);
-          login.initBrowser();
-          break;
-
-        default:
-          $('#login').show();
-          $('#login-server-error').show();
-          $('#login-body').hide();
-          break;
-        }
-      }
+      url: '/api/basic-auth',
+      complete: login.verifyIdentity
     });
   },
 

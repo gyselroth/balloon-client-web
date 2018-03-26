@@ -63,14 +63,21 @@ var app = {
       $('#fs-view-notification').addClass('fs-view-bar-active');
       app.$view.show();
       app.$view.find('input[name=subscribe]').prop('checked', app.balloon.last.subscription);
-      app.$view.find('input[name=exclude_me]').prop('checked', app.balloon.last.subscription_exclude_me);
+
+      if(app.balloon.last.subscription === false) {
+        var exclude_me = true;
+      } else {
+        var exclude_me = app.balloon.last.subscription_exclude_me;
+      }
+
+      app.$view.find('input[name=exclude_me]').prop('checked', exclude_me);
       app.$view.find('input[name=recursive]').prop('checked', app.balloon.last.subscription_recursive);
     });
   },
 
   subscribe: function(node, subscription, exclude_me, recursive) {
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/notifications/subscribe',
+      url: app.balloon.base+'/nodes/subscription',
       type: 'POST',
       dataType: 'json',
       data: {
