@@ -31,6 +31,7 @@ deploy:
   on:
     master: true
 - provider: bintray
+  skip_cleanup: true
   file: bintray.json
   user: raffis
   key:
@@ -39,6 +40,7 @@ deploy:
     master: false
     tags: true
 - provider: bintray
+  skip_cleanup: true
   file: bintray.json
   user: raffis
   on:
