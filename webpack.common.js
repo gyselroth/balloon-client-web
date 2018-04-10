@@ -2,16 +2,20 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
+
+var gitRevisionPlugin = new GitRevisionPlugin();
 
 const extractSass = new ExtractTextPlugin({
-    filename: "[name].[contenthash].css",
-    disable: false
+  filename: "[name].[contenthash].css",
+  disable: false
 });
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
-    app: './app.js',
+    app: './main.js',
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -55,7 +59,7 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery"
+      jQuery: "jquery",
     }),
     new ExtractTextPlugin({
       filename: "balloon.css",
@@ -69,6 +73,28 @@ module.exports = {
       minify: {
         collapseWhitespace: true,
         preserveLineBreaks: false,
+      }
+    }),
+    new webpack.DefinePlugin({
+      'process.env.VERSION': JSON.stringify(process.env.VERSION || gitRevisionPlugin.version()),
+      'process.env.COMMITHASH': JSON.stringify(gitRevisionPlugin.commithash()),
+      'process.env.BRANCH': JSON.stringify(gitRevisionPlugin.branch()),
+    }),
+    new MergeJsonWebpackPlugin({
+      "output": {
+        "groupBy": [
+          {
+            "pattern": "{./src/locale/en.json,./src/app/*/locale/en.json}",
+            "fileName": "locale/en.json"
+          },
+          {
+            "pattern": "{./src/locale/de.json,./src/app/*/locale/de.json}",
+            "fileName": "locale/de.json"
+          }
+        ]
+      },
+      "globOptions": {
+        "nosort": true
       }
     })
   ]

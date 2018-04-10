@@ -1,11 +1,10 @@
 /**
- * Balloon
+ * balloon
  *
- * @author    Raffael Sahli <sahli@gyselroth.net>
- * @copyright Copryright (c) 2012-2017 gyselroth GmbH (https://gyselroth.com)
+ * @copyright Copryright (c) 2012-2018 gyselroth GmbH (https://gyselroth.com)
  * @license   GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
-import * as $ from "jquery";
+import $ from "jquery";
 import i18next from 'i18next';
 import i18nextXHRBackend from 'i18next-xhr-backend';
 import i18nextBrowserLanguageDetector from 'i18next-browser-languagedetector';
@@ -13,24 +12,35 @@ import i18nextLocalStorageCache from 'i18next-localstorage-cache';
 import i18nextSprintfPostProcessor from 'i18next-sprintf-postprocessor';
 import jqueryI18next from 'jquery-i18next';
 import login from './auth.js'
+import app from './app.js'
 
 var translate = {
   config: {},
   load: function(url, options, callback, data) {
+    $.ajax({
+      url: '/locale/'+url+'.json',
+      success: function(body, responseText, response) {
+        callback(response.responseText, {status: '200'});
+      },
+      error: function() {
+        callback(null, {status: '404'});
+      }
+    });
+  },
+
+  loadCulture: function(locale) {
     try {
-      let waitForLocale = require('bundle-loader!../locale/'+url+'.json');
-      waitForLocale((locale) => {
-        locale = JSON.stringify(locale);
-        callback(locale, {status: '200'});
-      })
+      require('bundle-loader!kendo-ui-core/js/cultures/kendo.culture.'+locale+'.js')((data) => {
+        kendo.culture(locale);
+      });
     } catch (e) {
-      callback(null, {status: '404'});
+      //fallback to en-US
     }
   },
 
   init: function(config) {
     this.config = config;
-    var locale_version = '2017062004';
+    var locale_version = process.env.VERSION+'-'+process.env.COMMITHASH;
 
     var locales = [
       ['en',  'English'],
@@ -98,21 +108,20 @@ var translate = {
 
         $('[data-i18n]').localize();
 
+        app.render();
         login.init(translate.config);
-        //if($('#fs-namespace').is(':visible')) {
-        //  balloon.init();
-        //}
 
         var current = localStorage.i18nextLng;
-        kendo.culture(current);
+        translate.loadCulture(current);
+        var $locales = $('#login-locale');
 
         for(let lang in locales) {
-          $('#login-locale').append('<option value="'+locales[lang][0]+'">'+locales[lang][1]+'</option>')
+          $locales.append('<option value="'+locales[lang][0]+'">'+locales[lang][1]+'</option>')
         }
 
-        $('#login-locale option[value='+current+']').attr('selected','selected');
-        $('#login-locale').unbind('change').change(function(){
-          kendo.culture($(this).val());
+        $locales.find('option[value='+current+']').attr('selected','selected');
+        $locales.unbind('change').change(function(){
+          translate.loadCulture($(this).val());
           i18next.changeLanguage($(this).val(), function(){
             $('[data-i18n]').localize();
           });

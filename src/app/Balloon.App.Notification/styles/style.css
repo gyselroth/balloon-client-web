@@ -1,0 +1,7 @@
+#fs-notification div:first-child {
+    margin-bottom: 15px;
+}
+
+#fs-notification div {
+    margin-bottom: 5px;
+}

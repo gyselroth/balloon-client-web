@@ -1,0 +1,13 @@
+{
+  "app": {
+    "balloon_app_desktopclient": {
+      "menu": "Desktop",
+      "description": "Get the balloon experience to your Desktop, choose your OS:",
+      "windows": "Windows (.exe)",
+      "osx": "OS X (.pkg)",
+      "linux": "Linux (.zip)",
+      "debian": "DEB based (.deb)",
+      "redhat": "RPM based (.rpm)"
+    }
+  }
+}

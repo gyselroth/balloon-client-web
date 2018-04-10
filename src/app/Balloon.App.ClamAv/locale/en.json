@@ -1,0 +1,8 @@
+{
+  "app": {
+    "balloon_app_clamav": {
+      "malware_found": "This file has been identified with a malware [%s] and is currently in qurantine.",
+      "clean": "This file has been scanned for malware."
+    }
+  }
+}
