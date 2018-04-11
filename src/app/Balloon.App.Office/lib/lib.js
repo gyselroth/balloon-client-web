@@ -8,7 +8,7 @@
 import $ from "jquery";
 import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
-import css from '../styles/style.css';
+import css from '../styles/style.scss';
 
 var app = {
   render: function() {
@@ -304,27 +304,46 @@ var app = {
   },
 
   addFile: function() {
-    var $box = $('#fs-new-file');
-    if($box.is(':visible')) {
-      $box.remove();
+    var $trigger = $(this);
+    var $select = $('#fs-new-file');
+
+    if($select.is(':visible')) {
+      $select.remove();
       return;
     }
 
-    var $select = $('<div id="fs-new-file">'+
-        '<div class="gr-icon gr-i-file-add"></div>' +
-        '<ul>'+
-            '<li><span class="gr-i-file-text gr-icon"></span><span>'+i18next.t('app.office.text_document')+'</span></li>'+
-            '<li><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span></li>'+
-            '<li><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span></li>'+
-            '<li><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span></li>'+
+    var $select = $('<div class="fs-action-dropwdown" id="fs-new-file">'+
+          '<span class="fs-action-dropdown-spike"></span>'+
+          '<ul class="fs-action-dropdown-content">'+
+            '<li>'+
+                '<svg class="gr-icon gr-i-file-text"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-text"></use></svg>'+
+                '<span>'+i18next.t('app.office.text_document')+'</span>'+
+            '</li>'+
+            '<li>'+
+                '<svg class="gr-icon gr-i-file-word"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-word"></use></svg>'+
+                '<span>'+i18next.t('app.office.word_document')+'</span>'+
+            '</li>'+
+            '<li>'+
+                '<svg class="gr-icon gr-i-file-excel"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-excel"></use></svg>'+
+                '<span>'+i18next.t('app.office.excel_document')+'</span>'+
+            '</li>'+
+            '<li>'+
+                '<svg class="gr-icon gr-i-file-powerpoint"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-powerpoint"></use></svg>'+
+                '<span>'+i18next.t('app.office.powerpoint_document')+'</span>'+
+            '</li>'+
         '</ul>'+
     '</div>');
 
     var $bar = $('#fs-browser-action');
     $bar.append($select);
-    $box = $('#fs-new-file');
 
-    $box.on('click', 'li', function(){
+
+    var $spike = $select.find('.fs-action-dropdown-spike');
+    var spikeLeft = ($trigger.offset().left + $trigger.width() / 2) - $select.offset().left - ($spike.outerWidth() / 2);
+
+    $spike.css('left', spikeLeft+'px');
+
+    $select.on('click', 'li', function(){
       var $type = $(this).find('.gr-icon');
 
       if($type.hasClass('gr-i-file-text')) {
@@ -337,17 +356,17 @@ var app = {
         app.addOfficeFile('pptx');
       }
 
-      $box.remove();
+      $select.remove();
     });
 
     $(document).off('click.office').on('click.office', function(e) {
-      if($(e.target).hasClass('gr-i-file-add')) {
+      if($(e.target).is('#fs-action-file')) {
         return;
       }
 
-      var $box = $('#fs-new-file');
-      if($box.is(':visible')) {
-        $box.remove();
+      var $select = $('#fs-new-file');
+      if($select.is(':visible')) {
+        $select.remove();
       }
     });
   },

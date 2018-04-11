@@ -5803,10 +5803,10 @@ var balloon = {
       $files.click();
       break;
     case 'file':
-      balloon.addFile();
+      balloon.addFile.call(this);
       break;
     case 'folder':
-      balloon.addFolder();
+      balloon.addFolder.call(this);
       break;
     case 'delete':
       balloon.deletePrompt(balloon.getSelected(balloon.getCurrentNode()));

@@ -154,17 +154,22 @@
                             </ul>
                         </div>
 
-                        <ul id="fs-browser-action">
-                            <li id="fs-action-file" class="fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_file">
-                                <svg class="gr-icon gr-i-file-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-add"></use></svg>
-                            </li>
-                            <li id="fs-action-folder" class="fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_folder">
-                                <svg class="gr-icon gr-i-folder-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-add"></use></svg>
-                            </li>
-                            <li id="fs-action-upload" class="fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.upload">
-                                <svg class="gr-icon gr-i-cloud-upload"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#cloud-upload"></use></svg>
-                            </li>
-                        </ul>
+                        <div id="fs-browser-action">
+                            <ul id="fs-browser-action-buttons">
+                                <li data-i18n="[title]nav.action.add_file">
+                                    <svg class="gr-icon gr-i-file-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-add"></use></svg>
+                                    <div id="fs-action-file" class="fs-action-element fs-action-collection-only"></div>
+                                </li>
+                                <li data-i18n="[title]nav.action.add_folder">
+                                    <svg class="gr-icon gr-i-folder-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#folder-add"></use></svg>
+                                    <div id="fs-action-folder" class="fs-action-element fs-action-collection-only"></div>
+                                </li>
+                                <li data-i18n="[title]nav.action.upload">
+                                    <svg class="gr-icon gr-i-cloud-upload"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#cloud-upload"></use></svg>
+                                    <div id="fs-action-upload" class="fs-action-element fs-action-collection-only"></div>
+                                </li>
+                            </ul>
+                        </div>
 
                         <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
 
