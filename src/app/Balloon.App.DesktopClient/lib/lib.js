@@ -13,12 +13,9 @@ import login from '../../../lib/auth.js';
 
 var app = {
   render: function() {
-    this.$menu = $('<li id="fs-menu-user-desktop">'
-      +'<span class="gr-icon gr-i-laptop"></span>'
-      +'<span>'+i18next.t('app.balloon_app_desktopclient.menu')+'</span>'
+    this.$menu = $('<li id="fs-menu-user-desktop" data-i18n="[title]app.balloon_app_desktopclient.menu">'
+      +'<svg class="gr-icon gr-i-arrow-s"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrow-s"></use></svg>'
     +'</li>');
-
-    $("#fs-identity-menu").css("height","+=20px");
 
     this.$menu.insertAfter('#fs-menu-user-events');
   },
