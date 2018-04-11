@@ -813,7 +813,7 @@ var balloon = {
               break;
             case 'color_tag':
               if(balloon.isValidColor(node.meta.color)) {
-                var color_tag = '<span class="fs-color-tag fs-color-'+node.meta.color+'"></span>';
+                var color_tag = '<span class="fs-color-tag fs-color-tag-'+node.meta.color+'"></span>';
               } else {
                 var color_tag = '<span class="fs-color-tag"></span>';
               }
@@ -5512,12 +5512,19 @@ var balloon = {
       var current = $(this).hasClass('fs-color-selected');
       $fs_prop_color.find('.fs-color-selected').removeClass('fs-color-selected');
 
+      var $fs_color_tag = $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag');
+
       if(current) {
         var color = null;
-        $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', 'transparent');
+        $fs_color_tag.removeClass(function(index, className) {
+          return (className.match(/(^|\s)fs-color-tag-\S+/g) || []).join(' ');
+        });
       } else {
         $(this).addClass('fs-color-selected');
-        $('#fs-browser-tree').find('li[fs-id='+balloon.getCurrentNode().id+']').find('.fs-color-tag').css('background-color', $(this).css('background-color'));
+        $fs_color_tag.removeClass(function(index, className) {
+          return (className.match(/(^|\s)fs-color-tag-\S+/g) || []).join(' ');
+        });
+        $fs_color_tag.addClass('fs-color-tag-'+color);
       }
 
       balloon.saveMetaAttributes(balloon.getCurrentNode(), {color: color});

@@ -148,6 +148,22 @@
             width: 20px;
             height: 20px;
             border-radius: $border-radius;
+
+            &.fs-color-tag-magenta {
+              background-color: $colorMagenta;
+            }
+            &.fs-color-tag-purple {
+              background-color: $colorPurple;
+            }
+            &.fs-color-tag-blue {
+              background-color: $colorBlue;
+            }
+            &.fs-color-tag-green {
+              background-color: $colorGreen;
+            }
+            &.fs-color-tag-yellow {
+              background-color: $colorYellow;
+            }
           }
         }
       }

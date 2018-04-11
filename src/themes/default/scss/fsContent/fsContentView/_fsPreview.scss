@@ -201,38 +201,38 @@
           }
         }
 
-        //TODO pixtron - abstract colors?
-        .fs-color-FF4D8D {
-          border-color: #ff4d8d;
+        .fs-color-magenta {
+          border-color: $colorMagenta;
         }
-        .fs-color-854DFF {
-          border-color: #854dff;
+        .fs-color-purple {
+          border-color: $colorPurple;
         }
-        .fs-color-4DC9FF {
-          border-color: #4dc9ff;
+        .fs-color-blue {
+          border-color: $colorBlue;
         }
-        .fs-color-4DFF88 {
-          border-color: #4dff88;
+        .fs-color-green {
+          border-color: $colorGreen;
         }
-        .fs-color-FFE14D {
-          border-color: #ffe14d;
+        .fs-color-yellow {
+          border-color: $colorYellow;
         }
 
+
         .fs-color-selected {
-          &.fs-color-FF4D8D {
-            background-color: #ff4d8d;
+          &.fs-color-magenta {
+            background-color: $colorMagenta;
           }
-          &.fs-color-854DFF {
-            background-color: #854dff;
+          &.fs-color-purple {
+            background-color: $colorPurple;
           }
-          &.fs-color-4DC9FF {
-            background-color: #4dc9ff;
+          &.fs-color-blue {
+            background-color: $colorBlue;
           }
-          &.fs-color-4DFF88 {
-            background-color: #4dff88;
+          &.fs-color-green {
+            background-color: $colorGreen;
           }
-          &.fs-color-FFE14D {
-            background-color: #ffe14d;
+          &.fs-color-yellow {
+            background-color: $colorYellow;
           }
         }
       }
