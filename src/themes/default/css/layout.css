@@ -396,14 +396,14 @@ td {
     margin-right: 3px;
 }
 
-#fs-logo {
+/*#fs-logo {
     background: url(../img/icon_white.svg) no-repeat center;
     width: 20px;
     height: 20px;
     position: absolute;
     left: 20px;
     top: 18px;
-}
+}*/
 
 #login-header {
     margin: 5px 0 20px 0;
