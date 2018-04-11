@@ -764,7 +764,7 @@ var balloon = {
       }
 
       var order = ['icon', 'name', 'meta', 'size', 'changed', 'checkbox'];
-      var metaOrder = ['tag', 'sharelink_token', 'deleted'];
+      var metaOrder = ['color_tag', 'sharelink_token', 'deleted'];
 
       $that.attr('fs-id', balloon.id(node));
 
@@ -5293,7 +5293,7 @@ var balloon = {
       case 'changed':
       case 'deleted':
       case 'created':
-        if(typeof data.data[prop] === 'object' && data.data[prop] !== null) {
+        if(node[prop] !== null) {
           var date   = new Date(node[prop]),
             format = kendo.toString(date, kendo.culture().calendar.patterns.g),
             since  = balloon.timeSince(date);
@@ -5403,7 +5403,7 @@ var balloon = {
         break;
 
       default:
-        if($field.length != 0 && attribute !== 'access' && attribute != 'shareowner') {
+        if($field.length != 0 && prop !== 'access' && prop != 'shareowner') {
           $field.html(node[prop]);
         }
         break;
@@ -5755,15 +5755,9 @@ var balloon = {
    * @return void
    */
   togglePannel: function(pannel, hide) {
-    if(pannel == 'menu-left') {
-      var $k_splitter = $('#fs-browser-layout').data('kendoSplitter');
-    } else if(pannel === 'content') {
-      var $k_splitter = $('#fs-node-container').data('kendoSplitter');
-    } else {
-      return;
-    }
-
-    var $pannel  = $('#fs-'+pannel);
+    var $fs_browser_layout = $('#fs-browser-layout'),
+      $k_splitter = $fs_browser_layout.data('kendoSplitter'),
+      $pannel  = $('#fs-'+pannel);
 
     if(hide === true && $pannel.width() === 0) {
       return
