@@ -109,36 +109,17 @@
         }
 
         #fs-settings-menu-wrap {
+          @include dropdown(220px, 36px, 16px);
+
           display: none;
-          position: absolute;
-          top: 36px;
           right: -48px;
-          width: 220px;
-          z-index: 15;
-          padding-top: 25px;
+
+          .bln-dropdown-spike {
+            right: 53px;
+          }
 
           #fs-settings-menu {
             @include shadow-default;
-
-            width: 100%;
-            background-color: $colorWhite;
-            border-radius: 4px;
-            border: solid 1px $colorLightGrey;
-
-            // arrow up
-            &:before {
-              content: "";
-              position: absolute;
-              top: 20px;
-              right: 53px;
-              display: block;
-              height: 10px;
-              width: 10px;
-              border-top: 1px solid $colorLightGrey;
-              border-left: 1px solid $colorLightGrey;
-              background-color: $colorWhite;
-              transform: rotate(45deg);
-            }
 
             #fs-quota {
               @include clearfix;

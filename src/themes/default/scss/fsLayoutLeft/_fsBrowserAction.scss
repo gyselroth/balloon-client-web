@@ -45,46 +45,11 @@
   .fs-action-dropwdown {
     $dropdownWidth: 220px;
 
-    display: block;
-    position: absolute;
-    top: $buttonSize;
+    @include dropdown($dropdownWidth, $buttonSize);
+
     left: calc(100% - #{$dropdownWidth});
-    width: $dropdownWidth;
-    z-index: 15;
-    padding-top: 9px;
-
-    .fs-action-dropdown-spike {
-      position: absolute;
-      top: 1px;
-      right: 50%;
-      display: block;
-
-      width: 0;
-      height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-bottom: 9px solid $colorLightGrey;
-
-      &:after {
-        content: "";
-        position: absolute;
-        top: 1px;
-        left: -8px;
-        width: 0;
-        height: 0;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-bottom: 8px solid $colorWhite;
-      }
-    }
 
     ul {
-      width: 100%;
-      background-color: $colorWhite;
-      border-radius: 4px;
-      border: solid 1px $colorLightGrey;
-      z-index: 16;
-
       li {
         line-height: 40px;
         font-size: 15px;

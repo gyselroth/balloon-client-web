@@ -312,9 +312,9 @@ var app = {
       return;
     }
 
-    var $select = $('<div class="fs-action-dropwdown" id="fs-new-file">'+
-          '<span class="fs-action-dropdown-spike"></span>'+
-          '<ul class="fs-action-dropdown-content">'+
+    var $select = $('<div class="bln-dropdown fs-action-dropwdown" id="fs-new-file">'+
+          '<span class="bln-dropdown-spike fs-action-dropdown-spike"></span>'+
+          '<ul class="bln-dropdown-content fs-action-dropdown-content">'+
             '<li>'+
                 '<svg class="gr-icon gr-i-file-text"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-text"></use></svg>'+
                 '<span>'+i18next.t('app.office.text_document')+'</span>'+

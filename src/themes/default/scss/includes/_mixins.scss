@@ -69,6 +69,48 @@
   box-shadow: 0 2px 25px 0 rgba(77, 75, 89, 0.24);
 }
 
+@mixin dropdown($dropdownWidth:220px, $top:0, $paddingTop:0) {
+  display: block;
+  position: absolute;
+  top: $top;
+  width: $dropdownWidth;
+  z-index: 15;
+  padding-top: 9px + $paddingTop;
+
+  .bln-dropdown-spike {
+    position: absolute;
+    top: 1px + $paddingTop;
+    right: 50%;
+    display: block;
+
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 9px solid $colorLightGrey;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: -8px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid $colorWhite;
+    }
+  }
+
+  .bln-dropdown-content {
+    width: 100%;
+    background-color: $colorWhite;
+    border-radius: 4px;
+    border: solid 1px $colorLightGrey;
+    z-index: 16;
+  }
+}
+
 @mixin events-list {
   li {
     @include clearfix;
