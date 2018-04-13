@@ -17,7 +17,7 @@ var app = {
       +'<svg class="gr-icon gr-i-arrow-s"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrow-s"></use></svg>'
     +'</li>');
 
-    this.$menu.insertAfter('#fs-menu-user-events');
+    this.$menu.insertBefore('#fs-settings');
   },
 
   preInit: function(core)  {
