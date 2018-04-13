@@ -184,60 +184,44 @@
                     </div>
 
                     <div id="fs-browser">
-                        <div id="fs-action-filter-select">
-                            <div class="gr-icon gr-i-filter"></div>
-                            <div>
-                                <ul>
-                                    <li>
-                                        <div class="fs-onoffswitch">
-                                            <input type="checkbox" name="directory" class="fs-onoffswitch-checkbox" id="fs-filter-directory" checked>
-                                            <label for="fs-filter-directory" class="fs-onoffswitch-label"/>
-                                        </div>
-                                        <span data-i18n="tree.filter.directories"></span>
-                                    </li>
-                                    <li>
-                                        <div class="fs-onoffswitch">
-                                            <input type="checkbox" name="file" class="fs-onoffswitch-checkbox" id="fs-filter-file" checked>
-                                            <label for="fs-filter-file" class="fs-onoffswitch-label"/>
-                                        </div>
-                                        <span data-i18n="tree.filter.files"></span>
-                                    </li>
-                                    <li>
-                                        <div class="fs-onoffswitch">
-                                            <input type="checkbox" name="share" class="fs-onoffswitch-checkbox" id="fs-filter-share" checked>
-                                            <label for="fs-filter-share" class="fs-onoffswitch-label"/>
-                                        </div>
-                                        <span data-i18n="tree.filter.shares"></span>
-                                    </li>
-                                    <li>
-                                        <div class="fs-onoffswitch">
-                                            <input type="checkbox" name="deleted" class="fs-onoffswitch-checkbox" id="fs-filter-deleted">
-                                            <label for="fs-filter-deleted" class="fs-onoffswitch-label"/>
-                                        </div>
-                                        <span data-i18n="tree.filter.deleted"></span>
-                                    </li>
-                                    <li>
-                                        <div class="fs-onoffswitch">
-                                            <input type="checkbox" name="hidden" class="fs-onoffswitch-checkbox" id="fs-filter-hidden">
-                                            <label for="fs-filter-hidden" class="fs-onoffswitch-label"/>
-                                        </div>
-                                        <span data-i18n="tree.filter.hidden"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
                         <!-- TODO pixtron - styling for "fresh state" -->
                         <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
 
                         <div id="fs-browser-header">
-                            <div id="fs-action-filter" class="fs-browser-column fs-browser-column-icon fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.filter">
+                            <div class="fs-browser-column fs-browser-column-icon" data-i18n="[title]nav.action.filter">
+                                <div id="fs-action-filter" class="fs-action-element"></div>
                                 <svg class="gr-icon gr-i-filter"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#filter"></use></svg>
                             </div>
-                            <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-name"><div data-i18n="tree.column.name"></div><span class="k-icon k-i-arrow-s"></span></div>
-                            <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
-                            <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
-                            <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-checkbox"></div>
+                            <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-sortable fs-browser-column-name"><div data-i18n="tree.column.name"></div><span class="k-icon k-i-arrow-s"></span></div>
+                            <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-sortable fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
+                            <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-sortable fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
+                            <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-sortable fs-browser-column-checkbox"></div>
+
+                            <div id="fs-action-filter-select" class="bln-dropdown">
+                                <span class="bln-dropdown-spike"></span>
+                                <ul class="bln-dropdown-content">
+                                    <li>
+                                        <input type="checkbox" name="directory" id="fs-filter-directory" checked>
+                                        <label for="fs-filter-directory" data-i18n="tree.filter.directories" />
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="file" id="fs-filter-file" checked>
+                                        <label for="fs-filter-file" data-i18n="tree.filter.files" />
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="share" id="fs-filter-share" checked>
+                                        <label for="fs-filter-share" data-i18n="tree.filter.shares" />
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="deleted" id="fs-filter-deleted" checked>
+                                        <label for="fs-filter-deleted" data-i18n="tree.filter.deleted" />
+                                    </li>
+                                    <li>
+                                        <input type="checkbox" name="hidden" id="fs-filter-hidden" checked>
+                                        <label for="fs-filter-hidden" data-i18n="tree.filter.hidden" />
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
                         <div id="fs-browser-tree"></div>

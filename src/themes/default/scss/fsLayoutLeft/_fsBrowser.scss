@@ -48,10 +48,12 @@
     border-radius: $border-radius;
     padding: 0 10px;
     margin-bottom: 20px;
+    position: relative;
 
     .fs-browser-column {
       $paddingTopBottom: ($headerHeight - $lineHeight) / 2;
 
+      position: relative;
       padding-top: $paddingTopBottom;
       padding-bottom: $paddingTopBottom;
       div {
@@ -75,6 +77,50 @@
       height: $checkboxWidth;
       border: 1px solid $colorMediumGrey;
       border-radius: 2px;
+    }
+
+    #fs-action-filter {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #fs-action-filter-select {
+      @include dropdown(140px, 24px, 10px);
+
+      left: 0;
+      display: none;
+
+      .bln-dropdown-spike {
+        right: 108px;
+      }
+
+      .bln-dropdown-content {
+        padding: 8px 0;
+
+        input[type="checkbox"] {
+          & + label {
+            padding-left: 36px;
+            vertical-align: text-top;
+            min-height: 30px;
+            margin-top: 0;
+            color: $colorMediumGrey;
+            font-size: 15px;
+            line-height: 30px;
+
+            &:before {
+              @include checkbox(15px);
+
+              margin: 6px 0 0 10px;
+            }
+          }
+          &:checked + label {
+            color: $colorDarkGrey;
+          }
+        }
+      }
     }
   }
 

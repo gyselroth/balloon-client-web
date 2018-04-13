@@ -154,7 +154,7 @@ var balloon = {
     balloon.initCrumb();
 
     $(".fs-action-element").unbind('click').click(balloon.doAction);
-    $("#fs-browser-header").find("> div").unbind('click').click(balloon._sortTree);
+    $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
 
     $(document).unbind('drop').on('drop', function(e) {
       e.stopPropagation();
@@ -5860,16 +5860,22 @@ var balloon = {
       break;
 
     case 'filter':
-      $('body').off('click').on('click', function(e){
+      var $select = $('#fs-action-filter-select');
+
+      if($select.is(':visible')) {
+        $select.hide();
+        return;
+      }
+
+      $(document).off('click.action-filter').on('click.action-filter', function(e){
         var $target = $(e.target);
 
         if($target.attr('id') != "fs-action-filter") {
-          $('#fs-action-filter-select').hide();
+          $select.hide();
         }
       })
 
-      $('#fs-action-filter-select').show().off('click', 'input[type=checkbox]')
-        .on('click', 'input[type=checkbox]', balloon._filterTree);
+      $select.show().off('change', 'input[type=checkbox]').on('change', 'input[type=checkbox]', balloon._filterTree);
       break;
 
     case 'rename':
