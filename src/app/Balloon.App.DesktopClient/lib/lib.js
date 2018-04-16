@@ -8,7 +8,7 @@
 import $ from "jquery";
 import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
-import css from '../styles/style.css';
+import css from '../styles/style.scss';
 import login from '../../../lib/auth.js';
 
 var app = {
@@ -17,7 +17,7 @@ var app = {
       +'<svg class="gr-icon gr-i-arrow-s"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrow-s"></use></svg>'
     +'</li>');
 
-    this.$menu.insertBefore('#fs-settings');
+    this.$menu.appendTo('#fs-menu-left-bottom');
   },
 
   preInit: function(core)  {
@@ -28,14 +28,15 @@ var app = {
   },
 
   openPopup: function() {
+    var _self = this;
     var $div = $('<div id="fs-desktop">'
-      + '<div>'+i18next.t('app.balloon_app_desktopclient.description')+'</div>'
+      + '<p>'+i18next.t('app.balloon_app_desktopclient.description')+'</p>'
       + '<ul>'
-        + '<li id="fs-desktop-exe"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.windows')+'</span></li>'
-        + '<li id="fs-desktop-pkg"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.osx')+'</span></li>'
-        + '<li id="fs-desktop-zip"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.linux')+'</span></li>'
-        + '<li id="fs-desktop-deb"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.debian')+'</span></li>'
-        + '<li id="fs-desktop-rpm"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.redhat')+'</span></li>'
+        + '<li id="fs-desktop-exe"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.windows')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-pkg"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.osx')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-zip"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.linux')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-deb"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.debian')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-rpm"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.redhat')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
       + '</ul>'
     +'</div>');
 
@@ -50,10 +51,15 @@ var app = {
       modal: true,
       draggable: true,
       open: function(e) {
+      },
+      close: function(e) {
+        _self.$menu.removeClass('fs-menu-left-active');
       }
     }).data('kendoWindow');
 
     this.$k_popup.open().center();
+
+    this.$menu.addClass('fs-menu-left-active');
   },
 
   download: function(e) {

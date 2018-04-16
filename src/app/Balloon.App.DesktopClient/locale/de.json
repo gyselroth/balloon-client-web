@@ -7,7 +7,8 @@
       "osx": "OS X (.pkg)",
       "linux": "Linux (.zip)",
       "debian": "DEB based (.deb)",
-      "redhat": "RPM based (.rpm)"
+      "redhat": "RPM based (.rpm)",
+      "download": "Download"
     }
   }
 }
