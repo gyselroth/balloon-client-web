@@ -18,11 +18,18 @@
   },
   "profile": {
     "quota": "Quota",
-    "quota_max": "Total Speicherplatz:",
-    "quota_left": "Freier Speicherplatz:",
-    "quota_used": "Benutzter Speicherplatz:",
+    "quota_max": "Total Speicherplatz",
+    "quota_left": "Freier Speicherplatz",
+    "quota_used": "Benutzter Speicherplatz",
     "quota_unlimited": "Unlimitiert",
-    "user": "Benutzer"
+    "user": "Benutzer",
+    "attribute": {
+      "id": "User Id",
+      "created": "Created",
+      "username": "Username",
+      "name": "Name",
+      "mail": "E-mail"
+    }
   },
   "nav": {
     "action": {

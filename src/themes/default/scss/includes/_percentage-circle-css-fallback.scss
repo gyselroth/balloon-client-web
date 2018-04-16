@@ -1,0 +1,87 @@
+/****************************************************************
+ * Inspired by http://circle.firchow.net/
+*****************************************************************/
+
+.percent-circle {
+  $strokeWidth: 0.017391304347826em;
+
+  .css-fallback {
+    position: relative;
+    width: 1em;
+    height: 1em;
+    background-color: $backgroundColor;
+    border-radius: 50%;
+    font-size: $chartWidth;
+    float: left;
+
+    span.percent-text {
+      position: absolute;
+      width: 100%;
+      z-index: 1;
+      left: 0;
+      top: calc(50% - 24px);
+      width: 100%;
+      line-height: 48px;
+      font-size: 48px;
+      color: $foregroundColor;
+      display: block;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    &:after{
+      position: absolute;
+      top: $strokeWidth;
+      left: $strokeWidth;
+      display: block;
+      content: " ";
+      border-radius: 50%;
+      background-color: $colorWhite;
+      width: 1 - (2 * $strokeWidth);
+      height: 1 - (2 * $strokeWidth);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .slice {
+      position: absolute;
+      width: 1em;
+      height: 1em;
+      clip: rect(0em, 1em, 1em, 0.5em);
+    }
+
+    .bar {
+      position: absolute;
+      border: $strokeWidth solid $foregroundColor;
+      width: 1 - (2 * $strokeWidth);
+      height: 1 - (2 * $strokeWidth);
+      clip: rect(0em, 0.5em, 1em, 0em);
+      border-radius: 50%;
+      transform: rotate(0);
+    }
+
+    @for $percentage from 1 through 100 {
+      &.chart-#{$percentage} {
+        @if $percentage > 50 {
+          .slice {
+            clip: rect(auto, auto, auto, auto);
+          }
+
+          .fill {
+            position: absolute;
+            border: $strokeWidth solid $foregroundColor;
+            width: 1 - (2 * $strokeWidth);
+            height: 1 - (2 * $strokeWidth);
+            clip: rect(0em, 0.5em, 1em, 0em);
+            border-radius: 50%;
+            transform: rotate(180deg);
+          }
+        }
+
+        .bar {
+          transform: rotate((360/100*$percentage) + deg);
+        }
+      }
+    }
+  }
+}

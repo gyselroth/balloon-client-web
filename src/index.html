@@ -533,31 +533,52 @@
         </div>
 
         <div id="fs-profile-window" data-i18n="[title]login.profile">
-            <div id="fs-profile-avatar"></div>
+            <div id="fs-profile-window-quota">
+                <div id="fs-quota-circle" class="percent-circle">
+                    <div class="css-fallback chart-0">
+                        <span class="percent-text">0%</span>
+                        <div class="slice">
+                            <div class="bar"></div>
+                            <div class="fill"></div>
+                        </div>
+                    </div>
+                    <figure class="chart chart-0 animate">
+                        <svg viewbox="0, 0, 230, 230" role="img" xmlns="http://www.w3.org/2000/svg">
+                            <circle r="96" cx="50%" cy="50%" class="circle-background"/>
+                            <circle r="96" cx="50%" cy="50%" class="circle-foreground"/>
+                        </svg>
+                        <figcaption></figcaption>
+                    </figure>
+                </div>
 
-            <fieldset id="fs-profile-quota">
-                <label data-i18n="profile.quota"></label>
-                <div id="fs-profile-quota-bar"></div>
-                <table>
-                    <tr id="fs-profile-quota-max">
-                        <th data-i18n="profile.quota_max"></th>
-                        <td></td>
-                    </tr>
-                    <tr id="fs-profile-quota-used">
-                        <th data-i18n="profile.quota_used"></th>
-                        <td></td>
-                    </tr>
-                    <tr id="fs-profile-quota-left">
-                        <th data-i18n="profile.quota_left"></th>
-                        <td></td>
-                    </tr>
-                </table>
-            </fieldset>
+                <div id="fs-profile-quota">
+                    <table>
+                        <tr id="fs-profile-quota-max">
+                            <th data-i18n="profile.quota_max"></th>
+                            <td></td>
+                        </tr>
+                        <tr id="fs-profile-quota-used">
+                            <th data-i18n="profile.quota_used"></th>
+                            <td></td>
+                        </tr>
+                        <tr id="fs-profile-quota-left">
+                            <th data-i18n="profile.quota_left"></th>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
-            <fieldset id="fs-profile-user">
-                <label data-i18n="profile.user"></label>
-                <table></table>
-            </fieldset>
+            <hr class="full-width" />
+
+            <div id="fs-profile-window-user">
+                <div id="fs-profile-avatar"></div>
+
+                <div id="fs-profile-user">
+                    <table></table>
+                </div>
+            </div>
+
         </div>
 
         <div id="fs-error-window" data-i18n="[title]error.error">

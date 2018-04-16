@@ -8,10 +8,11 @@
 
 .k-window {
   $headerHeight: 72px;
+  $sidePadding: 60px;
 
   box-sizing: border-box;
   background-color: $colorWhite;
-  padding: 0 60px;
+  padding: 0 $sidePadding;
   color: $colorDarkGrey;
   border-radius: 8px;
 
@@ -77,6 +78,20 @@
     box-sizing: border-box;
     padding: 26px 0 0 0;
     margin: 0;
-    overflow: hidden;
+    overflow: visible;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px solid $colorLightGrey;
+    width: 100%;
+    margin: 30px 0;
+    height: 0;
+
+    &.full-width {
+      width: calc(100% + #{2 * $sidePadding};
+      margin-left: $sidePadding * -1;
+      margin-right: $sidePadding * -1;
+    }
   }
 }

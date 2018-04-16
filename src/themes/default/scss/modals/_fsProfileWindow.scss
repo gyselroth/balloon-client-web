@@ -1,13 +1,110 @@
 // TDOO pixtron - implement this
 
+$availableColor: $colorLightGrey;
+$usedColor: $colorActiveBlue;
+
+@import "../includes/percentage-circle";
+
 #fs-profile-window {
   display: none;
 
-  fieldset {
-      margin-top: 15px;
+  #fs-profile-window-quota {
+    position: relative;
+    margin-bottom: 50px;
+
+    #fs-quota-circle {
+      margin-left: 25px;
+    }
+
+    #fs-profile-quota {
+      position: absolute;
+      right: 0;
+      top: calc(50% - #{3 * 30px / 2});
+
+      table {
+        border-collapse: collapse;
+
+        th,
+        td {
+          width: 200px;
+          font-size: 15px;
+          line-height: 30px;
+          font-weight: normal;
+          text-align: left;
+          color: $colorDarkGrey;
+          text-align: left;
+        }
+
+        td {
+          width: 148px;
+          text-align: right;
+          font-weight: bold;
+        }
+      }
+
+      #fs-profile-quota-used,
+      #fs-profile-quota-left {
+        th {
+          position: relative;
+          padding-left: 30px;
+
+          &:before {
+            display: block;
+            position: absolute;
+            top: 12.5px;
+            left: 0;
+            content: "";
+            background-color: $usedColor;
+            width: 20px;
+            height: 5px;
+            border-radius: 4px;
+          }
+        }
+      }
+
+      #fs-profile-quota-left {
+        th {
+          &:before {
+            background-color: $availableColor;
+          }
+        }
+      }
+    }
   }
 
-  th {
-      text-align: left;
+  #fs-profile-window-user {
+    $avatarSize: 120px;
+
+    position: relative;
+    margin-top: 30px;
+
+    #fs-profile-avatar {
+      position: absolute;
+      left: 0;
+      top: calc(50% - #{$avatarSize/2});
+      width: $avatarSize;
+      height: $avatarSize;
+      border-radius: 50%;
+    }
+
+    #fs-profile-user {
+      margin-left: $avatarSize + 40px;
+
+      th,
+      td {
+        color: $colorMediumGrey;
+        min-width: 110px;
+        font-size: 15px;
+        font-weight: normal;
+        line-height: 30px;
+        text-align: left;
+      }
+
+      td {
+        padding-left: 80px;
+        color: $colorDarkGrey;
+        min-width: 348px;
+      }
+    }
   }
 }

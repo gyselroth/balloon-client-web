@@ -1141,7 +1141,7 @@ td {
     margin-top: -3px;
 }
 
-#fs-profile-quota-bar {
+/*#fs-profile-quota-bar {
     display: inline-block;
     width: 95%;
     margin-bottom: 20px;
@@ -1165,7 +1165,7 @@ td {
 
 #fs-profile-quota-bar .k-progress-status {
     background-image: none;
-}
+}*/
 
 
 #fs-view-dropdown_listbox input[type=checkbox] {

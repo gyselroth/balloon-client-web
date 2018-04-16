@@ -1192,19 +1192,6 @@ var balloon = {
       height: '60%',
       width: '40%',
       open: function() {
-        var $fs_quota_usage = $('#fs-profile-quota-bar'),
-          $k_progress = $fs_quota_usage.data('kendoProgressBar');
-
-        if($k_progress == undefined) {
-          $k_progress = $fs_quota_usage.kendoProgressBar({
-            type: "percent",
-            value: 1,
-            animation: {
-              duration: 1500
-            }
-          }).data("kendoProgressBar");
-        }
-
         balloon.xmlHttpRequest({
           url: balloon.base+'/users/avatar',
           type: 'GET',
@@ -1221,48 +1208,61 @@ var balloon = {
           url: balloon.base+'/users/whoami',
           type: 'GET',
           success: function(body) {
+            //Quota
+            var used = balloon.getReadableFileSizeString(body.quota.used);
+            var max;
+            var free;
+            var percentage;
+            var percentageText;
+
+            if(body.quota.hard_quota === -1) {
+              $fs_quota_usage.hide();
+              max = i18next.t('profile.quota_unlimited');
+              free = max;
+              percentage = 0;
+              percentageText = max;
+            } else {
+              percentage = Math.round(body.quota.used/body.quota.hard_quota*100);
+              percentageText = percentage + '%';
+
+              max  = balloon.getReadableFileSizeString(body.quota.hard_quota),
+              free = balloon.getReadableFileSizeString(body.quota.hard_quota - body.quota.used);
+            }
+
+            var $fs_quota = $('#fs-quota-circle');
+            $fs_quota.find('.css-fallback').removeClass(function(index, className) {
+              return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
+            }).addClass('chart-'+percentage);
+            $fs_quota.find('.percent-text').text(percentageText);
+            $fs_quota.find('.chart').removeClass(function(index, className) {
+              return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
+            }).addClass('chart-'+percentage);
+
+
+            $('#fs-profile-quota-used').find('td').html(used);
+            $('#fs-profile-quota-max').find('td').html(max);
+            $('#fs-profile-quota-left').find('td').html(free);
+
+
+            //User attributes
             var $table = $('#fs-profile-user').find('table');
-            for(var attribute in body) {
+            var attributes = ['id', 'username', 'name', 'mail', 'created'];
+            for(var i=0; i<attributes.length; i++) {
+              var attribute = attributes[i];
+              var value = body[attribute];
+
               switch(attribute) {
               case 'created':
               case 'last_attr_sync':
-                var date   = new Date(body[attribute]),
+                var date   = new Date(value),
                   format = kendo.toString(date, kendo.culture().calendar.patterns.g),
                   since  = balloon.timeSince(date);
 
-                $table.append('<tr><th>'+attribute+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
-                break;
-
-              case 'quota':
-                var used = balloon.getReadableFileSizeString(body.quota.used);
-                var max;
-                var free;
-
-                if(body.quota.hard_quota === -1) {
-                  $fs_quota_usage.hide();
-                  max = i18next.t('profile.quota_unlimited');
-                  free = max;
-                } else {
-                  var percentage = Math.round(body.quota.used/body.quota.hard_quota*100);
-                  $k_progress.value(percentage);
-
-                  if(percentage >= 90) {
-                    $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
-                  } else {
-                    $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
-                  }
-
-                  max  = balloon.getReadableFileSizeString(body.quota.hard_quota),
-                  free = balloon.getReadableFileSizeString(body.quota.hard_quota - body.quota.used);
-                }
-
-                $('#fs-profile-quota-used').find('td').html(used);
-                $('#fs-profile-quota-max').find('td').html(max);
-                $('#fs-profile-quota-left').find('td').html(free);
+                $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
                 break;
 
               default:
-                $table.append('<tr><th>'+attribute+'</th><td>'+body[attribute]+'</td></tr>')
+                $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+value+'</td></tr>')
                 break;
               }
             }
@@ -5971,17 +5971,6 @@ var balloon = {
 
       case 'user-profile':
         $('#fs-profile-user').find('tr').remove();
-        var $win  = $('#fs-profile-window'),
-          $k_win  = $('#fs-profile-window').data('kendoWindow'),
-          $quota  = $('#fs-profile-quota-bar'),
-          $k_quota= $quota.data('kendoProgressBar');
-
-        if($k_quota !== undefined) {
-          $k_quota.destroy();
-          $quota.remove();
-          $('#fs-profile-quota').prepend('<div id="fs-profile-quota-bar"></div>');
-        }
-
         balloon.resetWindow('fs-profile-window');
         break;
 
