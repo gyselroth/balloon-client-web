@@ -1208,7 +1208,7 @@ var balloon = {
           url: balloon.base+'/users/whoami',
           type: 'GET',
           success: function(body) {
-            //Quota
+            // Quota
             var used = balloon.getReadableFileSizeString(body.quota.used);
             var max;
             var free;
@@ -1244,9 +1244,9 @@ var balloon = {
             $('#fs-profile-quota-left').find('td').html(free);
 
 
-            //User attributes
+            // User attributes
             var $table = $('#fs-profile-user').find('table');
-            var attributes = ['id', 'username', 'name', 'mail', 'created'];
+            var attributes = ['id', 'username', 'created'];
             for(var i=0; i<attributes.length; i++) {
               var attribute = attributes[i];
               var value = body[attribute];

@@ -79,16 +79,15 @@ $usedColor: $colorActiveBlue;
     margin-top: 30px;
 
     #fs-profile-avatar {
-      position: absolute;
-      left: 0;
-      top: calc(50% - #{$avatarSize/2});
       width: $avatarSize;
       height: $avatarSize;
       border-radius: 50%;
     }
 
     #fs-profile-user {
-      margin-left: $avatarSize + 40px;
+      position: absolute;
+      left: $avatarSize + 40px;
+      top: calc(50% - 45px);
 
       th,
       td {
