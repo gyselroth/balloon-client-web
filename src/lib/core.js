@@ -1200,7 +1200,8 @@ var balloon = {
             $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
           },
           error: function() {
-            //no action
+            var $avatar = $('#fs-profile-avatar');
+            $avatar.css('background-image', '');
           }
         });
 

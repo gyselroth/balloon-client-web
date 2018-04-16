@@ -190,7 +190,8 @@ var login = {
         case 200:
           login.username = response.responseJSON.name;
           localStorage.username = login.username;
-          $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+
+          login.updateFsIdentity();
 
           login.initBrowser();
           break;
@@ -213,9 +214,28 @@ var login = {
       success: function(body) {
         login.username = body.name;
         localStorage.username = login.username;
-        $('#fs-identity').show().find('#fs-identity-username').html(body);
+
+        login.updateFsIdentity();
       }
     });
+  },
+
+  updateFsIdentity: function() {
+    $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+
+    return login.xmlHttpRequest({
+      url: '/api/v'+balloon.BALLOON_API_VERSION+'/users/avatar',
+      dataType: 'json',
+      cache: false,
+      success: function(body) {
+        var $avatar = $('#fs-identity-avatar');
+        $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+      },
+      error: function() {
+        var $avatar = $('#fs-identity-avatar');
+        $avatar.css('background-image', '');
+      }
+    });;
   },
 
   getUsername: function() {
@@ -308,7 +328,9 @@ var login = {
           login.adapter = 'basic';
           login.username = response.responseJSON.name;
           localStorage.username = login.username;
-          $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+
+          login.updateFsIdentity();
+
           login.initBrowser();
           break;
 
