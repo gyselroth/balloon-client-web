@@ -1216,7 +1216,6 @@ var balloon = {
             var percentageText;
 
             if(body.quota.hard_quota === -1) {
-              $fs_quota_usage.hide();
               max = i18next.t('profile.quota_unlimited');
               free = max;
               percentage = 0;
