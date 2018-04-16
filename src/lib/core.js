@@ -4953,6 +4953,7 @@ var balloon = {
 
         if(data.hard_quota === -1) {
           $('#fs-quota-usage').hide();
+          $('#fs-quota-percent').hide();
           $('#fs-quota-total').html(i18next.t('user.quota_unlimited', used));
         } else {
           var percentage = Math.round(data.used/data.hard_quota*100);
@@ -4966,6 +4967,7 @@ var balloon = {
 
           balloon.quota = data;
 
+          $('#fs-quota-percent').html(percentage+'%');
           $('#fs-quota-total').html(i18next.t('user.quota_left', free));
           $('#fs-quota').attr('title', i18next.t('user.quota_detail', used, max,
             percentage, free));

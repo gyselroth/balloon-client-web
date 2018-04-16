@@ -522,7 +522,7 @@ td {
     margin-left: -125px;
 }
 
-#fs-quota-usage {
+/*#fs-quota-usage {
     display: inline-block;
     height: 9px;
     width: 190px;
@@ -530,16 +530,16 @@ td {
 
 #fs-quota-usage .k-progress-status {
     display: none;
-}
+}*/
 
-.fs-quota-high {
+/*.fs-quota-high {
     background-color: #FF0000 !important;
 }
 
 #fs-quota-total {
     font-size: 0.9em;
     color: #CCC;
-}
+}*/
 
 .k-progressbar > .k-state-selected {
     border: none;

@@ -156,11 +156,18 @@
               }
 
               #fs-quota-total,
+              #fs-quota-percent,
               .k-progress-status {
                 margin: 8px 0 0 0;
                 font-size: 13px;
                 line-height: 15px;
                 color: $colorMediumGrey;
+              }
+
+              #fs-quota-percent {
+                float: left;
+                font-weight: bold;
+                color: $colorActiveBlue;
               }
 
               #fs-quota-total {
