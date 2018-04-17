@@ -2994,6 +2994,12 @@ var balloon = {
       modal: true,
       open: function() {
         $fs_error_win.parent().addClass('fs-error-window');
+        var $icon = '<svg class="gr-icon gr-i-warning-fill" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#warning-fill"></use></svg>';
+        $fs_error_win.prev().find('.k-window-title').prepend($icon);
+
+        $fs_error_win.find('input[name="ok"]').off('click').on('click', function() {
+          $fs_error_win.data('kendoWindow').close();
+        });
       },
       close: function() {
         balloon.showAction(['file', 'menu', 'download', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter', 'rename']);

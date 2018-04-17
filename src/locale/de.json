@@ -227,6 +227,7 @@
     "confirm": "Bestätigen",
     "cancel": "Nein",
     "continue": "Ja",
+    "ok": "Ok",
     "force_delete": "Willst du diese Dateien/Ordner wirklich löschen (nicht wiederherstellbar)?",
     "trash_delete": "Willst du diese Dateien/Ordner in den Papierkorb verschieben (wiederherstellbar)?",
     "restore": "Willst du diese Datei/Order wiederherstellen?",

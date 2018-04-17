@@ -226,6 +226,7 @@
     "confirm": "Confirm",
     "cancel": "No",
     "continue": "Yes",
+    "ok": "Ok",
     "force_delete": "Do you really want to remove these items (inversable)?",
     "trash_delete": "Do you really want to move these items to the trash (restoreable)?",
     "restore": "Would you like to restore this item?",

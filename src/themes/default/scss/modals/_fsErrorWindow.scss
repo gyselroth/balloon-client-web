@@ -1,8 +1,64 @@
-// TDOO pixtron - implement this
+.fs-error-window {
+  padding: 72px 40px 40px;
+
+  & > div.k-header {
+    .k-window-title {
+      position: relative;
+      color: $colorErrorRed;
+      padding-left: 48px;
+
+      .gr-icon {
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        height: 33px;
+        width: 33px;
+      }
+    }
+  }
+}
 
 #fs-error-window {
   display: none;
-
-  max-height: 300px;
   overflow: auto;
+
+  #fs-error-single,
+  #fs-error-multi {
+    table {
+      border-collapse: collapse;
+      margin-top: 25px;
+
+      th,
+      td {
+        text-align: left;
+        font-size: 15px;
+        line-height: 20px;
+        font-style: bold;
+        width: 149px;
+      }
+
+      td {
+        font-style: normal;
+        width: 371px;
+        padding-left: 11px;
+      }
+    }
+  }
+
+  #fs-error-multi {
+    max-height: 300px;
+    overflow-y: scroll;
+    overflox-x: hidden;
+  }
+
+  #fs-error-window-button-wrapper {
+    text-align: right;
+    margin: 36px 0 0;
+    input {
+      display: inline-block;
+      width: 120px;
+    }
+  }
+
+
 }

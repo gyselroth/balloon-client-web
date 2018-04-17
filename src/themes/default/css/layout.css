@@ -669,7 +669,7 @@ td {
     width: 100%;
 }
 
-#fs-error-multi li {
+/*#fs-error-multi li {
     border: solid 1px #CCC;
     padding: 4px;
     margin: 7px 0;
@@ -678,13 +678,13 @@ td {
 
 #fs-error-single, #fs-error-multi {
     display: none;
-}
+}*/
 
 #fs-properties-window {
 	display: none;
 }
 
-.fs-error-window .k-window-titlebar {
+/*.fs-error-window .k-window-titlebar {
     border-bottom: 1px solid #CE0E0E !important;
     background-color: #f5cfcf !important;
     color: #000 !important;
@@ -699,7 +699,7 @@ td {
 .fs-error-window {
     font-size: 1.1em !important;
     border: 1px solid #CE0E0E !important;
-}
+}*/
 
 #fs-display-live {
     overflow: hidden;
@@ -819,7 +819,7 @@ td {
     padding: 5px 0 5px 0;
 }*/
 
-#fs-error-window th {
+/*#fs-error-window th {
     vertical-align: top;
     padding-top: 3px;
 }
@@ -835,7 +835,7 @@ td {
 .error-message {
     color: #CE0E0E;
     display: none;
-}
+}*/
 
 /*#fs-view-bar {
     -webkit-user-select: none;

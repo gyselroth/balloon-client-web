@@ -1,11 +1,3 @@
-@import './fsDisplayLive';
-@import './fsEditLive';
-@import './fsErrorWindow';
-@import './fsEventWindow';
-@import './fsHintWindow';
-@import './fsProfileWindow';
-@import './fsUploadmgr';
-
 .k-window {
   $headerHeight: 72px;
   $sidePadding: 60px;
@@ -95,3 +87,11 @@
     }
   }
 }
+
+@import './fsDisplayLive';
+@import './fsEditLive';
+@import './fsErrorWindow';
+@import './fsEventWindow';
+@import './fsHintWindow';
+@import './fsProfileWindow';
+@import './fsUploadmgr';
