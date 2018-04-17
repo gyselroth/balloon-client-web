@@ -2,6 +2,10 @@
   padding: 72px 40px 40px;
 
   & > div.k-header {
+    .k-window-actions {
+      right: -16px;
+    }
+
     .k-window-title {
       position: relative;
       color: $colorErrorRed;

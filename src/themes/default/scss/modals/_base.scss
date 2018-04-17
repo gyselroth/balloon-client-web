@@ -32,20 +32,25 @@
         padding: 0;
         border-radius: 0;
         border: none;
-        border: 1px solid fuchsia;
 
-        .k-icon {
-          //background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVQAAAFQCAYAAADgA4ajAAAAGXRFW…kQx25FAO6Bappm3OqEKQB8IVCZBQAgUAGAQAWAv3MWYACcvm/8pNHZMgAAAABJRU5ErkJggg==);
-
-          width: 100%;
-          height: 100%;
-
-          .k-i-close {
-            //background-position: -32px -16px;
-          }
+        color: #bbbbbb;
+        &:active,
+        &:hover,
+        &:visited,
+        &:link {
+          color: #bbbbbb;
         }
 
+        .gr-icon {
+          left: -7px;
+          width: 32px;
+          height: 32px;
+          stroke: none;
+        }
 
+        .k-i-close {
+          display: none;
+        }
       }
     }
 

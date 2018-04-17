@@ -12,6 +12,7 @@ import kendoProgressBar from 'kendo-ui-core/js/kendo.progressbar.js';
 import kendoDateTimePicker from 'kendo-ui-core/js/kendo.datetimepicker.js';
 import kendoSplitter from 'kendo-ui-core/js/kendo.splitter.js';
 import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
+import balloonWindow from './widget-balloon-window.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
@@ -273,7 +274,7 @@ var balloon = {
     }
 
     var $fs_hint_win = $('#fs-hint-window');
-    var $k_hint = $fs_hint_win.kendoWindow({
+    var $k_hint = $fs_hint_win.kendoBalloonWindow({
       title: $fs_hint_win.attr('title'),
       resizable: false,
       modal: true,
@@ -293,7 +294,7 @@ var balloon = {
           balloon._showHint();
         });
       }
-    }).data('kendoWindow').center().open();
+    }).data('kendoBalloonWindow').center().open();
 
     $fs_hint_win.unbind('keydown').keydown(function(e) {
       if(e.keyCode === 27) {
@@ -1185,7 +1186,7 @@ var balloon = {
     balloon.resetDom('user-profile');
 
     var $fs_profile_win = $('#fs-profile-window');
-    $fs_profile_win.kendoWindow({
+    $fs_profile_win.kendoBalloonWindow({
       title: $fs_profile_win.attr('title'),
       resizable: false,
       modal: true,
@@ -1269,7 +1270,7 @@ var balloon = {
           }
         });
       }
-    }).data("kendoWindow").center().open();
+    }).data("kendoBalloonWindow").center().open();
   },
 
 
@@ -1539,7 +1540,7 @@ var balloon = {
       $fs_event_list  = $fs_event_win.find('ul'),
       balloon.displayEventsInfiniteScroll($fs_event_list);
 
-      $fs_event_win.kendoWindow({
+      $fs_event_win.kendoBalloonWindow({
         title: $fs_event_win.attr('title'),
         resizable: false,
         modal: true,
@@ -1548,7 +1549,7 @@ var balloon = {
         open: function() {
           balloon.displayEvents($fs_event_list);
         }
-      }).data("kendoWindow").center().open();
+      }).data("kendoBalloonWindow").center().open();
     }
   },
 
@@ -2982,12 +2983,12 @@ var balloon = {
       }
     }
 
-    var $k_win = $fs_error_win.data('kendoWindow');
+    var $k_win = $fs_error_win.data('kendoBalloonWindow');
     if($k_win != undefined) {
       $k_win.destroy();
     }
 
-    $fs_error_win.kendoWindow({
+    $fs_error_win.kendoBalloonWindow({
       title: $fs_error_win.attr('title'),
       resizable: false,
       width: '600px',
@@ -2998,13 +2999,13 @@ var balloon = {
         $fs_error_win.prev().find('.k-window-title').prepend($icon);
 
         $fs_error_win.find('input[name="ok"]').off('click').on('click', function() {
-          $fs_error_win.data('kendoWindow').close();
+          $fs_error_win.data('kendoBalloonWindow').close();
         });
       },
       close: function() {
         balloon.showAction(['file', 'menu', 'download', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter', 'rename']);
       }
-    }).data("kendoWindow").center().open();
+    }).data("kendoBalloonWindow").center().open();
   },
 
 
@@ -4261,10 +4262,10 @@ var balloon = {
   promptConfirm: function(msg, action, params) {
     balloon.resetDom('prompt');
     var $div = $("#fs-prompt-window"),
-      $k_prompt = $div.data('kendoWindow');
+      $k_prompt = $div.data('kendoBalloonWindow');
     $('#fs-prompt-window-content').html(msg);
 
-    var $k_prompt = $div.kendoWindow({
+    var $k_prompt = $div.kendoBalloonWindow({
       title: $div.attr('title'),
       resizable: false,
       modal: true,
@@ -4273,7 +4274,7 @@ var balloon = {
           $div.find('input[name=cancel]').focus()
         },200);
       }
-    }).data("kendoWindow").center().open();
+    }).data("kendoBalloonWindow").center().open();
 
     $div.unbind('keydown').keydown(function(e) {
       if(e.keyCode === 27) {
@@ -4753,7 +4754,7 @@ var balloon = {
       success: function (data) {
         $textarea.val(data);
 
-        var $k_display = $div.kendoWindow({
+        var $k_display = $div.kendoBalloonWindow({
           width: '70%',
           height: '70%',
           resizable: false,
@@ -4776,7 +4777,7 @@ var balloon = {
             });
 
             $("#fs-prompt-window").find('input[name=cancel]').unbind('click').bind('click', function(){
-              $("#fs-prompt-window").data('kendoWindow').close();
+              $("#fs-prompt-window").data('kendoBalloonWindow').close();
               $k_display.close();
             });
           },
@@ -4807,12 +4808,12 @@ var balloon = {
               });
 
               $("#fs-prompt-window").find('input[name=cancel]').unbind('click').bind('click', function(){
-                $("#fs-prompt-window").data('kendoWindow').close();
+                $("#fs-prompt-window").data('kendoBalloonWindow').close();
                 $k_display.close();
               });
             });
           }
-        }).data("kendoWindow").center().open();
+        }).data("kendoBalloonWindow").center().open();
       }
     });
 
@@ -4875,7 +4876,7 @@ var balloon = {
       options.close();
       options.open();
     } else {
-      var $k_display = $div.kendoWindow(options).data("kendoWindow").open().maximize();
+      var $k_display = $div.kendoBalloonWindow(options).data("kendoBalloonWindow").open().maximize();
     }
 
     var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
@@ -6165,8 +6166,8 @@ var balloon = {
   resetWindow: function(id) {
     var $win = $('#'+id);
     $win.find('li').remove();
-    if($win.data('kendoWindow') !== undefined) {
-      $win.data('kendoWindow').close().destroy();
+    if($win.data('kendoBalloonWindow') !== undefined) {
+      $win.data('kendoBalloonWindow').close().destroy();
       var html = $win.html(),
         title= $win.attr('title');
       $win.remove();
@@ -6252,11 +6253,11 @@ var balloon = {
    */
   uploadFiles: function(files, parent_node) {
     var $div = $('#fs-uploadmgr');
-    var $k_manager_win = $div.kendoWindow({
+    var $k_manager_win = $div.kendoBalloonWindow({
       title: $div.attr('title'),
       resizable: false,
       modal: true,
-    }).data("kendoWindow");
+    }).data("kendoBalloonWindow");
 
     balloon.resetDom(['upload-progress', 'uploadmgr-progress']);
 

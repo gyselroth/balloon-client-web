@@ -1234,7 +1234,7 @@ td {
     text-align: center;
 }*/
 
-.k-window-action .gr-i-close {
+/*.k-window-action .gr-i-close {
     filter: invert(100%);
     -webkit-filter: invert(100%);
 }
@@ -1245,7 +1245,7 @@ td {
 
 .k-window-actions {
     margin-right: 12px;
-}
+}*/
 
 .fs-loader {
     background-image: url("../../../themes/default/img/loading.gif");
