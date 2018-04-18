@@ -1,6 +1,7 @@
 @import 'includes/colors';
 @import 'includes/mixins';
 @import 'includes/grIcons';
+@import 'includes/sk-circle';
 
 @import 'base';
 
@@ -17,6 +18,9 @@
 
 // meta data view on the right side
 @import 'fsContent';
+
+// upload progress
+@import 'fsUploadProgress';
 
 @import 'modals/base';
 

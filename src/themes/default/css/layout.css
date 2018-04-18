@@ -14,7 +14,7 @@
     overflow: hidden;
 }*/
 
-a {
+/*a {
     color: #3366CC;
 }
 
@@ -25,7 +25,7 @@ h1 {
 
 h2 {
     font-size: 14px;
-}
+}*/
 
 /*hr {
     border: none;
@@ -1384,7 +1384,7 @@ td {
     background-color: #eaeaea;
 }*/
 
-#fs-upload-progress {
+/*#fs-upload-progress {
     opacity: 0.8;
     display: none;
     background-color: #EEE;
@@ -1417,7 +1417,7 @@ td {
 
 #fs-upload-progress .k-item, #fs-upload-progress .k-state-selected {
     border: none;
-}
+}*/
 
 #fs-loader {
     margin: 8px 15px 5px 10px;

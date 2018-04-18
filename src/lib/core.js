@@ -5958,11 +5958,13 @@ var balloon = {
     for(var element in elements) {
       switch(elements[element]) {
       case 'upload-progress':
-        $("#fs-upload-progress-bar").find("> div").remove();
-        var $fs_upload_progress = $("#fs-upload-progress");
-        $fs_upload_progress.find(".fs-loader-small").hide();
-        $fs_upload_progress.hide().find('#fs-upload-progress-bar').append('<div class="fs-total-progress"></div>');
-        $("#fs-upload-progress-more").find("span:last-child").html('0%');
+        $("#fs-upload-progress").hide();
+        var $fs_upload_progress_bar = $("#fs-upload-progress-bar");
+
+        $fs_upload_progress_bar.find("> div").remove();
+        $fs_upload_progress_bar.append('<div class="fs-total-progress"></div>');
+        $('#fs-upload-progress-info-icon-loading').show();
+        $('#fs-upload-progress-info-icon-complete').hide();
         break;
 
       case 'uploadmgr-progress':
@@ -6361,7 +6363,9 @@ var balloon = {
     );
 
     $('#fs-uploadmgr-bytes').html('<span>0</span> / '+balloon.getReadableFileSizeString(balloon.upload_manager.upload_bytes));
-    $('#fs-upload-info').html('<span>0</span> / '+balloon.getReadableFileSizeString(balloon.upload_manager.upload_bytes));
+
+    $('#fs-upload-progree-info-status-uploaded').html('0');
+    $('#fs-upload-progree-info-status-total').html(balloon.getReadableFileSizeString(balloon.upload_manager.upload_bytes));
 
     for(var i = balloon.upload_manager.count.last_started; i < balloon.upload_manager.count.upload; i++) {
       balloon.upload_manager.count.last_started = i + 1;
@@ -6377,7 +6381,6 @@ var balloon = {
    * @return void
    */
   _initProgress: function(manager) {
-    $(".fs-status-loader").show();
     $("#fs-upload-progress").show();
 
     manager.progress.mgr_percent = $("#fs-uploadmgr-total-progress").find("> div").kendoProgressBar({
@@ -6485,7 +6488,9 @@ var balloon = {
         i18next.t('uploadmgr.finished')
       );
 
-      $(".fs-status-loader").hide();
+      $('#fs-upload-progress-info-icon-loading').hide();
+      $('#fs-upload-progress-info-icon-complete').show();
+
       balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       balloon.displayQuota();
 
@@ -6536,9 +6541,11 @@ var balloon = {
             file.manager.progress.mgr_percent.value(total_complete);
             file.manager.progress.notifier_percent.value(total_complete);
 
-            $("#fs-upload-progress-more span:last-child").text(total_complete + "%");
+
+            $("#fs-upload-progress-info-percent").html(total_complete + "%");
+            $('#fs-upload-progree-info-status-uploaded').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
+
             $('#fs-uploadmgr-bytes > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
-            $('#fs-upload-info > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
 
             var now  = new Date();
             var took = now.getTime() - file.manager.start_time.getTime();

@@ -29,7 +29,6 @@
         <div id="login-footer">balloon web ui <span></span> | GPL-3.0 | github: <a href="https://github.com/gyselroth/balloon-client-web">balloon-client-web</a></div>
     </div>
 
-    <!-- TODO pixtron - what is this for? -->
     <div style="display: none;" id="fs-namespace">
 
         <!-- TODO pixtron - what is this for? -->
@@ -506,17 +505,33 @@
         </div>
 
         <div id="fs-upload-progress">
-            <div id="fs-upload-progress-bar">
-                <div></div>
-            </div>
-            <div id="fs-upload-progress-more">
+            <div id="fs-upload-progress-info">
+                <div id="fs-upload-progress-info-percent">12%</div>
+                <div id="fs-upload-progree-info-status">
+                    <span id="fs-upload-progree-info-status-uploaded">15 MB</span>
+                    <span id="fs-upload-progree-info-status-total">1 GB</span>
+                </div>
                 <div id="fs-upload-details" data-i18n="uploadmgr.details"></div>
-                <span> | </span>
-                <div id="fs-upload-info"></div>
-                <span> | </span>
-                <span>0%</span>
+
+                <div id="fs-upload-progress-info-icon">
+                    <div id="fs-upload-progress-info-icon-loading" class="sk-circle">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                    </div>
+                    <div id="fs-upload-progress-info-icon-complete">
+                        <svg class="gr-icon gr-i-check"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#check"></use></svg>
+                    </div>
+                </div>
+
             </div>
-         </div>
+
+
+            <div id="fs-upload-progress-bar"></div>
+        </div>
 
         <div id="fs-edit-live">
             <textarea></textarea>
