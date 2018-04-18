@@ -7,6 +7,7 @@
   padding: 0 $sidePadding;
   color: $colorDarkGrey;
   border-radius: 8px;
+  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.15);
 
   & > div.k-header {
     position: relative;
