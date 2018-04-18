@@ -1,13 +1,18 @@
-// TDOO pixtron - implement this
-
+.fs-hint-window {
+  padding-left: 50px;
+  padding-right: 50px;
+}
 
 #fs-hint-window {
   display: none;
+  overflow: auto;
 
-  .gr-icon,
-  .fs-loader {
-      display: inline-block;
-      position: relative;
-      top: 5px;
+  width: 460px;
+  padding-bottom: 40px;
+
+  #fs-hint-window-content {
+    font-size: 15px;
+    line-height: 20px;
+    color: $colorDarkGrey;
   }
 }

@@ -78,6 +78,16 @@
     overflow: visible;
   }
 
+  .fs-window-secondary-actions {
+    text-align: right;
+    margin: 36px 0 0;
+
+    input {
+      display: inline-block;
+      width: auto;
+    }
+  }
+
   hr {
     border: 0;
     border-top: 1px solid $colorLightGrey;

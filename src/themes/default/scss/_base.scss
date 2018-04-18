@@ -77,19 +77,20 @@ input[type="checkbox"] {
 button,
 input[type="button"],
 input[type="submit"] {
-  border: 1px solid $colorLightGrey;
-  color: $colorActiveBlue;
+  border: 2px solid $colorMediumGrey;
+  color: $colorMediumGrey;
+  font-size: 13px;
+  font-weight: bold;
   line-height: 15px;
-  padding: 7px 14px 8px 14px;
+  padding: 10px 22px 11px 22px;
   width: auto;
+  min-width: 120px;
   cursor: pointer;
 
   &.fs-button-primary {
-    border: none;
+    border-color: $colorActiveBlue;
     background-color: $colorActiveBlue;
-    font-weight: 400;
     color: $colorWhite;
-    padding: 12px 14px 13px 14px;
   }
 }
 
