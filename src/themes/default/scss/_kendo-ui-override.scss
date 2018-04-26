@@ -1,0 +1,34 @@
+// Autocomplete
+.k-list-container.k-popup {
+  background-color: $colorWhite;
+  border: 1px solid $colorLightGrey;
+  border-radius: 4px;
+  padding: 0;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  overflow: hidden;
+
+  .k-list-scroller {
+    ul {
+      li {
+        background-color: $colorWhite;
+        font-size: 15px;
+        line-height: 30px;
+        color: $colorDarkGrey;
+        cursor: pointer;
+        paddgin: 0 14px;
+
+        &:hover {
+          background: $colorBrightGrey !important;
+        }
+      }
+    }
+  }
+
+  .k-nodata {
+    paddgin: 0 14px;
+    font-size: 15px;
+    line-height: 30px;
+    color: $colorDarkGrey;
+  }
+}
