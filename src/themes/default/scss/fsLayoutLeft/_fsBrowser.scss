@@ -131,7 +131,8 @@
     // single node
     .k-item {
       $paddingTopBottom: ($nodeHeight - $lineHeight) / 2;
-      padding: $paddingTopBottom 10px;
+      $paddingLeftRight: 10px;
+      padding: $paddingTopBottom $paddingLeftRight;
       margin: 0;
 
       background-color: $colorWhite;
@@ -146,7 +147,10 @@
 
       &[aria-selected="true"] {
         @include shadow-selected;
-        border: 2px solid $colorActiveBlue;
+
+        $borderSize: 2px;
+        padding: ($paddingTopBottom - $borderSize) ($paddingLeftRight - $borderSize);
+        border: $borderSize solid $colorActiveBlue;
       }
 
       &:last-child {
