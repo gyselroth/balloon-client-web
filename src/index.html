@@ -653,20 +653,41 @@
         <div id="fs-status-message"></div>
 
         <div id="fs-uploadmgr" data-i18n="[title]uploadmgr.uploadmgr" >
-            <div class="fs-uploadmgr-area" data-i18n="uploadmgr.waitlist"></div>
+            <h2><span data-i18n="uploadmgr.waitlist"></span>&nbsp;<span class="hint" data-i18n="uploadmgr.max_size"></span></h2>
             <div id="fs-upload-list"></div>
-            <p></p>
-            <div class="fs-uploadmgr-area" data-i18n="uploadmgr.progress"></div>
-            <div id="fs-uploadmgr-total-progress"><div></div></div>
+
+            <hr class="full-width" />
+
+            <h2 data-i18n="uploadmgr.progress"></h2>
+            <div id="fs-uploadmgr-total-progress" class="fs-uploadmgr-progress"><div></div></div>
 
             <div id="fs-uploadmgr-files"></div>
-            <div id="fs-uploadmgr-files-progress"><div></div></div>
+            <div id="fs-uploadmgr-files-progress" class="fs-uploadmgr-progress"><div></div></div>
 
-            <div class="fs-uploadmgr-area" data-i18n="uploadmgr.transfer"></div>
-            <div id="fs-uploadmgr-bytes"></div>
-            <div id="fs-uploadmgr-bandwidth">0 B/s</div>
-            <div id="fs-uploadmgr-time"></div>
-            <div class="fs-status-loader fs-status"></div>
+            <hr class="full-width" />
+
+            <h2 data-i18n="uploadmgr.transfer"></h2>
+            <div id="fs-uploadmgr-transfer">
+                <div id="fs-uploadmgr-bytes">
+                    <span>127.3 MB</span> / 127.3 MB
+                </div>
+                <div id="fs-uploadmgr-bandwidth">0B/s</div>
+                <div id="fs-uploadmgr-time">Fertig</div>
+
+                <div id="fs-uploadmgr-transfer-icon">
+                    <div id="fs-uploadmgr-transfer-icon-loading" class="sk-circle">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                    </div>
+                    <div id="fs-uploadmgr-transfer-icon-complete">
+                        <svg class="gr-icon gr-i-check"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#check"></use></svg>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

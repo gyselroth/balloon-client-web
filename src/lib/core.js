@@ -261,7 +261,6 @@ var balloon = {
     app.postInit(this);
   },
 
-
   /**
    * show hint
    *
@@ -4996,7 +4995,7 @@ var balloon = {
     }
 
     if(bytes < 1024) {
-      return bytes+'B';
+      return bytes+' B';
     }
 
     var i = -1;
@@ -6244,8 +6243,6 @@ var balloon = {
     balloon.uploadFiles(blobs, parent_node);
   },
 
-
-
   /**
    * Prepare selected files for upload
    *
@@ -6287,6 +6284,7 @@ var balloon = {
       };
     }
 
+    var $upload_list = $('#fs-upload-list');
     for(var i = 0, progressnode, file, last = balloon.upload_manager.count.last_started; file = files[i]; i++, last++) {
       if(file instanceof Blob) {
         file = {
@@ -6300,10 +6298,11 @@ var balloon = {
       } else if(file.blob.size+balloon.quota.used > balloon.quota.hard_quota) {
         balloon.displayError(new Error('Quota is too low to upload this file'));
       } else if(file.blob.size != 0) {
-        progressnode = $('<div id="fs-upload-'+last+'">'+file.name+'</div>');
-        $('#fs-upload-list').append(progressnode);
+        var progressId = 'fs-upload-'+last;
+        progressnode = $('<div id="'+progressId+'" class="fs-uploadmgr-progress"><div id="'+progressId+'-progress" class="fs-uploadmgr-progressbar"></div></div>');
+        $upload_list.append(progressnode);
 
-        progressnode.kendoProgressBar({
+        $('#'+progressId+'-progress').kendoProgressBar({
           type: 'percent',
           animation: {
             duration: 10
@@ -6325,11 +6324,8 @@ var balloon = {
           status:   1,
         });
 
-        progressnode.contents().filter(function() {
-          return this.nodeType == 3; //Node.TEXT_NODE
-        }).remove();
-        progressnode.append('<div class="fs-progress-filename">'+file.name+'</div>');
-        progressnode.append('<div class="fs-progress-stop gr-icon gr-i-clear"></div>');
+        progressnode.prepend('<div class="fs-progress-filename">'+file.name+'</div>');
+        progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div>');
 
         balloon.upload_manager.upload_bytes += file.blob.size;
       }
@@ -6339,7 +6335,7 @@ var balloon = {
       return;
     }
 
-    $('#fs-upload-list').on('click', '.fs-progress-stop', function() {
+    $('#fs-upload-list').on('click', '.fs-progress-icon', function() {
       var i  = parseInt($(this).parent().attr('id').substr(10)),
         file = balloon.upload_manager.files[i];
 
@@ -6348,7 +6344,6 @@ var balloon = {
       }
 
       file.status = 0;
-      $(this).addClass('fs-status-loader');
     });
 
     balloon.upload_manager.count.upload  = balloon.upload_manager.files.length;
@@ -6382,15 +6377,21 @@ var balloon = {
    */
   _initProgress: function(manager) {
     $("#fs-upload-progress").show();
+    $('#fs-uploadmgr-transfer-icon-complete').hide();
+    $('#fs-uploadmgr-transfer-icon-loading').show();
 
-    manager.progress.mgr_percent = $("#fs-uploadmgr-total-progress").find("> div").kendoProgressBar({
+    manager.progress.mgr_percent = $("#fs-uploadmgr-total-progress > div").kendoProgressBar({
       type: 'percent',
       animation: {
         duration: 10
       },
+      complete: function() {
+        $('#fs-uploadmgr-transfer-icon-loading').hide();
+        $('#fs-uploadmgr-transfer-icon-complete').show();
+      }
     }).data("kendoProgressBar");
 
-    manager.progress.notifier_percent = $("#fs-upload-progress-bar").find("> div").kendoProgressBar({
+    manager.progress.notifier_percent = $("#fs-upload-progress-bar > div").kendoProgressBar({
       type: 'percent',
       animation: {
         duration: 10
@@ -6398,7 +6399,7 @@ var balloon = {
     }).data("kendoProgressBar");
 
     if(manager.count.upload > 1) {
-      manager.progress.mgr_chunk = $("#fs-uploadmgr-files-progress").find("> div").kendoProgressBar({
+      manager.progress.mgr_chunk = $("#fs-uploadmgr-files-progress > div").kendoProgressBar({
         type: 'chunk',
         animation: {
           duration: 10
@@ -6437,7 +6438,8 @@ var balloon = {
         file.manager.count.success++;
         file.manager.progress.mgr_chunk.value(file.manager.count.transfer);
 
-        file.progress.find('.fs-progress-stop').removeClass('gr-i-clear').addClass('gr-i-checkmark');
+        file.progress.find('.fs-progress-icon').replaceWith('<div class="fs-progress-icon fs-progress-complete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg></div>');
+        file.progress.find('.fs-progress-icon').off('click');
 
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
           file.manager.count.success.toString(), file.manager.count.upload)
@@ -6449,10 +6451,11 @@ var balloon = {
 
     //Abort upload (stop uploading next chunks)
     if(file.status === 0 ) {
-      file.progress.find('.fs-progress-stop').remove();
+      file.progress.find('.fs-progress-icon').remove();
 
-      $('#fs-uploadmgr-bandwidth').html('0B/s');
-      file.progress.data("kendoProgressBar").value(0);
+      $('#fs-uploadmgr-bandwidth').html('(0 B/s)');
+      file.progress.find('.fs-uploadmgr-progressbar').data("kendoProgressBar").value(0);
+      file.progress.find('.k-state-selected').addClass('fs-progress-error');
 
       file.manager.upload_bytes = file.manager.upload_bytes - file.blob.size;
       file.manager.transfered_bytes = file.manager.transfered_bytes - file.transfered_bytes;
@@ -6483,7 +6486,7 @@ var balloon = {
    */
   _checkUploadEnd: function() {
     if(balloon.upload_manager.count.transfer >= balloon.upload_manager.count.upload) {
-      $('#fs-uploadmgr-bandwidth').html('0B/s');
+      $('#fs-uploadmgr-bandwidth').html('(0 B/s)');
       $('#fs-uploadmgr-time').html(
         i18next.t('uploadmgr.finished')
       );
@@ -6534,7 +6537,7 @@ var balloon = {
 
             var file_complete = file.transfered_bytes / file.blob.size;
             file_complete = Math.round(file_complete * 100);
-            file.progress.data("kendoProgressBar").value(file_complete);
+            file.progress.find('.fs-uploadmgr-progressbar').data("kendoProgressBar").value(file_complete);
 
             var total_complete = file.manager.transfered_bytes / file.manager.upload_bytes;
             total_complete = Math.round(total_complete * 100);
@@ -6553,7 +6556,7 @@ var balloon = {
             var end = new Date(now.getTime() + (Math.round(took / file.manager.transfered_bytes * bytes_left)));
 
             var rate = file.manager.transfered_bytes / (took / 1000);
-            $('#fs-uploadmgr-bandwidth').html(balloon.getReadableFileSizeString(rate)+'/s');
+            $('#fs-uploadmgr-bandwidth').html('(' + balloon.getReadableFileSizeString(rate)+'/s)');
 
             if(bytes_left > 0) {
               $('#fs-uploadmgr-time').html(i18next.t('uploadmgr.time_left', balloon.timeSince(end)));
@@ -6578,7 +6581,7 @@ var balloon = {
 
         var file_complete = file.transfered_bytes / file.blob.size;
         file_complete = Math.round(file_complete * 100);
-        file.progress.data("kendoProgressBar").value(file_complete);
+        file.progress.find('.fs-uploadmgr-progressbar').data("kendoProgressBar").value(file_complete);
 
         var total_complete;
         if(file.manager.upload_bytes === 0) {
@@ -6591,7 +6594,6 @@ var balloon = {
         file.manager.progress.mgr_percent.value(total_complete);
         file.manager.progress.notifier_percent.value(total_complete);
 
-        $("#fs-upload-progress-more span:last-child").text(total_complete + "%");
         $('#fs-uploadmgr-bytes > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
         $('#fs-upload-info > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
       },
@@ -6603,7 +6605,7 @@ var balloon = {
       error: function(e) {
         file.success--;
 
-        $('#fs-uploadmgr-bandwidth').html('0B/s');
+        $('#fs-uploadmgr-bandwidth').html('0 B/s');
 
         file.manager.progress.mgr_chunk.value((file.manager.count.transfer + 1));
 
@@ -6614,7 +6616,8 @@ var balloon = {
         }
 
         file.progress.find('.k-state-selected').addClass('fs-progress-error');
-        file.progress.find('.fs-progress-stop').removeClass('gr-i-clear').addClass('gr-i-error');
+        file.progress.find('.fs-progress-icon').addClass('fs-progress-error').replaceWith('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-error"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#error"></use></svg></div>');
+        file.progress.find('.fs-progress-icon').off('click');
 
         file.status = 2;
         file.manager.count.transfer++;

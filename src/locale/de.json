@@ -216,12 +216,13 @@
     "uploadmgr": "Upload Manager",
     "details": "Details",
     "waitlist": "Warteliste",
-    "progress": "Fortschritt",
+    "progress": "Gesamtfortschritt",
     "transfer": "Transfer",
     "files_uploaded": "%s / %s Dateien hochgeladen",
     "files_uploaded_plural": "%s / %s Dateien hochgeladen",
     "time_left": "%s übrig",
-    "finished": "Fertig"
+    "finished": "Fertig",
+    "max_size": "(Maximale Dateigrösse: 1.0 GB)"
   },
   "prompt": {
     "confirm": "Bestätigen",

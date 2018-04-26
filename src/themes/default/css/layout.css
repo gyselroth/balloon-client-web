@@ -2116,10 +2116,12 @@ td {
     top: 131px !important;
 }
 
+/*
 #fs-upload-list .k-progress-status,
 #fs-uploadmgr-total-progress .k-progress-status{
     background: none;
 }
+*/
 
 /*.k-window > *, .k-window {
     border-radius: 0;
