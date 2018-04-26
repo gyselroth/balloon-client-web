@@ -6,7 +6,6 @@
  */
 
 import $ from "jquery";
-import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
 import css from '../styles/style.scss';
 import login from '../../../lib/auth.js';
@@ -45,7 +44,7 @@ var app = {
     $('body').append($div);
 
 
-    app.$k_popup = $div.kendoWindow({
+    app.$k_popup = $div.kendoBalloonWindow({
       resizable: false,
       title: i18next.t('app.balloon_app_desktopclient.menu'),
       modal: true,
@@ -55,7 +54,7 @@ var app = {
       close: function(e) {
         _self.$menu.removeClass('fs-menu-left-active');
       }
-    }).data('kendoWindow');
+    }).data('kendoBalloonWindow');
 
     this.$k_popup.open().center();
 

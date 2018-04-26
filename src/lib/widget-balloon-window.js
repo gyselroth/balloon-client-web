@@ -1,3 +1,4 @@
+import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 
 (function($) {
   var kendo = window.kendo;
