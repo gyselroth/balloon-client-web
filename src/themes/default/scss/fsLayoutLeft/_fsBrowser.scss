@@ -136,7 +136,7 @@
     .k-item {
       $paddingTopBottom: ($nodeHeight - $lineHeight) / 2;
       $paddingLeftRight: 10px;
-      padding: $paddingTopBottom $paddingLeftRight;
+      padding: 0;
       margin: 0;
 
       background-color: $colorWhite;
@@ -153,8 +153,15 @@
         @include shadow-selected;
 
         $borderSize: 2px;
-        padding: ($paddingTopBottom - $borderSize) ($paddingLeftRight - $borderSize);
         border: $borderSize solid $colorActiveBlue;
+
+        .k-in {
+          padding: ($paddingTopBottom - $borderSize) ($paddingLeftRight - $borderSize);
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth} - #{$metaWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth} - #{ ($paddingLeftRight - $borderSize) * 2});
+          }
+        }
       }
 
       &:last-child {
@@ -166,12 +173,12 @@
         width: 100%;
         border-radius: 0;
         margin: 0;
-        padding: 0;
+        padding: $paddingTopBottom $paddingLeftRight;
         cursor: pointer;
 
-
         .fs-browser-column-name {
-          width: calc(100% - #{$iconWidth} - #{$metaWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+          width: calc(100% - #{$iconWidth} - #{$metaWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth} - #{$paddingLeftRight * 2});
+          height: 24px;
           color: $colorDarkGrey;
           font-size: 15px;
 
