@@ -35,7 +35,6 @@
     }
 
     #fs-properties-meta-tags {
-      //TODO pixtron - buttonHeight should be in global scope
       $buttonHeight: 30px;
 
 
@@ -64,6 +63,11 @@
             @include icon-button-small($buttonHeight, $buttonHeight);
             float: right;
             margin: 0;
+
+            .gr-icon {
+              width: 18px;
+              height: 18px;
+            }
           }
         }
 
