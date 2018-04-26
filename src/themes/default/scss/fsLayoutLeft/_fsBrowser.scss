@@ -118,6 +118,10 @@
           }
           &:checked + label {
             color: $colorDarkGrey;
+
+            &:before {
+              @include checkboxChecked;
+            }
           }
         }
       }

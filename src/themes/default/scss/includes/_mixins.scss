@@ -18,7 +18,12 @@
 }
 
 @mixin checkboxChecked {
+  border-color: $colorActiveBlue;
   background-color: $colorActiveBlue;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwb2x5Z29uIHBvaW50cz0iMTUuODYgOC4zNiAxMC41IDEzLjczIDguMTQgMTEuMzYgNi44NiAxMi42NCAxMC41IDE2LjI3IDE3LjE0IDkuNjQgMTUuODYgOC4zNiIgc3Ryb2tlPSIjZmZmIiBmaWxsPSIjZmZmIiAvPjwvc3ZnPg==');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 120%;
 }
 
 @mixin icon-button($width:60px, $height:null) {
