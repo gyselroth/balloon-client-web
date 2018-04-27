@@ -316,5 +316,8 @@
     "hint_22": "Die Benutzeroberfläche hat einen eingebauten Editor für Textdateien. Du kannst entweder eine neue Datei erstellen mittels der Aktion (<span class='gr-icon gr-i-file-add'></span>) oder eine existierende Textdatei öffnen (Doppelklick oder [Enter]).",
     "hint_23": "Die ganze Benutzeroberfläche arbeitet alle Anfragen asynchron ab. Wenn das Interface aktuell Daten mit dem Server am Austauschen ist, siehst du das anhand des Symbols (<span class='fs-loader'></span>). Wenn du eine Schreibaktion ausgelöst hast, erscheint als Feedback ein Symbol (<span class='gr-icon gr-i-check'></span>), wenn die Anfrage erfolgreich war.",
     "hint_24": "Du kannst diverse Aktionen mit deiner Tastatur auslösen. [SHIFT]+[N] (Ordner hinzufügen), [SHIFT]+[X] (Ausschneiden), [SHIFT]+[C] (Kopieren), [SHIFT]+[V] (Einfügen), [SHIFT]+[U] (Hochladen), [SHIFT]+[D] (Download), [SHIFT]+[A] (Datei hinzufügen), [SHIFT]+[R] (Wiederherstellen)."
+  },
+  "snackbar": {
+    "default": "Die Anfrage wurde erfolreich ausgeführt"
   }
 }

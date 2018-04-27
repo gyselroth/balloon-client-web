@@ -315,5 +315,8 @@
     "hint_22": "This interface has a built-in file editor for text files. Your can either create a new empty file via the file action icon (<span class='gr-icon gr-i-file-add'></span>) or edit an existing text file. Instead a download or preview it will open the editor if you double click on a node.",
     "hint_23": "The whole interface talks completely asynchronous with the server, if a request is currently running you will notice the loader icon (<span class='fs-loader'></span>) in the top bar. If the interface is currently doing a change or modification you will get a feedback (<span class='gr-icon gr-i-check'></span>) right next to the loader if the request was successful.",
     "hint_24": "You can perform various actions using only your keyboard. [SHIFT]+[N] (add folder), [SHIFT]+[X] (cut), [SHIFT]+[C] (copy), [SHIFT]+[V] (paste), [SHIFT]+[U] (upload), [SHIFT]+[D] (download), [SHIFT]+[A] (add file), [SHIFT]+[R] (undelete)."
+  },
+  "snackbar": {
+    "default": "The request completed successfully"
   }
 }

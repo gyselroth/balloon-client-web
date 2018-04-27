@@ -373,7 +373,7 @@ var balloon = {
         show  = (valid.indexOf(options.type) > -1);
 
       if(show && jqXHR.status.toString().substr(0, 1) === '2') {
-        balloon.showResponseTick();
+        balloon.showSnackbar();
       }
 
       if(complete !== undefined) {
@@ -398,16 +398,27 @@ var balloon = {
 
 
   /**
-   * Show response tick
+   * Show snackbar with given options
    *
+   * @param object options
    * @return void
    */
-  showResponseTick: function() {
-    var $tick = $('#fs-request-success').fadeIn(300);
+  showSnackbar: function(options) {
+    var options = options || {};
+    var $snackbar = $('#fs-snackbar');
+
+    var icon = options.icon || 'check';
+    var message = options.message || 'snackbar.default';
+
+    $snackbar.find('.gr-icon').hide();
+    $snackbar.find('.gr-i-' + icon).show();
+
+    $snackbar.find('#fs-snackbar-message').html(i18next.t(message));
+    $snackbar.addClass('show');
 
     setTimeout(function() {
-      $tick.fadeOut(600)
-    }, 1000)
+      $snackbar.removeClass('show');
+    }, 2900);
   },
 
 
