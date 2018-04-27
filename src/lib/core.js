@@ -356,18 +356,18 @@ var balloon = {
    */
   xmlHttpRequest: function(options) {
     if(options.beforeSend === undefined) {
-      options.beforeSend = balloon.showLoader;
+      options.beforeSend = balloon.showSpinner;
     } else {
       var beforeSend = options.beforeSend;
       options.beforeSend = function(jqXHR, settings) {
-        balloon.showLoader();
+        balloon.showSpinner();
         beforeSend(jqXHR, settings);
       };
     }
 
     var complete = options.complete;
     options.complete = function(jqXHR, textStatus) {
-      balloon.hideLoader();
+      balloon.hideSpinner();
 
       var valid = ['POST', 'PUT', 'DELETE', 'PATCH'],
         show  = (valid.indexOf(options.type) > -1);
@@ -3065,31 +3065,31 @@ var balloon = {
 
 
   /**
-   * Show loader
+   * Show spinner
    *
    * @return  void
    */
-  showLoader: function() {
-    var $fs_loader = $('#fs-loader');
+  showSpinner: function() {
+    var $fs_spinner = $('#fs-spinner');
 
-    if(!$fs_loader.is(':visible')) {
+    if(!$fs_spinner.is(':visible')) {
       $('#fs-namespace').addClass('fs-loader-cursor');
-      $fs_loader.show();
+      $fs_spinner.show();
     }
   },
 
 
   /**
-   * Hide loader
+   * Hide spinner
    *
    * @return  void
    */
-  hideLoader: function() {
-    var $fs_loader = $('#fs-loader');
+  hideSpinner: function() {
+    var $fs_spinner = $('#fs-spinner');
 
-    if($fs_loader.is(':visible')) {
+    if($fs_spinner.is(':visible')) {
       $('#fs-namespace').removeClass('fs-loader-cursor');
-      $fs_loader.hide();
+      $fs_spinner.hide();
     }
   },
 
@@ -5554,9 +5554,11 @@ var balloon = {
       timeout: 5000,
       beforeSend: function() {
         $fs_preview_outer.show();
+        // TODO pixtron - what is this class used for?
         $fs_preview.addClass('fs-loader');
       },
       complete: function() {
+        // TODO pixtron - what is this class used for?
         $fs_preview.removeClass('fs-loader');
 
         $fs_preview.find('*').unbind('click').bind('click', function() {
