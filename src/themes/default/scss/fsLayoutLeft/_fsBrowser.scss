@@ -5,20 +5,20 @@
 
   $lineHeight: 24px;
 
-  $iconWidth: 24px;
+  $iconWidth: 26px;
   $metaWidth: 72px;
   $sizeWidth: 110px;
   $changedWidth: 150px;
   $checkboxWidth: 18px;
 
-  $columnPadding: 0 25px;
+  $columnPaddingLeftRight: 25px;
 
   $border-radius: 4px;
 
   .fs-browser-column {
     display: inline-block;
     box-sizing: border-box;
-    padding: $columnPadding;
+    padding: 0 $columnPaddingLeftRight;
     line-height: $lineHeight;
     vertical-align: middle;
     color: $colorMediumGrey;
@@ -26,7 +26,7 @@
 
   .fs-browser-column-icon {
     width: $iconWidth;
-    height: $iconWidth;
+    height: $lineHeight;
     margin: 0;
     padding: 0;
   }
@@ -44,9 +44,11 @@
   }
 
   #fs-browser-header {
+    $checkboxWidth: 16px;
+
     border: 1px solid $headerBorderColor;
     border-radius: $border-radius;
-    padding: 0 10px;
+    padding: 0 17px 0 12px;
     margin-bottom: 20px;
     position: relative;
 
@@ -69,6 +71,7 @@
     .fs-browser-column-size,
     .fs-browser-column-changed {
       border-left: 1px dotted $headerBorderColor;
+      padding-left: $columnPaddingLeftRight - 1px;
     }
 
 
@@ -135,7 +138,8 @@
     // single node
     .k-item {
       $paddingTopBottom: ($nodeHeight - $lineHeight) / 2;
-      $paddingLeftRight: 10px;
+      $paddingLeft: 13px;
+      $paddingRight: 19px;
       padding: 0;
       margin: 0;
 
@@ -156,11 +160,7 @@
         border: $borderSize solid $colorActiveBlue;
 
         .k-in {
-          padding: ($paddingTopBottom - $borderSize) ($paddingLeftRight - $borderSize);
-
-          .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth} - #{$metaWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth} - #{ ($paddingLeftRight - $borderSize) * 2});
-          }
+          padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
         }
       }
 
@@ -170,14 +170,15 @@
 
       .k-in {
         display: block;
+        box-sizing: border-box;
         width: 100%;
         border-radius: 0;
         margin: 0;
-        padding: $paddingTopBottom $paddingLeftRight;
+        padding: $paddingTopBottom $paddingRight $paddingTopBottom $paddingLeft;
         cursor: pointer;
 
         .fs-browser-column-name {
-          width: calc(100% - #{$iconWidth} - #{$metaWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth} - #{$paddingLeftRight * 2});
+          width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
           height: 24px;
           color: $colorDarkGrey;
           font-size: 15px;
