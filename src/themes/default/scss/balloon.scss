@@ -57,3 +57,13 @@ body {
 #fs-files {
     display: none;
 }
+
+.fs-button-wrap {
+  text-align: left;
+  margin: 0;
+
+  input,
+  button {
+    display: inline-block;
+  }
+}

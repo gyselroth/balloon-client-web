@@ -32,3 +32,51 @@
     color: $colorDarkGrey;
   }
 }
+
+
+//Time and Datepicker
+.k-timepicker,
+.k-datepicker {
+  padding: 0 !important;
+
+  .k-picker-wrap {
+    background-image: none;
+    background-color: transparent;
+    box-sizing: border-box;
+    padding: 0;
+    border: none;
+
+    &.k-state-focused {
+      box-shadow: none;
+    }
+
+    .k-input {
+      line-height: 16px;
+      padding: 6px;
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid $colorLightGrey;
+    }
+
+    .k-select {
+      position: absolute;
+      top: 2px;
+      right: 6px;
+      border: none;
+      padding: 0;
+      width: 24px;
+      height: 100%;
+      color: $colorMediumGrey;
+
+      .gr-icon {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+      }
+    }
+
+
+  }
+}

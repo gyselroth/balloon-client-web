@@ -8,10 +8,11 @@
 import $ from "jquery";
 import kendoAutoComplete from 'kendo-ui-core/js/kendo.autocomplete.js';
 import kendoProgressBar from 'kendo-ui-core/js/kendo.progressbar.js';
-import kendoDateTimePicker from 'kendo-ui-core/js/kendo.datetimepicker.js';
 import kendoSplitter from 'kendo-ui-core/js/kendo.splitter.js';
 import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
 import balloonWindow from './widget-balloon-window.js';
+import balloonDatePicker from './widget-balloon-datepicker.js';
+import balloonTimePicker from './widget-balloon-timepicker.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
@@ -3785,93 +3786,226 @@ var balloon = {
    */
   shareLink: function(node) {
     balloon.resetDom('share-link');
-    var token,
-      $fs_share_link = $('#fs-share-link'),
-      $fs_share_expr = $fs_share_link.find('input[name=share_expiration]'),
-      $fs_share_pw   = $fs_share_link.find('input[name=share_password]');
+
+    var $fs_share_link_edit = $('#fs-share-link-edit');
+    var $fs_share_link_delete = $('#fs-share-link-delete');
+    var $fs_share_link_create = $('#fs-share-link-create');
 
     if(node.sharelink_token) {
-      $fs_share_link.find('.fs-share-remove').show();
-
-      $('#fs-link-options').show();
-      $fs_share_link.find('input[name=file_url]').val(window.location.origin+'/share/'+node.sharelink_token).show().
-        unbind('click').bind('click', function(){
-          this.select();
-          document.execCommand("copy");
-        });
-
-      token = node.sharelink_token;
-      if(node.sharelink_expire) {
-        var date = new Date(node.sharelink_expire);
-        var formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
-
-        $fs_share_expr.val(formatted);
-      }
-
-      $fs_share_link.find('input[name=share]').val(i18next.t('view.share.update'));
+      $fs_share_link_edit.show();
+      $fs_share_link_delete.show();
+      $fs_share_link_create.hide();
+    } else {
+      $fs_share_link_edit.hide();
+      $fs_share_link_delete.hide();
+      $fs_share_link_create.show();
     }
 
-    $fs_share_expr.kendoDateTimePicker({
-      format: kendo.toString(date, kendo.culture().calendar.patterns.g),
-      min: new Date(),
+    $fs_share_link_edit.off('click').on('click', balloon.showShareLink);
+    $fs_share_link_delete.off('click').on('click', function() {
+      balloon.removeShareLink();
     });
+    $fs_share_link_create.off('click').on('click', balloon.showShareLinkSettings);
+  },
 
-    $fs_share_link.find('input:submit').unbind().click(function(){
-      var shared,
-        date = $fs_share_expr.val();
 
-      shared = $(this).attr('name') == 'share';
+  /**
+   * Shows popup for share link settings
+   *
+   * @return bool
+   */
+  showShareLinkSettings: function() {
+    var node = balloon.getCurrentNode();
 
-      if(date != null || date != '' || date != undefined) {
-        date = kendo.parseDate(date, kendo.culture().calendar.patterns.g);
+    if(!node) return;
 
-        if(date !== null) {
-          date = Math.round(date.getTime() / 1000);
+    var $fs_share_link_settings_win = $('#fs-share-link-settings-window');
+
+    var $k_win = $fs_share_link_settings_win.kendoBalloonWindow({
+      title: i18next.t('view.share_link.settings.title', node.name),
+      resizable: false,
+      modal: true,
+      open: function() {
+        var token;
+
+        var $fs_share_expr_check = $fs_share_link_settings_win.find('#fs-share-link-expiration-check');
+        var $fs_share_pw_check = $fs_share_link_settings_win.find('#fs-share-link-password-check');
+        var $fs_share_pw = $fs_share_link_settings_win.find('input[name=share_password]');
+
+
+        var $k_fs_share_expr_date = $fs_share_link_settings_win.find('input[name=share_expiration_date]').kendoBalloonDatePicker({
+          format: kendo.culture().calendar.patterns.d,
+          min: new Date(),
+        }).data('kendoBalloonDatePicker');
+
+        var $k_fs_share_expr_time = $fs_share_link_settings_win.find('input[name=share_expiration_time]').kendoBalloonTimePicker({
+          format: kendo.culture().calendar.patterns.t
+        }).data('kendoBalloonTimePicker');
+
+        if(node.sharelink_token) {
+          token = node.sharelink_token;
+
+          if(node.sharelink_expire) {
+            var curDate = new Date(node.sharelink_expire);
+            var curTime = new Date(0);
+
+            curTime.setHours(curDate.getHours());
+            curTime.setMinutes(curDate.getMinutes());
+
+            curDate.setHours(0);
+            curDate.setMinutes(0);
+
+            $k_fs_share_expr_date.value(curDate);
+            $k_fs_share_expr_time.value(curTime);
+            $fs_share_expr_check.prop('checked', true);
+          }
         }
-      }
 
-      var data = {
-        id: balloon.id(node),
-        options: {
-          expiration: date,
-          token: token,
-          password: $fs_share_pw.val()
-        },
-      };
+        $fs_share_expr_check.off('change').on('change', function() {
+          if($fs_share_expr_check.prop('checked') === false) {
+            $k_fs_share_expr_date.value(null);
+            $k_fs_share_expr_time.value(null);
+          } else {
+            if($k_fs_share_expr_date.value() === null) {
+              var defaultDate = new Date();
+              defaultDate.setDate(defaultDate.getDate() + 1);
+              $k_fs_share_expr_date.value(defaultDate);
+            }
 
-      var url = url = balloon.base+'/nodes/share-link';
+            $k_fs_share_expr_date.open();
+          }
+        });
 
-      if(shared === true) {
-        var options = {
-          type: 'POST',
-          url: balloon.base+'/nodes/share-link',
-          data: {
-            id: balloon.id(node),
-            options: {
-              expiration: date,
-              token: token,
-              password: $fs_share_pw.val()
+        $k_fs_share_expr_date.unbind().bind('change', function() {
+          $fs_share_expr_check.prop('checked', $k_fs_share_expr_date.value() !== null);
+        });
+
+        $fs_share_pw_check.off('change').on('change', function() {
+          if($fs_share_pw_check.prop('checked') === false) {
+            $fs_share_pw.val('');
+          } else {
+            $fs_share_pw.focus();
+          }
+        });
+
+        $fs_share_pw.off('keyup').on('keyup', function() {
+          $fs_share_pw_check.prop('checked', $fs_share_pw.val() !== '');
+        });
+
+        $fs_share_link_settings_win.find('input:submit').unbind().click(function() {
+          var date = $k_fs_share_expr_date.value();
+          var time = $k_fs_share_expr_time.value();
+
+          if(date !== null) {
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+          }
+
+          if(date !== null && time !== null) {
+            date.setTime(date.getTime() + ((time.getHours() * 60 + time.getMinutes()) * 60 * 1000));
+          }
+
+          if(date != null) {
+            date = Math.round(date.getTime() / 1000);
+          }
+
+          balloon.xmlHttpRequest({
+            type: 'POST',
+            url: balloon.base+'/nodes/share-link',
+            data: {
+              id: balloon.id(node),
+              options: {
+                expiration: date,
+                token: token,
+                password: $fs_share_pw.val()
+              },
             },
-          },
-          success: function(body) {
-            balloon.last = body;
-            balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-            balloon.switchView('share-link');
-          }
-        };
-      } else {
-        var options = {
-          url: balloon.base+'/nodes/share-link?id='+balloon.id(node),
-          type: 'DELETE',
-          success: function(body) {
-            delete balloon.last.sharelink_token;
-            balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-            balloon.switchView('share-link');
-          }
-        };
-      }
+            complete: function() {
+              $k_win.close();
+              balloon.showShareLink();
+            },
+            success: function(body) {
+              balloon.last = body;
+              balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+              balloon.switchView('share-link');
+            }
+          });
+        });
 
-      balloon.xmlHttpRequest(options);
+        $fs_share_link_settings_win.find('input:button').unbind().click(function() {
+          $k_win.close();
+          if(token) balloon.showShareLink();
+        });
+      }
+    }).data('kendoBalloonWindow').center().open();
+  },
+
+  /**
+   * Shows popup for share link edting
+   *
+   * @return bool
+   */
+  showShareLink: function() {
+    var node = balloon.getCurrentNode();
+
+    if(!node) return;
+
+    var $fs_share_link_win = $('#fs-share-link-window');
+    var $fs_share_link = $fs_share_link_win.find('input[name=file_url]');
+    var $fs_share_link_settings = $fs_share_link_win.find('input[name=link_settings]');
+    var $fs_share_link_delete = $fs_share_link_win.find('#fs-share-link-window-delete');
+
+    var ext = balloon.getFileExtension(node);
+    var winTitle = node.name
+
+    if(ext != null && node.directory == false) {
+      winTitle = node.name.substr(0, node.name.length-ext.length-1) + ' (' + ext.toUpperCase() + ')';
+    }
+
+    var $k_win = $fs_share_link_win.kendoBalloonWindow({
+      title: winTitle,
+      resizable: false,
+      modal: true,
+      open: function() {
+        $fs_share_link.val(window.location.origin+'/share/'+node.sharelink_token);
+        $fs_share_link.unbind('click').bind('click', function() {
+          this.select();
+          document.execCommand('copy');
+          this.selectionEnd = this.selectionStart;
+          balloon.showSnackbar({message: 'view.share_link.link_copied'});
+        });
+
+        $fs_share_link_settings.off('click').on('click', function() {
+          $k_win.close();
+          balloon.showShareLinkSettings();
+        });
+
+        $fs_share_link_delete.off('click').on('click', function(){
+          balloon.removeShareLink().then(function() {
+            $k_win.close();
+          });
+        });
+      }
+    }).data('kendoBalloonWindow').center().open();
+  },
+
+  removeShareLink: function() {
+    var node = balloon.getCurrentNode();
+
+    if(!node) return;
+
+    return balloon.xmlHttpRequest({
+      url: balloon.base+'/nodes/share-link?id='+balloon.id(node),
+      type: 'DELETE',
+      success: function(body) {
+        delete balloon.last.sharelink_token;
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+
+        $('#fs-share-link-edit').hide();
+        $('#fs-share-link-delete').hide();
+        $('#fs-share-link-create').show();
+      }
     });
   },
 
@@ -6127,14 +6261,7 @@ var balloon = {
         break;
 
       case 'share-link':
-        var $link = $('#fs-share-link');
-        $link.find('.fs-share-remove').hide();
-        $link.find('input[name=file_url]').hide();
-        $('#fs-link-options').hide();
-        $link.find("input:text").val('');
-        $link.find("input:password").val('');
-        $link.find("input:checkbox").prop('checked', false);
-        $link.find('input[name=share]').val(i18next.t('view.share.create'));
+        $('#fs-share-link button').hide();
         break;
 
       case 'tree':

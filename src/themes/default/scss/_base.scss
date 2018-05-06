@@ -85,6 +85,7 @@ button,
 input[type="button"],
 input[type="submit"] {
   border: 2px solid $colorMediumGrey;
+  border-radius: 4px;
   color: $colorMediumGrey;
   font-size: 13px;
   font-weight: bold;
@@ -98,6 +99,13 @@ input[type="submit"] {
     border-color: $colorActiveBlue;
     background-color: $colorActiveBlue;
     color: $colorWhite;
+  }
+
+  &.fs-button-small {
+    padding: 6px 22px 7px 22px;
+    color: $colorActiveBlue;
+    border: 1px solid $colorLightGrey;
+    font-weight: 300;
   }
 }
 

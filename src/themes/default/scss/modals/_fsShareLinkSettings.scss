@@ -1,0 +1,78 @@
+.fs-share-link-settings-window {
+  padding-left: 30px;
+  padding-right: 30px;
+
+  hr.full-width {
+    width: calc(100% + 60px);
+    margin: 29px -30px;
+  }
+
+  & > div.k-header .k-window-actions {
+    right: -6px;
+  }
+}
+
+#fs-share-link-settings-window {
+  display: none;
+  width: 700px;
+  padding-bottom: 31px;
+
+
+  #fs-share-link-settings-window-content {
+    .fs-share-link-settings-window-row {
+      $checkboxWidth: 18px;
+      $labelWidth: 252px;
+
+      margin-bottom: 25px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .fs-share-link-settings-window-checkbox,
+      & > label,
+      & > input[type="text"],
+      & > input[type="password"] {
+        display: inline-block;
+        box-sizing: border-box;
+      }
+
+      .fs-share-link-settings-window-checkbox {
+        width: $checkboxWidth;
+      }
+
+      & > label {
+        padding-left: 10px;
+        width: $labelWidth;
+        line-height: 45px;
+
+        span {
+          color: $colorMediumGrey;
+        }
+
+      }
+
+      & > .k-datepicker,
+      & > .k-timepicker,
+      & > input[type="password"] {
+        width: calc(100% - #{$checkboxWidth + $labelWidth}) !important;
+
+        .k-select {
+          top: 9px;
+          right: 10px;
+        }
+      }
+
+      & > .k-datepicker input[type="text"],
+      & > .k-timepicker input[type="text"],
+      & > input[type="password"] {
+        padding: 13px 15px 14px;
+        height: auto;
+      }
+    }
+  }
+
+  .fs-window-secondary-actions {
+    margin-top: 30px;
+  }
+}

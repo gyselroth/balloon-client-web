@@ -313,26 +313,10 @@
                             <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
                         </dt>
                         <dd id="fs-share-link">
-                            <p class="fs-hint" data-i18n="view.share.hint_create_url"></p>
-                            <div id="fs-link-options">
-                                <div>
-                                    <input type="text" readonly="readonly" name="file_url">
-                                </div>
-                            </div>
-                            <div>
-                                <p data-i18n="view.share.expiration"></p>
-                                <input type="text" name="share_expiration">
-                            </div>
-                            <div>
-                                <p data-i18n="view.share.password"></p>
-                                <input type="password" name="share_password">
-                            </div>
-                            <div>
-                                <input type="submit" name="share" data-i18n="[value]view.share.create"/>
-                            </div>
-                            <div class="fs-share-remove">
-                                <p class="fs-hint" data-i18n="view.share.hint_remove_url"></p>
-                                <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/>
+                            <div class="fs-button-wrap fs-share-link-button-wrap">
+                                <button id="fs-share-link-create" class="fs-button-primary" data-i18n="view.share_link.create"></button>
+                                <button id="fs-share-link-edit" class="fs-button-primary" data-i18n="view.share_link.edit"></button>
+                                <button id="fs-share-link-delete" data-i18n="view.share_link.delete"></button>
                             </div>
                         </dd>
                         <dt id="fs-content-view-title-share-collection">
@@ -681,6 +665,65 @@
                     <div id="fs-uploadmgr-transfer-icon-complete">
                         <svg class="gr-icon gr-i-check"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#check"></use></svg>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="fs-share-link-settings-window">
+            <div id="fs-share-link-settings-window-content">
+                <div class="fs-share-link-settings-window-row">
+                    <div class="fs-share-link-settings-window-checkbox">
+                        <input type="checkbox" id="fs-share-link-expiration-check" />
+                        <label for="fs-share-link-expiration-check" />
+                    </div>
+                    <label for="share_expiration_date" data-i18n="view.share_link.settings.expiration_date"></label>
+                    <input type="text" name="share_expiration_date">
+                </div>
+                <div class="fs-share-link-settings-window-row">
+                    <div class="fs-share-link-settings-window-checkbox"></div>
+                    <label for="share_expiration_time" data-i18n="[html]view.share_link.settings.expiration_time"></label>
+                    <input type="text" name="share_expiration_time">
+                </div>
+
+                <hr class="full-width" />
+
+                <div class="fs-share-link-settings-window-row">
+                    <div class="fs-share-link-settings-window-checkbox">
+                        <input type="checkbox" id="fs-share-link-password-check" />
+                        <label for="fs-share-link-password-check" />
+                    </div>
+                    <label for="share_password" data-i18n="[html]view.share_link.settings.password"></label>
+                    <input type="password" name="share_password">
+                </div>
+
+                <hr class="full-width" />
+            </div>
+            <div id="fs-share-link-settings-window-button-wrapper" class="fs-window-secondary-actions">
+                <input type="button" tabindex="2" data-i18n="[value]view.share_link.settings.cancel" />
+                <input type="submit" tabindex="1" name="share" data-i18n="[value]view.share_link.settings.save" class="fs-button-primary" />
+            </div>
+        </div>
+
+
+        <div id="fs-share-link-window">
+            <div id="fs-share-link-window-content">
+                <div class="fs-share-link-window-row">
+                    <p class="fs-hint" data-i18n="view.share.hint_create_url"></p>
+                    <input type="submit" class="fs-button-small" name="link_settings" data-i18n="[value]view.share_link.link_settings" />
+                </div>
+
+                <h2><span data-i18n="view.share_link.global_link"></span><span class="fs-hint" data-i18n="view.share_link.global_link_hint"></span></h2>
+
+                <div class="fs-share-link-window-row">
+                    <input type="text" readonly="readonly" name="file_url">
+                    <div id="fs-share-link-window-delete" data-i18n="[title]view.share.delete">
+                        <svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg>
+                    </div>
+                </div>
+
+                <div id="fs-share-link-window-hint-delete">
+                    <svg class="gr-icon gr-i-info"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#info"></use></svg>
+                    <p class="fs-hint" data-i18n="view.share.hint_remove_url"></p>
                 </div>
             </div>
         </div>

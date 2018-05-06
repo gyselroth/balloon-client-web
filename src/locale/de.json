@@ -53,7 +53,7 @@
       "properties": "Eigenschaften",
       "history": "Verlauf",
       "share_folder": "Ordner freigeben",
-      "share_link": "Freigeben",
+      "share_link": "Link Teilen",
       "events": "Events",
       "advanced": "Erweitert"
     }
@@ -181,6 +181,24 @@
       "group_in_list": "Berechtigungsgruppe %s ist bereits in der Liste",
       "user_in_list": "Berechtigungsbenutzer %s ist bereits in der Liste",
       "prompt_remove_share": "Willst du diese Freigabe %s wirklich entfernen?</br> Alle Freigabemitglieder (ausser dir selber) werden ab sofort keinen Zugriff mehr haben."
+    },
+    "share_link": {
+      "create": "Link teilen",
+      "edit": "Link anpassen",
+      "delete": "Link löschen",
+      "link_settings": "Linkeinstellungen",
+      "link_copied": "Der Link wurde in die Zwischenablage kopiert",
+      "global_link": "Globaler Link",
+      "global_link_hint": "(zum Kopieren auf den Link klicken)",
+
+      "settings": {
+        "title": "Linkeinstellungen für „%s“",
+        "cancel": "Abbrechen",
+        "save": "Einstellungen speichern",
+        "expiration_date": "Gültigkeitsdauer",
+        "expiration_time": "Zeit <span>(optional)</span>",
+        "password": "Passwort <span>(optional)</span>"
+      }
     },
     "history": {
       "version": "Version %s",

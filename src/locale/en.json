@@ -53,7 +53,7 @@
       "properties": "Properties",
       "history": "History",
       "share_folder": "Share folder",
-      "share_link": "Share",
+      "share_link": "Share link",
       "events": "Events",
       "advanced": "Advanced"
     }
@@ -180,6 +180,23 @@
       "group_in_list": "ACL group %s is already in list",
       "user_in_list": "ACL user %s is already in list",
       "prompt_remove_share": "Do you really want to remove this share %s?</br> All members wouldn't have access anymore to this folder, except you."
+    },
+    "share_link": {
+      "create": "Create link",
+      "edit": "Edit link",
+      "delete": "Delete link",
+      "link_settings": "Link settings",
+      "link_copied": "The link has been copied to the clipboard",
+      "global_link": "Global link",
+      "global_link_hint": "(click link to copy it to clipboard)",
+      "settings": {
+        "title": "Linksettings for „%s“",
+        "cancel": "Cancel",
+        "save": "Save settings",
+        "expiration_date": "Expiration",
+        "expiration_time": "Time <span>(optional)</span>",
+        "password": "Password <span>(optional)</span>"
+      }
     },
     "history": {
       "version": "Version %s",
