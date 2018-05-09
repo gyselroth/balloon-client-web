@@ -438,27 +438,17 @@ var balloon = {
     $('#fs-browser-tree').find('li[fs-type=folder]').addClass('fs-file-dropable');
     $('#fs-browser-top').find('li').addClass('fs-file-dropable');
     $('#fs-upload').addClass('fs-file-dropable');
+    $('#fs-browser-tree').find('li[fs-type=file]').addClass('fs-file-disabled');
 
-    if(balloon.isMultiSelect()) {
-      var clue = $('.k-drag-clue').html();
+    var $itemCount = balloon.isMultiSelect() ? balloon.multiselect.length : 1;
+    var clue = $('.k-drag-clue').html();
 
-      clue = clue.substr(0, clue.search('</span>')+7);
-      var names = '';
-      for(var n in balloon.multiselect) {
-        if(names.length != 0) {
-          names += '; ';
-        }
+    clue = clue.substr(0, clue.search('</span>')+7);
 
-        names += balloon.multiselect[n].name;
-      }
+    clue += '<svg viewBox="0 0 24 24" class="gr-icon gr-i-file"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file"></use></svg>';
+    clue += '<div class="clue-item-count">' + $itemCount + '</span>';
 
-      if(names.length > 100) {
-        names = name.substr(0, 100)+'...';
-      }
-
-      clue += names;
-      $('.k-drag-clue').html(clue);
-    }
+    $('.k-drag-clue').html(clue);
   },
 
 
@@ -657,7 +647,7 @@ var balloon = {
    * @return  void
    */
   _treeDragend: function(e) {
-    $('#fs-browser-tree').find('.k-item').removeClass('fs-file-dropable');
+    $('#fs-browser-tree').find('.k-item').removeClass('fs-file-dropable').removeClass('fs-file-disabled');
     $('#fs-browser-top').find('li').removeClass('fs-file-dropable');
     $('#fs-upload').removeClass('fs-file-dropable');
   },
@@ -670,7 +660,7 @@ var balloon = {
    * @return  void
    */
   _treeDrop: function(e) {
-    $('#fs-browser-tree').find('.k-item').removeClass('fs-file-dropable');
+    $('#fs-browser-tree').find('.k-item').removeClass('fs-file-dropable').removeClass('fs-file-disabled');
     $('#fs-browser-top').find('li').removeClass('fs-file-dropable');
     $('#fs-upload').removeClass('fs-file-dropable');
 
