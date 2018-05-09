@@ -86,6 +86,7 @@
     input {
       display: inline-block;
       width: auto;
+      margin-left: 8px;
     }
   }
 
@@ -110,6 +111,7 @@
 @import './fsEventWindow';
 @import './fsHintWindow';
 @import './fsProfileWindow';
+@import './fsPromptWindow';
 @import './fsUploadmgr';
 @import './fsShare';
 @import './fsShareLink';

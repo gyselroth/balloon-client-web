@@ -1,7 +1,22 @@
-// TDOO pixtron - implement this
+.fs-prompt-window {
+  padding-left: 50px;
+  padding-right: 50px;
+
+  hr.full-width {
+    width: calc(100% + 100px);
+    margin-left: -50px;
+    margin-right: -50px;
+  }
+
+  & > div.k-header .k-window-actions {
+    right: -26px;
+  }
+}
+
 
 #fs-prompt-window {
   display: none;
+  padding-bottom: 40px;
 
   ul {
       margin: 8px 0;
