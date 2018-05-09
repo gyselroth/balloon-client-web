@@ -26,11 +26,18 @@ select {
   line-height: 16px;
   font-weight: 300;
   color: $colorDarkGrey;
+  caret-color: $colorActiveBlue;
 }
 
 input,
 textarea {
   padding: 6px;
+
+  &:focus {
+    border-color: $colorActiveBlue;
+    border-width: 2px;
+    padding: 5px;
+  }
 }
 
 input[type="radio"],
@@ -106,6 +113,18 @@ input[type="submit"] {
     color: $colorActiveBlue;
     border: 1px solid $colorLightGrey;
     font-weight: 300;
+  }
+
+  &:disabled {
+    border-color: $colorLightGrey !important;
+    color: $colorLightGrey !important;
+    cursor: default;
+
+    &.fs-button-primary {
+      background-color: $colorLightGrey !important;
+      color: $colorWhite !important;
+    }
+
   }
 }
 

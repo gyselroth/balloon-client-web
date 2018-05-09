@@ -1,0 +1,210 @@
+.fs-share-window {
+  padding-left: 30px;
+  padding-right: 30px;
+
+  hr.full-width {
+    width: calc(100% + 60px);
+    margin: 29px -30px;
+  }
+
+  & > div.k-header .k-window-actions {
+    right: -6px;
+  }
+}
+
+#fs-share-window {
+  display: none;
+  width: 700px;
+  padding-bottom: 30px;
+
+  #fs-share-window-content {
+    .fs-hint {
+      color: $colorMediumGrey;
+      font-size: 13px;
+      line-height: 18px;
+    }
+
+    h2 {
+      font-size: 15px;
+      line-height: 20px;
+      color: $colorDarkGrey;
+      margin: 19px 0 8px;
+    }
+
+    input[type="text"],
+    input.k-input[type="text"] {
+      font-size: 15px;
+      padding: 13px 15px 14px;
+      height: auto;
+
+      &:focus {
+        border-color: $colorActiveBlue;
+        border-width: 2px;
+        padding: 12px 14px 13px;
+      }
+    }
+
+    .fs-share-window-privilege-selector {
+      position: absolute;
+      top: calc(50% - 12px);
+      right: 0;
+      padding: 0;
+
+      .fs-share-window-selected-privilege {
+        color: $colorMediumGrey;
+
+        .fs-share-window-selected-privilege-label {
+          font-size: 13px;
+          line-height: 14px;
+          vertical-align: middle;
+          margin-right: 2px;
+        }
+
+        .gr-icon {
+          vertical-align: middle;
+        }
+      }
+
+      ul.fs-share-window-privileges {
+        display: none;
+        position: absolute;
+        top: -11px;
+        right: -10px;
+        border-radius: 4px;
+        min-width: 275px;
+        background-color: $colorWhite;
+        border: 1px solid $colorLightGrey;
+        z-index: 1;
+
+        li {
+          position: relative;
+
+          label {
+            display: block;
+            color: $colorMediumGrey;
+            font-size: 13px;
+            line-height: 40px;
+            padding: 0 39px;
+            cursor: pointer;
+
+            .gr-icon {
+              display: none;
+              position: absolute;
+              top: calc(50% - 7px);
+              left: 14px;
+              width: 14px;
+              height: 14px;
+            }
+          }
+
+          input[type="radio"] {
+            display: none;
+          }
+
+          &:hover {
+            label {
+              color: $colorDarkGrey;
+            }
+
+            background-color: $colorBrightGrey;
+          }
+
+          input[type="radio"]:checked + label {
+            color: $colorDarkGrey;
+
+            .gr-icon {
+              display: block;
+            }
+          }
+
+          &.fs-share-window-privilege-remove {
+            label {
+              color: $colorErrorRed !important;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        ul.fs-share-window-privileges {
+          display: block;
+        }
+      }
+    }
+
+    #fs-share-window-search {
+      position: relative;
+
+      .k-header {
+        background-image: none;
+        background-color: transparent;
+        width: 100%;
+
+        .k-icon {
+          display: none;
+        }
+      }
+
+      #fs-share-window-search-role {
+        right: 10px;
+      }
+    }
+
+    #fs-share-window-consumers {
+      margin-top: 29px;
+
+      & > li {
+        position: relative;
+        color: $colorDarkGrey;
+        font-size: 15px;
+        line-height: 30px;
+        margin: 0 -30px;
+        padding: 0 30px;
+        border-bottom: 1px solid $colorBrightGrey;
+
+        &:first-child {
+          border-top: 1px solid $colorBrightGrey;
+        }
+
+        .fs-share-window-privilege-selector {
+          top: 0;
+          right: 24px;
+
+          ul.fs-share-window-privileges {
+            top: -1px;
+            right: -7px;
+          }
+        }
+      }
+    }
+
+    #fs-share-window-remove {
+      @include clearfix;
+      position: relative;
+      margin-top: 20px;
+      color: $colorMediumGrey;
+
+      .gr-icon {
+        position: absolute;
+        top: 0;
+        left: -3px;
+      }
+
+      .fs-hint {
+        padding-left: 25px;
+        margin-bottom: 20px;
+        max-width: 460px;
+        float: left;
+      }
+
+      input {
+        float: right;
+      }
+
+      hr {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+  }
+}

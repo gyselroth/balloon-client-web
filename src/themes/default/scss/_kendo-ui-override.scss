@@ -16,7 +16,7 @@
         line-height: 30px;
         color: $colorDarkGrey;
         cursor: pointer;
-        paddgin: 0 14px;
+        padding: 0 14px;
 
         &:hover {
           background: $colorBrightGrey !important;
@@ -26,11 +26,19 @@
   }
 
   .k-nodata {
-    paddgin: 0 14px;
+    padding: 0 14px;
     font-size: 15px;
     line-height: 30px;
     color: $colorDarkGrey;
   }
+}
+
+.k-autocomplete.k-state-focused {
+  box-shadow: none !important;
+}
+
+.k-input {
+  border-color: $colorLightGrey;
 }
 
 
@@ -57,6 +65,15 @@
       box-sizing: border-box;
       border-radius: 4px;
       border: 1px solid $colorLightGrey;
+    }
+
+    &.k-state-focused {
+      .k-input {
+        border-width: 2px;
+        border-color: $colorActiveBlue;
+        padding: 5px;
+        box-sizing: border-box;
+      }
     }
 
     .k-select {

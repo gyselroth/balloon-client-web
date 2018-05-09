@@ -1,0 +1,103 @@
+#fs-share {
+  #fs-share-consumers {
+    $consumerItemSize: 30px;
+
+    @include clearfix;
+
+    h6,
+    span.fs-share-hint-owner-only {
+      float: left;
+      line-height: $consumerItemSize;
+      font-size: 13px;
+      font-weight: 300;
+      color: $colorMediumGrey;
+    }
+
+    span.fs-share-hint-owner-only {
+      margin-left: 10px;
+    }
+
+    ul {
+      float: left;
+      height: $consumerItemSize;
+      line-height: $consumerItemSize;
+      margin-left: 15px;
+
+      li {
+        position: relative;
+        display: inline-block;
+        border-radius: 50%;
+        width: $consumerItemSize;
+        height: $consumerItemSize;
+        margin-left: 10px;
+        cursor: pointer;
+
+        // TODO pixtron - add a placeholder avatar image
+        background-color: $colorLightGrey;
+        background-repeat: none;
+        background-size: cover;
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        div {
+          display: none;
+          position: absolute;
+          width: 180px;
+          top: 42px;
+          left: calc(50% - 90px);
+
+          span {
+            position: absolute;
+            top: -7px;
+            left: calc(50% - 7px);
+            display: block;
+
+            width: 0;
+            height: 0;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid $colorDarkGrey;
+          }
+
+          p {
+            color: $colorWhite;
+            background-color: $colorDarkGrey;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 16px;
+            text-align: center;
+            padding: 5px 10px;
+          }
+        }
+
+        &:hover {
+          div {
+            display: block;
+          }
+        }
+
+        &.fs-share-consumers-additional{
+          background-color: $colorBrightGrey;
+          background-image: none !important;
+
+          span {
+            position: absolute;
+            display: block;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: auto;
+            height: auto;
+            font-size: 11px;
+            font-weight: 700;
+            color: $colorMediumGrey;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}

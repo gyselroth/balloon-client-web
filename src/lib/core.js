@@ -477,7 +477,7 @@ var balloon = {
 
     //keyup/keydown node selection
     if(e.keyCode === 38 || e.keyCode === 40) {
-      if($("#fs-share-collection").find("input[name=share_role]").is(':focus')
+      if($("#fs-share").find("input[share_consumer_search]").is(':focus')
       || $('#fs-properties-meta-tags-tags').hasClass('fs-select-tags')) {
         return;
       }
@@ -923,7 +923,7 @@ var balloon = {
 
     balloon.resetDom(
       ['properties','preview','view-bar', 'action-bar',
-        'history','share-collection','share-link'
+        'history','share','share-link'
       ]);
 
     var copy   = balloon.last;
@@ -966,7 +966,7 @@ var balloon = {
       'multiselect',
       'view-bar',
       'history',
-      'share-collection',
+      'share',
       'share-link',
     ]);
 
@@ -995,7 +995,7 @@ var balloon = {
     }
 
     if(balloon.last.directory && balloon.last.access === 'm' && !balloon.last.share) {
-      views.push('share-collection');
+      views.push('share');
     }
 
     if(balloon.last.access != 'r') {
@@ -1825,7 +1825,7 @@ var balloon = {
     case 'history':
       balloon.displayHistory(balloon.getCurrentNode());
       break;
-    case 'share-collection':
+    case 'share':
       balloon.shareCollection(balloon.getCurrentNode());
       break;
     case 'share-link':
@@ -2152,7 +2152,7 @@ var balloon = {
 
       balloon.resetDom(
         ['selected','properties','preview','action-bar','multiselect','view-bar',
-          'history','share-collection','share-link']
+          'history','share','share-link']
       );
     } else if(balloon.isEditable(balloon.last.mime)) {
       balloon.editFile(balloon.getCurrentNode());
@@ -2197,7 +2197,7 @@ var balloon = {
     $fs_crumb_search_list.append('<li fs-id="" id="fs-crumb-search"><div>'+i18next.t('nav.search')+'</div></li>');
 
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
-      'view-bar', 'history', 'share-collection', 'share-link', 'search']);
+      'view-bar', 'history', 'share', 'share-link', 'search']);
   },
 
 
@@ -3394,69 +3394,191 @@ var balloon = {
       return false;
     }
 
-    balloon.resetDom('share-collection');
-    var $fs_share_collection     = $('#fs-share-collection'),
-      $fs_share_collection_tbl   = $fs_share_collection.find('table'),
-      $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
-      $share_name = $fs_share_collection.find("input[name=share_name]");
+    balloon.resetDom('share');
+
+    var $fs_share = $('#fs-share');
+    var $fs_share_create = $fs_share.find('#fs-share-create');
+    var $fs_share_edit = $fs_share.find('#fs-share-edit');
+    var $fs_share_delete = $fs_share.find('#fs-share-delete');
+
+    $fs_share_create.off('click').on('click', balloon.showShare);
+
+    $fs_share_edit.off('click').on('click', balloon.showShare);
+
+    $fs_share_delete.off('click').on('click', function() {
+      balloon.deleteShare(node);
+    });
+
+    if(!node.shared && !node.reference) {
+      $fs_share_create.show();
+      $fs_share_edit.hide();
+      $fs_share_delete.hide();
+
+      balloon.prepareShareConsumerPreview(node, []);
+    } else {
+      $fs_share_create.hide();
+      $fs_share_edit.show();
+      $fs_share_delete.show();
+
+      balloon.xmlHttpRequest({
+        url: balloon.base+'/collections/share',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          id: balloon.id(node),
+        },
+        success: function(data) {
+          balloon.prepareShareConsumerPreview(node, data.acl);
+        },
+      });
+    }
+  },
+
+  /**
+   * Prepares the share consumer preview
+   *
+   * @param object node
+   * @param array acl
+   * @return void
+   */
+  prepareShareConsumerPreview: function(node, acl) {
+    var $fs_share_consumers = $('#fs-share-consumers');
+    var $fs_share_consumers_ul = $fs_share_consumers.find('ul');
+
+    var $li_owner = $('<li></li>');
+    $fs_share_consumers_ul.append($li_owner);
+
+    $fs_share_consumers_ul.off('click').on('click', balloon.showShare);
+
+    balloon.xmlHttpRequest({
+      url: balloon.base+'/users/avatar',
+      type: 'GET',
+      success: function(body) {
+        $li_owner.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+      },
+      error: function() {
+        //empty method to avoid error message bubbling up
+      }
+    });
+
+    if(!node.shared && !node.reference) {
+      $fs_share_consumers.find('.fs-share-hint-owner-only').show();
+    } else {
+      var numConsumers = acl.length + 1;
+      var maxConsumersDisplayed = 5;
+
+      for(var i=0; i < maxConsumersDisplayed-1 && i < numConsumers; i++) {
+        var curAcl = acl[i];
+        var $li_consumer = $('<li><div><span></span><p>'+ i18next.t('view.share.privilege_text_'+curAcl.privilege, curAcl.role.name) +'</p></div></li>');
+        $fs_share_consumers_ul.append($li_consumer);
+
+        //TODO pixtron - add users avatar to li as inline background-image
+        /*balloon.xmlHttpRequest({
+          url: balloon.base+'/users/' + curAcl.id + '/avatar',
+          type: 'GET',
+          success: function(body) {
+            $li_consumer.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+          },
+          error: function() {
+            //empty method to avoid error message bubbling up
+          }
+        });*/
+      }
+
+      if(maxConsumersDisplayed < numConsumers) {
+        var $li_additional = $('<li class="fs-share-consumers-additional"><span>' + (numConsumers - maxConsumersDisplayed) + '+</span></li>');
+        $fs_share_consumers_ul.append($li_additional);
+      }
+    }
+  },
+
+  /**
+   * Shows popup for share creating/edting
+   *
+   * @return bool
+   */
+  showShare: function() {
+    var acl = [];
+    var node = balloon.getCurrentNode();
+
+    if(!node || !node.directory) return;
+
+    var $fs_share_win = $('#fs-share-window');
+    var $fs_share_win_create = $fs_share_win.find('input[name=create]');
+    var $fs_share_win_save = $fs_share_win.find('input[name=save]');
+    var $fs_share_win_cancel = $fs_share_win.find('input[name=cancel]');
+    var $fs_share_win_remove = $fs_share_win.find('#fs-share-window-remove');
+    var $fs_share_win_remove_btn = $fs_share_win.find('input[name=unshare]');
+    var $share_name = $fs_share_win.find('input[name=share_name]');
+
+    $fs_share_win.find('#fs-share-window-consumers').empty().hide();
+
+    if(node.shared === false) {
+      $fs_share_win_create.show();
+      $fs_share_win_save.hide();
+      $fs_share_win_remove.hide();
+    } else {
+      $fs_share_win_create.hide();
+      $fs_share_win_save.show();
+      $fs_share_win_remove.show();
+    }
 
     if(!node.shared && !node.reference) {
       $share_name.val(node.name);
-      return balloon.prepareShare(node, []);
-    }
+      balloon.prepareShareWindow(node, acl);
+    } else {
+      balloon.xmlHttpRequest({
+        url: balloon.base+'/collections/share',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          id: balloon.id(node),
+        },
+        success: function(data) {
+          $share_name.val(data.name);
 
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/collections/share',
-      type: 'GET',
-      dataType: 'json',
-      data: {
-        id: balloon.id(node),
-      },
-      success: function(data) {
-        var acl = [];
-
-        var $fs_share_collection     = $('#fs-share-collection'),
-          $fs_share_collection_tbl   = $fs_share_collection.find('table'),
-          $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
-          $share_name = $fs_share_collection.find("input[name=share_name]");
-
-        $fs_share_collection.find('th').each(function(){
-          var $that = $(this);
-          var chars = $that.html().length * 6;
-          $that.height(chars);
-        });
-
-        $fs_share_collection.find('.fs-share-remove').show();
-        var checked,
-          $acl_role;
-
-        $share_name.val(data.name);
-
-        for(var i in data.acl) {
-          checked = '';
-          if(data.acl[i].privilege == 'r') {
-            checked = "checked='checked'";
+          for(var i in data.acl) {
+            var consumer = data.acl[i];
+            balloon._addShareConsumer(consumer, acl);
           }
 
-          balloon._addShareRole(data.acl[i], acl);
+          balloon.prepareShareWindow(node, acl);
+        },
+      });
+    }
 
-          $fs_share_collection.find('tr[fs-acl-name="'+data.acl[i].id+'"]')
-            .find('input[value="'+data.acl[i].privilege+'"]').prop('checked', true);
+    var $k_win = $fs_share_win.kendoBalloonWindow({
+      title: node.name,
+      resizable: false,
+      modal: true
+    }).data('kendoBalloonWindow').center().open();
 
+    $fs_share_win.find('input[name="new_share_consumer_privilege"]').off('change').on('change', function() {
+      var newPrivilege = $(this).val();
+      $fs_share_win.find('#fs-share-window-search-role .fs-share-window-selected-privilege-label').html(i18next.t('view.share.privilege_' + newPrivilege));
+    });
 
-          $fs_share_collection_tbody.append($acl_role);
-        }
+    $fs_share_win_remove_btn.off('click').on('click', function() {
+      balloon.deleteShare(node);
+      $k_win.close();
+    });
 
-        if(data.acl.length > 0) {
-          $fs_share_collection_tbl.show().css('display', 'table');
-          $fs_share_collection.find('input[name=share]').val(i18next.t('view.share.update'));
-        }
+    $fs_share_win_create.off('click').on('click', function() {
+      if(balloon._saveShare(acl, node)) {
+        $k_win.close();
+      }
+    });
 
-        balloon.prepareShare(node, acl);
-      },
+    $fs_share_win_save.off('click').on('click', function() {
+      if(balloon._saveShare(acl, node)) {
+        $k_win.close();
+      }
+    });
+
+    $fs_share_win_cancel.off('click').on('click', function() {
+      $k_win.close();
     });
   },
-
 
   /**
    * Prepare share functionality
@@ -3465,98 +3587,24 @@ var balloon = {
    * @param array acl
    * @return void
    */
-  prepareShare: function(node, acl) {
-    var $fs_share_collection     = $('#fs-share-collection'),
-      $fs_share_collection_tbl   = $fs_share_collection.find('table'),
-      $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody'),
-      $share_name = $fs_share_collection.find("input[name=share_name]");
+  prepareShareWindow: function(node, acl) {
+    var $fs_share_win = $('#fs-share-window');
+    var $share_consumer_search = $fs_share_win.find('input[name=share_consumer_search]');
+    var $share_name = $fs_share_win.find('input[name=share_name]');
 
-    $fs_share_collection_tbl.off('click', '.gr-i-trash').on('click', '.gr-i-trash', function() {
-      var $that = $(this),
-        $parent = $that.parent().parent(),
-        role = $parent.attr('fs-acl-name'),
-        type = $parent.attr('fs-acl-type');
+    $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]').prop('disabled', ($share_name.val() === '' || acl.length === 0));
 
-      for(var i in acl) {
-        if(acl[i].id == role) {
-          acl.splice(acl.indexOf(acl[i]), 1);
+    $share_name.off('change').on('change', function() {
+      if($(this).val() !== '') {
+        if(acl.length > 0) {
+          $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]').prop('disabled', false);
         }
-      }
-
-      $parent.remove();
-
-      if($fs_share_collection.find('tr').length === 1) {
-        $fs_share_collection_tbl.hide();
-      }
-    })
-      .off('click', 'input[type=radio]').on('click', 'input[type=radio]', function() {
-        var $that = $(this),
-          $parent = $that.parent().parent(),
-          role = $parent.attr('fs-acl-name'),
-          type = $parent.attr('fs-acl-type');
-
-        for(var i in acl) {
-          if(acl[i].id == role) {
-            acl[i].privilege = $(this).prop('value');
-          }
-        }
-      });
-
-    var $share_role = $fs_share_collection.find("input[name=share_role]");
-    var selected = false;
-
-    $share_role.unbind('keyup').bind('keyup', function(e) {
-      if(e.keyCode == 13) {
-        if(selected === true) {
-          selected = false;
-          return;
-        }
-
-        var value = $share_role.data("kendoAutoComplete").value()
-        if(value === '' || value === undefined) {
-          return;
-        }
-
-        var filter = JSON.stringify({'filter': {'name': {
-          "$regex": $share_role.data("kendoAutoComplete").value(),
-          "$options": "i"
-        }}});
-
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/groups?'+filter,
-          contentType: "application/json",
-          success: function(data) {
-            if(data.length > 1) {
-              return;
-            }
-
-            $share_role.val('').focus();
-            acl = balloon._addShareRole(data, acl);
-          }
-        });
-
-        filter = JSON.stringify({'filter': {'username': {
-          "$regex": $share_role.data("kendoAutoComplete").value(),
-          "$options": "i"
-        }}});
-
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/users?'+filter,
-          contentType: "application/json",
-          dataType: 'json',
-          success: function(data) {
-            if(data.length > 1) {
-              return;
-            }
-
-            $share_role.val('').focus();
-            acl = balloon._addShareRole(data, acl);
-          }
-        });
+      } else {
+        $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]').prop('disabled', true);
       }
     });
 
-    $share_role.kendoAutoComplete({
+    $share_consumer_search.kendoAutoComplete({
       minLength: 3,
       dataTextField: "name",
       filter: "contains",
@@ -3564,18 +3612,18 @@ var balloon = {
         serverFiltering: true,
         transport: {
           read: function(operation) {
-            var value = $share_role.data("kendoAutoComplete").value()
+            var value = $share_consumer_search.data("kendoAutoComplete").value()
             if(value === '' || value === undefined) {
-              operation.success({data:[]});
+              operation.success({data:null});
               return;
             }
 
             var filter = JSON.stringify({'query': {'name': {
-              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$regex": $share_consumer_search.data("kendoAutoComplete").value(),
               "$options": "i"
             }}});
 
-            var roles = null;
+            var consumers = null;
 
             balloon.xmlHttpRequest({
               url: balloon.base+'/groups?'+filter,
@@ -3586,16 +3634,16 @@ var balloon = {
                   data.data[i].role = $.extend({}, data.data[i]);
                 }
 
-                if(roles !== null) {
-                  operation.success(data.data.concat(roles));
+                if(consumers !== null) {
+                  operation.success(data.data.concat(consumers));
                 } else {
-                  roles = data.data;
+                  consumers = data.data;
                 }
               }
             });
 
             filter = JSON.stringify({'query': {'username': {
-              "$regex": $share_role.data("kendoAutoComplete").value(),
+              "$regex": $share_consumer_search.data("kendoAutoComplete").value(),
               "$options": "i"
             }}});
 
@@ -3609,10 +3657,10 @@ var balloon = {
                   data.data[i].role = $.extend({}, data.data[i]);
                 }
 
-                if(roles !== null) {
-                  operation.success(data.data.concat(roles));
+                if(consumers !== null) {
+                  operation.success(data.data.concat(consumers));
                 } else {
-                  roles = data.data;
+                  consumers = data.data;
                 }
               }
             });
@@ -3623,52 +3671,158 @@ var balloon = {
           field: 'name'
         },
       }),
-      dataBound: function(e) {
-        $(e.sender.ul).find('li').each(function(n) {
-          var icon;
-          if(e.sender.dataSource._data[n].type === 'user') {
-            icon = 'person';
-          } else if(e.sender.dataSource._data[n].type === 'group') {
-            icon = 'group';
-          }
-
-          $(this).html('<div class="gr-icon gr-i-'+icon+'"></div>'+$(this).html());
-        });
-
-        var $container =  $(e.sender.list);
-      },
       change: function(e) {
         this.dataSource.read();
       },
       select: function(e) {
-        selected = true;
-
         setTimeout(function(){
-          $share_role.val('').focus();
+          $share_consumer_search.val('').focus();
         },50);
 
-        $fs_share_collection.find("input[name=share_role]").val("");
+        $share_consumer_search.val('');
         var item = this.dataItem(e.item.index());
-        acl = balloon._addShareRole(item, acl);
-      }
-    });
-
-    $fs_share_collection.find('input[type=submit]').unbind().click(function(){
-      if($(this).attr('name') == 'share') {
-        if($share_name.val() === '') {
-          $share_name.focus();
-        } else if(acl.length === 0) {
-          $share_role.focus();
-        } else {
-          balloon._shareCollection(node, acl, $share_name.val());
-        }
-      }          else {
-        var msg = i18next.t('view.share.prompt_remove_share', node.name);
-        balloon.promptConfirm(msg, 'deleteShare', [node]);
+        balloon._addShareConsumer(item, acl);
       }
     });
   },
 
+  /**
+   * Add a share consumer to list
+   *
+   * @param  object item
+   * @param  Array acl
+   * @return object
+   */
+  _addShareConsumer: function(item, acl) {
+    var $fs_share_win_consumers = $('#fs-share-window-consumers');
+
+    if(acl.filter(function(role) {
+      return role.id === item.role.id;
+    }).length > 0) {
+      //added item is already present in acl.
+      return;
+    }
+
+    var name = item.role.name;
+
+    var privilege = item.privilege || $('input[name="new_share_consumer_privilege"]:checked').val();
+
+    acl.push({
+      type: item.type,
+      id: item.role.id,
+      privilege: privilege,
+    });
+
+    var $consumer = $('<li id="fs-share-window-consumer-' + item.role.id + '">'+name+'</li>');
+
+    var $consumer_privilege = $(
+      '<div class="fs-share-window-privilege-selector">'+
+        '<div class="fs-share-window-selected-privilege">'+
+            '<span class="fs-share-window-selected-privilege-label">' + i18next.t('view.share.privilege_' + privilege) + '</span>'+
+            '<svg class="gr-icon gr-i-expand"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#expand"></use></svg>'+
+        '</div>'+
+      '</div>'
+    );
+
+    var $consumer_privilege_selector = $('<ul class="fs-share-window-privileges"></ul>');
+
+    var privileges = ['m', 'r', 'rw', 'w+'];
+    for(var i in privileges) {
+      var itemPrivilege = privileges[i];
+      var itemId = item.role.id;
+      $consumer_privilege_selector.append(
+        '<li>'+
+            '<input id="priv_' + itemId + '_' + itemPrivilege + '" type="radio" name="priv_'+item.role.id+'" value="' + itemPrivilege + '" ' + (itemPrivilege === privilege ? ' checked' : '') + ' />'+
+            '<label for="priv_'  + itemId + '_' + itemPrivilege + '">'+
+                '<svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg>'+
+                '<span class="fs-share-window-privilege-label">' + i18next.t('view.share.privilege_' + itemPrivilege) + '</span>'+
+            '</label>'+
+        '</li>'
+      );
+    }
+
+    var $consumer_privilege_selector_item_remove = $(
+      '<li class="fs-share-window-privilege-remove">'+
+          '<label>'+
+              '<span class="fs-share-window-privilege-label">' + i18next.t('view.share.remove_privilege') + '</span>'+
+          '</label>'+
+      '</li>'
+    );
+
+    $consumer_privilege_selector.append($consumer_privilege_selector_item_remove);
+
+    $consumer_privilege.append($consumer_privilege_selector);
+    $consumer.append($consumer_privilege);
+
+    $fs_share_win_consumers.append($consumer);
+    $fs_share_win_consumers.show();
+
+    $('#fs-share-window .fs-window-secondary-actions input[type="submit"]').prop('disabled', ($('#fs-share-window input[name=share_name]').val() === ''));
+
+    $consumer_privilege_selector.find('input[type="radio"]').off('change').on('change', function() {
+      var newPrivilege = $(this).val();
+
+      for(var i in acl) {
+        if(acl[i].id == item.role.id) {
+          acl[i].privilege = newPrivilege;
+          break;
+        }
+      }
+
+      $consumer_privilege.find('.fs-share-window-selected-privilege-label').html(i18next.t('view.share.privilege_' + newPrivilege));
+    });
+
+    $consumer_privilege_selector_item_remove.off('click').on('click', function() {
+      balloon._removeShareConsumer(item.role.id, acl);
+    });
+
+    return acl;
+  },
+
+  /**
+   * Remove a share consumer from list
+   *
+   * @param  string role
+   * @param  Array acl
+   * @return object
+   */
+  _removeShareConsumer: function(role, acl) {
+    $('#fs-share-window-consumer-' + role).remove();
+
+    for(var i in acl) {
+      if(acl[i].id == role) {
+        acl.splice(acl.indexOf(acl[i]), 1);
+        break;
+      }
+    }
+
+    if(acl.length === 0) {
+      $('#fs-share-window-consumers').hide();
+      $('#fs-share-window .fs-window-secondary-actions input[type="submit"]').prop('disabled', true);
+    }
+  },
+
+  /**
+   * Save acl for given node
+   *
+   * @param  Array acl
+   * @param  object node
+   * @return object
+   */
+  _saveShare: function(acl, node) {
+    var $share_name = $('#fs-share-window input[name=share_name]');
+
+    if($share_name.val() === '') {
+      $share_name.focus();
+      return false;
+    } else if(acl.length === 0) {
+      $('#fs-share-window input[name=share_consumer_search]').focus();
+      return false;
+    } else {
+      balloon._shareCollection(node, acl, $share_name.val());
+      return true;
+    }
+  },
 
   /**
    * Deleted share
@@ -3677,6 +3831,17 @@ var balloon = {
    * @return void
    */
   deleteShare: function(node) {
+    var msg = i18next.t('view.share.prompt_remove_share', node.name);
+    balloon.promptConfirm(msg, '_deleteShare', [node]);
+  },
+
+  /**
+   * Deleted share
+   *
+   * @param  object node
+   * @return void
+   */
+  _deleteShare: function(node) {
     var url = balloon.base+'/collections/share?id='+balloon.id(node);
 
     balloon.xmlHttpRequest({
@@ -3688,65 +3853,12 @@ var balloon = {
           balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
           balloon.last.shared = false;
           if(balloon.id(node) == balloon.id(balloon.last)) {
-            balloon.switchView('share-collection');
+            balloon.switchView('share');
           }
         }
       },
     });
   },
-
-
-  /**
-   * Add share role
-   *
-   * @param  object item
-   * @param  object acl
-   * @return object
-   */
-  _addShareRole: function(item, acl, type) {
-    var $fs_share_collection     = $('#fs-share-collection'),
-      $fs_share_collection_tbl   = $fs_share_collection.find('table'),
-      $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
-
-    var icon, name;
-    if(item.type === 'user') {
-      icon = 'person';
-      name = item.role.name;
-    } else if(item.type === 'group') {
-      icon = 'group';
-      name = item.role.name;
-    }
-
-    $fs_share_collection_tbody.append(
-      '<tr fs-acl-name="'+item.role.id+'" fs-acl-type="'+item.type+'">'+
-          '<td><div class="gr-icon gr-i-'+icon+'"></div></td>'+
-          '<td class="fs-role-name">'+name+'</td>'+
-          '<td><input name="priv_'+item.role.id+'" value="m" type="radio"/></td>'+
-          '<td><input name="priv_'+item.role.id+'" value="rw" checked="checked" type="radio"/></td>'+
-          '<td><input name="priv_'+item.role.id+'" value="r" type="radio"/></td>'+
-          '<td><input name="priv_'+item.role.id+'" value="w+" type="radio"/></td>'+
-          '<td class="fs-delete-role"><div class="gr-icon gr-i-trash"></div></td>'+
-        '</tr>'
-    );
-
-    var privilege = 'rw';
-    if(item.privilege) {
-      privilege = item.privilege;
-    }
-
-    acl.push({
-      type: item.type,
-      id: item.role.id,
-      privilege: privilege,
-    });
-
-    if($fs_share_collection_tbody.find('tr').length > 0) {
-      $fs_share_collection_tbl.show();
-    }
-
-    return acl;
-  },
-
 
   /**
    * Save share collection
@@ -3771,12 +3883,11 @@ var balloon = {
         node.shared = true;
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         if(balloon.id(node) == balloon.id(balloon.last)) {
-          balloon.switchView('share-collection');
+          balloon.switchView('share');
         }
       },
     });
   },
-
 
   /**
    * Share node
@@ -4008,7 +4119,6 @@ var balloon = {
       }
     });
   },
-
 
   /**
    * Check if we're running in an iOS devie
@@ -4475,7 +4585,7 @@ var balloon = {
       dataType: 'json',
       beforeSend: function() {
         balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
-          'view-bar', 'history', 'share-collection', 'share-link', 'search', 'events']);
+          'view-bar', 'history', 'share', 'share-link', 'search', 'events']);
 
         var $tree = $('#fs-browser-tree').find('ul');
 
@@ -6082,7 +6192,7 @@ var balloon = {
         'multiselect',
         'view-bar',
         'history',
-        'share-collection',
+        'share',
         'share-link',
         'advanced',
         'search',
@@ -6242,22 +6352,15 @@ var balloon = {
           .removeClass('k-state-selected');
         break;
 
-      case 'share-collection':
-        var $collection = $('#fs-share-collection');
-        var $complete =  $collection.find('input[name=share_role]');
+      case 'share':
+        var $fs_share = $('#fs-share');
 
-        if($complete.data('kendoAutoComplete') != undefined) {
-          $complete.data('kendoAutoComplete').destroy();
-        }
+        $fs_share.find('.fs-share-hint-owner-only').hide();
+        $fs_share.find('#fs-share-consumers ul').empty();
 
-        $complete.parent().html('<input type="text" name="share_role" placeholder="'+i18next.t('view.share.search_user')+'">');
-
-        $collection.find('input[name=share_name]').val('');
-        $collection.find('input[name=share]').val(i18next.t('view.share.create'));
-        $collection.find('.fs-share-remove').hide();
-        $collection.find('tbody tr').remove();
-        $collection.find('table').hide()
-        $collection.find("input:radio").prop('checked', false);
+        $fs_share.find('#fs-share-create').show();
+        $fs_share.find('#fs-share-edit').hide();
+        $fs_share.find('#fs-share-delete').hide();
         break;
 
       case 'share-link':

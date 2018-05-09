@@ -16,7 +16,7 @@ import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
       var id = $target.attr('id');
       if(id) $parent.addClass(id);
 
-      var $origIcon = $parent.find('.k-i-close');
+      var $origIcon = $parent.find('.k-window-actions .k-i-close');
       if($origIcon.length > 0) {
         var $newIcon = $origIcon.parent().find('.gr-i-close');
 

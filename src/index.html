@@ -319,36 +319,21 @@
                                 <button id="fs-share-link-delete" data-i18n="view.share_link.delete"></button>
                             </div>
                         </dd>
-                        <dt id="fs-content-view-title-share-collection">
+                        <dt id="fs-content-view-title-share">
                             <span data-i18n="nav.view.share_folder"></span>
                             <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>
                             <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>
                         </dt>
-                        <dd id="fs-share-collection">
-                            <p class="fs-hint" data-i18n="view.share.hint_add"></p>
-                            <div>
-                                <input type="text" name="share_role" data-i18n="[placeholder]view.share.search_user">
+                        <dd id="fs-share">
+                            <div class="fs-button-wrap fs-share-button-wrap">
+                                <button id="fs-share-create" class="fs-button-primary" data-i18n="view.share.create"></button>
+                                <button id="fs-share-edit" class="fs-button-primary" data-i18n="view.share.edit"></button>
+                                <button id="fs-share-delete" data-i18n="view.share.delete"></button>
                             </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th data-i18n="view.share.resource"></th>
-                                        <th data-i18n="view.share.full_access"></th>
-                                        <th data-i18n="view.share.ro"></th>
-                                        <th data-i18n="view.share.wo"></th>
-                                        <th data-i18n="view.share.wp"></th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <div>
-                                <input type="submit" name="share" data-i18n="[value]view.share.create"/>
-                            </div>
-                            <div class="fs-share-remove">
-                                <p class="fs-hint" data-i18n="view.share.hint_remove"></p>
-                                <input type="submit" name="unshare" data-i18n="[value]view.share.delete"/>
+                            <div id="fs-share-consumers">
+                                <h6 data-i18n="view.share.access_rights"></h6>
+                                <ul></ul>
+                                <span class="fs-share-hint-owner-only" data-i18n="view.share.owner_only"></span>
                             </div>
                         </dd>
                         <dt id="fs-content-view-title-properties">
@@ -704,11 +689,10 @@
             </div>
         </div>
 
-
         <div id="fs-share-link-window">
             <div id="fs-share-link-window-content">
                 <div class="fs-share-link-window-row">
-                    <p class="fs-hint" data-i18n="view.share.hint_create_url"></p>
+                    <p class="fs-hint" data-i18n="view.share_link.hint_create_url"></p>
                     <input type="submit" class="fs-button-small" name="link_settings" data-i18n="[value]view.share_link.link_settings" />
                 </div>
 
@@ -723,8 +707,74 @@
 
                 <div id="fs-share-link-window-hint-delete">
                     <svg class="gr-icon gr-i-info"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#info"></use></svg>
-                    <p class="fs-hint" data-i18n="view.share.hint_remove_url"></p>
+                    <p class="fs-hint" data-i18n="view.share_link.hint_remove_url"></p>
                 </div>
+            </div>
+        </div>
+
+        <div id="fs-share-window">
+            <div id="fs-share-window-content">
+                <p class="fs-hint" data-i18n="[html]view.share.hint_add"></p>
+
+                <h2 data-i18n="view.share.name"></h2>
+                <input type="text" name="share_name" />
+
+                <h2 data-i18n="view.share.search_user"></h2>
+
+                <div id="fs-share-window-search">
+                    <input type="text" name="share_consumer_search" />
+
+                    <div id="fs-share-window-search-role" class="fs-share-window-privilege-selector">
+                        <div class="fs-share-window-selected-privilege">
+                            <span class="fs-share-window-selected-privilege-label" data-i18n="view.share.privilege_rw"></span>
+                            <svg class="gr-icon gr-i-expand"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#expand"></use></svg>
+                        </div>
+                        <ul class="fs-share-window-privileges">
+                            <li>
+                                <input id="new_share_consumer_privilege_m" type="radio" name="new_share_consumer_privilege" value="m" />
+                                <label for="new_share_consumer_privilege_m">
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg>
+                                    <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_m"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input id="new_share_consumer_privilege_r" type="radio" name="new_share_consumer_privilege" value="r" />
+                                <label for="new_share_consumer_privilege_r">
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg>
+                                    <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_r"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input id="new_share_consumer_privilege_rw" type="radio" name="new_share_consumer_privilege" value="rw" checked />
+                                <label for="new_share_consumer_privilege_rw">
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg>
+                                    <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_rw"></span>
+                                </label>
+                            </li>
+                            <li>
+                                <input id="new_share_consumer_privilege_w+" type="radio" name="new_share_consumer_privilege" value="w+" />
+                                <label for="new_share_consumer_privilege_w+">
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg>
+                                    <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_w+"></span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <ul id="fs-share-window-consumers"></ul>
+
+                <div id="fs-share-window-remove">
+                    <svg class="gr-icon gr-i-info"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#info"></use></svg>
+                    <p class="fs-hint" data-i18n="view.share.hint_remove"></p>
+                    <input type="submit" name="unshare" class="fs-button-small" data-i18n="[value]view.share.delete"/>
+                    <hr class="full-width" />
+                </div>
+            </div>
+            <div id="fs-share-window-button-wrapper" class="fs-window-secondary-actions">
+                <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.share.cancel" />
+                <input type="submit" tabindex="1" name="create" data-i18n="[value]view.share.create" class="fs-button-primary" />
+                <input type="submit" tabindex="1" name="save" data-i18n="[value]view.share.save" class="fs-button-primary" />
             </div>
         </div>
     </div>

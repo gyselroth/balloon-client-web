@@ -66,8 +66,15 @@
       & > .k-datepicker input[type="text"],
       & > .k-timepicker input[type="text"],
       & > input[type="password"] {
+        font-size: 15px;
         padding: 13px 15px 14px;
         height: auto;
+      }
+
+      & > .k-datepicker .k-state-focused input[type="text"],
+      & > .k-timepicker .k-state-focused input[type="text"],
+      & > input[type="password"]:focus {
+        padding: 12px 14px 13px;
       }
     }
   }
