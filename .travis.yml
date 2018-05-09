@@ -34,15 +34,6 @@ deploy:
   skip_cleanup: true
   file: bintray.json
   user: raffis
-  key:
-    secure: dqYiouXasiWqN2J+OeZGVnyNkpP3In3+WL55OctHYdJJmUACxlfc4yislhtYZVLNJB3BP2GI/HXpgmGDMjP/X8qaFsup8FnHGge/3k/S8TEUP5NneFaGXXfWKi3yac0cYvO1FOi1B2rp50XvXco2ydg9ETD8ZSPzMiVysP3/iAzTeyAVvjkOIGUMNYH4XKVfuVg4ba6qeHGa3/GdIwF5OvDdj9T58cPjN7LHIUjDE1xEFtzgs4R0vclKfIJglOVHWmv2a6nOi9CQfaiVi6evGhHSoO9G25ragR1Nsiluijx/ASjPuTiG7ZU/1p7VlsKv5HVTVi/7ARtJZAkg9LjFp8T2DeWuA5kzt2v8rNU18bouSMZu49NGky4l0S4qJsYtB1Nof+Ti2tEBfifv1v//Ey5gRFVfLWPzJ7td55xm3JN5KynPIoIuW9XcgkLIlCZyGSsuxggqPnIUzGS79yybps1UQH6VrN2Hn94kO7aLrRahe61EkvgqUB6WYOM35OyaGinvVM+FIGeWWxtDXRzYLLoxxq6AP4CczSgSt3nUcdVVnwRg0m0vz/IKwg4SG4XEsLBleCNe8FJkdC8VN3mQyww1kgyxpxumE9WgebXFPBxRILqS+zcD33X0Rc5hrKy7A5fm0bfvFqMut+H+kvNlzVHtf0/gVd3h+p46pF2sr08=
-  on:
-    master: false
-    tags: true
-- provider: bintray
-  skip_cleanup: true
-  file: bintray.json
-  user: raffis
   on:
     tags: true
   key:
