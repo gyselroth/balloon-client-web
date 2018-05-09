@@ -44,8 +44,6 @@
   }
 
   #fs-browser-header {
-    $checkboxWidth: 16px;
-
     border: 1px solid $headerBorderColor;
     border-radius: $border-radius;
     padding: 0 17px 0 12px;
@@ -153,17 +151,6 @@
         background-color: rgba(57, 165, 255, 0.1);
       }
 
-      &[aria-selected="true"] {
-        @include shadow-selected;
-
-        $borderSize: 2px;
-        border: $borderSize solid $colorActiveBlue;
-
-        .k-in {
-          padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
-        }
-      }
-
       &:last-child {
         margin-bottom: 0;
       }
@@ -240,13 +227,21 @@
           }
         }
       }
-    }
 
-    // selected node
-    .k-state-selected,
-    .fs-multiselected {
-      .fs-browser-column-checkbox {
-        @include checkboxChecked;
+      &[aria-selected="true"],
+      &.fs-multiselected {
+        @include shadow-selected;
+
+        $borderSize: 2px;
+        border: $borderSize solid $colorActiveBlue;
+
+        .k-in {
+          padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
+
+          .fs-browser-column-checkbox {
+            @include checkboxChecked;
+          }
+        }
       }
     }
   }
