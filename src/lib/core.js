@@ -2077,7 +2077,7 @@ var balloon = {
         for(var node=prev_pos; node <= last_pos; node++) {
           balloon.multiSelect(balloon.datasource._data[node]);
         }
-      }      else {
+      } else {
         balloon._shift_start = undefined;
         balloon.resetDom('multiselect');
       }
@@ -2815,7 +2815,7 @@ var balloon = {
       balloon.multiselect.splice(index, 1);
 
       $selected.removeClass('fs-multiselected');
-    }    else if(index <= 0) {
+    } else if(index <= 0) {
       balloon.multiselect.push(node);
       $selected.addClass('fs-multiselected');
     }
@@ -4997,6 +4997,13 @@ var balloon = {
     var $div = $('#fs-edit-live'),
       $textarea = $div.find('textarea');
 
+    var ext = balloon.getFileExtension(node);
+    var winTitle = node.name
+
+    if(ext != null && node.directory == false) {
+      winTitle = node.name.substr(0, node.name.length-ext.length-1) + ' (' + ext.toUpperCase() + ')';
+    }
+
     balloon.xmlHttpRequest({
       url: balloon.base+'/files/content',
       type: 'GET',
@@ -5008,6 +5015,7 @@ var balloon = {
         $textarea.val(data);
 
         var $k_display = $div.kendoBalloonWindow({
+          title: winTitle,
           width: '70%',
           height: '70%',
           resizable: false,
@@ -5035,10 +5043,6 @@ var balloon = {
             });
           },
           open: function(e) {
-            $('#fs-edit-live_wnd_title').html(
-              $('#fs-browser-tree').find('li[fs-id="'+node.id+'"]').find('.k-in').find('> span').clone()
-            );
-
             setTimeout(function(){
               e.sender.wrapper.find('textarea').focus();
             }, 600);
