@@ -5719,19 +5719,15 @@ var balloon = {
       $fs_prop_color.find('.fs-color-'+node.meta.color).addClass('fs-color-selected');
     }
 
-    var $fs_prop_tags = $('#fs-properties-meta-tags').show(),
-      $fs_prop_tags_parent = $fs_prop_tags.parent();
-
+    var $fs_prop_tags = $('#fs-properties-meta-tags-tags').show();
     if(node.meta.tags) {
-      var children = [],
-        $fs_prop_tags_parent = $fs_prop_tags.parent();
+      var $fs_prop_tags_list = $fs_prop_tags.find('ul');
 
-      $fs_prop_tags.find('li').remove();
+      $fs_prop_tags_list.empty();
+
       for(var tag in node.meta.tags) {
-        children.push('<li><div class="fs-delete">x</div><div class="tag-name">'+node.meta.tags[tag]+'</div></li>');
+        $fs_prop_tags_list.append('<li><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete">x</div></li>');
       }
-
-      $fs_prop_tags.find('ul').html(children.join(''));
     }
 
     var $fs_prop_color = $("#fs-properties-meta-color");
@@ -6237,10 +6233,9 @@ var balloon = {
       case 'preview':
         $('#fs-properties-share').parent().hide();
 
-        var $fs_meta_tags = $("#fs-properties-meta-tags-tags");
-        $fs_meta_tags.hide()
-          .find('li').remove();
-
+        var $fs_meta_tags = $('#fs-properties-meta-tags-tags');
+        $fs_meta_tags.hide();
+        $fs_meta_tags.find('ul').empty();
 
         var $fs_preview_add_tag = $('#fs-preview-add-tag').removeClass('fs-add-tag-active'),
           $add   = $fs_preview_add_tag.find("input"),
