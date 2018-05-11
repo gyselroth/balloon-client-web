@@ -5540,8 +5540,6 @@ var balloon = {
       $fs_prop_file.show();
     }
 
-    var $fs_prop_tags = $("#fs-properties-meta-tags-tags").show();
-
     $("#fs-properties-node").show();
     var $field;
 
@@ -5593,37 +5591,6 @@ var balloon = {
           case 'description':
             $field = $('#fs-properties-'+meta_attr).find('textarea');
             $field.val(node.meta[meta_attr]);
-            break;
-
-          case 'color':
-            if(node[prop].color != undefined) {
-              // TODO pixtron - wouldn't it make more sense to give names like colorTag1, colorTag2 ...
-              var $fs_prop_color = $('#fs-properties-'+prop+'-color');
-              var color = 'fs-color-'+node[prop].color.substr(1);
-              $fs_prop_color.find('.'+color).addClass('fs-color-selected');
-
-            }
-            break;
-
-          case 'tags':
-            var children = [],
-              $fs_prop_tags_parent = $fs_prop_tags.parent();
-
-            $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
-              balloon.initMetaTagCompletion();
-              $('#fs-preview-add-tag').addClass('fs-add-tag-active');
-              $fs_prop_tags_parent
-                .find('input:text')
-                .focus()
-                .data('kendoAutoComplete').search();
-            });
-
-            $fs_prop_tags.find('li').remove();
-            for(var tag in node.meta.tags) {
-              children.push('<li><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete">x</div></li>');
-            }
-
-            $fs_prop_tags.find('ul').html(children.join(''));
             break;
 
           default:
