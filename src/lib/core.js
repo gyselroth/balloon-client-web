@@ -1749,7 +1749,8 @@ var balloon = {
 
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
-    balloon.togglePannel('content', true);
+    //TODO pixtron - do we really need to toggle the pannel here?
+    balloon.togglePannel('content');
     balloon.resetDom(['search']);
 
     // TODO pixtron - can this be removed?
@@ -1997,7 +1998,8 @@ var balloon = {
     $k_tree.trigger('select', {node: $node});
 
     balloon.long_touch = true;
-    balloon.togglePannel('content', false)
+    //TODO pixtron - should pannel really open here?
+    balloon.togglePannel('content', true);
 
     if(!balloon.isSystemNode(balloon.last)) {
       $('#fs-browser-tree').find('.k-in').removeClass('k-state-selected');
@@ -2025,7 +2027,7 @@ var balloon = {
       return;
     }
     balloon.last_click_event = e;
-    balloon.togglePannel('content', false);
+    balloon.togglePannel('content', true);
 
     if(balloon.rename_node !== null && balloon.rename_node !== undefined) {
       balloon._rename();
@@ -2121,7 +2123,7 @@ var balloon = {
     }
 
     if(balloon.last !== null && balloon.last.directory) {
-      balloon.togglePannel('content', true);
+      balloon.togglePannel('content', false);
 
       var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
 
@@ -6017,18 +6019,13 @@ var balloon = {
    * Toggle pannel
    *
    * @param  string pannel
+   * @param boolean expand (optional) See https://docs.telerik.com/kendo-ui/api/javascript/ui/splitter/methods/toggle
    * @return void
    */
-  togglePannel: function(pannel, hide) {
-    var $fs_browser_layout = $('#fs-browser-layout'),
-      $k_splitter = $fs_browser_layout.data('kendoSplitter'),
-      $pannel  = $('#fs-'+pannel);
+  togglePannel: function(pannel, expand) {
+    var $k_splitter = $('#fs-browser-layout').data('kendoSplitter');
 
-    if(hide === true && $pannel.width() === 0) {
-      return
-    }
-
-    $k_splitter.toggle($pannel);
+    $k_splitter.toggle('#fs-'+pannel, expand);
   },
 
 
