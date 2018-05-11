@@ -1753,8 +1753,7 @@ var balloon = {
     balloon.togglePannel('content');
     balloon.resetDom(['search']);
 
-    // TODO pixtron - can this be removed?
-    /*if(action === 'cloud') {
+    if(action === 'cloud') {
       balloon.resetDom('breadcrumb-home');
       $('#fs-crumb-search-list').hide();
       $('#fs-crumb-home-list').show();
@@ -1763,7 +1762,7 @@ var balloon = {
       $('#fs-crumb-home-list').hide();
       $('#fs-crumb-search-list').show();
       $('#fs-crumb-search').find('div:first-child').html($that.find('div:last-child').html());
-    }*/
+    }
 
     if(exec === false) {
       return;
