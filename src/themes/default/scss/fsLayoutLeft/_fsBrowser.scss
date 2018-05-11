@@ -3,7 +3,7 @@
   $headerBorderColor: $colorLightGrey;
   $nodeHeight: 50px; //height of a single node
 
-  $lineHeight: 24px;
+  $lineHeight: 30px;
 
   $iconWidth: 26px;
   $metaWidth: 72px;
@@ -28,7 +28,7 @@
     width: $iconWidth;
     height: $lineHeight;
     margin: 0;
-    padding: 0;
+    padding: 3px 0;
   }
 
   .fs-browser-column-changed {
@@ -166,7 +166,7 @@
 
         .fs-browser-column-name {
           width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
-          height: 24px;
+          height: $lineHeight;
           color: $colorDarkGrey;
           font-size: 15px;
           text-overflow: ellipsis;
@@ -181,8 +181,9 @@
             font-size: 15px;
             line-height: 17px;
             padding: 5px 6px 6px 6px;
-            margin-top: -3px;
+            margin-top: 0;
             margin-left: -7px;
+            border: 1px solid $colorLightGrey;
           }
         }
 
