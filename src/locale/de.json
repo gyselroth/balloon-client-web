@@ -97,7 +97,8 @@
     "new_file": "Neue Datei",
     "selected": "{{count}} Objekt ausgewählt",
     "selected_plural": "{{count}} Objekte ausgewählt",
-    "no_nodes": "<Es wurden keine Daten gefunden>"
+    "no_nodes": "<Es wurden keine Daten gefunden>",
+    "folderup": "Zurück"
   },
   "user": {
     "disk_space": "Speicherplatz:",

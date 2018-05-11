@@ -748,12 +748,17 @@ var balloon = {
       var $that = $(this), node;
       node = balloon.datasource.getByUid($(this).attr('data-uid'));
 
+      var order = ['icon', 'name', 'meta', 'size', 'changed', 'checkbox'];
+      var metaOrder = ['color_tag', 'sharelink_token', 'deleted'];
+
       if(balloon.isSystemNode(node)) {
         if(balloon.id(node) == '_FOLDERUP') {
-          $that.attr('fs-type', 'folder');
+          $that.addClass('fs-folderup');
           balloon.fileUpload(balloon.getPreviousCollectionId(), $that);
+          order = ['icon', 'name'];
+        } else {
+          return;
         }
-        return;
       }
 
       if(node.meta != undefined && node.meta.tags != undefined) {
@@ -763,9 +768,6 @@ var balloon = {
       if(node.deleted) {
         $that.addClass('fs-node-deleted');
       }
-
-      var order = ['icon', 'name', 'meta', 'size', 'changed', 'checkbox'];
-      var metaOrder = ['color_tag', 'sharelink_token', 'deleted'];
 
       $that.attr('fs-id', balloon.id(node));
 
@@ -813,7 +815,7 @@ var balloon = {
               }
               break;
             case 'color_tag':
-              if(balloon.isValidColor(node.meta.color)) {
+              if(node.meta && node.meta.color && balloon.isValidColor(node.meta.color)) {
                 var color_tag = '<span class="fs-color-tag fs-color-tag-'+node.meta.color+'"></span>';
               } else {
                 var color_tag = '<span class="fs-color-tag"></span>';
@@ -2327,9 +2329,9 @@ var balloon = {
               if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.data.id !== null && operation.id !== null) {
                 pool.data.unshift({
                   id: '_FOLDERUP',
-                  name: "..",
+                  name: i18next.t('tree.folderup'),
                   directory: true,
-                  spriteCssClass: 'gr-icon gr-i-folder',
+                  spriteCssClass: 'gr-i-arrow-w',
                 });
               }
 
@@ -4880,11 +4882,13 @@ var balloon = {
           }          else {
             return 'gr-i-folder-filter';
           }
-        }        else if(node.shared === true && node.reference === true) {
+        } else if(node.shared === true && node.reference === true) {
           return 'gr-i-folder-received';
-        }        else if(node.shared === true) {
+        } else if(node.shared === true) {
           return 'gr-i-folder-shared';
-        }        else {
+        } else if(node.spriteCssClass) {
+          return node.spriteCssClass;
+        } else {
           return 'gr-i-folder';
         }
       }
