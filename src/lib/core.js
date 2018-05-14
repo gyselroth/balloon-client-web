@@ -256,6 +256,39 @@ var balloon = {
       balloon.menuLeftAction('cloud')
     });
 
+    $('#fs-browser-header-checkbox').off('click').on('click', function() {
+      var $this = $(this);
+      var $fs_browser_tree = $("#fs-browser-tree");
+      var $k_tree = $fs_browser_tree.data('kendoTreeView');
+
+      if($this.hasClass('fs-browser-header-checkbox-undetermined') || $this.hasClass('fs-browser-header-checkbox-checked')) {
+        for(var i=0; i<balloon.datasource._pristineData.length; i++) {
+          var node = balloon.datasource._pristineData[i];
+          var $node = $('#fs-browser-tree').find('li[fs-id='+balloon.id(node)+']');
+          $node.removeClass('fs-multiselected');
+        }
+        $k_tree.select($());
+
+        balloon.multiselect = [];
+        balloon.togglePannel('content', false);
+        balloon.pushState(false, true);
+      } else {
+        for(var i=0; i<balloon.datasource._pristineData.length; i++) {
+          var node = balloon.datasource._pristineData[i];
+
+          balloon.multiSelect(node);
+
+          var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
+          $k_tree.select(dom_node);
+          $k_tree.trigger('select', {node: dom_node});
+        }
+
+        balloon.pushState();
+      }
+
+      balloon._updateCheckAllState();
+    });
+
     balloon.showHint();
     balloon.initialized = true;
     app.postInit(this);
@@ -892,6 +925,7 @@ var balloon = {
       rename_match = false;
     }
 
+    balloon._updateCheckAllState();
     balloon.fileUpload(balloon.getCurrentCollectionId(), $('#fs-layout-left'));
   },
 
@@ -2075,10 +2109,38 @@ var balloon = {
         balloon.resetDom('multiselect');
       }
 
+      balloon._updateCheckAllState();
       balloon.pushState();
     }
   },
 
+  /**
+   * Updates the state of the check all checkbox in browser tree
+   *
+   * @return void
+   */
+  _updateCheckAllState: function() {
+    var $fs_browser_header_checkbox = $('#fs-browser-header-checkbox');
+    var nodeCount = balloon.datasource._pristineData.length;
+
+    $fs_browser_header_checkbox.removeClass('fs-browser-header-checkbox-checked');
+    $fs_browser_header_checkbox.removeClass('fs-browser-header-checkbox-undetermined');
+
+    if(balloon.isMultiSelect()) {
+      if(balloon.multiselect.length === nodeCount) {
+        $fs_browser_header_checkbox.addClass('fs-browser-header-checkbox-checked');
+      } else {
+        $fs_browser_header_checkbox.addClass('fs-browser-header-checkbox-undetermined');
+      }
+    } else if(balloon.last) {
+      //one node selected
+      if(nodeCount === 1) {
+        $fs_browser_header_checkbox.addClass('fs-browser-header-checkbox-checked');
+      } else {
+        $fs_browser_header_checkbox.addClass('fs-browser-header-checkbox-undetermined');
+      }
+    }
+  },
 
   /**
    * Is touch device?

@@ -26,6 +26,13 @@
   background-size: 120%;
 }
 
+@mixin checkboxUndetermined {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxyZWN0IGZpbGw9IiMzOWE1ZmYiIHg9IjQiIHk9IjExIiB3aWR0aD0iMTYiIGhlaWdodD0iMiIvPjwvc3ZnPg==');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
 @mixin icon-button($width:60px, $height:null) {
   @if ($height == null) { $height: $width }
 

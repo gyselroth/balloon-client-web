@@ -22,6 +22,10 @@
     line-height: $lineHeight;
     vertical-align: middle;
     color: $colorMediumGrey;
+
+    &.fs-browser-column-sortable {
+      cursor: pointer;
+    }
   }
 
   .fs-browser-column-icon {
@@ -78,6 +82,15 @@
       height: $checkboxWidth;
       border: 1px solid $colorMediumGrey;
       border-radius: 2px;
+      cursor: pointer;
+
+      &.fs-browser-header-checkbox-checked {
+        @include checkboxChecked;
+      }
+
+      &.fs-browser-header-checkbox-undetermined {
+        @include checkboxUndetermined;
+      }
     }
 
     #fs-action-filter {
@@ -86,6 +99,7 @@
       top: 0;
       width: 100%;
       height: 100%;
+      cursor: pointer;
     }
 
     #fs-action-filter-select {
