@@ -2662,10 +2662,11 @@ var balloon = {
         name: new_name,
       },
       success: function(data) {
-        if(typeof(node) === 'object') {
-          node.name = new_name;
-          node.spriteCssClass = balloon.getSpriteClass(node);
-          balloon.displayProperties(node);
+        var newNode = data;
+
+        if(typeof(newNode) === 'object') {
+          newNode.spriteCssClass = balloon.getSpriteClass(node);
+          balloon.displayProperties(newNode);
         }
 
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
