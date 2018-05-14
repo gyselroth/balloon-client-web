@@ -1,6 +1,6 @@
 ## 2.0.0-beta2
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
-**Date**: 
+**Date**: Mon Mar 26 13:01:18 CEST 2018
 
 * [FIX] fixed error node is not a share after unshare a collection
 * [FIX] popup close icon is now brighter and better visible

@@ -118,11 +118,19 @@
                      <div id="fs-browser-action">
                         <ul>
                            <li id="fs-action-menu" class="gr-icon gr-i-menu fs-action-element" data-i18n="[title]nav.action.toggle_menu"></li>
-                           <li id="fs-action-file" class="gr-icon gr-i-file-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_file"></li>
-                           <li id="fs-action-folder" class="gr-icon gr-i-folder-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add_folder"></li>
+                           <li id="fs-action-add" class="gr-icon gr-i-add fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.add"></li>
                            <li id="fs-action-upload" class="gr-icon gr-i-cloud-upload fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.upload"></li>
                            <li id="fs-action-filter" class="gr-icon gr-i-filter fs-action-element fs-action-collection-only" data-i18n="[title]nav.action.filter"></li>
                         </ul>
+
+                        <div id="fs-action-add-select">
+                            <div class="gr-icon gr-i-add" data-i18n="[title]nav.action.add"></div>
+                            <ul>
+                                <li data-type="folder"><span class="gr-i-folder gr-icon"></span><span data-i18n="tree.folder"></span><input type="text" data-i18n="[placeholder]tree.new_folder"/></li>
+                                <li data-type="txt"><span class="gr-i-file-text gr-icon"></span><span data-i18n="tree.txt_file"></span><input type="text" data-i18n="[placeholder]tree.new_file"/></li>
+                            </ul>
+                        </div>
+
                         <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
                         <div id="fs-action-filter-select">
                            <div class="gr-icon gr-i-filter"></div>

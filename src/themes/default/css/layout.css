@@ -829,7 +829,7 @@ td {
     display: none;
 }
 
-#fs-action-filter-select .gr-i-filter {
+#fs-action-filter-select .gr-i-filter, #fs-action-add-select .gr-i-add {
     float: left;
     background-color: #f4f4f4;
     opacity: 1;
@@ -843,12 +843,23 @@ td {
     box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
 }
 
-#fs-action-filter-select {
+#fs-action-filter-select, #fs-action-add-select {
     display: none;
     position: absolute;
-    left: 156px;
     top: 5px;
     z-index: 5;
+}
+
+#fs-action-filter-select ul, #fs-action-add-select ul {
+    background-color: #f4f4f4;
+}
+
+#fs-action-filter-select {
+    left: 116px;
+}
+
+#fs-action-add-select {
+    left: 46px;
 }
 
 /*
@@ -866,25 +877,40 @@ td {
     height: 10px;
 }
 */
-#fs-action-filter-select li {
+#fs-action-filter-select li, #fs-action-add-select li {
     clear: both;
 }
 
-#fs-action-filter-select li > span {
-    margin-left: 5px;
+#fs-action-add-select li {
+    height: 28px;
 }
 
-#fs-action-filter-select li > * {
+#fs-action-filter-select li > span, #fs-action-add-select li > span {
+    margin-left: 5px;
+    line-height: 24px;
+}
+
+#fs-action-filter-select li > *, #fs-action-add-select li > * {
     float: left;
 }
 
-#fs-action-filter-select > div:last-child {
+#fs-action-filter-select > div:last-child, #fs-action-add-select > div:last-child {
     background-color: #f4f4f4;
     float: left;
 }
 
-#fs-action-filter-select span:first-child {
+#fs-action-filter-select span:first-child, #fs-action-add-select span:first-child {
     position: relative;
+}
+
+#fs-action-add-select input {
+    float: left;
+    width: 150px;
+    margin: 0 0 0 5px;
+}
+
+.fs-node-exists {
+    border-color: #CE0E0E !important;
 }
 
 #fs-action-filter li {
@@ -1027,7 +1053,7 @@ td {
     float: left;
 }
 
-#fs-action-filter-select ul {
+#fs-action-filter-select ul, #fs-action-add-select ul {
     margin: 0;
     padding: 0.4em;
     -webkit-box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
@@ -1037,7 +1063,7 @@ td {
     z-index: 1;
 }
 
-#fs-action-filter-select ul:before {
+#fs-action-filter-select ul:before, #fs-action-add-select ul:before {
     background: #f4f4f4;
     display: block;
     content: ".";
@@ -1045,7 +1071,7 @@ td {
     width: 7px;
     height: 27px;
     position: absolute;
-    left: -5px;
+    left: -3px;
     top: 0;
 }
 

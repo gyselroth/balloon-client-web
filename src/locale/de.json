@@ -84,7 +84,9 @@
         "hidden": "Versteckt"
     },
     "open_folder": "Ordner öffnen",
+    "folder": "Ordner",
     "new_folder": "Neuer Ordner",
+    "txt_file": "Textdokument",
     "new_file": "Neue Datei",
     "selected": "({{count}} items ausgewählt)",
     "selected_plural": "({{count}} items ausgewählt)",
