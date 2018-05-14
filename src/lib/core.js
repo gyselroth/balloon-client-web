@@ -2560,66 +2560,6 @@ var balloon = {
     return filtered;
   },
 
-
-  /**
-   * Rename node directly in the browser
-   *
-   * @param   object node
-   * @return  void
-   */
-  //TODO pixtron - this seems to just be reintroduced by merging from master (not really needed anymore?)
-  /*initRenameBrowser: function(node) {
-    balloon.rename_node = node;
-    var $target = $('li[fs-id='+node.id+']').find('.k-in')
-      .addClass('fs-rename');
-
-    $target.find('.fs-ext').hide();
-
-    var value = node.name,
-      name  = $target.find('.fs-browser-name').html();
-
-    $target.find('.fs-browser-name')
-      .html('<input name="rename" value="'+value+'"/>');
-
-    var ext = balloon.getFileExtension(node);
-    balloon.rename_input = $target.find('input').focus();
-    if(ext === null) {
-      balloon.rename_input.select();
-    } else {
-      var length = node.name.length - ext.length - 1;
-      balloon.rename_input[0].setSelectionRange(0, length);
-    }
-
-    $(document).unbind('click').click(function(e) {
-      if($(e.target).attr('name') == 'rename') {
-        return;
-      }
-
-      if(node.id == balloon.rename_node.id) {
-        balloon.rename_input.parent().removeClass('fs-rename');
-      }
-      balloon.post_rename_reload = true;
-
-      balloon._rename();
-    });
-
-    balloon.rename_input.keyup(function(e) {
-      e.stopImmediatePropagation();
-
-      if(e.which === 27) {
-        balloon.resetRename(name);
-      } else if(e.which === 13) {
-        if(node.id == balloon.rename_node.id) {
-          balloon.rename_input.parent().removeClass('fs-rename');
-        }
-        balloon.post_rename_reload = true;
-
-        balloon._rename();
-      }
-    });
-  },*/
-
-
   /**
    * Rename the selected node
    *
@@ -2650,23 +2590,8 @@ var balloon = {
       $input[0].setSelectionRange(0, length);
     }
 
-    //TODO pixtron - can this be removed? should be handled by $input.focusout() below
-    /*$(document).unbind('click').click(function(e) {
-      var $some_target = $(e.target);
-
-      if($some_target.attr('id') == 'fs-properties-name'  ||
-      $some_target.parent().attr('id') == 'fs-properties-name' ||
-      $some_target.parent().parent().attr('id') == 'fs-properties-name') {
-        return;
-      }
-
-      balloon._rename();
-      balloon._resetRenameView();
-    });*/
-
     $input.focusout(function(e) {
       balloon._rename();
-      balloon._resetRenameView();
     });
 
     $input.keyup(function(e) {
@@ -2675,30 +2600,9 @@ var balloon = {
         balloon._resetRenameView();
       } else if(e.keyCode == 13) {
         balloon._rename();
-        balloon._resetRenameView();
       }
     });
   },
-
-
-  /**
-   * Reset rename (back to the original name)
-   *
-   * @param string name
-   */
-  resetRename: function(name) {
-    //TODO pixtron - can this savely be removed?
-    return;
-    var $parent = balloon.rename_input.parent();
-    balloon.rename_input.remove().unbind('keyup');
-    $parent.html(name);
-    $parent.parent().find('.fs-ext').show();
-    $(document).unbind('click');
-    balloon.rename_node = undefined;
-    balloon.rename_input = null;
-  },
-
-
 
   /**
    * Reset normal fs-value-name view
@@ -2715,6 +2619,7 @@ var balloon = {
     }
 
     balloon.rename_node = undefined;
+    balloon.rename_original = undefined;
     balloon.rename_input = null;
   },
 
@@ -2734,9 +2639,6 @@ var balloon = {
     balloon.rename_input.unbind('keyup');
 
     if(new_value != balloon.rename_node.name) {
-      balloon.rename_original = null;
-      balloon.rename_node.name = new_value;
-
       balloon.rename(balloon.rename_node, new_value);
     } else {
       balloon._resetRenameView();
@@ -2771,6 +2673,7 @@ var balloon = {
       },
       error: function(response) {
         balloon.rename_node = null;
+        balloon._resetRenameView();
         balloon.displayError(response);
       }
     });
