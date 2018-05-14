@@ -5726,7 +5726,7 @@ var balloon = {
       $fs_prop_tags_list.empty();
 
       for(var tag in node.meta.tags) {
-        $fs_prop_tags_list.append('<li><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete">x</div></li>');
+        $fs_prop_tags_list.append('<li><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div></li>');
       }
     }
 
@@ -5823,7 +5823,7 @@ var balloon = {
     });
 
     $fs_prop_tags.unbind('click').on('click', 'li', function(e) {
-      if($(e.target).attr('class') == 'fs-delete') {
+      if($(e.target).attr('class') == 'fs-delete' || ($(e.target).parents().filter('.fs-delete').length > 0)) {
         $(this).remove();
 
         var tags = $fs_prop_tags.find('li').map(function() {
@@ -5838,6 +5838,7 @@ var balloon = {
         return;
       }
 
+      //TODO pixtron - fix advanced search
       balloon.advancedSearch();
       var value = 'meta.tags:'+$(this).find('.tag-name').text();
       balloon.search(value);
@@ -5881,12 +5882,12 @@ var balloon = {
 
       var $fs_prop_tags = $('#fs-properties-meta-tags-tags');
       if($last_tag.attr('name') == 'add_tag') {
-        $fs_prop_tags.find('ul').append('<li><div class="tag-name">'+value+'</div><div class="fs-delete">x</div></li>');
+        $fs_prop_tags.find('ul').append('<li><div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div></li>');
         $last_tag.val('').focus();
       } else {
         var $parent = $last_tag.parent();
         $last_tag.remove();
-        $parent.html('<div class="tag-name">'+value+'</div><div class="fs-delete">x</div>');
+        $parent.html('<div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div>');
       }
 
       var tags = $fs_prop_tags.find('li').map(function () {
