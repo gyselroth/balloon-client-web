@@ -16,7 +16,7 @@ var apps = [
   convert,
   notification,
   clamav,
-  desktop
+  desktop,
 ]
 
 var app = {
