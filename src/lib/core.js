@@ -132,7 +132,7 @@ var balloon = {
    */
   init: function() {
     balloon.add_file_handlers = {
-      file: balloon.addFile,
+      txt: balloon.addFile,
       folder: balloon.addFolder,
     };
 
@@ -490,7 +490,6 @@ var balloon = {
    */
   _treeKeyup: function(e) {
     e.preventDefault();
-
     if($('.k-window').is(':visible') || $('input,select,textarea').is(':focus')) {
       return;
     }
@@ -772,7 +771,7 @@ var balloon = {
     var selected = balloon.getURLParam('selected[]'),
       $fs_browser_tree = $("#fs-browser-tree"),
       $k_tree = $fs_browser_tree.data('kendoTreeView'),
-      rename_match = false;
+      select_match = false;
 
     $fs_browser_tree.find('.k-item').each(function() {
       var $that = $(this), node;
@@ -893,8 +892,8 @@ var balloon = {
         balloon.fileUpload(node);
       }
 
-      if(balloon.added_rename == balloon.id(node)) {
-        rename_match = node;
+      if(balloon.added == balloon.id(node)) {
+        select_match = node;
       }
 
       if(selected !== null && typeof(selected) === 'object' && selected.indexOf(balloon.id(node)) > -1) {
@@ -908,14 +907,12 @@ var balloon = {
       }
     });
 
-    if(rename_match !== false) {
-      var dom_node = $('li[fs-id='+rename_match.id+']');
+    if(select_match !== false) {
+      var dom_node = $('li[fs-id='+select_match.id+']');
       $k_tree.select(dom_node);
       $k_tree.trigger('select', {node: dom_node});
-
-      balloon.initRenameBrowser(rename_match);
-      balloon.added_rename = null;
-      rename_match = false;
+      balloon.added = null;
+      select_match = false;
     }
 
     balloon.fileUpload(balloon.getCurrentCollectionId(), $('#fs-layout-left'));
@@ -2021,8 +2018,7 @@ var balloon = {
 
       if(balloon.isMultiSelect()) {
         balloon.multiSelect(balloon.getCurrentNode());
-      }      else {
-        //balloon.multiSelect(balloon.previous, true);
+      } else {
         balloon.multiSelect(balloon.getCurrentNode());
       }
 
@@ -2042,7 +2038,10 @@ var balloon = {
       return;
     }
     balloon.last_click_event = e;
-    balloon.togglePannel('content', false);
+
+    if(!balloon.isMobileViewPort()) {
+      balloon.togglePannel('content', false);
+    }
 
     if(balloon.rename_node !== null && balloon.rename_node !== undefined) {
       balloon._rename();
@@ -2180,6 +2179,9 @@ var balloon = {
    * @return  void
    */
   _searchKeyup: function(e){
+    var $that = $(this);
+    $('.fs-search-reset-button').show();
+
     if(e.keyCode == 13) {
       balloon.search($(this).val());
       return;
@@ -2196,6 +2198,7 @@ var balloon = {
   resetSearch: function(e) {
     balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-crumb-home-list').show();
+    $('.fs-search-reset-button').hide();
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list').hide();
     $fs_crumb_search_list.find('li').remove();
@@ -2251,7 +2254,6 @@ var balloon = {
     balloon.datasource = new kendo.data.HierarchicalDataSource({
       transport: {
         read: function(operation, a) {
-console.log(operation);
           balloon.resetDom('upload');
           if(balloon.datasource._url == undefined) {
             balloon.datasource._url = balloon.base+'/collections/children';
@@ -3327,15 +3329,22 @@ console.log(operation);
 
         var $input = $(this).find('input');
         if(type === 'folder') {
-          $input.val($input.attr('placeholder'));
+          $input.val(i18next.t('tree.new_folder'));
         } else {
-          $input.val($input.attr('placeholder')+'.'+type);
+          $input.val(i18next.t('tree.new_file'));
         }
 
         $input.show().focus().off('keydown').on('keydown', function(e) {
+          e.stopImmediatePropagation();
           var name = $(this).val();
+
+          if(type !== 'folder') {
+            name = name+'.'+type;
+          }
+
           if(balloon.nodeExists(name)) {
             $(this).addClass('fs-node-exists');
+            return;
           } else {
             $(this).removeClass('fs-node-exists');
           }
@@ -3345,7 +3354,9 @@ console.log(operation);
               balloon.add_file_handlers[type](name, type);
             }
 
-            $('#fs-action-add-select').hide();
+            setTimeout(function(){
+              $('#fs-action-add-select').hide();
+            }, 100);
           }
         });
       });
@@ -3367,6 +3378,7 @@ console.log(operation);
       },
       dataType: 'json',
       success: function(data) {
+        balloon.added = data.id;
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
     });
@@ -3386,6 +3398,7 @@ console.log(operation);
       url: balloon.base+'/files?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
       type: 'PUT',
       success: function(data) {
+        balloon.added = data.id;
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
     });
@@ -4142,6 +4155,7 @@ console.log(operation);
 
     var content = $('#fs-search-container').find('input:text').val();
     var query   = balloon.buildQuery(content, must);
+    $('.fs-search-reset-button').show();
 
     if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
       query = undefined;

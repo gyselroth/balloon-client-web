@@ -320,6 +320,7 @@ var app = {
         $('#fs-new-file').remove();
       },
       success: function(data) {
+        app.balloon.added = data.id;
         app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
       }
     });

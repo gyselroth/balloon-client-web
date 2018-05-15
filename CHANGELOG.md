@@ -1,3 +1,12 @@
+## 2.0.0-beta3
+**Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
+**Date**: Tue May 15 14:52:11 CEST 2018
+
+* [FIX] share reset button is only visible after enter input
+* [FIX] fixed right pannel toggle in mobile view
+* [CHANGE] adding new nodes opens a dropdown to choose from and set the new name
+
+
 ## 2.0.0-beta2
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Mon Mar 26 13:01:18 CEST 2018

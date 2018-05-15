@@ -70,6 +70,24 @@
 }
 
 @media only screen and (max-width:550px) {
+    #fs-action-add-select {
+        left: 14px;
+        z-index: 100;
+    }
+
+    #fs-action-add-select ul:before {
+        height: 30px;
+    }
+
+    #fs-action-add-select ul {
+        top: -4px;
+    }
+
+    #fs-action-add-select .gr-i-add {
+        height: 24px;
+        width: 27px;
+    }
+
     #fs-logo {
         top: 10px;
         left: 10px;
