@@ -2354,7 +2354,7 @@ var balloon = {
               var sorted = balloon._sortDatasource(
                 balloon._filterDatasource(pool.data, balloon.tree.filter),
                 balloon.tree.sort.field,
-                balloon.tree.sort.dir,
+                balloon.tree.sort.dir
               );
               balloon._rebuildTree(sorted, operation)
             },
