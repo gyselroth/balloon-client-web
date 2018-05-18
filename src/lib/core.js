@@ -843,6 +843,10 @@ var balloon = {
       var $node_el = $that_k_in.first();
       $node_el.empty();
 
+      if(balloon.isSearch()) {
+        $node_el.addClass('fs-browser-search-item');
+      }
+
       for(var prop in order) {
         switch(order[prop]) {
         case 'changed':
@@ -891,11 +895,25 @@ var balloon = {
 
         case 'name':
           var ext = balloon.getFileExtension(node);
+          var $name_el;
           if(ext != null && !node.directory) {
-            $node_el.append('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name.substr(0, node.name.length-ext.length-1)+'</span><span class="fs-ext">&nbsp;('+ext+')</span></div>');
+            $name_el = $('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name.substr(0, node.name.length-ext.length-1)+'</span><span class="fs-ext">&nbsp;('+ext+')</span></div>');
           } else {
-            $node_el.append('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name+'</span></div>');
+            $name_el = $('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name+'</span></div>');
           }
+
+          if(balloon.isSearch()) {
+            var path = node.path.split('/').slice(1);
+            var $path_el = $('<p></p>');
+
+            path.forEach(function(item) {
+              $path_el.append('<span> / </span><span>' + item + '</span>');
+            });
+
+            $name_el.append($path_el);
+          }
+
+          $node_el.append($name_el);
           break;
 
         case 'icon':

@@ -241,6 +241,22 @@
             }
           }
         }
+
+        &.fs-browser-search-item {
+          .fs-browser-column-name {
+            height: 33px;
+            margin-top: -2px;
+            margin-bottom: -1px;
+            line-height: 17px;
+
+            & > p {
+              font-size: 13px;
+              line-height: 14px;
+              margin-top: 2px;
+              color: $colorActiveBlue;
+            }
+          }
+        }
       }
 
       &[aria-selected="true"],
