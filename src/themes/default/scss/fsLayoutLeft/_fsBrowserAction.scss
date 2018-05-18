@@ -49,6 +49,7 @@
     @include dropdown($dropdownWidth, $buttonSize);
 
     left: calc(100% - #{$dropdownWidth});
+    display: none;
 
     ul {
       li {
@@ -67,6 +68,11 @@
 
         span {
           color: $colorMediumGrey;
+        }
+
+        input[type=text] {
+          display: inline-block;
+          width: calc(100% - 32px);
         }
 
         &:hover {

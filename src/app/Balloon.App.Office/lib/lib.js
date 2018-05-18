@@ -16,8 +16,36 @@ var app = {
   preInit: function(core)  {
     this.balloon = core;
     app.balloon._treeDblclick = app.treeDblclick;
-    app.addTextFile = app.balloon.addFile;
-    app.balloon.addFile = app.addFile;
+
+    var $add_node = $('#fs-action-add-select').find('ul');
+
+    $add_node.append(
+      '<li data-type="docx">'+
+        '<svg class="gr-icon gr-i-file-word"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-word"></use></svg>'+
+        '<span>'+i18next.t('app.office.word_document')+'</span>'+
+        '<input type="text" placeholder="" />'+
+      '</li>'
+    );
+
+    $add_node.append(
+      '<li data-type="xlsx">'+
+        '<svg class="gr-icon gr-i-file-excel"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-excel"></use></svg>'+
+        '<span>'+i18next.t('app.office.excel_document')+'</span>'+
+        '<input type="text" placeholder="" />'+
+      '</li>'
+    );
+
+    $add_node.append(
+      '<li data-type="pptx">'+
+        '<svg class="gr-icon gr-i-file-powerpoint"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-powerpoint"></use></svg>'+
+        '<span>'+i18next.t('app.office.powerpoint_document')+'</span>'+
+        '<input type="text" placeholder="" />'+
+      '</li>'
+    );
+
+    this.balloon.add_file_handlers.docx = this.addOfficeFile;
+    this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
+    this.balloon.add_file_handlers.pptx = this.addOfficeFile;
   },
 
   resetView: function() {
@@ -302,82 +330,7 @@ var app = {
     app.balloon.pushState();
   },
 
-  addFile: function() {
-    var $trigger = $(this);
-    var $select = $('#fs-new-file');
-
-    if($select.is(':visible')) {
-      $select.remove();
-      return;
-    }
-
-    var $select = $('<div class="bln-dropdown fs-action-dropwdown" id="fs-new-file">'+
-          '<span class="bln-dropdown-spike fs-action-dropdown-spike"></span>'+
-          '<ul class="bln-dropdown-content fs-action-dropdown-content">'+
-            '<li>'+
-                '<svg class="gr-icon gr-i-file-text"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-text"></use></svg>'+
-                '<span>'+i18next.t('app.office.text_document')+'</span>'+
-            '</li>'+
-            '<li>'+
-                '<svg class="gr-icon gr-i-file-word"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-word"></use></svg>'+
-                '<span>'+i18next.t('app.office.word_document')+'</span>'+
-            '</li>'+
-            '<li>'+
-                '<svg class="gr-icon gr-i-file-excel"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-excel"></use></svg>'+
-                '<span>'+i18next.t('app.office.excel_document')+'</span>'+
-            '</li>'+
-            '<li>'+
-                '<svg class="gr-icon gr-i-file-powerpoint"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file-powerpoint"></use></svg>'+
-                '<span>'+i18next.t('app.office.powerpoint_document')+'</span>'+
-            '</li>'+
-        '</ul>'+
-    '</div>');
-
-    var $bar = $('#fs-browser-action');
-    $bar.append($select);
-
-
-    var $spike = $select.find('.fs-action-dropdown-spike');
-    var spikeLeft = ($trigger.offset().left + $trigger.width() / 2) - $select.offset().left - ($spike.outerWidth() / 2);
-
-    $spike.css('left', spikeLeft+'px');
-
-    $select.on('click', 'li', function(){
-      var $type = $(this).find('.gr-icon');
-
-      if($type.hasClass('gr-i-file-text')) {
-        app.addTextFile();
-      } else if($type.hasClass('gr-i-file-word')) {
-        app.addOfficeFile('docx');
-      } else if($type.hasClass('gr-i-file-excel')) {
-        app.addOfficeFile('xlsx');
-      } else if($type.hasClass('gr-i-file-powerpoint')) {
-        app.addOfficeFile('pptx');
-      }
-
-      $select.remove();
-    });
-
-    $(document).off('click.office').on('click.office', function(e) {
-      if($(e.target).is('#fs-action-file')) {
-        return;
-      }
-
-      var $select = $('#fs-new-file');
-      if($select.is(':visible')) {
-        $select.remove();
-      }
-    });
-  },
-
-  addOfficeFile: function(type) {
-    var new_name = i18next.t('tree.new_file'),
-      name = new_name+'.'+type;
-
-    if(app.balloon.nodeExists(name)) {
-      name = new_name+' ('+app.balloon.randomString(4)+').'+type;
-    }
-
+  addOfficeFile: function(name, type) {
     name = encodeURI(name);
 
     app.balloon.xmlHttpRequest({
@@ -387,8 +340,8 @@ var app = {
         $('#fs-new-file').remove();
       },
       success: function(data) {
+        app.balloon.added = data.id;
         app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
-        app.balloon.added_rename = data.id;
       }
     });
   }
