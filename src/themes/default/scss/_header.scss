@@ -9,6 +9,8 @@
 
   height: $headerHeight;
 
+  z-index: 12;
+
   > div {
     float: left;
     display: block;
@@ -55,7 +57,9 @@
 
   }
 
-  #fs-browser-top-search {
+  #fs-search {
+    @include clearfix;
+
     position: absolute;
     top: 12px;
     left: 0;
@@ -63,22 +67,101 @@
 
     display: block;
     margin: auto;
-    padding: 6px;
 
     max-width: 400px;
     width: 40%;
     height: 36px;
 
-    background-color: $colorWhite;
+    & > .gr-icon {
+      position: absolute;
+      color: $colorMediumGrey;
+    }
 
-    border-radius: 20px;
-    border: solid 1px $colorLightGrey;
+    .gr-i-search {
+      top: 6px;
+      left: 7px;
+    }
 
-    line-height: 17px;
-    font-size: 15px;
-    letter-spacing: 0.5px;
-    text-align: left;
+    .gr-i-close {
+      display: none;
+      top: 11px;
+      right: 51px;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
+
+    #fs-search-input {
+      padding: 5px 6px 7px 45px;
+
+      float: left;
+      width: 100%;
+      height: 100%;
+
+      background-color: $colorWhite;
+
+      border-radius: 20px;
+      border: solid 1px $colorLightGrey;
+
+      line-height: 17px;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      text-align: left;
+      color: $colorDarkGrey;
+
+      &::placeholder, /* Chrome, Firefox, Opera, Safari 10.1+ */
+      &:-ms-input-placeholder, /* Internet Explorer 10-11 */
+      &::-ms-input-placeholder { /* Microsoft Edge */
+        color: $colorMediumGrey;
+      }
+
+      &::placeholder {
+        opacity: 1; /* Firefox */
+      }
+    }
+
+    #fs-search-toggle-filter {
+      @include icon-button-small(30px);
+      display: none;
+      margin: 3px 0 0 10px;
+      float: left;
+    }
+
+    &.fs-search-focused {
+      max-width: 600px;
+
+      .gr-i-close {
+        display: block;
+      }
+
+      #fs-search-input {
+        @include shadow-selected;
+        padding: 4px 5px 6px 44px;
+
+        border-width: 2px;
+        border-color: $colorActiveBlue;
+        width: calc(100% - 40px);
+      }
+
+      #fs-search-toggle-filter {
+        display: block;
+      }
+    }
+
+    &.fs-search-filtered {
+      #fs-search-toggle-filter:after {
+        content: "";
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 10px;
+        height: 10px;
+        background-color: $colorActiveBlue;
+        border-radius: 50%;
+      }
+    }
   }
+
 
   #fs-identity {
     $identityHeight: 36px;

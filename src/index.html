@@ -47,7 +47,14 @@
                 <div id="fs-title" data-i18n="app.title"></div>
             </div>
 
-            <input id="fs-browser-top-search" type="text" placeholder="TODO pixtron - search placeholder" />
+            <div id="fs-search">
+                <svg viewBox="0 0 24 24" class="gr-icon gr-i-search"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#search"></use></svg>
+                <input id="fs-search-input" type="text" data-i18n="[placeholder]nav.action.search" />
+                <svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg>
+                <div id="fs-search-toggle-filter">
+                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-filter"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#filter"></use></svg>
+                </div>
+            </div>
 
             <div id="fs-identity">
                 <div id="fs-identity-username"></div>
@@ -129,25 +136,42 @@
             <ul id="fs-menu-left-bottom"></ul>
         </div>
 
+        <div id="fs-search-filter">
+            <div id="fs-search-filter-content">
+                <section id="fs-search-filter-tags">
+                    <h2 data-i18n="search.filter.tags"></h2>
+                    <div data-i18n="search.filter.no_tags"></div>
+                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div>
+                </section>
+                <section id="fs-search-filter-color">
+                    <h2 data-i18n="search.filter.color"></h2>
+                    <div data-i18n="search.filter.no_color"></div>
+                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div>
+                </section>
+                <section id="fs-search-filter-mime">
+                    <h2 data-i18n="search.filter.mime"></h2>
+                    <div data-i18n="search.filter.no_mime"></div>
+                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div>
+                </section>
+            </div>
+            <div id="fs-search-filter-buttons">
+                <div><!--TODO pixtron - Text "found n items"--></div>
+                <input type="submit" tabindex="1" name="fs-search-filter-apply" data-i18n="[value]search.apply_filter" class="fs-button-primary" />
+                <input type="button" tabindex="2" name="fs-search-filter-reset" data-i18n="[value]search.reset_filter" />
+            </div>
+        </div>
+
         <div id="fs-browser-layout" >
             <div id="fs-layout-left">
                 <div id="fs-layout-left-container">
                     <div id="fs-layout-left-inner">
                     <div id="fs-layout-left-header">
                         <div id="fs-crumb">
-                            <!-- TODO pixtron - can this be removed? -->
-                            <!--ul id="fs-crumb-search-list">
-                                <li fs-id="" id="fs-crumb-search">
-                                    <div></div>
-                                    <svg class="gr-icon gr-i-arrowhead-e"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-e"></use></svg-->
-                                </li>
-                            </ul-->
+                            <ul id="fs-crumb-search-list">
+                                <li fs-id="" data-i18n="search.results"></li>
+                            </ul>
                             <ul id="fs-crumb-home-list">
-                                <li fs-id="" id="fs-crumb-home" data-i18n="menu.cloud">
-                                    <!-- TODO pixtron - remove this -->
-                                    <!--div data-i18n="menu.cloud"></div>
-                                    <svg class="gr-icon gr-i-arrowhead-e"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-e"></use></svg-->
-                                </li>
+                                <li fs-id="" id="fs-crumb-home" data-i18n="menu.cloud"></li>
                             </ul>
                         </div>
 

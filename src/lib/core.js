@@ -131,7 +131,6 @@ var balloon = {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
-    $('#fs-disclaimer').html('balloon-client-web ' + process.env.VERSION);
     app.preInit(this);
     balloon.kendoFixes();
 
@@ -208,19 +207,38 @@ var balloon = {
 
     balloon.displayQuota();
 
-    $('#fs-action-search').unbind('click').bind('click', function(){
-      if(!$('#fs-search-container').hasClass('k-state-collapsed')) {
-        balloon.resetSearch();
+
+    var $fs_search = $('#fs-search');
+    var $fs_search_input = $fs_search.find('#fs-search-input');
+    var $fs_search_filter_toggle = $fs_search.find('#fs-search-toggle-filter');
+
+    $fs_search_input.off('focus').on('focus', function() {
+      $fs_search.addClass('fs-search-focused');
+
+      // if field is empty it is a fresh search, wait for first change to occur
+      if($fs_search_input.val() === '') {
+        $fs_search_input.off('keypress').on('keypress', function() {
+          $fs_search_input.off('keypress');
+          balloon.advancedSearch();
+        });
       } else {
-        balloon.datasource.data([]);
         balloon.advancedSearch();
       }
     });
 
-    $('#fs-search-container-small').find('input:text')
-      .unbind('keyup').keyup(balloon._searchKeyup);
+    $fs_search_input.off('blur').on('blur', function() {
+      if($fs_search_input.val() === '') {
+        balloon.resetSearch();
+      }
+    });
 
-    $('#fs-search-container-small').find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
+    $fs_search.find('.gr-i-close').off('click').on('click', function() {
+      balloon.resetSearch();
+    });
+
+    $fs_search_filter_toggle.off('click').on('click', function() {
+      $('#fs-search-filter').toggle();
+    });
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
       e.preventDefault();
@@ -1793,11 +1811,11 @@ var balloon = {
       balloon.resetDom('breadcrumb-home');
       $('#fs-crumb-search-list').hide();
       $('#fs-crumb-home-list').show();
+      $('#fs-browser-action').show();
     } else {
-      balloon.resetDom(['breadcrumb-search']);
+      balloon.resetDom('breadcrumb-search');
       $('#fs-crumb-home-list').hide();
       $('#fs-crumb-search-list').show();
-      $('#fs-crumb-search').find('div:first-child').html($that.find('div:last-child').html());
     }
 
     if(exec === false) {
@@ -2242,14 +2260,13 @@ var balloon = {
    * @return  void
    */
   resetSearch: function(e) {
-    // TODO pixtron - can this method be removed?
-
     balloon.menuLeftAction(balloon.getCurrentMenu());
-    $('#fs-crumb-home-list').show();
+    $('#fs-browser-action').show();
+    $('#fs-search-filter').hide();
 
-    var $fs_crumb_search_list = $('#fs-crumb-search-list').hide();
+    var $fs_crumb_search_list = $('#fs-crumb-search-list');
     $fs_crumb_search_list.find('li').remove();
-    $fs_crumb_search_list.append('<li fs-id="" id="fs-crumb-search"><div>'+i18next.t('nav.search')+'</div></li>');
+    $fs_crumb_search_list.append('<li fs-id="" id="fs-crumb-search">'+i18next.t('search.results')+'</li>');
 
     balloon.resetDom(['selected', 'properties', 'preview', 'action-bar', 'multiselect',
       'view-bar', 'history', 'share', 'share-link', 'search']);
@@ -3071,6 +3088,8 @@ var balloon = {
    * @return  void
    */
   initCrumb: function() {
+    $('#fs-crumb-search-list').hide();
+
     $('#fs-crumb').on('click', 'li', function() {
       var $k_tree = $("#fs-browser-tree").data("kendoTreeView"),
         $that = $(this),
@@ -3102,13 +3121,11 @@ var balloon = {
    * @return object
    */
   getCrumb: function() {
-    return $("#fs-crumb-home-list");
-    // TODO pixtron - can this be removed?
-    /*if(balloon.isSearch()) {
+    if(balloon.isSearch()) {
       return $("#fs-crumb-search-list");
     } else {
       return $("#fs-crumb-home-list");
-    }*/
+    }
   },
 
 
@@ -3157,7 +3174,6 @@ var balloon = {
       $($crumbs[0]).hide();
     }
 
-    //var child = '<li fs-id="'+node.id+'"><div>'+node.name+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>';
     var child = '<li fs-id="'+node.id+'">'+node.name+'</li>';
     balloon.getCrumb().append(child);
   },
@@ -4148,38 +4164,19 @@ var balloon = {
   advancedSearch: function(e) {
     balloon.resetDom(['breadcrumb-search']);
     $('#fs-crumb-home-list').hide();
+    $('#fs-browser-action').hide();
     $('#fs-crumb-search-list').show();
-    $('#fs-crumb-search').find('div:first-child').html(i18next.t('menu.search'));
+
+    $('#fs-crumb-search').find('li:first-child').html(i18next.t('search.results'));
+
+    var $fs_search = $('#fs-search');
+    var $fs_search_input = $fs_search.find('#fs-search-input');
+    var $fs_search_filter = $('#fs-search-filter');
 
     balloon.showAction([]);
 
-    var $fs_search_filter = $('#fs-search-filter');
-    var $k_splitter = $('#fs-layout-left').data('kendoSplitter')
-
-    $('#fs-search-show-filter').unbind('click').bind('click', function() {
-      if($fs_search_filter.is(':visible')) {
-        $k_splitter.size(".k-pane:first", '120px');
-        $(this).find('div:first-child').html(i18next.t('search.hide_filter'));
-        $(this).find('.gr-icon').removeClass('gr-i-arrowhead-n').addClass('gr-i-arrowhead-s');
-      } else {
-        $k_splitter.size(".k-pane:first", $fs_search_filter.height()+120+'px');
-        $(this).find('div:first-child').html(i18next.t('search.show_filter'));
-        $(this).find('.gr-icon').removeClass('gr-i-arrowhead-s').addClass('gr-i-arrowhead-n');
-      }
-
-      $fs_search_filter.toggle();
-    });
-
-    var $fs_search_extend = $('#fs-search-container');
-    $fs_search_extend.find('.fs-search-reset-button').unbind('click').bind('click', balloon.resetSearch);
-    $('#fs-browser-action').hide();
-
-    var $k_splitter = $('#fs-layout-left').data('kendoSplitter');
-    $k_splitter.expand($fs_search_extend);
-
-    $fs_search_extend.find('input:text')
-      .focus()
-      .unbind('keyup').bind('keyup', balloon.buildExtendedSearchQuery);
+    if(!$fs_search_input.is(':focus')) $fs_search_input;
+    $fs_search_input.off('keyup').on('keyup', balloon.buildExtendedSearchQuery);
 
     balloon.xmlHttpRequest({
       url: balloon.base+'/users/node-attribute-summary',
@@ -4189,7 +4186,7 @@ var balloon = {
         attributes: ['meta.color', 'meta.tags', 'mime']
       },
       success: function(body) {
-        var $color_list = $('#fs-search-filter-color').find('div'),
+        var $color_list = $('#fs-search-filter-color').find('div:first'),
           colors = body['meta.color'],
           children = [];
 
@@ -4203,7 +4200,7 @@ var balloon = {
           $color_list.html('<ul>'+children.join('')+'</ul>');
         }
 
-        var $tag_list = $('#fs-search-filter-tags').find('div'),
+        var $tag_list = $('#fs-search-filter-tags').find('div:first'),
           tags = body['meta.tags'],
           children = [];
 
@@ -4215,41 +4212,67 @@ var balloon = {
           $tag_list.html('<ul>'+children.join('')+'</ul>');
         }
 
-        var $mime_list = $('#fs-search-filter-mime').find('div'),
+        var $mime_list = $('#fs-search-filter-mime').find('div:first'),
           mimes = body['mime'],
           children = [];
 
         for(var i in mimes) {
           var ext = balloon.mapMimeToExtension(mimes[i]._id);
-          if(ext !== false) {
-            children.push('<li data-item="'+mimes[i]._id+'"><div class="gr-icon '+balloon.getSpriteClass(ext)+'"></div><div>['+mimes[i]._id+']</div></li>');
-          }          else {
-            children.push('<li data-item="'+mimes[i]._id+'"><div class="gr-icon gr-i-file"></div><div>['+mimes[i]._id+']</div></li>');
-          }
+
+          var spriteClass = ext !== false ? balloon.getSpriteClass(ext) : 'gr-i-file';
+          children.push(
+            '<li data-item="'+mimes[i]._id+'">'+
+              '<svg class="gr-icon  ' + spriteClass + '"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg>'+
+              '<div>['+mimes[i]._id+']</div></li>'
+          );
         }
 
         if(children.length >= 1) {
           $mime_list.html('<ul>'+children.join('')+'</ul>');
         }
 
-        $fs_search_extend.find('li').unbind('click').bind('click', function() {
-          var $that   = $(this),
-            $parent   = $that.parent().parent(),
-            parent_id = $parent.attr('id');
-
-          if(parent_id === 'fs-search-filter-color' || parent_id === 'fs-search-filter-mime') {
-            $parent.find('.fs-search-filter-selected')
-              .not($that)
-              .removeClass('fs-search-filter-selected');
-          }
-
+        $fs_search_filter.find('li').unbind('click').bind('click', function() {
           $(this).toggleClass('fs-search-filter-selected');
-          balloon.buildExtendedSearchQuery();
         });
+
+        $fs_search_filter.find('input[name=fs-search-filter-apply]').off('click').on('click', function() {
+          balloon.buildExtendedSearchQuery();
+          $fs_search_filter.hide();
+        });
+
+        $fs_search_filter.find('.fs-search-filter-section-reset').unbind('click').bind('click', function() {
+          var $this = $(this);
+          var filter = $this.parent().attr('id').replace('fs-search-filter-', '');
+
+          balloon.resetSearchFilter(filter);
+        });
+
+        $fs_search_filter.find('input[name=fs-search-filter-reset]').off('click').on('click', function() {
+          balloon.resetSearchFilter(['tags', 'color', 'mime']);
+          balloon.buildExtendedSearchQuery();
+          $fs_search_filter.hide();
+        });
+
+        balloon.buildExtendedSearchQuery();
       },
     });
   },
 
+  /**
+   * Resets given search filter
+   *
+   * @param string|array filters Filter(s) to reset
+   * @return void
+   */
+  resetSearchFilter: function(filters) {
+    if(typeof filters === 'string') {
+      filters = [filters];
+    }
+
+    filters.forEach(function(filter) {
+      $('#fs-search-filter-'+filter+ ' li').removeClass('fs-search-filter-selected');
+    });
+  },
 
   /**
    * Build query & search
@@ -4292,8 +4315,14 @@ var balloon = {
       {bool: {should: should3}},
     ];
 
-    var content = $('#fs-search-container').find('input:text').val();
+    var content = $('#fs-search-input').val();
     var query   = balloon.buildQuery(content, must);
+
+    if(should1.length > 0 || should2.length > 0 || should3.length > 0) {
+      $('#fs-search').addClass('fs-search-filtered');
+    } else {
+      $('#fs-search').removeClass('fs-search-filtered');
+    }
 
     if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
       query = undefined;
@@ -4410,9 +4439,7 @@ var balloon = {
    * @return bool
    */
   isSearch: function() {
-    // TODO pixtron - needs to be reimplemented
-    return false;
-    return $('#fs-crumb-search-list').is(':visible') || $('#fs-search-container-small').find('input').val().length > 0;
+    return $('#fs-crumb-search-list').is(':visible');
   },
 
 
@@ -5804,7 +5831,7 @@ var balloon = {
         return;
       }
 
-      //TODO pixtron - fix advanced search
+      //TODO pixtron - search: fix advanced search
       balloon.advancedSearch();
       var value = 'meta.tags:'+$(this).find('.tag-name').text();
       balloon.search(value);
@@ -6249,16 +6276,12 @@ var balloon = {
         break;
 
       case 'search':
-        var $k_splitter = $('#fs-layout-left').data('kendoSplitter'),
-          $container = $('#fs-search-container');
+        var $fs_search = $('#fs-search');
+        var $fs_search_input = $fs_search.find('#fs-search-input');
 
+        $fs_search.removeClass('fs-search-focused').removeClass('fs-search-filtered');
+        $fs_search_input.val('');
         $('#fs-browser-action').show();
-        $('#fs-search-container-small').find('input:text').val('');
-
-        if($k_splitter != undefined) {
-          $k_splitter.collapse('#fs-search-container');
-          $container.find('input:text').val('');
-        }
         break;
 
       case 'history':
@@ -6305,16 +6328,14 @@ var balloon = {
       case 'breadcrumb-home':
         var $crumb = $('#fs-crumb-home-list');
         $crumb.find('li').remove();
-        //$crumb.append('<li id="fs-crumb-home" fs-id=""><div>'+i18next.t('menu.cloud')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
         $crumb.append('<li id="fs-crumb-home" fs-id="">'+i18next.t('menu.cloud')+'</li>');
         break;
 
-      // TODO pixtron - can this be removed?
-      /*case 'breadcrumb-search':
+      case 'breadcrumb-search':
         var $crumb = $('#fs-crumb-search-list');
         $crumb.find('li').remove();
-        $crumb.append('<li id="fs-crumb-search" fs-id=""><div>'+i18next.t('menu.search')+'</div><div class="gr-icon gr-i-arrowhead-e"></div></li>');
-      break;*/
+        $crumb.append('<li id="fs-crumb-search" fs-id="">'+i18next.t('search.results')+'</li>');
+        break;
 
       case 'shortcuts':
         $(document).unbind('keyup');

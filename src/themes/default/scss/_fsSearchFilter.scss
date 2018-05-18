@@ -1,0 +1,216 @@
+#fs-search-filter {
+  @include shadow-default;
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: auto;
+  width: auto;
+  padding: 0 30px 0 90px;
+  background-color: $colorWhite;
+  border-top: 1px solid $colorBrightGrey;
+  z-index: 11;
+
+  #fs-search-filter-content,
+  #fs-search-filter-buttons {
+    margin: auto;
+    width: 100%;
+    max-width: 960px;
+  }
+
+  #fs-search-filter-content {
+    h2 {
+      font-size: 15px;
+      line-height: 19px;
+      font-weight: 400;
+      margin: 14px 0 12px 0;
+      color: $colorDarkGrey;
+    }
+
+    section {
+      position: relative;
+      padding-bottom: 20px;
+      border-bottom: 1px solid $colorBrightGrey;
+
+      ul {
+        li {
+          display: inline-block;
+          margin-top: 5px;
+          cursor: pointer;
+        }
+      }
+
+      .fs-search-filter-section-reset {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: $colorMediumGrey;
+        cursor: pointer;
+
+        .gr-icon {
+          position: relative;
+          top: 3px;
+          margin-left: 11px;
+          width: 14px;
+          height: 14px;
+        }
+      }
+
+
+      &#fs-search-filter-tags,
+      &#fs-search-filter-mime {
+        ul {
+          margin-left: -6px;
+
+          li {
+            border: 1px solid $colorLightGrey;
+            background-color: $colorBrightGrey;
+            border-radius: 4px;
+            margin-left: 6px;
+            color: $colorMediumGrey;
+            line-height: 27px;
+            padding: 0 10px 1px 10px;
+
+            &.fs-search-filter-selected {
+              background-color: $colorDarkGrey;
+              border-color: $colorDarkGrey;
+              color: $colorWhite;
+            }
+          }
+        }
+      }
+
+      &#fs-search-filter-mime {
+        ul {
+          li {
+            @include clearfix;
+
+            padding-left: 6px;
+
+            .gr-icon {
+              float: left;
+              margin-top: 2px;
+              margin-right: 6px;
+            }
+
+            div {
+              float: left;
+            }
+          }
+        }
+      }
+
+      &#fs-search-filter-color {
+        padding-bottom: 30px;
+
+        ul {
+          li {
+            $size: 20px;
+            width: $size;
+            height: $size;
+            border: none;
+            border-radius: 50%;
+            margin-right: 10px;
+
+            &.fs-color-magenta {
+              background-color: $colorMagenta;
+            }
+            &.fs-color-purple {
+              background-color: $colorPurple;
+            }
+            &.fs-color-blue {
+              background-color: $colorBlue;
+            }
+            &.fs-color-green {
+              background-color: $colorGreen;
+            }
+            &.fs-color-yellow {
+              background-color: $colorYellow;
+            }
+
+            &.fs-search-filter-selected {
+              $borderSize: 2px;
+              $selectedSize: $size - 2 * $borderSize;
+              position: relative;
+
+              background-color: transparent;
+              border: $borderSize solid $colorWhite;
+              width: $selectedSize;
+              height: $selectedSize;
+
+              &:after {
+                $innerSize: 12px;
+
+                position: absolute;
+                top: ($selectedSize - $innerSize) / 2;
+                left: ($selectedSize - $innerSize) / 2;
+
+                content: "";
+                display: block;
+                background-color: $colorWhite;
+                border-radius: 50%;
+                width: $innerSize;
+                height: $innerSize;
+              }
+
+              &.fs-color-magenta {
+                border-color: $colorMagenta;
+
+                &:after {
+                  background-color: $colorMagenta;
+                }
+              }
+              &.fs-color-purple {
+                border-color: $colorPurple;
+
+                &:after {
+                  background-color: $colorPurple;
+                }
+              }
+              &.fs-color-blue {
+                border-color: $colorBlue;
+
+                &:after {
+                  background-color: $colorBlue;
+                }
+              }
+              &.fs-color-green {
+                border-color: $colorGreen;
+
+                &:after {
+                  background-color: $colorGreen;
+                }
+              }
+              &.fs-color-yellow {
+                border-color: $colorYellow;
+
+                &:after {
+                  background-color: $colorYellow;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #fs-search-filter-buttons {
+    @include clearfix;
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    div {
+      float: left;
+      padding: 10px 0 11px;
+      font-size: 13px;
+      line-height: 15px;
+      color: $colorMediumGrey;
+    }
+
+    input {
+      float: right;
+      margin-left: 10px;
+    }
+  }
+}

@@ -67,8 +67,9 @@
     "search": "Search"
   },
   "search": {
-    "hide_filter": "Hide filter",
-    "show_filter": "Show filter",
+    "results": "Searchresults",
+    "reset_filter": "Reset",
+    "apply_filter": "Apply",
     "filter": {
       "color": "Color",
       "tags": "Tags",
