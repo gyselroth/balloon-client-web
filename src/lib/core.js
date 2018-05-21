@@ -825,7 +825,7 @@ var balloon = {
       var $node_el = $that_k_in.first();
       $node_el.empty();
 
-      if(balloon.isSearch()) {
+      if(balloon.isSearch() && balloon.id(node) !== '_FOLDERUP') {
         $node_el.addClass('fs-browser-search-item');
       }
 
@@ -884,7 +884,7 @@ var balloon = {
             $name_el = $('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name+'</span></div>');
           }
 
-          if(balloon.isSearch()) {
+          if(balloon.isSearch() && balloon.id(node) !== '_FOLDERUP') {
             var path = node.path.split('/').slice(1);
             var $path_el = $('<p></p>');
 
