@@ -5,6 +5,7 @@ $snackBarVisibleDuration: 2s;
 
 #fs-snackbar {
   @include clearfix;
+  @include shadow-default;
 
   display: none;
   position: absolute;

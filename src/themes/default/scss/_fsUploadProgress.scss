@@ -9,6 +9,8 @@
   z-index: 15;
 
   #fs-upload-progress-info {
+    @include shadow-default;
+
     $width: 260px;
 
     position: absolute;
