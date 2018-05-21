@@ -294,17 +294,7 @@ var balloon = {
       if($this.hasClass('fs-browser-header-checkbox-undetermined') || $this.hasClass('fs-browser-header-checkbox-checked')) {
         balloon.deselectAll();
       } else {
-        for(var i=0; i<balloon.datasource._pristineData.length; i++) {
-          var node = balloon.datasource._pristineData[i];
-
-          balloon.multiSelect(node);
-
-          var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
-          $k_tree.select(dom_node);
-          $k_tree.trigger('select', {node: dom_node});
-        }
-
-        balloon.pushState();
+        balloon.selectAll();
       }
 
       balloon._updateCheckAllState();
@@ -2855,6 +2845,32 @@ var balloon = {
     balloon.multiselect = [];
     balloon.togglePannel('content', false);
     balloon.pushState(false, true);
+  },
+
+  /**
+   * Selects all currently displayed nodes
+   *
+   * @return  void
+   */
+  selectAll: function() {
+    var $fs_browser_tree = $('#fs-browser-tree');
+    var $k_tree = $fs_browser_tree.data('kendoTreeView');
+
+    for(var i=0; i<balloon.datasource._pristineData.length; i++) {
+      var node = balloon.datasource._pristineData[i];
+      var id = balloon.id(node);
+
+      //do not select _FOLDERUP
+      if(id === '_FOLDERUP') continue;
+
+      balloon.multiSelect(node);
+
+      var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
+      $k_tree.select(dom_node);
+      $k_tree.trigger('select', {node: dom_node});
+    }
+
+    balloon.pushState();
   },
 
   /**
