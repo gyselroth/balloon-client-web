@@ -41,6 +41,7 @@ var app = {
 
     $div.off('click').on('click', 'li', this.download);
 
+    $('body .fs-desktop').remove();
     $('body').append($div);
 
 
@@ -56,7 +57,7 @@ var app = {
       }
     }).data('kendoBalloonWindow');
 
-    this.$k_popup.open().center();
+    this.$k_popup.center().open();
 
     this.$menu.addClass('fs-menu-left-active');
   },
