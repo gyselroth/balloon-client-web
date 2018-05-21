@@ -292,16 +292,7 @@ var balloon = {
       var $k_tree = $fs_browser_tree.data('kendoTreeView');
 
       if($this.hasClass('fs-browser-header-checkbox-undetermined') || $this.hasClass('fs-browser-header-checkbox-checked')) {
-        for(var i=0; i<balloon.datasource._pristineData.length; i++) {
-          var node = balloon.datasource._pristineData[i];
-          var $node = $('#fs-browser-tree').find('li[fs-id='+balloon.id(node)+']');
-          $node.removeClass('fs-multiselected');
-        }
-        $k_tree.select($());
-
-        balloon.multiselect = [];
-        balloon.togglePannel('content', false);
-        balloon.pushState(false, true);
+        balloon.deselectAll();
       } else {
         for(var i=0; i<balloon.datasource._pristineData.length; i++) {
           var node = balloon.datasource._pristineData[i];
@@ -777,6 +768,7 @@ var balloon = {
     }
 
     balloon.move(balloon.getSelected(src), dest);
+    balloon.deselectAll();
   },
 
 
@@ -2846,6 +2838,26 @@ var balloon = {
 
 
   /**
+   * Deselects all currently selected nodes
+   *
+   * @return  void
+   */
+  deselectAll: function() {
+    var $k_tree = $("#fs-browser-tree").data('kendoTreeView');
+
+    for(var i=0; i<balloon.datasource._pristineData.length; i++) {
+      var node = balloon.datasource._pristineData[i];
+      var $node = $('#fs-browser-tree').find('li[fs-id='+balloon.id(node)+']');
+      $node.removeClass('fs-multiselected');
+    }
+    $k_tree.select($());
+
+    balloon.multiselect = [];
+    balloon.togglePannel('content', false);
+    balloon.pushState(false, true);
+  },
+
+  /**
    * Check if node is selected
    *
    * @param   object node
@@ -4854,6 +4866,7 @@ var balloon = {
       },
       complete: function() {
         balloon.resetDom('multiselect');
+        balloon.deselectAll();
       },
       success: function(data) {
         var count = 1;
