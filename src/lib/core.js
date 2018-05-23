@@ -1162,6 +1162,10 @@ var balloon = {
 
     balloon.showView(views);
 
+    if(!balloon.isMobileViewPort()) {
+      balloon.togglePannel('content', true);
+    }
+
     $('#fs-content-view dt').unbind('click').not('.disabled').click(function() {
       var $that = $(this),
         action = $that.attr('id').substr(22);
@@ -2179,10 +2183,6 @@ var balloon = {
       return;
     }
     balloon.last_click_event = e;
-
-    if(!balloon.isMobileViewPort()) {
-      balloon.togglePannel('content', true);
-    }
 
     if(balloon.rename_node !== null && balloon.rename_node !== undefined) {
       balloon._rename();
