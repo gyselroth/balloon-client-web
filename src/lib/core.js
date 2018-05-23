@@ -1737,14 +1737,13 @@ var balloon = {
    * @return string
    */
   getViewName: function() {
-    var name = $('#fs-content-data').find('div[class^=fs-view-]').filter(':visible').attr('id');
+    var name = $('#fs-content-view dt.active').attr('id');
 
     if(name === undefined) {
       return null;
     }
 
-    name = name.substr(3);
-    return name;
+    return name.replace('fs-content-view-title-', '');
   },
 
 
