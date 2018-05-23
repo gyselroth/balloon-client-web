@@ -127,6 +127,93 @@ var balloon = {
   add_file_handlers: {},
 
   /**
+   * Content views in side pannel
+   *
+   * Array of side pannel items.
+   * - item.id: unique id for the item (required)
+   * - item.title: title of the item (required)
+   * - item.isEnabled: method, which decides if the item is enabled in current state (required)
+   * - item.onActivate: method, which is triggered, when the side pannel is opened (required)
+   * - item.$content: jQuery dom representation of item content (optional). If present it will replace the content present in the template
+   *
+   * @var array
+   */
+  fs_content_views: [
+    {
+      id: 'preview',
+      title: 'nav.view.preview',
+      isEnabled: function() {
+        return true;
+      },
+      onActivate: function() {
+        balloon.displayPreview(balloon.getCurrentNode());
+      },
+    },
+    {
+      id: 'share-link',
+      title: 'nav.view.share_link',
+      isEnabled: function() {
+        return balloon.last.access != 'r' && !balloon.last.deleted;
+      },
+      onActivate: function() {
+        balloon.shareLink(balloon.getCurrentNode());
+      },
+    },
+    {
+      id: 'share',
+      title: 'nav.view.share_folder',
+      isEnabled: function() {
+        return balloon.last.directory && balloon.last.access === 'm' && !balloon.last.share;
+      },
+      onActivate: function() {
+        balloon.shareCollection(balloon.getCurrentNode());
+      },
+    },
+    {
+      id: 'properties',
+      title: 'nav.view.properties',
+      isEnabled: function() {
+        return true;
+      },
+      onActivate: function() {
+        balloon.displayProperties(balloon.getCurrentNode());
+      },
+    },
+    {
+      id: 'history',
+      title: 'nav.view.history',
+      isEnabled: function() {
+        return !balloon.last.directory;
+      },
+      onActivate: function() {
+        balloon.displayHistory(balloon.getCurrentNode());
+      },
+    },
+    {
+      id: 'events',
+      title: 'nav.view.events',
+      isEnabled: function() {
+        return true;
+      },
+      onActivate: function() {
+        var $view_list = $('#fs-events ul');
+        balloon.displayEventsInfiniteScroll($view_list, balloon.getCurrentNode());
+        balloon.displayEvents($view_list, balloon.getCurrentNode());
+      },
+    },
+    {
+      id: 'advanced',
+      title: 'nav.view.advanced',
+      isEnabled: function() {
+        return balloon.last.access != 'r';
+      },
+      onActivate: function() {
+        balloon.advancedOperations(balloon.getCurrentNode());
+      },
+    },
+  ],
+
+  /**
    * Init file browsing
    *
    * @return void
@@ -158,6 +245,8 @@ var balloon = {
         scrollable: false
       });
     }
+
+    balloon.initFsContentView();
 
     $("#fs-menu-left").off('click').on('click', 'li', balloon.menuLeftAction);
     $("#fs-identity").off('click').on('click', 'li', balloon._menuRightAction);
@@ -303,6 +392,34 @@ var balloon = {
     balloon.showHint();
     balloon.initialized = true;
     app.postInit(this);
+  },
+
+  /**
+   * initializes fs-content-view
+   *
+   * @return void
+   */
+  initFsContentView: function() {
+    var $fs_content_view_template = $('#fs-content-view');
+    var $fs_content_view = $('<dl id="fs-content-view"></dl>');
+
+    for(var i=0; i<balloon.fs_content_views.length; i++) {
+      var viewConfig = balloon.fs_content_views[i];
+      var view = viewConfig.id;
+
+      $fs_content_view.append(
+        '<dt id="fs-content-view-title-' + view + '">'+
+            '<span>' + i18next.t(viewConfig.title) + '</span>'+
+            '<svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>'+
+            '<svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>'+
+        '</dt>'
+      );
+
+      var $content = viewConfig.$content || $fs_content_view_template.find('#fs-'+view);
+      $fs_content_view.append($content);
+    }
+
+    $fs_content_view_template.replaceWith($fs_content_view);
   },
 
   /**
@@ -981,8 +1098,8 @@ var balloon = {
         'history','share','share-link'
       ]);
 
-    var copy   = balloon.last;
-    balloon.last   = node;
+    var copy = balloon.last;
+    balloon.last = node;
 
     if(!balloon.isSystemNode(copy)) {
       balloon.previous = copy;
@@ -1000,7 +1117,6 @@ var balloon = {
     }
 
     balloon.showAction(actions);
-    //$('.fs-action-select-only').css('display','inline-block');
 
     if(balloon.isSystemNode(node) || balloon.isMultiSelect()) {
       e.preventDefault();
@@ -1028,38 +1144,21 @@ var balloon = {
     balloon.displayProperties(node);
     var view  = balloon.getURLParam('view');
 
-    if(balloon.previous !== null && balloon.previous.id !== balloon.last.id
-     || balloon.previous !== null && view === null || balloon.previous === null && view === null) {
+    if(balloon.previous !== null && balloon.previous.id !== balloon.last.id || view === null) {
       view = 'preview';
+    }
+
+    var views = [];
+
+    for(var i=0; i<balloon.fs_content_views.length; i++) {
+      var viewConfig = balloon.fs_content_views[i];
+      if(viewConfig.isEnabled && viewConfig.isEnabled()) {
+        views.push(viewConfig.id);
+      }
     }
 
     balloon.switchView(view);
     $('#fs-properties-name').show();
-
-    var $fs_view_bar_li = $('#fs-view-bar').find('li');
-    $fs_view_bar_li.removeClass('fs-view-bar-active');
-    $('#fs-view-'+view).addClass('fs-view-bar-active');
-    var views = ['preview', 'properties', 'events'];
-
-    if(!balloon.last.deleted) {
-      views.push('share-link')
-    }
-
-    if(!balloon.last.directory) {
-      views.push('history')
-    }
-
-    if(balloon.last.directory && balloon.last.access === 'm' && !balloon.last.share) {
-      views.push('share');
-    }
-
-    if(balloon.last.access != 'r') {
-      views.push('advanced');
-    }
-
-    if(balloon.last.access != 'r' && !balloon.last.deleted) {
-      views.push('advanced', 'share-link');
-    }
 
     balloon.showView(views);
 
@@ -1071,8 +1170,6 @@ var balloon = {
         balloon.switchView(action);
       }
     });
-
-    balloon.pushState();
   },
 
 
@@ -1869,33 +1966,26 @@ var balloon = {
     var $title = $('#fs-content-view-title-'+view).addClass('active');
     $title.next().addClass('active');
 
-    switch(view) {
-    case 'properties':
-      balloon.displayProperties(balloon.getCurrentNode());
-      break;
-    case 'preview':
-      balloon.displayPreview(balloon.getCurrentNode());
-      break;
-    case 'history':
-      balloon.displayHistory(balloon.getCurrentNode());
-      break;
-    case 'share':
-      balloon.shareCollection(balloon.getCurrentNode());
-      break;
-    case 'share-link':
-      balloon.shareLink(balloon.getCurrentNode());
-      break;
-    case 'events':
-      var $view_list = $('#fs-events ul');
-      balloon.displayEventsInfiniteScroll($view_list, balloon.getCurrentNode());
-      balloon.displayEvents($view_list, balloon.getCurrentNode());
-      break;
-    case 'advanced':
-      balloon.advancedOperations(balloon.getCurrentNode());
-      break;
-    }
+    var viewConfig = balloon._getViewConfig(view);
+
+    if(viewConfig.onActivate) viewConfig.onActivate.call(this);
 
     balloon.pushState();
+  },
+
+
+  /**
+   * Gets the config for a given view
+   *
+   * @param   string id of the view
+   * @return  object
+   */
+  _getViewConfig: function(view) {
+    for(var i=0; i<balloon.fs_content_views.length; i++) {
+      if(balloon.fs_content_views[i].id === view) return balloon.fs_content_views[i];
+    }
+
+    return null;
   },
 
 
@@ -2593,10 +2683,11 @@ var balloon = {
   _rebuildTree: function(data, operation) {
     operation.success(data);
 
-    if (balloon.post_rename_reload) {
+    // TODO pixtron - this might be removed as balloon.post_rename_reload is never true?
+    /*if (balloon.post_rename_reload) {
       balloon.showAction(['menu','add','upload','filter','refresh','download','delete','restore','copy','cut']);
       balloon.post_rename_reload = false;
-    }
+    }*/
   },
 
 
@@ -3061,6 +3152,7 @@ var balloon = {
         });
       },
       close: function() {
+        // TODO pixtron - is this really needed?
         balloon.showAction(['menu', 'download', 'add', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter', 'rename']);
       }
     }).data("kendoBalloonWindow").center().open();
