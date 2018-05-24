@@ -50,7 +50,7 @@
     }
   },
   "menu": {
-    "cloud": "My balloon",
+    "cloud": "Mein balloon",
     "shared_for_me": "Für mich freigegeben",
     "shared_from_me": "Meine Freigaben",
     "shared_link": "Geteilte Links",
@@ -84,7 +84,9 @@
         "hidden": "Versteckt"
     },
     "open_folder": "Ordner öffnen",
+    "folder": "Ordner",
     "new_folder": "Neuer Ordner",
+    "txt_file": "Textdokument",
     "new_file": "Neue Datei",
     "selected": "({{count}} items ausgewählt)",
     "selected_plural": "({{count}} items ausgewählt)",

@@ -829,7 +829,7 @@ td {
     display: none;
 }
 
-#fs-action-filter-select .gr-i-filter {
+#fs-action-filter-select .gr-i-filter, #fs-action-add-select .gr-i-add {
     float: left;
     background-color: #f4f4f4;
     opacity: 1;
@@ -843,12 +843,23 @@ td {
     box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
 }
 
-#fs-action-filter-select {
+.fs-menu-dropdown {
     display: none;
     position: absolute;
-    left: 156px;
     top: 5px;
     z-index: 5;
+}
+
+.fs-menu-dropdown ul {
+    background-color: #f4f4f4;
+}
+
+#fs-action-filter-select {
+    left: 119px;
+}
+
+#fs-action-add-select {
+    left: 45px;
 }
 
 /*
@@ -866,25 +877,40 @@ td {
     height: 10px;
 }
 */
-#fs-action-filter-select li {
+.fs-menu-dropdown li {
     clear: both;
 }
 
-#fs-action-filter-select li > span {
-    margin-left: 5px;
+#fs-action-add-select li {
+    height: 28px;
 }
 
-#fs-action-filter-select li > * {
+.fs-menu-dropdown li > span {
+    margin-left: 5px;
+    line-height: 24px;
+}
+
+.fs-menu-dropdown li > * {
     float: left;
 }
 
-#fs-action-filter-select > div:last-child {
+.fs-menu-dropdown > div:last-child {
     background-color: #f4f4f4;
     float: left;
 }
 
-#fs-action-filter-select span:first-child {
+.fs-menu-dropdown span:first-child {
     position: relative;
+}
+
+#fs-action-add-select input {
+    float: left;
+    width: 150px;
+    margin: 0 0 0 5px;
+}
+
+.fs-node-exists {
+    border-color: #CE0E0E !important;
 }
 
 #fs-action-filter li {
@@ -1027,7 +1053,7 @@ td {
     float: left;
 }
 
-#fs-action-filter-select ul {
+#fs-action-filter-select ul, #fs-action-add-select ul {
     margin: 0;
     padding: 0.4em;
     -webkit-box-shadow: 0 0 2px 0 rgba(0,0,0,0.75);
@@ -1037,7 +1063,7 @@ td {
     z-index: 1;
 }
 
-#fs-action-filter-select ul:before {
+#fs-action-filter-select ul:before, #fs-action-add-select ul:before {
     background: #f4f4f4;
     display: block;
     content: ".";
@@ -1045,7 +1071,7 @@ td {
     width: 7px;
     height: 27px;
     position: absolute;
-    left: -5px;
+    left: -3px;
     top: 0;
 }
 
@@ -1984,7 +2010,7 @@ td {
     font-size: 1.2em;
     color: #5d5d5d;
     padding: 0;
-    display: block;
+    display: none;
     cursor: pointer;
 }
 
@@ -2232,11 +2258,7 @@ td {
     color: #555;
 }
 
-#fs-properties-shared .gr-icon {
-    margin-top: -4px;
-}
-
-#fs-properties-shared .fs-value {
+#fs-properties-share .fs-value {
     line-height: 25px;
 }
 

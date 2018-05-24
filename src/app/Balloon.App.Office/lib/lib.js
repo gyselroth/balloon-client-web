@@ -17,8 +17,15 @@ var app = {
   preInit: function(core)  {
     this.balloon = core;
     app.balloon._treeDblclick = app.treeDblclick;
-    app.addTextFile = app.balloon.addFile;
-    app.balloon.addFile = app.addFile;
+
+    var $add_node = $('#fs-action-add-select').find('ul');
+    $add_node.append('<li data-type="docx"><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span><input type="text" placeholder=""/></li>');
+    $add_node.append('<li data-type="xlsx"><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span><input type="text" placeholder=""/></li>');
+    $add_node.append('<li data-type="pptx"><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span><input type="text" placeholder=""/></li>');
+
+    this.balloon.add_file_handlers.docx = this.addOfficeFile;
+    this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
+    this.balloon.add_file_handlers.pptx = this.addOfficeFile;
   },
 
   resetView: function() {
@@ -303,63 +310,7 @@ var app = {
     app.balloon.pushState();
   },
 
-  addFile: function() {
-    var $box = $('#fs-new-file');
-    if($box.is(':visible')) {
-      $box.remove();
-      return;
-    }
-
-    var $select = $('<div id="fs-new-file">'+
-        '<div class="gr-icon gr-i-file-add"></div>' +
-        '<ul>'+
-            '<li><span class="gr-i-file-text gr-icon"></span><span>'+i18next.t('app.office.text_document')+'</span></li>'+
-            '<li><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span></li>'+
-            '<li><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span></li>'+
-            '<li><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span></li>'+
-        '</ul>'+
-    '</div>');
-
-    var $bar = $('#fs-browser-action');
-    $bar.append($select);
-    $box = $('#fs-new-file');
-
-    $box.on('click', 'li', function(){
-      var $type = $(this).find('.gr-icon');
-
-      if($type.hasClass('gr-i-file-text')) {
-        app.addTextFile();
-      } else if($type.hasClass('gr-i-file-word')) {
-        app.addOfficeFile('docx');
-      } else if($type.hasClass('gr-i-file-excel')) {
-        app.addOfficeFile('xlsx');
-      } else if($type.hasClass('gr-i-file-powerpoint')) {
-        app.addOfficeFile('pptx');
-      }
-
-      $box.remove();
-    });
-
-    $(document).off('click.office').on('click.office', function(e) {
-      if($(e.target).hasClass('gr-i-file-add')) {
-        return;
-      }
-
-      var $box = $('#fs-new-file');
-      if($box.is(':visible')) {
-        $box.remove();
-      }
-    });
-  },
-
-  addOfficeFile: function(type) {
-    var new_name = i18next.t('tree.new_file'),
-      name = new_name+'.'+type;
-
-    if(app.balloon.nodeExists(name)) {
-      name = new_name+' ('+app.balloon.randomString(4)+').'+type;
-    }
-
+  addOfficeFile: function(name, type) {
     name = encodeURI(name);
 
     app.balloon.xmlHttpRequest({
@@ -369,8 +320,8 @@ var app = {
         $('#fs-new-file').remove();
       },
       success: function(data) {
+        app.balloon.added = data.id;
         app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
-        app.balloon.added_rename = data.id;
       }
     });
   }

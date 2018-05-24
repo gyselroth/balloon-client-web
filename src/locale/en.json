@@ -84,8 +84,10 @@
         "hidden": "Hidden"
     },
     "open_folder": "Open folder",
-    "new_folder": "New folder",
-    "new_file": "New file",
+    "folder": "Folder",
+    "new_folder": "New Folder",
+    "txt_file": "Text Document",
+    "new_file": "New File",
     "selected": "({{count}} item selected)",
     "selected_plural": "({{count}} items selected)",
     "no_nodes": "<No files were found>"

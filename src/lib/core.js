@@ -119,11 +119,23 @@ var balloon = {
   quota: {},
 
   /**
+   * Add file handlers
+   *
+   * @var object
+   */
+  add_file_handlers: {},
+
+  /**
    * Init file browsing
    *
    * @return void
    */
   init: function() {
+    balloon.add_file_handlers = {
+      txt: balloon.addFile,
+      folder: balloon.addFolder,
+    };
+
     if(balloon.isInitialized()) {
       balloon.resetDom();
     } else {
@@ -478,7 +490,6 @@ var balloon = {
    */
   _treeKeyup: function(e) {
     e.preventDefault();
-
     if($('.k-window').is(':visible') || $('input,select,textarea').is(':focus')) {
       return;
     }
@@ -745,7 +756,7 @@ var balloon = {
   _treeDataBound: function(e) {
     balloon.resetDom(['multiselect', 'action-bar']);
 
-    var actions = ['file', 'folder', 'upload', 'refresh', 'filter'];
+    var actions = ['add', 'upload', 'refresh', 'filter'];
 
     if(balloon.selected_action.command !== null) {
       actions.push('paste');
@@ -760,7 +771,7 @@ var balloon = {
     var selected = balloon.getURLParam('selected[]'),
       $fs_browser_tree = $("#fs-browser-tree"),
       $k_tree = $fs_browser_tree.data('kendoTreeView'),
-      rename_match = false;
+      select_match = false;
 
     $fs_browser_tree.find('.k-item').each(function() {
       var $that = $(this), node;
@@ -881,8 +892,8 @@ var balloon = {
         balloon.fileUpload(node);
       }
 
-      if(balloon.added_rename == balloon.id(node)) {
-        rename_match = node;
+      if(balloon.added == balloon.id(node)) {
+        select_match = node;
       }
 
       if(selected !== null && typeof(selected) === 'object' && selected.indexOf(balloon.id(node)) > -1) {
@@ -896,14 +907,12 @@ var balloon = {
       }
     });
 
-    if(rename_match !== false) {
-      var dom_node = $('li[fs-id='+rename_match.id+']');
+    if(select_match !== false) {
+      var dom_node = $('li[fs-id='+select_match.id+']');
       $k_tree.select(dom_node);
       $k_tree.trigger('select', {node: dom_node});
-
-      balloon.initRenameBrowser(rename_match);
-      balloon.added_rename = null;
-      rename_match = false;
+      balloon.added = null;
+      select_match = false;
     }
 
     balloon.fileUpload(balloon.getCurrentCollectionId(), $('#fs-layout-left'));
@@ -941,7 +950,7 @@ var balloon = {
 
     var actions = ['download', 'delete', 'refresh'];
     if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
-      actions.push('file', 'folder', 'upload', 'cut', 'copy', 'filter');
+      actions.push('add', 'upload', 'cut', 'copy', 'filter');
     }
     if(balloon.last.deleted !== false) {
       actions.push('restore', 'delete');
@@ -2009,8 +2018,7 @@ var balloon = {
 
       if(balloon.isMultiSelect()) {
         balloon.multiSelect(balloon.getCurrentNode());
-      }      else {
-        //balloon.multiSelect(balloon.previous, true);
+      } else {
         balloon.multiSelect(balloon.getCurrentNode());
       }
 
@@ -2030,7 +2038,10 @@ var balloon = {
       return;
     }
     balloon.last_click_event = e;
-    balloon.togglePannel('content', false);
+
+    if(!balloon.isMobileViewPort()) {
+      balloon.togglePannel('content', false);
+    }
 
     if(balloon.rename_node !== null && balloon.rename_node !== undefined) {
       balloon._rename();
@@ -2168,6 +2179,9 @@ var balloon = {
    * @return  void
    */
   _searchKeyup: function(e){
+    var $that = $(this);
+    $('.fs-search-reset-button').show();
+
     if(e.keyCode == 13) {
       balloon.search($(this).val());
       return;
@@ -2184,6 +2198,7 @@ var balloon = {
   resetSearch: function(e) {
     balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-crumb-home-list').show();
+    $('.fs-search-reset-button').hide();
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list').hide();
     $fs_crumb_search_list.find('li').remove();
@@ -2278,12 +2293,12 @@ var balloon = {
 
           if(balloon.datasource._ds_params.sort === true) {
             balloon.datasource._ds_params = false;
-            balloon._sortDatasource(
+            var sorted = balloon._sortDatasource(
               balloon._filterDatasource(balloon.datasource._raw_data, balloon.tree.filter),
               balloon.tree.sort.field,
-              balloon.tree.sort.dir,
-              operation
+              balloon.tree.sort.dir
             );
+            balloon._rebuildTree(sorted, operation);
 
             return;
           }
@@ -2336,12 +2351,12 @@ var balloon = {
               }
 
               balloon.datasource._raw_data = pool.data;
-              balloon._sortDatasource(
+              var sorted = balloon._sortDatasource(
                 balloon._filterDatasource(pool.data, balloon.tree.filter),
                 balloon.tree.sort.field,
-                balloon.tree.sort.dir,
-                operation
+                balloon.tree.sort.dir
               );
+              balloon._rebuildTree(sorted, operation)
             },
             error: function(e) {
               if(balloon.datasource._raw_data === undefined) {
@@ -2442,7 +2457,7 @@ var balloon = {
    * @param   object operation
    * @return  void
    */
-  _sortDatasource: function(data, field, dir, operation) {
+  _sortDatasource: function(data, field, dir) {
     //sort folders first, 2nd abc
     data.sort(function(a, b) {
       var aname, bname;
@@ -2487,9 +2502,20 @@ var balloon = {
       }
     });
 
+    return data;
+  },
+
+  /**
+   * Rebuild tree
+   *
+   * @param array data
+   * @param object operation
+   */
+  _rebuildTree: function(data, operation) {
     operation.success(data);
+
     if (balloon.post_rename_reload) {
-      balloon.showAction(['menu','file','folder','upload','filter','refresh','download','delete','restore','copy','cut']);
+      balloon.showAction(['menu','add','upload','filter','refresh','download','delete','restore','copy','cut']);
       balloon.post_rename_reload = false;
     }
   },
@@ -3004,7 +3030,7 @@ var balloon = {
         $fs_error_win.parent().addClass('fs-error-window');
       },
       close: function() {
-        balloon.showAction(['file', 'menu', 'download', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
+        balloon.showAction(['menu', 'download', 'add', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
       }
     }).data("kendoWindow").center().open();
   },
@@ -3278,17 +3304,71 @@ var balloon = {
 
 
   /**
+   * Add node
+   */
+  addNode: function() {
+    $('body').off('click').on('click', function(e){
+      var $target = $(e.target);
+
+      if($target.attr('id') != "fs-action-add") {
+        $('#fs-action-add-select').hide();
+      }
+    });
+
+    $('#fs-action-add-select').find('span').show();
+    $('#fs-action-add-select').find('input').hide().val('');
+
+    $('#fs-action-add-select').show().off('click', 'li')
+      .on('click', 'li', function(e) {
+        e.stopPropagation();
+        $('#fs-action-add-select').find('span').show();
+        $('#fs-action-add-select').find('input').hide().val('');
+
+        $(this).find('span').last().hide();
+        var type = $(this).attr('data-type');
+
+        var $input = $(this).find('input');
+        if(type === 'folder') {
+          $input.val(i18next.t('tree.new_folder'));
+        } else {
+          $input.val(i18next.t('tree.new_file'));
+        }
+
+        $input.show().focus().off('keydown').on('keydown', function(e) {
+          e.stopImmediatePropagation();
+          var name = $(this).val();
+
+          if(type !== 'folder') {
+            name = name+'.'+type;
+          }
+
+          if(balloon.nodeExists(name)) {
+            $(this).addClass('fs-node-exists');
+            return;
+          } else {
+            $(this).removeClass('fs-node-exists');
+          }
+
+          if(e.keyCode === 13) {
+            if(balloon.add_file_handlers[type]) {
+              balloon.add_file_handlers[type](name, type);
+            }
+
+            setTimeout(function(){
+              $('#fs-action-add-select').hide();
+            }, 100);
+          }
+        });
+      });
+  },
+
+  /**
    * Add folder
    *
+   * @param string name
    * @return  void
    */
-  addFolder: function() {
-    var name = i18next.t('tree.new_folder');
-
-    if(balloon.nodeExists(name)) {
-      name = name+' ('+balloon.randomString(4)+')';
-    }
-
+  addFolder: function(name) {
     balloon.xmlHttpRequest({
       url: balloon.base+'/collections',
       type: 'POST',
@@ -3298,8 +3378,8 @@ var balloon = {
       },
       dataType: 'json',
       success: function(data) {
+        balloon.added = data.id;
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data.id;
       },
     });
   },
@@ -3308,23 +3388,18 @@ var balloon = {
   /**
    * Add new file
    *
+   * @param string name
    * @return void
    */
-  addFile: function() {
-    var name = i18next.t('tree.new_file')+'.txt';
-
-    if(balloon.nodeExists(name)) {
-      name = i18next.t('tree.new_file')+' ('+balloon.randomString(4)+').txt';
-    }
-
+  addFile: function(name) {
     name = encodeURI(name);
 
     balloon.xmlHttpRequest({
       url: balloon.base+'/files?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
       type: 'PUT',
       success: function(data) {
+        balloon.added = data.id;
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        balloon.added_rename = data.id;
       },
     });
   },
@@ -4080,6 +4155,7 @@ var balloon = {
 
     var content = $('#fs-search-container').find('input:text').val();
     var query   = balloon.buildQuery(content, must);
+    $('.fs-search-reset-button').show();
 
     if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
       query = undefined;
@@ -5772,11 +5848,8 @@ var balloon = {
       });
       $files.click();
       break;
-    case 'file':
-      balloon.addFile();
-      break;
-    case 'folder':
-      balloon.addFolder();
+    case 'add':
+      balloon.addNode();
       break;
     case 'delete':
       balloon.deletePrompt(balloon.getSelected(balloon.getCurrentNode()));
@@ -5814,7 +5887,7 @@ var balloon = {
 
       if(balloon.selected_action.command === 'cut') {
         if(balloon.selected_action.collection == parent) {
-          balloon.showAction(['download', 'file', 'folder', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
+          balloon.showAction(['download', 'add', 'upload', 'refresh', 'delete', 'cut', 'copy', 'filter']);
         } else {
           balloon.move(balloon.selected_action.nodes, parent);
         }
