@@ -18,6 +18,10 @@ var app = {
     this.balloon = core;
     app.addNormalFolder = app.balloon.addFolder;
     app.balloon.addFolder = app.addFolder;
+
+    var $add_node = $('#fs-action-add-select').find('ul');
+    $add_node.append('<li data-type="external_storage"><span class="gr-i-folder gr-icon"></span><span>'+i18next.t('app.external_storage.folder')+'</span></li>');
+    this.balloon.add_file_handlers.external_storage = this.storageWizard;
   },
 
   resetView: function() {
@@ -29,13 +33,14 @@ var app = {
 
     $div.html(
       '<select>'+
-        '<option value="smb">'+i18next.t('app.externalstorage.smb_cifs_share')+'</option>'+
+        '<option value="smb">'+i18next.t('app.externalstorage.smb_share')+'</option>'+
       '</select>'+
-      '<label>'+i18next.t('app.externalstorage.name')+'</label><input name="name" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.host')+'</label><input name="host" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.share')+'</label><input name="share" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.username')+'</label><input name="username" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.password')+'</label><input name="password" type="password"/>'+
+      '<label>'+i18next.t('tree.folder')+'</label><input name="name" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="share" type="text"/>'+
+      '<label>'+i18next.t('login.username')+'</label><input name="username" type="text"/>'+
+      '<label>'+i18next.t('login.password')+'</label><input name="password" type="password"/>'+
       '<input name="add" value='+i18next.t('button.save')+' type="submit"/>'+
       '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>');
 
@@ -45,7 +50,7 @@ var app = {
       modal: true,
       draggable: true,
       width: 400,
-      height: 400,
+      height: 470,
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
           return;

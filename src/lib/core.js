@@ -3328,11 +3328,19 @@ var balloon = {
         var type = $(this).attr('data-type');
 
         var $input = $(this).find('input');
+
         if(type === 'folder') {
-          $input.val(i18next.t('tree.new_folder'));
+          var name = i18next.t('tree.new_folder');
         } else {
-          $input.val(i18next.t('tree.new_file'));
+          var name = i18next.t('tree.new_file');
         }
+
+        if($input.length === 0) {
+          $('#fs-action-add-select').hide();
+          return balloon.add_file_handlers[type](name, type);
+        }
+
+        $input.val(name);
 
         $input.show().focus().off('keydown').on('keydown', function(e) {
           e.stopImmediatePropagation();
