@@ -415,7 +415,7 @@ var balloon = {
         '</dt>'
       );
 
-      var $content = viewConfig.$content || $fs_content_view_template.find('#fs-'+view);
+      var $content = viewConfig.$content || $fs_content_view_template.find('#fs-'+view).clone();
       $fs_content_view.append($content);
     }
 
