@@ -910,7 +910,7 @@ var balloon = {
       node = balloon.datasource.getByUid($(this).attr('data-uid'));
 
       var order = ['icon', 'name', 'meta', 'size', 'changed', 'checkbox'];
-      var metaOrder = ['color_tag', 'sharelink_token', 'deleted'];
+      var metaOrder = ['color_tag', 'sharelink_token', 'deleted', 'readonly', 'destroy'];
 
       if(balloon.isSystemNode(node)) {
         if(balloon.id(node) == '_FOLDERUP') {
@@ -971,12 +971,22 @@ var balloon = {
             switch(metaOrder[metaProp]) {
             case 'sharelink_token':
               if(node.sharelink_token) {
-                meta_html_children.push('<div class="fs-node-shared"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#hyperlink"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#hyperlink"></use></svg></div>');
               }
               break;
             case 'deleted':
               if(node.deleted) {
-                meta_html_children.push('<div class="fs-node-shared"><svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg></div>');
+              }
+              break;
+            case 'readonly':
+              if(node.readonly) {
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-lock"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#lock"></use></svg></div>');
+              }
+              break;
+            case 'destroy':
+              if(node.destroy) {
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-flag"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#flag"></use></svg></div>');
               }
               break;
             case 'color_tag':
@@ -1023,23 +1033,6 @@ var balloon = {
         case 'checkbox':
           $node_el.append('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
           break;
-
-          //TODO pixtron - can these be removed?
-          /*case 'readonly':
-            if(node.readonly === true) {
-              html_children.push('<div class="fs-node-readonly gr-icon gr-i-lock"></div>');
-            } else {
-              html_children.push('<div>&nbsp;</div>');
-            }
-          break;
-
-          case 'destroy':
-            if(node.destroy !== undefined) {
-              html_children.push('<div class="fs-node-destroy gr-icon gr-i-flag"></div>');
-            } else {
-              html_children.push('<div>&nbsp;</div>');
-            }
-          break;*/
         }
       }
 
