@@ -7,7 +7,7 @@
 
 import $ from "jquery";
 import i18next from 'i18next';
-import css from '../styles/style.css';
+import css from '../styles/style.scss';
 
 var app = {
   preInit: function(core) {
@@ -18,7 +18,7 @@ var app = {
       '<div><input type="checkbox" id="fs-notification-subscribe" name="subscribe" value="1"/><label for="fs-notification-subscribe">'+i18next.t('app.balloon_app_notification.subscribe')+'</label></div>'+
       '<div><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1"/><label for="fs-notification-exclude_me">'+i18next.t('app.balloon_app_notification.exclude_me')+'</label></div>'+
       '<div> <input type="checkbox" id="fs-notification-recursive" name="recursive" value="1"/><label for="fs-notification-recursive">'+i18next.t('app.balloon_app_notification.recursive')+'</label></div>'+
-      '<input type="submit" value="'+i18next.t('app.balloon_app_notification.save')+'">'+
+      '<input type="submit" class="fs-button-primary" value="'+i18next.t('app.balloon_app_notification.save')+'">'+
     '</dd>');
 
     this.$content = $content;
