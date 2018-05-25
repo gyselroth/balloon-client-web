@@ -15,4 +15,27 @@
     }
   }
 
+  #fs-advanced-destroy-date {
+    @include clearfix;
+
+    padding-top: 10px;
+
+    div {
+      font-size: 13px;
+      line-height: 30px;
+      float: left;
+
+      &#fs-advanced-destroy-date-preview {
+        margin: 0 10px 0 28px;
+        color: $colorDarkGrey;
+      }
+    }
+
+    button {
+      float: right;
+      min-width: 90px;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  }
 }

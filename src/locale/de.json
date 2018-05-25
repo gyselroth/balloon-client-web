@@ -225,9 +225,19 @@
       "user_deleted": "[gelöschter User]"
     },
     "advanced": {
-      "destroyable": "Automatische Löschung: Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
+      "destroy_date": "Löschdatum",
+      "set_destroy_date": "Festlegen",
+      "edit_destroy_date": "Editieren",
       "prompt_destroy": "Möchtest du wirklich, dass am %s die die Datei/Ordner %s gelöscht wird?",
-      "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)"
+      "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)",
+      "destroy_date_window": {
+        "title": "Löschdatum festlegen",
+        "destroyable": "Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "destroy_date": "Löschdatum",
+        "destroy_time": "Zeit <span>(optional)</span>"
+      }
     }
   },
   "error": {

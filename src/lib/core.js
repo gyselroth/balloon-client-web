@@ -1995,52 +1995,120 @@ var balloon = {
   advancedOperations: function(node) {
     balloon.resetDom('advanced');
 
-    var $fs_advanced   = $('#fs-advanced'),
-      $fs_destroy_at = $fs_advanced.find('input[name=destroy_at]'),
-      $fs_readonly   = $fs_advanced.find('input[name=readonly]'),
-      $fs_submit   = $fs_advanced.find('input[name=submit]'),
-      formatted    = '';
+    var $fs_advanced = $('#fs-advanced');
+    var $fs_readonly = $fs_advanced.find('input[name=readonly]');
+    var $fs_destroy_date_preview = $fs_advanced.find('#fs-advanced-destroy-date-preview');
+    var $fs_destroy_date_set = $fs_advanced.find('#fs-advanced-destroy-date-set');
+    var $fs_destroy_date_edit = $fs_advanced.find('#fs-advanced-destroy-date-edit');
 
     if(node.destroy !== undefined) {
-      var date = new Date(node.destroy);
-      formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
+      var formatedDate = kendo.toString(new Date(node.destroy), kendo.culture().calendar.patterns.g);
 
-      $fs_destroy_at.val(formatted);
+      $fs_destroy_date_preview.html(formatedDate);
+      $fs_destroy_date_set.hide();
+      $fs_destroy_date_edit.show();
+    } else {
+      $fs_destroy_date_preview.html('');
+      $fs_destroy_date_set.show();
+      $fs_destroy_date_edit.hide();
     }
 
-    if(node.readonly === true) {
-      $fs_readonly.prop('checked', true);
-    }
+    $fs_readonly.prop('checked', node.readonly);
 
-    $fs_destroy_at.kendoDateTimePicker({
-      format: kendo.culture().calendar.patterns.g,
-      min: new Date(),
+    $fs_readonly.off('change').on('change', function() {
+      balloon.xmlHttpRequest({
+        url: balloon.base+'/nodes',
+        type: 'PATCH',
+        data: {
+          id: balloon.id(node),
+          readonly: node.readonly
+        },
+        success: function(data) {
+          node.readonly = data.readonly;
+        }
+      });
     });
 
-    $fs_submit.off('click').on('click', function(){
-      var ts = $fs_destroy_at.val();
-      if(ts !== formatted) {
-        formatted = ts;
-        if(ts === '') {
-          balloon.selfDestroyNode(node, ts);
-        } else {
-          var msg  = i18next.t('view.advanced.prompt_destroy', ts, node.name);
-          balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts]);
-        }
-      }
+    $fs_advanced.find('button').off('click').on('click', balloon.showDestroyDate);
+  },
 
-      if(node.readonly !== $fs_readonly.is(':checked')) {
-        node.readonly = $fs_readonly.is(':checked');
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/nodes',
-          type: 'PATCH',
-          data: {
-            id: balloon.id(node),
-            readonly: node.readonly
-          },
+  /**
+   * Opens modal for setting the destoy date of the current node
+   *
+   * @return void
+   */
+  showDestroyDate: function() {
+    var node = balloon.getCurrentNode();
+
+    if(!node) return;
+
+    var $fs_destroy_date_win = $('#fs-destroy-date-window');
+
+    var $k_win = $fs_destroy_date_win.kendoBalloonWindow({
+      title: i18next.t('view.advanced.destroy_date_window.title'),
+      resizable: false,
+      modal: true,
+      open: function() {
+        var $k_fs_destroy_date = $fs_destroy_date_win.find('input[name=destroy_date]').kendoBalloonDatePicker({
+          format: kendo.culture().calendar.patterns.d,
+          min: new Date(),
+        }).data('kendoBalloonDatePicker');
+
+        var $k_fs_destroy_time = $fs_destroy_date_win.find('input[name=destroy_time]').kendoBalloonTimePicker({
+          format: kendo.culture().calendar.patterns.t
+        }).data('kendoBalloonTimePicker');
+
+        if(node.destroy) {
+          var curDate = new Date(node.destroy);
+          var curTime = new Date(0);
+
+          curTime.setHours(curDate.getHours());
+          curTime.setMinutes(curDate.getMinutes());
+
+          curDate.setHours(0);
+          curDate.setMinutes(0);
+
+          $k_fs_destroy_date.value(curDate);
+          $k_fs_destroy_time.value(curTime);
+        }
+
+        $fs_destroy_date_win.find('input:submit').unbind().click(function() {
+          var ts = null;
+          var curTs = (new Date(node.destroy)).getTime() / 1000;
+          var date = $k_fs_destroy_date.value();
+          var time = $k_fs_destroy_time.value();
+
+          if(date !== null) {
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+          }
+
+          if(date !== null && time !== null) {
+            date.setTime(date.getTime() + ((time.getHours() * 60 + time.getMinutes()) * 60 * 1000));
+          }
+
+          if(date != null) {
+            ts = Math.round(date.getTime() / 1000);
+          }
+
+          if(ts !== curTs) {
+            if(ts === null) {
+              balloon.selfDestroyNode(node, ts, $k_win);
+            } else {
+              var msg  = i18next.t('view.advanced.prompt_destroy', ts, node.name);
+              balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win]);
+            }
+          } else {
+            $k_win.close();
+          }
+        });
+
+        $fs_destroy_date_win.find('input:button').unbind().click(function() {
+          $k_win.close();
         });
       }
-    });
+    }).data('kendoBalloonWindow').center().open();
   },
 
 
@@ -2048,18 +2116,12 @@ var balloon = {
    * Set self destroy node
    *
    * @param object node
-   * @param string ts
+   * @param null|integer ts
    */
-  selfDestroyNode: function(node, ts) {
+  selfDestroyNode: function(node, ts, $k_win) {
     var url;
 
-    if(ts !== '') {
-      ts = kendo.parseDate(ts, kendo.culture().calendar.patterns.g);
-
-      if(ts !== null) {
-        ts = Math.round(ts.getTime() / 1000);
-      }
-
+    if(ts !== null) {
       url = balloon.base+'/nodes?id='+balloon.id(node)+'&'+'at='+ts;
     } else {
       url = balloon.base+'/nodes?id='+balloon.id(node)+'&at=0';
@@ -2068,6 +2130,14 @@ var balloon = {
     balloon.xmlHttpRequest({
       url: url,
       type: 'DELETE',
+      complete: function() {
+        if($k_win) {
+          $k_win.close();
+        }
+
+        node.destroy = ts === null ? undefined : (new Date(ts * 1000)).toISOString();
+        balloon.advancedOperations(node);
+      }
     });
   },
 
@@ -6428,9 +6498,6 @@ var balloon = {
         break;
 
       case 'advanced':
-        var $fs_advanced   = $('#fs-advanced');
-        $fs_advanced.find('input[name=destroy_at]').val(''),
-        $fs_advanced.find('input[name=readonly]').prop('checked', false);
         break;
 
       case 'selected':

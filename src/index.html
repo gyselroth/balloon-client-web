@@ -445,12 +445,11 @@
                                 <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
                                 <label for="fs-readonly" data-i18n="view.advanced.readonly"></label>
                             </div>
-                            <div class="fs-advanced-group">
-                                <p data-i18n="view.advanced.destroyable"></p>
-                                <input type="text" name="destroy_at">
-                            </div>
-                            <div class="fs-advanced-group">
-                                <input type="submit" name="submit" data-i18n="[value]button.save"/>
+                            <div class="fs-advanced-group" id="fs-advanced-destroy-date">
+                                <div class="fs-advanced-label" data-i18n="view.advanced.destroy_date"></div>
+                                <div id="fs-advanced-destroy-date-preview"></div>
+                                <button id="fs-advanced-destroy-date-set" class="fs-button-small" data-i18n="view.advanced.set_destroy_date"></button>
+                                <button id="fs-advanced-destroy-date-edit" class="fs-button-small" data-i18n="view.advanced.edit_destroy_date"></button>
                             </div>
                         </dd>
                     </dl>
@@ -643,6 +642,27 @@
                         <svg class="gr-icon gr-i-check"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#check"></use></svg>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="fs-destroy-date-window">
+            <div id="fs-destroy-date-window-content">
+                <p data-i18n="view.advanced.destroy_date_window.destroyable"></p>
+
+                <fieldset>
+                    <div id="fs-destroy-date-window-date">
+                        <label for="share_expiration_date" data-i18n="view.advanced.destroy_date_window.destroy_date"></label>
+                        <input type="text" name="destroy_date" />
+                    </div>
+                    <div>
+                        <label for="share_expiration_time" data-i18n="[html]view.advanced.destroy_date_window.destroy_time"></label>
+                        <input type="text" name="destroy_time" />
+                    </div>
+                </fieldset>
+            </div>
+            <div id="fs-destroy-date-window-button-wrapper" class="fs-window-secondary-actions">
+                <input type="button" tabindex="2" data-i18n="[value]view.advanced.destroy_date_window.cancel" />
+                <input type="submit" tabindex="1" name="share" data-i18n="[value]view.advanced.destroy_date_window.save" class="fs-button-primary" />
             </div>
         </div>
 

@@ -224,9 +224,20 @@
       "user_deleted": "[user deleted]"
     },
     "advanced": {
-      "destroyable": "Self-Destruction: (The node will destroy itself at the time specified (Not-restorable!)):",
+      "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",
+      "destroy_date": "Destruction date",
+      "set_destroy_date": "Set date",
+      "edit_destroy_date": "Edit date",
       "prompt_destroy": "Would you really like to set the date/time %s for node %s for self destruction?",
-      "readonly": "Readonly (No content changes can be made anymore, but you can still modify meta data)"
+      "readonly": "Readonly (No content changes can be made anymore, but you can still modify meta data)",
+      "destroy_date_window": {
+        "title": "Set destruction date",
+        "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",
+        "cancel": "Cancel",
+        "save": "Save",
+        "destroy_date": "Destruction date",
+        "destroy_time": "Time <span>(optional)</span>"
+      }
     }
   },
   "error": {
