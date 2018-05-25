@@ -22,7 +22,7 @@ var app = {
           '</select>'+
           '<svg class="gr-icon gr-i-expand"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#expand"></use></svg>'+
           '<div id="fs-shadow-formats-add">'+
-            '<svg class="gr-icon gr-i-add"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#add"></use></svg>'+
+            '<svg class="gr-icon gr-i-plus"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#plus"></use></svg>'+
           '</div>'+
       '</div>'+
       '<ul id="fs-shadow-slaves"></ul>'+
@@ -170,7 +170,7 @@ var app = {
           '<div><span class="fs-path">'+path+'</span></div>'+
         '</div>'+
         '<div class="fs-shadow-slave-remove">'+
-          '<svg class="gr-icon gr-i-remove"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#remove"></use></svg>'+
+          '<svg class="gr-icon gr-i-minus"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#minus"></use></svg>'+
         '</div>'+
       '</li>'
     );
