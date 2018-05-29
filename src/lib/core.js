@@ -5387,21 +5387,14 @@ var balloon = {
     $('#fs-display-left').hide();
     $('#fs-display-right').hide();
 
+    var $k_display;
     var options = {
       draggable: false,
       resizable: false,
-      modal: false,
+      modal: true,
       open: function(e) {
-        $('#fs-display-live_wnd_title').html(
-          $('#fs-browser-tree').find('li[fs-id="'+node.id+'"]').find('.k-in').find('> span').clone()
-        );
-
-        $(this.wrapper).addClass('fs-transparent-window');
-        $div.addClass('fs-transparent-window');
-        $('body').append('<div class="fs-display-overlay"></div>');
       },
       close: function() {
-        $('.fs-display-overlay').remove();
         $('#fs-display-content > *').remove();
       }
     };
@@ -5409,21 +5402,30 @@ var balloon = {
     if($div.is(':visible')) {
       options.close();
       options.open();
+      $k_display = $div.data("kendoBalloonWindow")
     } else {
-      var $k_display = $div.kendoBalloonWindow(options).data("kendoBalloonWindow").open().maximize();
+      $k_display = $div.kendoBalloonWindow(options).data("kendoBalloonWindow").open().maximize();
     }
 
     var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
     if(typeof(login) === 'object' && !login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
+
     var $div_content = $('#fs-display-content').html('').hide(),
       $element,
       type = node.mime.substr(0, node.mime.indexOf('/'));
+    var $div_content_inner = $('<div id="fs-display-content-inner"></div>');
+
     $div_content.css({width: 'inherit', height: 'inherit'});
+    $div_content_inner.css({width: null, height: null});
 
     if(type == 'image') {
       $element = $('<img src="'+url+'"/>');
+
+      $element.one('load', function() {
+        $div_content_inner.css({width: $element.width(), height: ($element.height() + 40)});
+      });
     } else if(type == 'video') {
       $element = $('<video autoplay controls><source src="'+url+'" type="'+node.mime+'"></video>');
     } else if(type == 'audio' || node.mime == 'application/ogg') {
@@ -5432,7 +5434,17 @@ var balloon = {
       $div_content.css({width: '90%', height: '90%'})
       $element = $('<embed src="'+url+'" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">');
     }
-    $div_content.show().html($element);
+
+    $div_content_inner.append($element);
+    $div_content_inner.append('<div id="fs-display-title">' + node.name + '</div>');
+
+    var $close = $('<svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg>');
+    $div_content_inner.append($close);
+    $div_content.show().html($div_content_inner);
+
+    $close.off('click').on('click', function() {
+      $k_display.close();
+    });
 
     var index = balloon.datasource._pristineData.indexOf(node);
     var data = balloon.datasource._pristineData;

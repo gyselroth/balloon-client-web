@@ -93,7 +93,11 @@
         bottom: 0;
       }
     }
-
-
   }
+}
+
+.k-overlay {
+  opacity: 1 !important;
+  filter: none !important;
+  background-color: rgba(0, 0, 0, 0.4);
 }

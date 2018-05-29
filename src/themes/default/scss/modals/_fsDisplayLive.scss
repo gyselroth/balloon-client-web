@@ -1,5 +1,101 @@
-// TDOO pixtron - implement this
+.k-window {
+
+  &.fs-display-live {
+    height: 100% !important;
+    background-color: transparent;
+
+    & > div.k-window-content {
+      padding-top: 0;
+    }
+
+    & > .k-header {
+      display: none;
+    }
+  }
+}
 
 #fs-display-live {
 	display: none;
+
+  overflow: hidden;
+
+  #fs-display-content {
+    margin: 0 auto;
+    max-width: 90%;
+    max-height: 90%;
+    text-align: center;
+
+    #fs-display-content-inner {
+      box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.15);
+      position: relative;
+      width: 100%;
+      height: 100%;
+
+      border-radius: 4px;
+      background-color: $colorBrightGrey;
+      margin: 0 auto;
+      overflow: hidden;
+
+      img,
+      video,
+      audio {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        max-height: calc(100% - 40px);
+      }
+
+      embed {
+        width: 100%;
+        height: calc(100% - 40px);
+      }
+
+      #fs-display-title {
+        color: $colorMediumGrey;
+        font-size: 13px;
+        line-height: 40px;
+      }
+
+      .gr-i-close {
+        position: absolute;
+        top: 21px;
+        right: 21px;
+        width: 28px;
+        height: 28px;
+        color: $colorMediumGrey;
+        cursor: pointer;
+      }
+    }
+  }
+
+  #fs-display-left,
+  #fs-display-right {
+    $size: 30px;
+
+    position: absolute;
+    top: 50%;
+    margin-top: $size / 2;
+    width: $size;
+    height: $size;
+    background-color: $colorWhite;
+    box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.12);
+    color: $colorActiveBlue;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+
+    .gr-icon {
+      position: relative;
+      top: 3px;
+      left: 3px;
+    }
+  }
+
+  #fs-display-left {
+    left: 0;
+  }
+
+  #fs-display-right {
+    right: 0;
+  }
 }
