@@ -152,6 +152,36 @@
           height: 6px;
           border-radius: 0;
           position: relative;
+          width: calc(100% + 10px);
+          left: -4px;
+
+          .k-state-selected,
+          .k-state-default {
+            padding: 0 3px;
+            background-color: transparent !important;
+            box-sizing: border-box;
+
+            &:after {
+              display: block;
+              content: "";
+              background-color: $colorActiveBlue;
+              border-radius: 3px;
+              width: 100%;
+              height: 100%;
+            }
+
+            &.k-complete:after {
+              background-color: $colorSuccessGreen;
+            }
+
+            &.fs-progress-error {
+              opacity: 1;
+              &:after {
+                opacity: 0.3;
+                background-color: $colorErrorRed !important;
+              }
+            }
+          }
         }
       }
     }
