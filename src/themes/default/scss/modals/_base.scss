@@ -19,6 +19,16 @@
     border: none;
     height: $headerHeight;
 
+
+    .k-window-title {
+      display: block;
+      width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+
+    }
+
     .k-window-actions {
       position: absolute;
       top: 24px;
