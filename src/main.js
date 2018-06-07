@@ -11,7 +11,9 @@ import ubuntu_fonts from 'ubuntu-fontface/ubuntu.css';
 import kendo_theme from './themes/default/css/kendo_theme.css';
 import layout from './themes/default/css/layout.css';
 import responsive from './themes/default/css/responsive.css';
-//import icons from '@gyselroth/icon-collection/src/icons.css';
+
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
+
 import $ from "jquery";
 import translate from './lib/translate.js';
 import svgxuse from 'svgxuse';

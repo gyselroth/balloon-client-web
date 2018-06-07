@@ -410,8 +410,8 @@ var balloon = {
       $fs_content_view.append(
         '<dt id="fs-content-view-title-' + view + '">'+
             '<span>' + i18next.t(viewConfig.title) + '</span>'+
-            '<svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-n"></use></svg>'+
-            '<svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrowhead-s"></use></svg>'+
+            '<svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="/assets/icons.svg#arrowhead-n"></use></svg>'+
+            '<svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="/assets/icons.svg#arrowhead-s"></use></svg>'+
         '</dt>'
       );
 
@@ -606,7 +606,7 @@ var balloon = {
 
     clue = clue.substr(0, clue.search('</span>')+7);
 
-    clue += '<svg viewBox="0 0 24 24" class="gr-icon gr-i-file"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#file"></use></svg>';
+    clue += '<svg viewBox="0 0 24 24" class="gr-icon gr-i-file"><use xlink:href="/assets/icons.svg#file"></use></svg>';
     clue += '<div class="clue-item-count">' + $itemCount + '</span>';
 
     $('.k-drag-clue').html(clue);
@@ -971,22 +971,22 @@ var balloon = {
             switch(metaOrder[metaProp]) {
             case 'sharelink_token':
               if(node.sharelink_token) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#hyperlink"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg></div>');
               }
               break;
             case 'deleted':
               if(node.deleted) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-trash"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#trash"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg></div>');
               }
               break;
             case 'readonly':
               if(node.readonly) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-lock"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#lock"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-lock"><use xlink:href="/assets/icons.svg#lock"></use></svg></div>');
               }
               break;
             case 'destroy':
               if(node.destroy) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-flag"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#flag"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-flag"><use xlink:href="/assets/icons.svg#flag"></use></svg></div>');
               }
               break;
             case 'color_tag':
@@ -1027,7 +1027,7 @@ var balloon = {
 
         case 'icon':
           var spriteClass = balloon.getSpriteClass(node);
-          $node_el.append('<div class="fs-browser-column fs-browser-column-icon"><svg class="gr-icon  ' + spriteClass + '"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg></div>');
+          $node_el.append('<div class="fs-browser-column fs-browser-column-icon"><svg class="gr-icon  ' + spriteClass + '"><use xlink:href="/assets/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg></div>');
           break;
 
         case 'checkbox':
@@ -1581,7 +1581,7 @@ var balloon = {
 
           $node = $('<li></li>');
 
-          $icon = $('<div class="fs-events-icon"><svg class="gr-icon"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#undo"></use></svg></div>');
+          $icon = $('<div class="fs-events-icon"><svg class="gr-icon"><use xlink:href="/assets/icons.svg#undo"></use></svg></div>');
           balloon._spriteIcon($icon, icon);
           $node.append($icon);
 
@@ -1649,7 +1649,7 @@ var balloon = {
 
 
           if(undo === true) {
-            $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#undo"></use></svg></div>').unbind('click').bind('click',
+            $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="/assets/icons.svg#undo"></use></svg></div>').unbind('click').bind('click',
               body.data[log], balloon._undoEvent);
             $node.append($undo);
           }
@@ -3207,7 +3207,7 @@ var balloon = {
       modal: true,
       open: function() {
         $fs_error_win.parent().addClass('fs-error-window');
-        var $icon = '<svg class="gr-icon gr-i-warning-fill" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#warning-fill"></use></svg>';
+        var $icon = '<svg class="gr-icon gr-i-warning-fill" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#warning-fill"></use></svg>';
         $fs_error_win.prev().find('.k-window-title').prepend($icon);
 
         $fs_error_win.find('input[name="ok"]').off('click').on('click', function() {
@@ -3981,7 +3981,7 @@ var balloon = {
       '<div class="fs-share-window-privilege-selector">'+
         '<div class="fs-share-window-selected-privilege">'+
             '<span class="fs-share-window-selected-privilege-label">' + i18next.t('view.share.privilege_' + privilege) + '</span>'+
-            '<svg class="gr-icon gr-i-expand"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#expand"></use></svg>'+
+            '<svg class="gr-icon gr-i-expand"><use xlink:href="/assets/icons.svg#expand"></use></svg>'+
         '</div>'+
       '</div>'
     );
@@ -3996,7 +3996,7 @@ var balloon = {
         '<li>'+
             '<input id="priv_' + itemId + '_' + itemPrivilege + '" type="radio" name="priv_'+item.role.id+'" value="' + itemPrivilege + '" ' + (itemPrivilege === privilege ? ' checked' : '') + ' />'+
             '<label for="priv_'  + itemId + '_' + itemPrivilege + '">'+
-                '<svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg>'+
+                '<svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="/assets/icons.svg#checkmark"></use></svg>'+
                 '<span class="fs-share-window-privilege-label">' + i18next.t('view.share.privilege_' + itemPrivilege) + '</span>'+
             '</label>'+
         '</li>'
@@ -4509,7 +4509,7 @@ var balloon = {
           var spriteClass = ext !== false ? balloon.getSpriteClass(ext) : 'gr-i-file';
           children.push(
             '<li data-item="'+mimes[i]._id+'">'+
-              '<svg class="gr-icon  ' + spriteClass + '"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg>'+
+              '<svg class="gr-icon  ' + spriteClass + '"><use xlink:href="/assets/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg>'+
               '<div>['+mimes[i]._id+']</div></li>'
           );
         }
@@ -5438,7 +5438,7 @@ var balloon = {
     $div_content_inner.append($element);
     $div_content_inner.append('<div id="fs-display-title">' + node.name + '</div>');
 
-    var $close = $('<svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg>');
+    var $close = $('<svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg>');
     $div_content_inner.append($close);
     $div_content.show().html($div_content_inner);
 
@@ -6020,7 +6020,7 @@ var balloon = {
       $fs_prop_tags_list.empty();
 
       for(var tag in node.meta.tags) {
-        $fs_prop_tags_list.append('<li><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div></li>');
+        $fs_prop_tags_list.append('<li><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
       }
     }
 
@@ -6176,12 +6176,12 @@ var balloon = {
 
       var $fs_prop_tags = $('#fs-properties-meta-tags-tags');
       if($last_tag.attr('name') == 'add_tag') {
-        $fs_prop_tags.find('ul').append('<li><div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div></li>');
+        $fs_prop_tags.find('ul').append('<li><div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
         $last_tag.val('').focus();
       } else {
         var $parent = $last_tag.parent();
         $last_tag.remove();
-        $parent.html('<div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div>');
+        $parent.html('<div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>');
       }
 
       var tags = $fs_prop_tags.find('li').map(function () {
@@ -6806,7 +6806,7 @@ var balloon = {
         });
 
         progressnode.prepend('<div class="fs-progress-filename">'+file.name+'</div>');
-        progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#close"></use></svg></div>');
+        progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#close"></use></svg></div>');
 
         balloon.upload_manager.upload_bytes += file.blob.size;
       }
@@ -6919,7 +6919,7 @@ var balloon = {
         file.manager.count.success++;
         file.manager.progress.mgr_chunk.value(file.manager.count.transfer);
 
-        file.progress.find('.fs-progress-icon').replaceWith('<div class="fs-progress-icon fs-progress-complete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#checkmark"></use></svg></div>');
+        file.progress.find('.fs-progress-icon').replaceWith('<div class="fs-progress-icon fs-progress-complete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#checkmark"></use></svg></div>');
         file.progress.find('.fs-progress-icon').off('click');
 
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
@@ -7097,7 +7097,7 @@ var balloon = {
         }
 
         file.progress.find('.k-state-selected').addClass('fs-progress-error');
-        file.progress.find('.fs-progress-icon').addClass('fs-progress-error').replaceWith('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-error"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#error"></use></svg></div>');
+        file.progress.find('.fs-progress-icon').addClass('fs-progress-error').replaceWith('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-error"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#error"></use></svg></div>');
         file.progress.find('.fs-progress-icon').off('click');
 
         file.status = 2;

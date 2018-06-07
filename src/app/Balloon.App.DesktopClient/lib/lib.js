@@ -13,7 +13,7 @@ import login from '../../../lib/auth.js';
 var app = {
   render: function() {
     this.$menu = $('<li id="fs-menu-user-desktop" data-i18n="[title]app.balloon_app_desktopclient.menu">'
-      +'<svg class="gr-icon gr-i-arrow-s"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#arrow-s"></use></svg>'
+      +'<svg class="gr-icon gr-i-arrow-s"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#arrow-s"></use></svg>'
     +'</li>');
 
     this.$menu.appendTo('#fs-menu-left-bottom');

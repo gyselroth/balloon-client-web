@@ -20,9 +20,9 @@ var app = {
         '<select name="formats">'+
           '<option>'+i18next.t('app.balloon_app_convert.choose_format')+'</option>'+
           '</select>'+
-          '<svg class="gr-icon gr-i-expand"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#expand"></use></svg>'+
+          '<svg class="gr-icon gr-i-expand"><use xlink:href="/assets/icons.svg#expand"></use></svg>'+
           '<div id="fs-shadow-formats-add">'+
-            '<svg class="gr-icon gr-i-plus"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#plus"></use></svg>'+
+            '<svg class="gr-icon gr-i-plus"><use xlink:href="/assets/icons.svg#plus"></use></svg>'+
           '</div>'+
       '</div>'+
       '<ul id="fs-shadow-slaves"></ul>'+
@@ -163,14 +163,14 @@ var app = {
 
     return $('<li ' + (id ? 'data-id="'+id+'"' : '') + '>'+
         '<div class="fs-shadow-slave-icon">'+
-          '<svg class="gr-icon '+sprite+'"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#'+icon+'"></use></svg>'+
+          '<svg class="gr-icon '+sprite+'"><use xlink:href="/assets/icons.svg#'+icon+'"></use></svg>'+
         '</div>'+
         '<div class="fs-shadow-slave-name">'+
           '<div><span class="fs-name">'+name+'</span><span class="fs-ext">('+format+')</span></div>'+
           '<div><span class="fs-path">'+path+'</span></div>'+
         '</div>'+
         '<div class="fs-shadow-slave-remove">'+
-          '<svg class="gr-icon gr-i-minus"><use xlink:href="../node_modules/@gyselroth/icon-collection/src/icons.svg#minus"></use></svg>'+
+          '<svg class="gr-icon gr-i-minus"><use xlink:href="/assets/icons.svg#minus"></use></svg>'+
         '</div>'+
       '</li>'
     );
