@@ -1,7 +1,13 @@
+@import '../../../../node_modules/ubuntu-fontface/ubuntu.css';
+
 @import 'includes/colors';
 @import 'includes/mixins';
 @import 'includes/grIcons';
 @import 'includes/sk-circle';
+
+@import 'includes/reset';
+@import '../css/kendo.css';
+@import '../css/kendo_theme.css';
 
 @import 'base';
 

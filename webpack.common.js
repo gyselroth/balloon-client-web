@@ -28,13 +28,6 @@ module.exports = {
         loader: 'json-loader'
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: "css-loader"
-        })
-      },
-      {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
         loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
       },
