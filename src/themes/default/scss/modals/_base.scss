@@ -8,6 +8,8 @@
   color: $colorDarkGrey;
   border-radius: 8px;
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.15);
+  max-width: 100%;
+  width: 100%;
 
   & > div.k-header {
     position: relative;
@@ -26,7 +28,6 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-
     }
 
     .k-window-actions {
@@ -111,6 +112,35 @@
       width: calc(100% + #{2 * $sidePadding};
       margin-left: $sidePadding * -1;
       margin-right: $sidePadding * -1;
+    }
+  }
+
+  @media only screen and (max-width: $breakpointWindowFullscreen) {
+    border-radius: 0;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    height: 100% !important;
+    width: inherit !important;
+    padding: 0 30px !important;
+
+    & > div.k-header {
+      height: 33px;
+
+      .k-window-title {
+        top: 39px;
+      }
+
+      .k-window-actions {
+        top: 42px;
+        right: -6px;
+      }
+    }
+
+    & > div.k-window-content {
+      padding-top: 56px;
     }
   }
 }
