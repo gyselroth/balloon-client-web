@@ -15,6 +15,10 @@
 
   $border-radius: 4px;
 
+  $breakpointMetaVisible: 635px;
+  $breakpointSizeVisible: 720px;
+  $breakpointChangedVisible: 875px;
+
   .fs-browser-column {
     display: inline-block;
     box-sizing: border-box;
@@ -67,15 +71,15 @@
     }
 
     .fs-browser-column-name {
-      width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+      width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
     }
 
     .fs-browser-column-size,
     .fs-browser-column-changed {
       border-left: 1px dotted $headerBorderColor;
       padding-left: $columnPaddingLeftRight - 1px;
+      display: none;
     }
-
 
     #fs-browser-header-checkbox {
       width: $checkboxWidth;
@@ -152,6 +156,7 @@
       $paddingTopBottom: ($nodeHeight - $lineHeight) / 2;
       $paddingLeft: 13px;
       $paddingRight: 19px;
+
       padding: 0;
       margin: 0;
 
@@ -179,7 +184,7 @@
         cursor: pointer;
 
         .fs-browser-column-name {
-          width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
+          width: calc(100% - #{$iconWidth + $checkboxWidth});
           height: $lineHeight;
           color: $colorDarkGrey;
           font-size: 15px;
@@ -201,9 +206,13 @@
           }
         }
 
+        .fs-browser-column-meta,
+        .fs-browser-column-changed,
+        .fs-browser-column-size {
+          display: none;
+        }
+
         .fs-browser-column-meta {
-          width: $metaWidth;
-          padding: 0;
           color: $colorMediumGrey;
 
           @include clearfix;
@@ -311,6 +320,191 @@
 
           .fs-browser-column-name {
             color: $colorMediumGrey;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointMetaVisible) {
+    #fs-browser-tree {
+      $metaPaddingSmallScreen: 25px;
+
+      .k-item {
+        .k-in {
+          .fs-browser-column-meta {
+            display: inline-block;
+            width: $metaWidth + $metaPaddingSmallScreen;
+            padding: 0 $metaPaddingSmallScreen 0 0;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointSizeVisible) {
+    #fs-browser-header {
+      .fs-browser-column-size {
+        display: inline-block;
+      }
+
+      .fs-browser-column-name {
+        width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
+      }
+    }
+
+    #fs-browser-tree {
+      .k-item {
+        .k-in {
+          .fs-browser-column-meta {
+            padding-right: 0;
+            width: $metaWidth;
+          }
+
+          .fs-browser-column-size {
+            display: inline-block;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointChangedVisible) {
+    #fs-browser-header {
+      .fs-browser-column-changed {
+        display: inline-block;
+      }
+
+      .fs-browser-column-name {
+        width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+      }
+    }
+
+    #fs-browser-tree {
+      .k-item {
+        .k-in {
+          .fs-browser-column-changed {
+            display: inline-block;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  .fs-content-expanded & {
+    @media screen and (min-width: $minWidthForPannel) {
+      #fs-browser-header {
+        .fs-browser-column-changed,
+        .fs-browser-column-size {
+          display: none;
+        }
+
+        .fs-browser-column-name {
+          width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
+        }
+      }
+
+      #fs-browser-tree {
+        .k-item {
+          .k-in {
+            .fs-browser-column-changed,
+            .fs-browser-column-size,
+            .fs-browser-column-meta {
+              display: none;
+            }
+
+            .fs-browser-column-name {
+              width: calc(100% - #{$iconWidth + $checkboxWidth});
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (min-width: #{$breakpointMetaVisible + 400px}) {
+      #fs-browser-tree {
+        $metaPaddingSmallScreen: 25px;
+
+        .k-item {
+          .k-in {
+            .fs-browser-column-meta {
+              display: inline-block;
+              width: $metaWidth + $metaPaddingSmallScreen;
+              padding: 0 $metaPaddingSmallScreen 0 0;
+            }
+
+            .fs-browser-column-name {
+              width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth});
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (min-width: #{$breakpointSizeVisible + 400px}) {
+      #fs-browser-header {
+        .fs-browser-column-size {
+          display: inline-block;
+        }
+
+        .fs-browser-column-name {
+          width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
+        }
+      }
+
+      #fs-browser-tree {
+        .k-item {
+          .k-in {
+            .fs-browser-column-meta {
+              padding-right: 0;
+              width: $metaWidth;
+            }
+
+            .fs-browser-column-size {
+              display: inline-block;
+            }
+
+            .fs-browser-column-name {
+              width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (min-width: #{$breakpointChangedVisible + 400px}) {
+      #fs-browser-header {
+        .fs-browser-column-changed {
+          display: inline-block;
+        }
+
+        .fs-browser-column-name {
+          width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+        }
+      }
+
+      #fs-browser-tree {
+        .k-item {
+          .k-in {
+            .fs-browser-column-changed {
+              display: inline-block;
+            }
+
+            .fs-browser-column-name {
+              width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
+            }
           }
         }
       }
