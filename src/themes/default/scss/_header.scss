@@ -79,12 +79,16 @@
     left: 0;
     right: 0;
 
-    display: block;
+    display: none;
     margin: auto;
 
     max-width: 400px;
     width: 40%;
     height: 36px;
+
+    @media screen and (min-width: $breakpointSearchVisible) {
+      display: block;
+    }
 
     & > .gr-icon {
       position: absolute;
