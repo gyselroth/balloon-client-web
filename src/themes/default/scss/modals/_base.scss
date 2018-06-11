@@ -10,6 +10,7 @@
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.15);
   max-width: 100%;
   width: 100%;
+  overflow: hidden;
 
   & > div.k-header {
     position: relative;
@@ -127,20 +128,20 @@
     padding: 0 30px !important;
 
     & > div.k-header {
-      height: 33px;
+      height: 33px !important;
 
       .k-window-title {
-        top: 39px;
+        top: 39px !important;
       }
 
       .k-window-actions {
-        top: 42px;
-        right: -6px;
+        top: 42px !important;
+        right: -6px !important;
       }
     }
 
     & > div.k-window-content {
-      padding-top: 56px;
+      padding-top: 56px !important;
     }
   }
 }
