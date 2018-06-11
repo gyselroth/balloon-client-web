@@ -8,7 +8,6 @@
 import $ from "jquery";
 import kendoAutoComplete from 'kendo-ui-core/js/kendo.autocomplete.js';
 import kendoProgressBar from 'kendo-ui-core/js/kendo.progressbar.js';
-import kendoSplitter from 'kendo-ui-core/js/kendo.splitter.js';
 import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
 import balloonWindow from './widget-balloon-window.js';
 import balloonDatePicker from './widget-balloon-datepicker.js';
@@ -232,19 +231,6 @@ var balloon = {
 
     app.preInit(this);
     balloon.kendoFixes();
-
-    var $fs_browser_layout = $("#fs-browser-layout");
-    var $fs_layout_left = $("#fs-layout-left");
-
-    if($fs_browser_layout.data('kendoSplitter') === undefined) {
-      $fs_browser_layout.kendoSplitter({
-        panes: [
-          { collapsible: false, min: "25%" },
-          { collapsible: true, size: "400px", min: "400px", collapsed: true },
-        ],
-        scrollable: false
-      });
-    }
 
     balloon.initFsContentView();
 
@@ -1166,7 +1152,7 @@ var balloon = {
     balloon.showView(views);
 
     if(!balloon.isMobileViewPort()) {
-      balloon.togglePannel('content', true);
+      balloon.togglePannel(true);
     }
 
     $('#fs-content-view dt').unbind('click').not('.disabled').click(function() {
@@ -1918,7 +1904,7 @@ var balloon = {
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
     //TODO pixtron - do we really need to toggle the pannel here?
-    balloon.togglePannel('content');
+    balloon.togglePannel();
     balloon.resetDom(['search']);
 
     if(action === 'cloud') {
@@ -2229,7 +2215,7 @@ var balloon = {
 
     balloon.long_touch = true;
     //TODO pixtron - should pannel really open here?
-    balloon.togglePannel('content', true);
+    balloon.togglePannel(true);
 
     if(!balloon.isSystemNode(balloon.last)) {
       $('#fs-browser-tree').find('.k-in').removeClass('k-state-selected');
@@ -2379,7 +2365,7 @@ var balloon = {
     }
 
     if(balloon.last !== null && balloon.last.directory) {
-      balloon.togglePannel('content', false);
+      balloon.togglePannel(false);
 
       var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
 
@@ -2972,7 +2958,7 @@ var balloon = {
     }
 
     balloon.resetDom(['upload', 'preview', 'properties', 'history', 'selected', 'view-bar']);
-    balloon.togglePannel('content', true);
+    balloon.togglePannel(true);
 
     var index = balloon.multiselect.indexOf(node);
     var $selected = $('#fs-browser-tree').find('li[fs-id='+balloon.id(node)+']');
@@ -3006,7 +2992,7 @@ var balloon = {
     $k_tree.select($());
 
     balloon.multiselect = [];
-    balloon.togglePannel('content', false);
+    balloon.togglePannel(false);
     balloon.pushState(false, true);
   },
 
@@ -6287,16 +6273,23 @@ var balloon = {
 
 
   /**
-   * Toggle pannel
+   * Toggle side pannel
    *
-   * @param  string pannel
-   * @param boolean expand (optional) See https://docs.telerik.com/kendo-ui/api/javascript/ui/splitter/methods/toggle
+   * @param boolean expand (optional)
    * @return void
    */
-  togglePannel: function(pannel, expand) {
-    var $k_splitter = $('#fs-browser-layout').data('kendoSplitter');
+  togglePannel: function(expand) {
+    var $layout = $('#fs-browser-layout');
 
-    $k_splitter.toggle('#fs-'+pannel, expand);
+    if(expand === undefined) {
+      expand = !$layout.hasClass('fs-content-expanded');
+    }
+
+    if(expand === true) {
+      $layout.addClass('fs-content-expanded');
+    } else {
+      $layout.removeClass('fs-content-expanded');
+    }
   },
 
 
@@ -6317,10 +6310,6 @@ var balloon = {
     }
 
     switch(name) {
-    //TODO pixtron - remove the left menu is not a kendo splitter pannel anymore
-    /*case 'menu':
-      balloon.togglePannel('menu-left');
-      break;*/
     case 'upload':
       var $files = $('#fs-files');
       $files.unbind('change').change(function(e) {

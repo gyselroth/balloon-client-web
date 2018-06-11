@@ -21,4 +21,31 @@
           display: none;
       }
     }
+
+
+    #fs-layout-left {
+      width: 100%;
+    }
+
+    #fs-content {
+      width: 0;
+    }
+
+    #fs-layout-left,
+    #fs-content {
+      transition: width 0.3s ease-in-out;
+
+
+    }
+
+    &.fs-content-expanded {
+      #fs-layout-left {
+        width: calc(100% - 400px);
+      }
+
+      #fs-content {
+        width: 400px;
+      }
+    }
+
 }

@@ -6,8 +6,13 @@ $fsContentSidePadding: 30px;
 
 #fs-content {
 
+  position: absolute;
+  right: 0;
+  top: 0;
   border-top: 1px solid $colorBrightGrey;
   background-color: $colorWhite;
+  height: 100%;
+  overflow: hidden;
 
   #fs-content-inner {
     height: 100%;
