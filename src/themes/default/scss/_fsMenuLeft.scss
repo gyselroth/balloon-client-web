@@ -3,7 +3,7 @@
   top: 60px;
   bottom: 0;
   left: 0;
-  width: 60px;
+  width: 0;
   overflow: hidden;
   background-color: $colorWhite;
   border-right: 1px solid $colorBrightGrey;
@@ -109,5 +109,7 @@
     }
   }
 
-
+  @media screen and (min-width: $breakpointMenuVisible) {
+    width: 60px;
+  }
 }

@@ -21,7 +21,7 @@
     transition: width 0.3s ease-in-out;
   }
 
-  @media screen and (min-width: $minWidthForPannel) {
+  @media screen and (min-width: $breakpointPannelVisible) {
     &.fs-content-expanded {
       #fs-layout-left {
         width: calc(100% - 400px);

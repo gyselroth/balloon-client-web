@@ -404,7 +404,7 @@
   }
 
   .fs-content-expanded & {
-    @media screen and (min-width: $minWidthForPannel) {
+    @media screen and (min-width: $breakpointPannelVisible) {
       #fs-browser-header {
         .fs-browser-column-changed,
         .fs-browser-column-size {

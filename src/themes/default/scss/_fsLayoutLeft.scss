@@ -15,9 +15,13 @@
   }
 
   #fs-layout-left-container {
-    padding: 0 30px 0 90px;
+    padding: 0 30px;
     width: 100%;
     box-sizing: border-box;
+
+    @media screen and (min-width: $breakpointMenuVisible) {
+      padding: 0 30px 0 90px;
+    }
   }
 
   #fs-layout-left-inner {
