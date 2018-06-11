@@ -236,14 +236,18 @@ var balloon = {
 
     $("#fs-menu-left").off('click').on('click', 'li', balloon.menuLeftAction);
     $("#fs-identity").off('click').on('click', 'li', balloon._menuRightAction);
+
     $('#fs-menu-left-toggl').off('click').on('click', function(event) {
       event.preventDefault();
-      var $menu = $("#fs-menu-left");
+      var $menu = $('#fs-menu-left');
+      var $toggl = $('#fs-menu-left-toggl');
 
       if($menu.hasClass('fs-menu-left-open')) {
         $menu.removeClass('fs-menu-left-open');
+        $toggl.removeClass('fs-menu-left-open');
       } else {
         $menu.addClass('fs-menu-left-open');
+        $toggl.addClass('fs-menu-left-open');
       }
     });
 

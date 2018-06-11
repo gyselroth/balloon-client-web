@@ -28,6 +28,20 @@
     &:hover {
       color: $colorDarkGrey;
     }
+
+    .gr-i-arrowhead-w {
+      display: none;
+    }
+
+    &.fs-menu-left-open {
+      .gr-i-arrowhead-w {
+        display: block;
+      }
+
+      .gr-i-menu {
+        display: none;
+      }
+    }
   }
 
   #fs-logo {
