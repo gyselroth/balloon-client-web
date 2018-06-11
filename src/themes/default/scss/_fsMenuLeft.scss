@@ -4,25 +4,28 @@
   bottom: 0;
   left: 0;
   width: 60px;
+  overflow: hidden;
   background-color: $colorWhite;
   border-right: 1px solid $colorBrightGrey;
 
+  transition: width 0.3s ease-in-out;
+
   z-index: 15;
+
+  &.fs-menu-left-open {
+    width: 240px;
+  }
 
   #fs-menu-left-top,
   #fs-menu-left-bottom {
+    width: 100%;
+
     li {
-      @include icon-button(60px, 60px);
+
       color: $colorMediumGrey;
-
-      &.fs-menu-left-active {
-        border-left: 4px solid $colorActiveBlue;
-        color: $colorDarkGrey;
-
-        .gr-icon {
-          left: -8px;
-        }
-      }
+      width: 100%;
+      position: relative;
+      cursor: pointer;
 
       &:before {
         content: "";
@@ -45,6 +48,41 @@
       &:hover {
         color: $colorDarkGrey;
       }
+
+      .fs-menu-left-icon {
+        @include icon-button(60px, 60px);
+
+        & + div {
+          position: absolute;
+          top: 0;
+          left: 60px;
+          width: 140px;
+          height: 60px;
+          line-height: 60px;
+
+          span {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 13px;
+            line-height: 17px;
+            text-transform: uppercase;
+          }
+        }
+      }
+
+      &.fs-menu-left-active {
+        border-left: 4px solid $colorActiveBlue;
+        color: $colorDarkGrey;
+
+        .fs-menu-left-icon {
+          width: 56px;
+
+          & + div {
+            left: 56px;
+            font-weight: 700;
+          }
+        }
+      }
     }
   }
 
@@ -59,8 +97,13 @@
         background-color: $colorDarkGrey;
         color: $colorWhite;
 
-        .gr-icon {
-          left: 0;
+        .fs-menu-left-icon {
+          width: 60px;
+
+          & + div {
+            left: 60px;
+            font-weight: 700;
+          }
         }
       }
     }

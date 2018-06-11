@@ -38,7 +38,7 @@
         <input id="fs-query" name="query" type="hidden" value=""/>
 
         <div id="fs-browser-top-bar">
-            <div id="fs-toggle-overlay-menu" class="fs-action-element" data-i18n="[title]nav.action.toggle_menu">
+            <div id="fs-menu-left-toggl" data-i18n="[title]nav.action.toggle_menu">
                 <svg class="gr-icon gr-i-menu"><use xlink:href="/assets/icons.svg#menu"></use></svg>
             </div>
 
@@ -84,53 +84,43 @@
             </div>
         </div>
 
-
-        <!--ul id="fs-menu-flyover">
-            <li class="fs-menu-left-active" id="fs-menu-cloud">
-                <svg class="gr-icon gr-i-cloud"><use xlink:href="/assets/icons.svg#cloud"></use></svg>
-                <div data-i18n="menu.cloud"></div>
-            </li>
-            <li id="fs-menu-shared_for_me">
-                <svg class="gr-icon gr-i-folder-received"><use xlink:href="/assets/icons.svg#folder-received"></use></svg>
-                <div data-i18n="menu.shared_for_me"></div>
-            </li>
-            <li id="fs-menu-shared_from_me">
-                <svg class="gr-icon gr-i-folder-shared"><use xlink:href="/assets/icons.svg#folder-shared"></use></svg>
-                <div data-i18n="menu.shared_from_me"></div>
-            </li>
-            <li id="fs-menu-shared_link">
-                <svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg>
-                <div data-i18n="menu.shared_link"></div>
-            </li>
-            <li id="fs-menu-search">
-                <svg class="gr-icon gr-i-search"><use xlink:href="/assets/icons.svg#search"></use></svg>
-                <div data-i18n="menu.search"></div>
-            </li>
-            <li id="fs-menu-trash">
-                <svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg>
-                <div data-i18n="menu.trash"></div>
-            </li>
-        </ul-->
-
         <div id="fs-menu-left">
             <ul id="fs-menu-left-top">
                 <li class="fs-menu-left-active" id="fs-menu-cloud">
-                    <svg class="gr-icon gr-i-cloud"><use xlink:href="/assets/icons.svg#cloud"></use></svg>
+                    <div class="fs-menu-left-icon">
+                        <svg class="gr-icon gr-i-cloud"><use xlink:href="/assets/icons.svg#cloud"></use></svg>
+                    </div>
+                    <div><span data-i18n="menu.cloud"></span></div>
                 </li>
                 <li id="fs-menu-shared_for_me">
-                    <svg class="gr-icon gr-i-folder-received"><use xlink:href="/assets/icons.svg#folder-received"></use></svg>
+                    <div class="fs-menu-left-icon">
+                        <svg class="gr-icon gr-i-folder-received"><use xlink:href="/assets/icons.svg#folder-received"></use></svg>
+                    </div>
+                    <div><span data-i18n="menu.shared_for_me"></span></div>
                 </li>
                 <li id="fs-menu-shared_from_me">
-                    <svg class="gr-icon gr-i-folder-shared"><use xlink:href="/assets/icons.svg#folder-shared"></use></svg>
+                    <div class="fs-menu-left-icon">
+                        <svg class="gr-icon gr-i-folder-shared"><use xlink:href="/assets/icons.svg#folder-shared"></use></svg>
+                    </div>
+                    <div><span data-i18n="menu.shared_from_me"></span></div>
                 </li>
                 <li id="fs-menu-shared_link">
-                    <svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg>
+                    <div class="fs-menu-left-icon">
+                        <svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg>
+                    </div>
+                    <div><span data-i18n="menu.shared_link"></span></div>
                 </li>
                 <li id="fs-menu-search">
-                    <svg class="gr-icon gr-i-search"><use xlink:href="/assets/icons.svg#search"></use></svg>
+                    <div class="fs-menu-left-icon">
+                        <svg class="gr-icon gr-i-search"><use xlink:href="/assets/icons.svg#search"></use></svg>
+                    </div>
+                    <div><span data-i18n="menu.search"></span></div>
                 </li>
                 <li id="fs-menu-trash">
-                    <svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg>
+                    <div class="fs-menu-left-icon">
+                        <svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg>
+                    </div>
+                    <div><span data-i18n="menu.trash"></span></div>
                 </li>
             </ul>
             <ul id="fs-menu-left-bottom"></ul>

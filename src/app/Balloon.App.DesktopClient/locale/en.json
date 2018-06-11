@@ -1,7 +1,7 @@
 {
   "app": {
     "balloon_app_desktopclient": {
-      "menu": "Desktop",
+      "menu": "Download Desktop app",
       "description": "Get the balloon experience to your Desktop, choose your OS:",
       "windows": "Windows (.exe)",
       "osx": "OS X (.pkg)",
