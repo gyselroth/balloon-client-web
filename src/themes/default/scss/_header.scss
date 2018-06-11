@@ -296,6 +296,11 @@
 
     #fs-identity-username {
       line-height: $identityHeight;
+      display: none;
+
+      @media screen and (min-width: $breakpointUsernameVisible) {
+        display: inline-block;
+      }
     }
 
     #fs-identity-avatar {
