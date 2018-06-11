@@ -6,7 +6,7 @@
 
   ul {
     li {
-      display: inline-block;
+      display: none;
       color: $colorMediumGrey;
       width: auto;
       height: 17px;
@@ -16,6 +16,11 @@
       letter-spacing: 0.3px;
       text-align: left;
       vertical-align: baseline;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
       cursor: pointer;
 
       &:after {
@@ -26,18 +31,29 @@
       }
 
       &:last-child {
+        display: inline-block;
         color: $colorDarkGrey;
         width: auto;
         height: 27px;
         line-height: 27px;
         font-family: Ubuntu;
-        font-size: 24px;
+        font-size: 15px;
         font-weight: 500;
         letter-spacing: 0.4px;
         text-align: left;
 
         &:after {
           display: none;
+        }
+      }
+
+      @media screen and (min-width: $breakpointBreadcrumb) {
+        display: inline-block;
+
+        &:last-child {
+          height: 27px;
+          line-height: 27px;
+          font-size: 24px;
         }
       }
     }
