@@ -1,4 +1,3 @@
-// TDOO pixtron - implement this
 
 #fs-browser-layout {
     position: absolute;
@@ -8,20 +7,6 @@
     right: 0;
     overflow: hidden;
     z-index: 10;
-
-    .k-splitbar{
-      /*background: transparent;*/
-      border: none;
-      background-color: #FFF;
-      -webkit-box-shadow: inset 8px 0 4px -4px rgba(0, 0, 0, 0.08);
-      -moz-box-shadow:    inset 8px 0 4px -4px rgba(0, 0, 0, 0.08);
-      box-shadow:         inset 8px 0 4px -4px rgba(0, 0, 0, 0.08);
-
-      .gr-icon{
-          display: none;
-      }
-    }
-
 
     #fs-layout-left {
       width: 100%;
@@ -34,8 +19,6 @@
     #fs-layout-left,
     #fs-content {
       transition: width 0.3s ease-in-out;
-
-
     }
 
     &.fs-content-expanded {
