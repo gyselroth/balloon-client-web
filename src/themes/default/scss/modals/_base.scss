@@ -11,7 +11,6 @@
   max-width: 100%;
   width: 100%;
   overflow: hidden;
-  margin-left: -60px;
 
   & > div.k-header {
     position: relative;
@@ -117,17 +116,12 @@
     }
   }
 
-  @media only screen and (max-width: $breakpointMenuVisible - 1px) {
-    margin-left: 0;
-  }
-
   @media only screen and (max-width: $breakpointWindowFullscreen) {
     border-radius: 0;
     top: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    margin-left: 0;
 
     height: 100% !important;
     width: inherit !important;
