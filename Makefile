@@ -13,8 +13,7 @@ VERSION := "0.0.1"
 endif
 
 # PACKAGES
-DEB_LIGHT = $(DIST_DIR)/balloon-web-light-$(VERSION).deb
-DEB_FULL = $(DIST_DIR)/balloon-web-full-$(VERSION).deb
+DEB = $(DIST_DIR)/balloon-web-$(VERSION).deb
 TAR = $(DIST_DIR)/balloon-web-$(VERSION).tar.gz
 
 # NPM STUFF
@@ -58,12 +57,12 @@ dist: tar deb
 
 
 .PHONY: deb
-deb: $(DIST_DIR)/balloon-web-light-$(VERSION).deb $(DIST_DIR)/balloon-web-full-$(VERSION).deb
+deb: $(DIST_DIR)/balloon-web-$(VERSION).deb
 
 $(DIST_DIR)/balloon-web-%-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
 	@-test ! -d $(PACK_DIR) || rm -rfv $(PACK_DIR)
 	@mkdir -p $(PACK_DIR)/DEBIAN
-	@cp $(BASE_DIR)/packaging/debian/control-$* $(PACK_DIR)/DEBIAN/control
+	@cp $(BASE_DIR)/packaging/debian/control $(PACK_DIR)/DEBIAN/control
 	@sed -i s/'{version}'/$(VERSION)/g $(PACK_DIR)/DEBIAN/control
 	@if [ $* == "full" ]; then cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst; fi
 	@mkdir -p $(PACK_DIR)/usr/share/balloon-web

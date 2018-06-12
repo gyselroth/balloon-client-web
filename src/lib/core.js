@@ -16,6 +16,15 @@ import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
 
+$.ajaxSetup({
+  beforeSend:function(jqXHR,settings){
+    if (settings.dataType === 'binary'){
+      settings.xhr().responseType='arraybuffer';
+      settings.processData=false;
+    }
+  }
+});
+
 var balloon = {
   /**
    * Debug mode
@@ -1204,6 +1213,36 @@ var balloon = {
     }
   },
 
+  /**
+   * Base64 encode
+   */
+  base64Encode: function(str) {
+        var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var out = "", i = 0, len = str.length, c1, c2, c3;
+        while (i < len) {
+            c1 = str.charCodeAt(i++) & 0xff;
+            if (i == len) {
+                out += CHARS.charAt(c1 >> 2);
+                out += CHARS.charAt((c1 & 0x3) << 4);
+                out += "==";
+                break;
+            }
+            c2 = str.charCodeAt(i++);
+            if (i == len) {
+                out += CHARS.charAt(c1 >> 2);
+                out += CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+                out += CHARS.charAt((c2 & 0xF) << 2);
+                out += "=";
+                break;
+            }
+            c3 = str.charCodeAt(i++);
+            out += CHARS.charAt(c1 >> 2);
+            out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+            out += CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+            out += CHARS.charAt(c3 & 0x3F);
+        }
+        return out;
+  },
 
   /**
    * Display user profile
@@ -1237,9 +1276,10 @@ var balloon = {
         balloon.xmlHttpRequest({
           url: balloon.base+'/users/avatar',
           type: 'GET',
+          mimeType: "text/plain; charset=x-user-defined",
           success: function(body) {
             var $avatar = $('#fs-profile-avatar');
-            $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+            $avatar.css('background-image', 'url(data:image/png;base64,'+balloon.base64Encode(body)+')');
           },
           error: function() {
             //no action
@@ -5578,9 +5618,10 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/files/preview?encode=base64&id='+balloon.id(node),
+      url: balloon.base+'/files/preview?id='+balloon.id(node),
       type: 'GET',
       timeout: 5000,
+      mimeType: "text/plain; charset=x-user-defined",
       beforeSend: function() {
         $fs_preview_outer.show();
         $fs_preview.addClass('fs-loader');
@@ -5601,7 +5642,7 @@ var balloon = {
           this.error();
         } else {
           var img = document.createElement('img');
-          img.src = 'data:image/jpeg;base64,' + data;
+          img.src = 'data:image/png;base64,' +balloon.base64Encode(data);
           $fs_preview.html(img);
         }
       },

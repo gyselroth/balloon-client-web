@@ -1,6 +1,0 @@
-Package: balloon-web-light
-Version: {version}
-Architecture: all
-Maintainer: Raffael Sahli <sahli@gyselroth.com>
-Homepage: https://github.com/gyselroth/balloon-client-web
-Description: balloon web ui
