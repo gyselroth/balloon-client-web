@@ -10,6 +10,8 @@ import i18next from 'i18next';
 import css from '../styles/style.scss';
 
 var app = {
+  id: 'Balloon.App.Office',
+
   render: function() {
   },
 

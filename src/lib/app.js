@@ -20,6 +20,14 @@ var apps = [
 ]
 
 var app = {
+  isInstalled: function(appId) {
+    var foundApp = apps.find(function(app) {
+      return app.id !== undefined && app.id === appId;
+    });
+
+    return foundApp !== undefined;
+  },
+
   render: function() {
     for(let app in apps) {
       if(apps[app]['render']) {

@@ -11,6 +11,8 @@ import css from '../styles/style.scss';
 import login from '../../../lib/auth.js';
 
 var app = {
+  id: 'Balloon.App.DesktopClient',
+
   render: function() {
     this.$menu = $('<li id="fs-menu-user-desktop" data-i18n="[title]app.balloon_app_desktopclient.menu">'
       +'<div class="fs-menu-left-icon">'
