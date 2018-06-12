@@ -26,6 +26,42 @@ import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
       }
     },
 
+    center: function () {
+      var that = this,
+        position = that.options.position,
+        wrapper = that.wrapper,
+        documentWindow = $(window),
+        scrollTop = 0,
+        scrollLeft = 0,
+        newTop, newLeft;
+
+      if (that.options.isMaximized) {
+        return that;
+      }
+
+      if(that.options.pinned && !that._isPinned) {
+        that.pin();
+      }
+
+      if (!that.options.pinned) {
+        scrollTop = documentWindow.scrollTop();
+        scrollLeft = documentWindow.scrollLeft();
+      }
+
+      newLeft = scrollLeft + Math.max(0, (documentWindow.width() - wrapper.outerWidth()) / 2);
+      newTop = scrollTop + Math.max(0, (documentWindow.height() - wrapper.outerHeight() - parseInt(wrapper.css("paddingTop"), 10)) / 2);
+
+      wrapper.css({
+        left: newLeft,
+        top: newTop
+      });
+
+      position.top = newTop;
+      position.left = newLeft;
+
+      return that;
+    },
+
     options: {
       name: 'BalloonWindow',
     }
