@@ -10,8 +10,8 @@
     <div id="login">
         <div id="login-box">
             <div id="login-header">
-                <svg class="gr-icon gr-i-cloud"><use xlink:href="/assets/icons.svg#cloud"></use></svg>
-                <span data-i18n="app.title"></span>
+                <span id="login-logo"></span>
+                <span data-i18n="app.title">balloon</span>
             </div>
             <div id="login-server-error" class="error-message" data-i18n="login.error.server"></div>
             <div id="login-body">
@@ -20,7 +20,7 @@
                   <input type="text" name="username" autocomplete="off" data-i18n="[placeholder]login.username"/>
                   <input type="password" name="password" autocomplete="off" data-i18n="[placeholder]login.password"/>
                   <select id="login-locale"></select>
-                  <input type="submit" name="submit" data-i18n="[value]login.login"/>
+                  <input type="submit" name="submit" class="fs-button-primary" data-i18n="[value]login.login"/>
                </div>
                <div id="login-oidc-error" class="error-message" data-i18n="login.error.oidc"></div>
                <div id="login-oidc"></div>
