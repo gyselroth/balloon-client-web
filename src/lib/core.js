@@ -3866,7 +3866,20 @@ var balloon = {
       }
     });
 
-    $share_consumer_search.kendoAutoComplete({
+    balloon._userAndGroupAutocomplete($share_consumer_search, true, function(item) {
+      balloon._addShareConsumer(item, acl);
+    });
+  },
+
+  /**
+   * Autocomplete for users and groups on a given $input
+   *
+   * @param  object $input
+   * @param  Function onSelect callback when an item from the autocomplete has been selected
+   * @return object
+   */
+  _userAndGroupAutocomplete: function($input, includeGroups, onSelect) {
+    $input.kendoAutoComplete({
       minLength: 3,
       dataTextField: "name",
       filter: "contains",
@@ -3874,38 +3887,42 @@ var balloon = {
         serverFiltering: true,
         transport: {
           read: function(operation) {
-            var value = $share_consumer_search.data("kendoAutoComplete").value()
+            var value = $input.data("kendoAutoComplete").value()
             if(value === '' || value === undefined) {
               operation.success({data:null});
               return;
             }
 
-            var filter = JSON.stringify({'query': {'name': {
-              "$regex": $share_consumer_search.data("kendoAutoComplete").value(),
-              "$options": "i"
-            }}});
-
             var consumers = null;
 
-            balloon.xmlHttpRequest({
-              url: balloon.base+'/groups?'+filter,
-              contentType: "application/json",
-              success: function(data) {
-                for(var i in data.data) {
-                  data.data[i].type = 'group';
-                  data.data[i].role = $.extend({}, data.data[i]);
-                }
+            if(includeGroups) {
+              var filter = JSON.stringify({'query': {'name': {
+                "$regex": $input.data("kendoAutoComplete").value(),
+                "$options": "i"
+              }}});
 
-                if(consumers !== null) {
-                  operation.success(data.data.concat(consumers));
-                } else {
-                  consumers = data.data;
+              balloon.xmlHttpRequest({
+                url: balloon.base+'/groups?'+filter,
+                contentType: "application/json",
+                success: function(data) {
+                  for(var i in data.data) {
+                    data.data[i].type = 'group';
+                    data.data[i].role = $.extend({}, data.data[i]);
+                  }
+
+                  if(consumers !== null) {
+                    operation.success(data.data.concat(consumers));
+                  } else {
+                    consumers = data.data;
+                  }
                 }
-              }
-            });
+              });
+            } else {
+              consumers = [];
+            }
 
             filter = JSON.stringify({'query': {'username': {
-              "$regex": $share_consumer_search.data("kendoAutoComplete").value(),
+              "$regex": $input.data("kendoAutoComplete").value(),
               "$options": "i"
             }}});
 
@@ -3938,12 +3955,12 @@ var balloon = {
       },
       select: function(e) {
         setTimeout(function(){
-          $share_consumer_search.val('').focus();
+          $input.val('').focus();
         },50);
 
-        $share_consumer_search.val('');
+        $input.val('');
         var item = this.dataItem(e.item.index());
-        balloon._addShareConsumer(item, acl);
+        onSelect(item);
       }
     });
   },
@@ -4341,6 +4358,8 @@ var balloon = {
       resizable: false,
       modal: true,
       open: function() {
+        balloon.initShareLinkMessageForm();
+
         $fs_share_link.val(window.location.origin+'/share/'+node.sharelink_token);
         $fs_share_link.unbind('click').bind('click', function() {
           this.select();
@@ -4363,6 +4382,11 @@ var balloon = {
     }).data('kendoBalloonWindow').center().open();
   },
 
+  /**
+   * Removes a share link
+   *
+   * @return void
+   */
   removeShareLink: function() {
     var node = balloon.getCurrentNode();
 
@@ -4379,6 +4403,183 @@ var balloon = {
         $('#fs-share-link-delete').hide();
         $('#fs-share-link-create').show();
       }
+    });
+  },
+
+  /**
+   * Send a share link as mail or notification
+   *
+   * @return void
+   */
+  sendShareLinkMessage: function() {
+    var subject = i18next.t('view.share_link.message.subject')
+    var $recipient_list = $('#fs-share-link-window-recipient-list');
+    var comment = $('#fs-share-link-window-comment').val();
+
+    var emails = [], users = [], groups = [];
+
+    $recipient_list.find('.tag').each(function(i, item) {
+      var data = $(item).data();
+
+      switch(data.recipientType) {
+      case 'email':
+        emails.push(data.recipientAddress);
+        break;
+      case 'user':
+        users.push(data.recipientAddress);
+        break;
+      case 'group':
+        groups.push(data.recipientAddress);
+        break;
+      }
+    });
+
+    function doRequest(recipients, endpoint) {
+      var promise = $.Deferred();
+      if(recipients.length === 0) return promise.resolve();
+
+      balloon.xmlHttpRequest({
+        url: balloon.base + '/' + endpoint,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          subject: i18next.t('view.share_link.message.subject'),
+          body: $('#fs-share-link-window-comment').val(),
+          receiver: recipients
+        }
+      }).fail(function() {
+        promise.reject();
+      }).done(function() {
+        promise.resolve();
+      });
+
+      return promise;
+    }
+
+    return $.when(
+      doRequest(emails, 'notifications/mail'),
+      doRequest(users, 'notifications')
+    );
+  },
+
+  /**
+   * Initializes the share link message form
+   *
+   * @return void
+   */
+  initShareLinkMessageForm: function() {
+    if(app.isInstalled('Balloon.App.Notification') === false) {
+      // require the Notification app to be installed in order to send messages
+      $fs_share_link_message_form.hide();
+      return;
+    }
+    var $fs_share_link_win = $('#fs-share-link-window');
+    var $fs_share_link_message_form = $fs_share_link_win.find('#fs-share-link-window-message-form');
+    var $recipient_list = $fs_share_link_win.find('#fs-share-link-window-recipient-list');
+    var $input_recipient = $fs_share_link_message_form.find('#fs-share-link-window-recipient');
+    var $input_comment = $fs_share_link_message_form.find('#fs-share-link-window-comment');
+    var $btn_send = $fs_share_link_message_form.find('input[name="send"]');
+
+    $recipient_list.find('.tag').remove();
+    $input_comment.val('');
+    $btn_send.prop('disabled', true);
+
+    function addRecipient(recipient, noReFocus) {
+      var label = '';
+      var valid = true;
+      var type, address;
+
+      if(typeof recipient === 'string') {
+        if(recipient === '') return;
+        type = 'email';
+        address = recipient.trim();
+        label = address;
+
+        var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        valid = re.test(String(address).toLowerCase());
+      } else {
+        type = recipient.type;
+        address = recipient.role.id;
+        label = recipient.role.name;
+      }
+
+      var $recipient = $(
+        '<div class="tag" data-recipient-address="' + address + '" data-recipient-type="' + type + '">'+
+          '<div class="tag-name">'+ label + '</div>'+
+          '<div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>'+
+        '</div>'
+      );
+
+      if(valid === false) {
+        $recipient.addClass('is-invalid');
+      }
+
+      $recipient.insertBefore($input_recipient.parent());
+      $input_recipient.val('');
+      $input_recipient.blur();
+      if(!noReFocus) $input_recipient.focus();
+      mightSendForm();
+    }
+
+    function mightSendForm() {
+      if($recipient_list.find('.tag').not('.is-invalid').length > 0 && $input_comment.val() !== '') {
+        $btn_send.prop('disabled', false);
+      } else {
+        $btn_send.prop('disabled', true);
+      }
+    }
+
+    $input_recipient.off('blur').on('blur', function() {
+      addRecipient($input_recipient.val(), true);
+    });
+
+    $input_comment.off('keyup').on('keyup', function() {
+      mightSendForm();
+    });
+
+    $input_recipient.off('keyup').on('keyup', function(event) {
+      event.stopImmediatePropagation();
+
+      switch(event.keyCode) {
+      case 13:
+      case 32:
+        addRecipient($input_recipient.val());
+        break;
+      case 8:
+        if($input_recipient.val().trim() === '') {
+          $recipient_list.find('.tag').last().remove();
+          mightSendForm();
+        }
+        break;
+      }
+    });
+
+    balloon._userAndGroupAutocomplete($input_recipient, false, function(item) {
+      addRecipient(item);
+    });
+
+    $recipient_list.unbind('click').on('click', '.fs-delete', function(event) {
+      $(this).parents().filter('.tag').remove();
+      mightSendForm();
+    });
+
+    $btn_send.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      $btn_send.prop('disabled', true);
+
+      var requests = balloon.sendShareLinkMessage();
+
+      requests.done(function() {
+        $btn_send.prop('disabled', true);
+        $recipient_list.find('.tag').remove();
+        $input_comment.val('');
+      });
+
+      requests.fail(function() {
+        $btn_send.prop('disabled', true);
+        $recipient_list.find('.tag').remove();
+      });
     });
   },
 
@@ -6020,7 +6221,7 @@ var balloon = {
       $fs_prop_tags_list.empty();
 
       for(var tag in node.meta.tags) {
-        $fs_prop_tags_list.append('<li><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
+        $fs_prop_tags_list.append('<li class="tag"><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
       }
     }
 
@@ -6176,7 +6377,7 @@ var balloon = {
 
       var $fs_prop_tags = $('#fs-properties-meta-tags-tags');
       if($last_tag.attr('name') == 'add_tag') {
-        $fs_prop_tags.find('ul').append('<li><div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
+        $fs_prop_tags.find('ul').append('<li class="tag"><div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
         $last_tag.val('').focus();
       } else {
         var $parent = $last_tag.parent();

@@ -123,6 +123,51 @@
   }
 }
 
+@mixin tag-list {
+  .tag {
+    float: left;
+    display: block;
+    background-color: $colorBrightGrey;
+    border: 1px solid $colorLightGrey;
+    border-radius: 4px;
+    margin: 5px 5px 0 0;
+    height: 30px;
+    padding: 0 6px 0 10px;
+    box-sizing: border-box;
+    font-size: 13px;
+    line-height: 28px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    .tag-name,
+    .fs-delete {
+      display: inline-block;
+      line-height: 28px;
+      letter-spacing: 0.5px;
+      color: $colorDarkGrey;
+      cursor: pointer;
+    }
+
+    .tag-name {
+      padding-right: 10px;
+    }
+
+    .fs-delete {
+      color: $colorMediumGrey;
+
+      .gr-icon {
+        position: relative;
+        top: 3px;
+        width: 14px;
+        height: 14px;
+
+      }
+    }
+  }
+}
+
 @mixin events-list {
   li {
     @include clearfix;
