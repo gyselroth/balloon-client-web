@@ -60,7 +60,6 @@ var app = {
       $('#fs-properties').prepend($node);
     }
 
-
     if(app.balloon.last.directory || app.balloon.last.deleted) {
       return;
     }

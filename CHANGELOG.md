@@ -1,3 +1,12 @@
+## 2.0.0-rc1
+**Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
+**Date**: Fri Jun 15 17:36:32 CEST 2018
+
+* [CHANGE] avatar and preview images are now used as binary image from api
+* [FIX] fixes invalid view for file/collection nodes, load always preview first
+* [FIX] fixes re-added new nodes entries after relogin
+
+
 ## 2.0.0-beta3
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Tue May 15 14:52:11 CEST 2018

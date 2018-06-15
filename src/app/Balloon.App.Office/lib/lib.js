@@ -12,23 +12,18 @@ import css from '../styles/style.css';
 
 var app = {
   render: function() {
+    var $add_node = $('#fs-action-add-select').find('ul');
+    $add_node.append('<li data-type="docx"><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span><input type="text" placeholder=""/></li>');
+    $add_node.append('<li data-type="xlsx"><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span><input type="text" placeholder=""/></li>');
+    $add_node.append('<li data-type="pptx"><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span><input type="text" placeholder=""/></li>');
   },
 
   preInit: function(core)  {
     this.balloon = core;
     app.balloon._treeDblclick = app.treeDblclick;
-
-    var $add_node = $('#fs-action-add-select').find('ul');
-    $add_node.append('<li data-type="docx"><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span><input type="text" placeholder=""/></li>');
-    $add_node.append('<li data-type="xlsx"><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span><input type="text" placeholder=""/></li>');
-    $add_node.append('<li data-type="pptx"><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span><input type="text" placeholder=""/></li>');
-
     this.balloon.add_file_handlers.docx = this.addOfficeFile;
     this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
     this.balloon.add_file_handlers.pptx = this.addOfficeFile;
-  },
-
-  resetView: function() {
   },
 
   edit: function(node) {
