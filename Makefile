@@ -59,12 +59,12 @@ dist: tar deb
 .PHONY: deb
 deb: $(DIST_DIR)/balloon-web-$(VERSION).deb
 
-$(DIST_DIR)/balloon-web-%-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
+$(DIST_DIR)/balloon-web-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
 	@-test ! -d $(PACK_DIR) || rm -rfv $(PACK_DIR)
 	@mkdir -p $(PACK_DIR)/DEBIAN
 	@cp $(BASE_DIR)/packaging/debian/control $(PACK_DIR)/DEBIAN/control
 	@sed -i s/'{version}'/$(VERSION)/g $(PACK_DIR)/DEBIAN/control
-	@if [ $* == "full" ]; then cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst; fi
+	@cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst
 	@mkdir -p $(PACK_DIR)/usr/share/balloon-web
 	@cp -Rp $(BUILD_DIR)/* $(PACK_DIR)/usr/share/balloon-web
 	@mkdir $(PACK_DIR)/usr/share/balloon-web/nginx
