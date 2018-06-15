@@ -998,7 +998,7 @@ var balloon = {
     var view  = balloon.getURLParam('view');
 
     if(balloon.previous !== null && balloon.previous.id !== balloon.last.id
-     || balloon.previous !== null && view === null || balloon.previous === null && view === null) {
+     || balloon.previous !== null && view === null || balloon.previous === null && view === null || balloon.last.id === '_FOLDERUP') {
       view = 'preview';
     }
 
@@ -1163,7 +1163,7 @@ var balloon = {
     }
 
     var url = '?'+balloon.param('menu', balloon.getMenuName())+'&'+balloon.param('menu')+'&'+balloon.param('collection', balloon.getCurrentCollectionId())+'&'
-         +balloon.param('selected', list)+'&'+balloon.param('view', balloon.getViewName());
+         +balloon.param('selected', list)+'&'+balloon.param('view', 'preview');
 
     if(balloon.history_last_url !== url) {
       window.history[exec](
@@ -2189,7 +2189,6 @@ var balloon = {
           params.id = id;
           balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
         } else {
-
           balloon.menuLeftAction(balloon.getCurrentMenu());
         }
       } else {
@@ -3904,7 +3903,6 @@ var balloon = {
               document.execCommand("copy");
             });
 
-          token = node.sharelink_token;
           if(node.sharelink_expire) {
             var date = new Date(node.sharelink_expire);
             var formatted = kendo.toString(date, kendo.culture().calendar.patterns.g);
@@ -3936,11 +3934,8 @@ var balloon = {
 
           var data = {
             id: balloon.id(node),
-            options: {
-              expiration: date,
-              token: token,
-              password: $fs_share_pw.val()
-            },
+            expiration: date,
+            password: $fs_share_pw.val()
           };
 
           var url = url = balloon.base+'/nodes/share-link';
@@ -3949,14 +3944,7 @@ var balloon = {
             var options = {
               type: 'POST',
               url: balloon.base+'/nodes/share-link',
-              data: {
-                id: balloon.id(node),
-                options: {
-                  expiration: date,
-                  token: token,
-                  password: $fs_share_pw.val()
-                },
-              },
+              data: data,
               success: function(body) {
                 balloon.last = body;
                 balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
@@ -4740,7 +4728,7 @@ var balloon = {
   getSpriteClass: function(node) {
     if(typeof(node) === 'object') {
       if(node.directory) {
-        if(node.filtered === true) {
+        if(node.filter) {
           if(node.shared === true && node.reference === true) {
             return 'gr-i-folder-filter-received';
           }          else if(node.shared === true) {

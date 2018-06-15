@@ -52,7 +52,7 @@ var app = {
   },
 
   selectNode: function() {
-    if(app.balloon.last.deleted) {
+    if(app.balloon.last.deleted || app.balloon.last.id == '_FOLDERUP') {
       return;
     }
 

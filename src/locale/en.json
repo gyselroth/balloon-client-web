@@ -25,8 +25,7 @@
   },
   "nav": {
     "action": {
-      "add_file": "Add file",
-      "add_folder": "Add folder",
+      "add": "Add",
       "upload": "Upload",
       "refresh": "Refresh",
       "download": "Download",
