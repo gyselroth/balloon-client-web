@@ -68,7 +68,6 @@ var app = {
 
       $('#fs-properties').prepend($node);
     }
-
   },
 
   onActivate: function() {

@@ -13,44 +13,18 @@ var app = {
   id: 'Balloon.App.Office',
 
   render: function() {
+    var $add_node = $('#fs-action-add-select').find('ul');
+    $add_node.append('<li data-type="docx"><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span><input type="text" placeholder=""/></li>');
+    $add_node.append('<li data-type="xlsx"><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span><input type="text" placeholder=""/></li>');
+    $add_node.append('<li data-type="pptx"><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span><input type="text" placeholder=""/></li>');
   },
 
   preInit: function(core)  {
     this.balloon = core;
     app.balloon._treeDblclick = app.treeDblclick;
-
-    var $add_node = $('#fs-action-add-select').find('ul');
-
-    $add_node.append(
-      '<li data-type="docx">'+
-        '<svg class="gr-icon gr-i-file-word"><use xlink:href="/assets/icons.svg#file-word"></use></svg>'+
-        '<span>'+i18next.t('app.office.word_document')+'</span>'+
-        '<input type="text" placeholder="" />'+
-      '</li>'
-    );
-
-    $add_node.append(
-      '<li data-type="xlsx">'+
-        '<svg class="gr-icon gr-i-file-excel"><use xlink:href="/assets/icons.svg#file-excel"></use></svg>'+
-        '<span>'+i18next.t('app.office.excel_document')+'</span>'+
-        '<input type="text" placeholder="" />'+
-      '</li>'
-    );
-
-    $add_node.append(
-      '<li data-type="pptx">'+
-        '<svg class="gr-icon gr-i-file-powerpoint"><use xlink:href="/assets/icons.svg#file-powerpoint"></use></svg>'+
-        '<span>'+i18next.t('app.office.powerpoint_document')+'</span>'+
-        '<input type="text" placeholder="" />'+
-      '</li>'
-    );
-
     this.balloon.add_file_handlers.docx = this.addOfficeFile;
     this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
     this.balloon.add_file_handlers.pptx = this.addOfficeFile;
-  },
-
-  resetView: function() {
   },
 
   edit: function(node) {

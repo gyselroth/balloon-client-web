@@ -60,7 +60,7 @@ var app = {
     app.$content.find('input[name=exclude_me]').prop('checked', exclude_me);
     app.$content.find('input[name=recursive]').prop('checked', app.balloon.last.subscription_recursive);
   },
-
+  
   subscribe: function(node, subscription, exclude_me, recursive) {
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/nodes/subscription',

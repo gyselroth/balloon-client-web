@@ -16,6 +16,15 @@ import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
 
+$.ajaxSetup({
+  beforeSend:function(jqXHR,settings){
+    if (settings.dataType === 'binary'){
+      settings.xhr().responseType='arraybuffer';
+      settings.processData=false;
+    }
+  }
+});
+
 var balloon = {
   /**
    * Debug mode
@@ -1285,7 +1294,7 @@ var balloon = {
     }
 
     var url = '?'+balloon.param('menu', balloon.getMenuName())+'&'+balloon.param('menu')+'&'+balloon.param('collection', balloon.getCurrentCollectionId())+'&'
-         +balloon.param('selected', list)+'&'+balloon.param('view', balloon.getViewName());
+         +balloon.param('selected', list)+'&'+balloon.param('view', 'preview');
 
     if(balloon.history_last_url !== url) {
       window.history[exec](
@@ -1335,6 +1344,36 @@ var balloon = {
     }
   },
 
+  /**
+   * Base64 encode
+   */
+  base64Encode: function(str) {
+        var CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        var out = "", i = 0, len = str.length, c1, c2, c3;
+        while (i < len) {
+            c1 = str.charCodeAt(i++) & 0xff;
+            if (i == len) {
+                out += CHARS.charAt(c1 >> 2);
+                out += CHARS.charAt((c1 & 0x3) << 4);
+                out += "==";
+                break;
+            }
+            c2 = str.charCodeAt(i++);
+            if (i == len) {
+                out += CHARS.charAt(c1 >> 2);
+                out += CHARS.charAt(((c1 & 0x3)<< 4) | ((c2 & 0xF0) >> 4));
+                out += CHARS.charAt((c2 & 0xF) << 2);
+                out += "=";
+                break;
+            }
+            c3 = str.charCodeAt(i++);
+            out += CHARS.charAt(c1 >> 2);
+            out += CHARS.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
+            out += CHARS.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
+            out += CHARS.charAt(c3 & 0x3F);
+        }
+        return out;
+  },
 
   /**
    * Display user profile
@@ -1355,9 +1394,10 @@ var balloon = {
         balloon.xmlHttpRequest({
           url: balloon.base+'/users/avatar',
           type: 'GET',
+          mimeType: "text/plain; charset=x-user-defined",
           success: function(body) {
             var $avatar = $('#fs-profile-avatar');
-            $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+            $avatar.css('background-image', 'url(data:image/png;base64,'+balloon.base64Encode(body)+')');
           },
           error: function() {
             var $avatar = $('#fs-profile-avatar');
@@ -2381,7 +2421,6 @@ var balloon = {
           params.id = id;
           balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
         } else {
-
           balloon.menuLeftAction(balloon.getCurrentMenu());
         }
       } else {
@@ -4205,7 +4244,6 @@ var balloon = {
         var $fs_share_pw_check = $fs_share_link_settings_win.find('#fs-share-link-password-check');
         var $fs_share_pw = $fs_share_link_settings_win.find('input[name=share_password]');
 
-
         var $k_fs_share_expr_date = $fs_share_link_settings_win.find('input[name=share_expiration_date]').kendoBalloonDatePicker({
           format: kendo.culture().calendar.patterns.d,
           min: new Date(),
@@ -4348,7 +4386,7 @@ var balloon = {
           this.selectionEnd = this.selectionStart;
           balloon.showSnackbar({message: 'view.share_link.link_copied'});
         });
-
+        
         $fs_share_link_settings.off('click').on('click', function() {
           $k_win.close();
           balloon.showShareLinkSettings();
@@ -5156,7 +5194,7 @@ var balloon = {
   getSpriteClass: function(node) {
     if(typeof(node) === 'object') {
       if(node.directory) {
-        if(node.filtered === true) {
+        if(node.filter) {
           if(node.shared === true && node.reference === true) {
             return 'gr-i-folder-filter-received';
           }          else if(node.shared === true) {
@@ -6060,9 +6098,10 @@ var balloon = {
     }
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/files/preview?encode=base64&id='+balloon.id(node),
+      url: balloon.base+'/files/preview?id='+balloon.id(node),
       type: 'GET',
       timeout: 5000,
+      mimeType: "text/plain; charset=x-user-defined",
       beforeSend: function() {
         $fs_preview_outer.show();
         // TODO pixtron - what is this class used for?
@@ -6085,7 +6124,7 @@ var balloon = {
           this.error();
         } else {
           var img = document.createElement('img');
-          img.src = 'data:image/jpeg;base64,' + data;
+          img.src = 'data:image/png;base64,' +balloon.base64Encode(data);
           $fs_preview.html(img);
         }
       },
