@@ -6,6 +6,7 @@ NODE_MODULES_DIR = $(BASE_DIR)/node_modules
 DIST_DIR = $(BASE_DIR)/dist
 BUILD_DIR = $(BASE_DIR)/build
 PACK_DIR = $(BASE_DIR)/pack
+INSTALL_PREFIX = "/"
 
 # VERSION
 ifeq ($(VERSION),)
@@ -21,6 +22,7 @@ NPM_BIN = npm
 ESLINT_BIN = $(NODE_MODULES_DIR)/.bin/eslint
 
 # TARGET ALIASES
+INSTALL_TARGET = "$(INSTALL_PREFIX)usr/share/balloon-web"
 NPM_TARGET = $(NODE_MODULES_DIR)
 WEBPACK_TARGET = $(BUILD_DIR)
 ESLINT_TARGET = $(BASE_DIR)
@@ -29,7 +31,7 @@ BUILD_TARGET = $(ESLINT_TARGET) $(WEBPACK_TARGET)
 
 # TARGETS
 .PHONY: all
-all: dist
+all: build
 
 
 .PHONY: clean
@@ -176,3 +178,11 @@ webpack: $(WEBPACK_TARGET)
 $(WEBPACK_TARGET) : $(NPM_TARGET) $(BASE_DIR)/webpack.common.js
 	$(NPM_BIN) run build
 	@touch $@
+
+.PHONY: install
+install: $(INSTALL_TARGET)
+
+$(INSTALL_TARGET): $(BUILD_TARGET)
+	@cp -Rp $(BUILD_DIR)/* $(INSTALL_PREFIX)/usr/share/balloon-web
+	@mkdir -p /etc/nginx/conf.d
+	@cp -Rp $(BASE_DIR)/packaging/nginx.conf /etc/nginx/conf.d
