@@ -6,11 +6,12 @@
  */
 
 import $ from "jquery";
-import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
-import css from '../styles/style.css';
+import css from '../styles/style.scss';
 
 var app = {
+  id: 'Balloon.App.Office',
+
   render: function() {
     var $add_node = $('#fs-action-add-select').find('ul');
     $add_node.append('<li data-type="docx"><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span><input type="text" placeholder=""/></li>');
@@ -68,7 +69,7 @@ var app = {
 
     $div.find('input[name=join]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $div.data('kendoWindow').close();
+      $div.data('kendoBalloonWindow').close();
       app.joinSession(node, doc, $div.find('input[name=session]:checked').val());
     });
 
@@ -76,7 +77,7 @@ var app = {
   },
 
   sessionPrompt: function($div, node, doc)    {
-    var $k_prompt = $div.kendoWindow({
+    var $k_prompt = $div.kendoBalloonWindow({
       title: $div.attr('title'),
       resizable: false,
       modal: true,
@@ -85,7 +86,7 @@ var app = {
           $div.find('input[name=join]').focus()
         },200);
       }
-    }).data("kendoWindow").center().open();
+    }).data("kendoBalloonWindow").center().open();
 
     $div.unbind('keydown').keydown(function(e) {
       if(e.keyCode === 27) {
@@ -114,7 +115,7 @@ var app = {
 
     $div.find('input[name=join]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $div.data('kendoWindow').close();
+      $div.data('kendoBalloonWindow').close();
       app.joinSession(node, doc, session.id);
     });
 
@@ -146,7 +147,7 @@ var app = {
     var $div = $('<div id="fs-edit-office"></div>');
     $('body').append($div);
 
-    var $k_display = $div.kendoWindow({
+    var $k_display = $div.kendoBalloonWindow({
       resizable: false,
       title: node.name,
       modal: true,
@@ -207,7 +208,7 @@ var app = {
           });
         });
       }
-    }).data("kendoWindow").center().maximize();
+    }).data("kendoBalloonWindow").center().maximize();
   },
 
   showStartupPrompt: function(e) {
@@ -226,7 +227,7 @@ var app = {
         +'</div>');
     $("#fs-namespace").append($div);
 
-    var $k_prompt = $div.kendoWindow({
+    var $k_prompt = $div.kendoBalloonWindow({
       title: $div.attr('title'),
       resizable: false,
       modal: true,
@@ -235,7 +236,7 @@ var app = {
           $div.find('input[name=close]').focus()
         },200);
       }
-    }).data("kendoWindow");
+    }).data("kendoBalloonWindow");
 
     setTimeout(function(){
       $k_prompt.center().open();

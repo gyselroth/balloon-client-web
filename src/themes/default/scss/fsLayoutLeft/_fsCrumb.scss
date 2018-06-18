@@ -1,0 +1,61 @@
+#fs-crumb {
+  width: calc(100% - 150px);
+  display: block;
+  float: left;
+  margin: 15px 0 8px 0;
+
+  ul {
+    li {
+      display: none;
+      color: $colorMediumGrey;
+      width: auto;
+      height: 17px;
+      line-height: 17px;
+      font-family: Ubuntu;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      text-align: left;
+      vertical-align: baseline;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      cursor: pointer;
+
+      &:after {
+        // TODO pixtron - use svg or icon font
+        content: ">";
+        display: inline-block;
+        padding: 0 10px;
+      }
+
+      &:last-child {
+        display: inline-block;
+        color: $colorDarkGrey;
+        width: auto;
+        height: 27px;
+        line-height: 27px;
+        font-family: Ubuntu;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.4px;
+        text-align: left;
+
+        &:after {
+          display: none;
+        }
+      }
+
+      @media screen and (min-width: $breakpointBreadcrumb) {
+        display: inline-block;
+
+        &:last-child {
+          height: 27px;
+          line-height: 27px;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+}

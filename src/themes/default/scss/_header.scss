@@ -1,0 +1,322 @@
+#fs-browser-top-bar {
+  $headerHeight: 60px;
+
+  @include clearfix;
+  position: relative;
+
+  padding: 0;
+  background-color: $colorWhite;
+
+  height: $headerHeight;
+
+  z-index: 12;
+
+  > div {
+    float: left;
+    display: block;
+
+    &.gr-icon {
+      margin: 6px 0;
+    }
+  }
+
+  #fs-menu-left-toggl {
+    @include icon-button(60px, 60px);
+
+    color: $colorMediumGrey;
+
+    &:hover {
+      color: $colorDarkGrey;
+    }
+
+    .gr-i-arrowhead-w {
+      display: none;
+    }
+
+    &.fs-menu-left-open {
+      .gr-i-arrowhead-w {
+        display: block;
+      }
+
+      .gr-i-menu {
+        display: none;
+      }
+    }
+  }
+
+  #fs-logo {
+    $logoHeight: 20px;
+
+    @include clearfix;
+
+    margin-left: 16px;
+    margin-top: ( $headerHeight - $logoHeight ) / 2;
+
+    svg {
+      width: $logoHeight;
+      height: $logoHeight;
+      float: left;
+    }
+
+    div {
+      float: left;
+      height: $logoHeight;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: $logoHeight;
+      letter-spacing: 0.5px;
+      text-align: left;
+      margin-left: 9px;
+    }
+
+  }
+
+  #fs-search {
+    @include clearfix;
+
+    position: absolute;
+    top: 12px;
+    left: 0;
+    right: 0;
+
+    display: none;
+    margin: auto;
+
+    max-width: 400px;
+    width: 40%;
+    height: 36px;
+
+    @media screen and (min-width: $breakpointSearchVisible) {
+      display: block;
+    }
+
+    & > .gr-icon {
+      position: absolute;
+      color: $colorMediumGrey;
+    }
+
+    .gr-i-search {
+      top: 6px;
+      left: 7px;
+    }
+
+    .gr-i-close {
+      display: none;
+      top: 11px;
+      right: 51px;
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
+
+    #fs-search-input {
+      padding: 5px 6px 7px 45px;
+
+      float: left;
+      width: 100%;
+      height: 100%;
+
+      background-color: $colorWhite;
+
+      border-radius: 20px;
+      border: solid 1px $colorLightGrey;
+
+      line-height: 17px;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      text-align: left;
+      color: $colorDarkGrey;
+
+      &::placeholder, /* Chrome, Firefox, Opera, Safari 10.1+ */
+      &:-ms-input-placeholder, /* Internet Explorer 10-11 */
+      &::-ms-input-placeholder { /* Microsoft Edge */
+        color: $colorMediumGrey;
+      }
+
+      &::placeholder {
+        opacity: 1; /* Firefox */
+      }
+    }
+
+    #fs-search-toggle-filter {
+      @include icon-button-small(30px);
+      display: none;
+      margin: 3px 0 0 10px;
+      float: left;
+    }
+
+    &.fs-search-focused {
+      max-width: 600px;
+
+      .gr-i-close {
+        display: block;
+      }
+
+      #fs-search-input {
+        @include shadow-selected;
+        padding: 4px 5px 6px 44px;
+
+        border-width: 2px;
+        border-color: $colorActiveBlue;
+        width: calc(100% - 40px);
+      }
+
+      #fs-search-toggle-filter {
+        display: block;
+      }
+    }
+
+    &.fs-search-filtered {
+      #fs-search-toggle-filter:after {
+        content: "";
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 10px;
+        height: 10px;
+        background-color: $colorActiveBlue;
+        border-radius: 50%;
+      }
+    }
+  }
+
+
+  #fs-identity {
+    $identityHeight: 36px;
+
+    float: right;
+    margin-top: ( $headerHeight - $identityHeight ) / 2;
+
+    > div,
+    > ul {
+      float: left;
+
+      > li {
+        @include icon-button(24px, $identityHeight);
+        color: $colorMediumGrey;
+        margin-left: 5px;
+        float: left;
+
+        &:hover {
+          color: $colorDarkGrey;
+
+          #fs-settings-menu-wrap {
+            display: block;
+          }
+        }
+
+        #fs-settings-menu-wrap {
+          @include dropdown(220px, 36px, 16px);
+
+          display: none;
+          right: -48px;
+
+          .bln-dropdown-spike {
+            right: 53px;
+          }
+
+          #fs-settings-menu {
+            @include shadow-default;
+
+            #fs-quota {
+              @include clearfix;
+
+              width: 190px;
+              margin: 25px 15px 0;
+
+              #fs-quota-usage {
+                display: block;
+                border-radius: 4px;
+                background-color: $colorBrightGrey;
+                border: none;
+                height: 6px;
+                width: 100%;
+
+                .k-state-selected {
+                  background-color: $colorActiveBlue;
+                  border-radius: 4px;
+                  border: none;
+                }
+
+                .k-progress-status-wrap {
+                  width: auto !important;
+                  margin: 0;
+
+                  .k-progress-status {
+                    background-image: none;
+                    margin: 14px 0 0 0;
+                    padding: 0;
+                    color: $colorActiveBlue;
+                    font-weight: 500;
+                  }
+                }
+              }
+
+              #fs-quota-total,
+              #fs-quota-percent,
+              .k-progress-status {
+                margin: 8px 0 0 0;
+                font-size: 13px;
+                line-height: 15px;
+                color: $colorMediumGrey;
+              }
+
+              #fs-quota-percent {
+                float: left;
+                font-weight: bold;
+                color: $colorActiveBlue;
+              }
+
+              #fs-quota-total {
+                float: right;
+              }
+            }
+
+
+            ul {
+              margin-top: 10px;
+              padding: 0 17px;
+              border-top: 1px solid $colorLightGrey;
+
+              li {
+                font-size: 15px;
+                line-height: 2.67;
+                text-align: left;
+                color: $colorMediumGrey;
+
+                &:hover {
+                  color: $colorDarkGrey;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #fs-identity-username {
+      line-height: $identityHeight;
+      display: none;
+
+      @media screen and (min-width: $breakpointUsernameVisible) {
+        display: inline-block;
+      }
+    }
+
+    #fs-identity-avatar {
+      margin-left: 10px;
+      margin-right: 15px;
+
+      // TODO pixtron - add a placeholder image
+      background-color: $colorLightGrey;
+      background-repeat: none;
+      background-size: cover;
+
+      width: $identityHeight;
+      height: $identityHeight;
+      border-radius: $identityHeight;
+    }
+  }
+
+  @include clearfix;
+}

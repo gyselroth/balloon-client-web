@@ -7,9 +7,11 @@
 
 import $ from "jquery";
 import i18next from 'i18next';
-import css from '../styles/style.css';
+import css from '../styles/style.scss';
 
 var app = {
+  id: 'Balloon.App.ClamAv',
+
   render: function() {
   },
 

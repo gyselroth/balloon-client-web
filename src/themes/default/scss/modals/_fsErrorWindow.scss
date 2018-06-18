@@ -1,0 +1,67 @@
+.fs-error-window {
+  padding: 72px 40px 40px;
+
+  & > div.k-header {
+    .k-window-actions {
+      right: -16px;
+    }
+
+    .k-window-title {
+      position: relative;
+      color: $colorErrorRed;
+      padding-left: 48px;
+
+      .gr-icon {
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        height: 33px;
+        width: 33px;
+      }
+    }
+  }
+}
+
+#fs-error-window {
+  display: none;
+  overflow: auto;
+
+  #fs-error-single,
+  #fs-error-multi {
+    table {
+      border-collapse: collapse;
+      margin-top: 25px;
+
+      th,
+      td {
+        text-align: left;
+        font-size: 15px;
+        line-height: 20px;
+        font-style: bold;
+        width: 149px;
+      }
+
+      td {
+        font-style: normal;
+        width: 371px;
+        padding-left: 11px;
+      }
+    }
+  }
+
+  #fs-error-multi {
+    max-height: 300px;
+    overflow-y: scroll;
+    overflox-x: hidden;
+  }
+
+  #fs-error-window-button-wrapper {
+    margin: 36px 0 0;
+
+    input {
+      width: 120px;
+    }
+  }
+
+
+}

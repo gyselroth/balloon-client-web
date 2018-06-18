@@ -1,0 +1,35 @@
+
+#fs-browser-layout {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  z-index: 10;
+
+  #fs-layout-left {
+    width: 100%;
+  }
+
+  #fs-content {
+    width: 0;
+  }
+
+  #fs-layout-left,
+  #fs-content {
+    transition: width 0.3s ease-in-out;
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    &.fs-content-expanded {
+      #fs-layout-left {
+        width: calc(100% - 400px);
+      }
+
+      #fs-content {
+        width: 400px;
+      }
+    }
+  }
+}

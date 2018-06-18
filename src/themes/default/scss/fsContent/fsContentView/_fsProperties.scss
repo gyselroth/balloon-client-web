@@ -1,0 +1,58 @@
+#fs-properties {
+  .fs-properties-group {
+    border-top: 1px solid $colorBrightGrey;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+
+
+    th,
+    td {
+      line-height: 20px;
+      font-weight: 300;
+      padding: 0 0 17px 0;
+      text-align: left;
+    }
+
+    td {
+      padding-left: 30px;
+    }
+  }
+
+  fieldset {
+    padding-top: 17px;
+    margin: 0;
+
+    label {
+      line-height: 14px;
+      font-weight: 300;
+      padding: 0;
+      margin-bottom: 8px;
+      text-align: left;
+      color: $colorMediumGrey;
+    }
+
+    input,
+    textarea {
+      margin-bottom: 18px;
+    }
+
+    div:last-child {
+      input,
+      textarea {
+        margin-bottom: 0;
+      }
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+  }
+
+
+}

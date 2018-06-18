@@ -1,0 +1,78 @@
+.fs-destroy-date-window {
+
+}
+
+#fs-destroy-date-window {
+  display: none;
+  width: 640px;
+  padding-bottom: 40px;
+  padding-top: 13px;
+
+  #fs-destroy-date-window-content {
+    p {
+      font-size: 13px;
+      line-height: 18px;
+      color: $colorMediumGrey;
+      margin: 0;
+    }
+
+    fieldset {
+      @include clearfix;
+
+      margin-top: 30px;
+
+      div {
+        float: left;
+        width: 50%;
+        box-sizing: border-box;
+
+        &:first-child {
+          padding-right: 10px;
+        }
+
+        &:last-child {
+          padding-left: 10px;
+        }
+
+        label {
+          display: block;
+          font-size: 15px;
+          line-height: 20px;
+          font-weight: 700;
+
+          span {
+            color: $colorMediumGrey;
+            font-weight: 300;
+          }
+        }
+
+        & > .k-datepicker,
+        & > .k-timepicker {
+          display: block;
+          width: 100%;
+
+          .k-select {
+            top: 9px;
+            right: 10px;
+          }
+        }
+
+        & > .k-datepicker input[type="text"],
+        & > .k-timepicker input[type="text"],
+        & > input[type="password"] {
+          font-size: 15px;
+          padding: 13px 15px 14px;
+          height: auto;
+        }
+
+        & > .k-datepicker .k-state-focused input[type="text"],
+        & > .k-timepicker .k-state-focused input[type="text"],
+        & > input[type="password"]:focus {
+          padding: 12px 14px 13px;
+        }
+      }
+    }
+
+
+  }
+}

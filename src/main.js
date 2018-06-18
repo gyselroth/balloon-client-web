@@ -5,26 +5,25 @@
  * @license     GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
 
-import reset from './themes/default/css/reset.css';
-import kendo from './themes/default/css/kendo.css';
-import ubuntu_fonts from 'ubuntu-fontface/ubuntu.css';
-import kendo_theme from './themes/default/css/kendo_theme.css';
-import layout from './themes/default/css/layout.css';
-import responsive from './themes/default/css/responsive.css';
-import icons from '@gyselroth/icon-collection/src/icons.css';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
+
 import $ from "jquery";
 import translate from './lib/translate.js';
+import svgxuse from 'svgxuse';
+
+import balloonCss from './themes/default/scss/balloon.scss';
+
 
 $.ajax({
-   url: '/config.json',
-   success: function(body, responseText, response) {
-      if(body.localScript) {
-        $.getScript(body.localScript);
-      }
+  url: '/config.json',
+  success: function(body, responseText, response) {
+    if(body.localScript) {
+      $.getScript(body.localScript);
+    }
 
-      translate.init(body);
-   },
-   error: function() {
-      translate.init({});
+    translate.init(body);
+  },
+  error: function() {
+    translate.init({});
   }
 });

@@ -1,0 +1,90 @@
+.fs-share-link-window {
+  padding-left: 30px;
+  padding-right: 30px;
+
+  hr.full-width {
+    width: calc(100% + 60px);
+    margin: 29px -30px;
+  }
+
+  & > div.k-header .k-window-actions {
+    right: -6px;
+  }
+}
+
+#fs-share-link-window {
+  $deleteButtonSize: 30px;
+
+  display: none;
+  width: 700px;
+  padding-bottom: 30px;
+
+  #fs-share-link-window-content {
+    .fs-share-link-window-row {
+      @include clearfix;
+
+      p.fs-hint {
+        display:  block;
+        float: left;
+        width: 510px;
+
+        & + input {
+          display: block;
+          float:  right;
+        }
+      }
+
+      input[name="file_url"] {
+        color: $colorActiveBlue;
+        font-size: 15px;
+        width: calc(100% - #{$deleteButtonSize + 10px});
+        float: left;
+      }
+
+      #fs-share-link-window-delete {
+        @include icon-button-small($deleteButtonSize);
+
+        display: block;
+        margin: 0;
+        float: right;
+      }
+    }
+
+    .fs-hint {
+      color: $colorMediumGrey;
+      line-height: 18px;
+      font-size: 13px;
+    }
+
+    h2 {
+      margin: 20px 0 7px;
+
+      span {
+        font-size: 15px;
+        font-weight: 700;
+
+        &.fs-hint {
+          margin-left: 4px;
+          font-size: 15px;
+          font-weight: 300;
+        }
+      }
+    }
+
+    #fs-share-link-window-hint-delete {
+      position: relative;
+      color: $colorMediumGrey;
+      margin-top: 19px;
+
+      svg {
+        position: absolute;
+        top: -3px;
+        left: 0;
+      }
+
+      p {
+        padding-left: 30px;
+      }
+    }
+  }
+}

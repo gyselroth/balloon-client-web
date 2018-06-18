@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "balloon"
+    "title": "Balloon"
   },
   "login": {
     "username": "Benutzername",
@@ -9,6 +9,7 @@
     "logout": "Logout",
     "events": "Events",
     "profile": "Profil",
+    "settings": "Einstellungen",
     "error": {
       "server": "Der balloon Server meldet aktuell eine Störung, bitte versuche es später erneut.",
       "basic": "Der Benutzername oder das Passwort ist falsch.",
@@ -17,11 +18,18 @@
   },
   "profile": {
     "quota": "Quota",
-    "quota_max": "Total Speicherplatz:",
-    "quota_left": "Freier Speicherplatz:",
-    "quota_used": "Benutzter Speicherplatz:",
+    "quota_max": "Total Speicherplatz",
+    "quota_left": "Freier Speicherplatz",
+    "quota_used": "Benutzter Speicherplatz",
     "quota_unlimited": "Unlimitiert",
-    "user": "Benutzer"
+    "user": "Benutzer",
+    "attribute": {
+      "id": "User Id",
+      "created": "Created",
+      "username": "Username",
+      "name": "Name",
+      "mail": "E-mail"
+    }
   },
   "nav": {
     "action": {
@@ -36,14 +44,15 @@
       "copy": "Kopieren",
       "cut": "Ausschneiden",
       "paste": "Einfügen",
-      "filter": "Filter"
+      "filter": "Filter",
+      "rename": "Umbenennen"
     },
     "view": {
       "preview": "Vorschau",
       "properties": "Eigenschaften",
       "history": "Verlauf",
       "share_folder": "Ordner freigeben",
-      "share_link": "Freigeben",
+      "share_link": "Link Teilen",
       "events": "Events",
       "advanced": "Erweitert"
     }
@@ -53,12 +62,13 @@
     "shared_for_me": "Für mich freigegeben",
     "shared_from_me": "Meine Freigaben",
     "shared_link": "Geteilte Links",
-    "trash": "Gelöschte",
+    "trash": "Gelöschte Objekte",
     "search": "Suchen"
   },
   "search": {
-    "hide_filter": "Filter einblenden",
-    "show_filter": "Filter ausblenden",
+    "results": "Suchresultate",
+    "reset_filter": "Zurücksetzen",
+    "apply_filter": "Anwenden",
     "filter": {
       "color": "Farbe",
       "tags": "Tags",
@@ -87,13 +97,14 @@
     "new_folder": "Neuer Ordner",
     "txt_file": "Textdokument",
     "new_file": "Neue Datei",
-    "selected": "({{count}} items ausgewählt)",
-    "selected_plural": "({{count}} items ausgewählt)",
-    "no_nodes": "<Es wurden keine Daten gefunden>"
+    "selected": "{{count}} Objekt ausgewählt",
+    "selected_plural": "{{count}} Objekte ausgewählt",
+    "no_nodes": "<Es wurden keine Daten gefunden>",
+    "folderup": "Zurück"
   },
   "user": {
     "disk_space": "Speicherplatz:",
-    "quota_left": "(%s übrig)",
+    "quota_left": "%s übrig",
     "quota_detail": "Speicherplatz: %s / %s (%s%%) => %s übrig",
     "quota_unlimited": "%s von unlimitiert"
   },
@@ -153,26 +164,50 @@
       "role": "Rolle"
     },
     "share": {
-      "hint_add": "Ein freigegebener Ordner wird automatisch bei allen Freigabemitgliedern hinterlegt (Dies kann einige Minuten in Anspruch nehmen)",
+      "hint_add": "Ein freigegebener Ordner wird automatisch bei allen Freigabemitgliedern hinterlegt<br />(Dies kann einige Minuten in Anspruch nehmen)",
       "name": "Name für die Freigabe",
-      "search_user": "Nach Benutzer/Gruppe suchen...",
+      "search_user": "Benutzer/Gruppe suchen",
       "resource": "Ressource",
       "manage": "Administrator",
       "privilege_m": "Administrator",
       "privilege_rw": "Lesen/Schreiben",
       "privilege_r": "Nur Lesen",
       "privilege_w+": "Briefkasten",
-      "password": "Passwort (optional)",
-      "create": "Erstellen",
-      "update": "Anpassen",
+      "remove_privilege": "Person entfernen",
+      "create": "Ordner freigeben",
+      "save": "Anpassungen bestätigen",
+      "edit": "Freigabe anpassen",
+      "cancel": "Abbrechen",
       "hint_remove": "Wenn du diese Freigabe entfernst, wird die Freigabe in einen normalen Ordner zurück mutiert. Alle Freigabemitglieder haben ab sofort keinen Zugriff mehr auf die Freigabe und die Verknüpfung wird entfernt.",
-      "delete": "Löschen",
-      "hint_create_url": "Mit einem globalen Freigabe-Link kannst du eine/einen Datei/Ordner weltweit mit allen teilen, auch mit Benutzern, welche keinen Account besitzen.",
-      "expiration": "Gültigkeitsdauer Datum/Zeit (optional)",
-      "hint_remove_url": "Wenn du diese Freigabe entfernst, wird der Link ab sofort ungültig und kann nicht wiederhergestellt werden.",
+      "delete": "Freigabe Löschen",
       "group_in_list": "Berechtigungsgruppe %s ist bereits in der Liste",
       "user_in_list": "Berechtigungsbenutzer %s ist bereits in der Liste",
-      "prompt_remove_share": "Willst du diese Freigabe %s wirklich entfernen?</br> Alle Freigabemitglieder (ausser dir selber) werden ab sofort keinen Zugriff mehr haben."
+      "prompt_remove_share": "Willst du diese Freigabe %s wirklich entfernen?</br> Alle Freigabemitglieder (ausser dir selber) werden ab sofort keinen Zugriff mehr haben.",
+      "access_rights": "Zugriffsrechte",
+      "owner_only": "Nur Du hast Zugriff",
+      "privilege_text_m": "%s hat den Zugriff Administrator",
+      "privilege_text_rw": "%s hat den Zugriff lesen/schreiben",
+      "privilege_text_r": "%s hat den Zugriff nur lesen",
+      "privilege_text_w+": "%s hat den Zugriff Briefkasten"
+    },
+    "share_link": {
+      "hint_create_url": "Mit einem globalen Freigabe-Link kannst du eine/einen Datei/Ordner weltweit mit allen teilen, auch mit Benutzern, welche keinen Account besitzen.",
+      "hint_remove_url": "Wenn du diese Freigabe entfernst, wird der Link ab sofort ungültig und kann nicht wiederhergestellt werden.",
+      "create": "Link teilen",
+      "edit": "Link anpassen",
+      "delete": "Link löschen",
+      "link_settings": "Linkeinstellungen",
+      "link_copied": "Der Link wurde in die Zwischenablage kopiert",
+      "global_link": "Globaler Link",
+      "global_link_hint": "(zum Kopieren auf den Link klicken)",
+      "settings": {
+        "title": "Linkeinstellungen für „%s“",
+        "cancel": "Abbrechen",
+        "save": "Einstellungen speichern",
+        "expiration_date": "Gültigkeitsdauer",
+        "expiration_time": "Zeit <span>(optional)</span>",
+        "password": "Passwort <span>(optional)</span>"
+      }
     },
     "history": {
       "version": "Version %s",
@@ -189,9 +224,19 @@
       "user_deleted": "[gelöschter User]"
     },
     "advanced": {
-      "destroyable": "Automatische Löschung: Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
+      "destroy_date": "Löschdatum",
+      "set_destroy_date": "Festlegen",
+      "edit_destroy_date": "Editieren",
       "prompt_destroy": "Möchtest du wirklich, dass am %s die die Datei/Ordner %s gelöscht wird?",
-      "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)"
+      "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)",
+      "destroy_date_window": {
+        "title": "Löschdatum festlegen",
+        "destroyable": "Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
+        "cancel": "Abbrechen",
+        "save": "Speichern",
+        "destroy_date": "Löschdatum",
+        "destroy_time": "Zeit <span>(optional)</span>"
+      }
     }
   },
   "error": {
@@ -208,17 +253,19 @@
     "uploadmgr": "Upload Manager",
     "details": "Details",
     "waitlist": "Warteliste",
-    "progress": "Fortschritt",
+    "progress": "Gesamtfortschritt",
     "transfer": "Transfer",
     "files_uploaded": "%s / %s Dateien hochgeladen",
     "files_uploaded_plural": "%s / %s Dateien hochgeladen",
     "time_left": "%s übrig",
-    "finished": "Fertig"
+    "finished": "Fertig",
+    "max_size": "(Maximale Dateigrösse: 1.0 GB)"
   },
   "prompt": {
     "confirm": "Bestätigen",
     "cancel": "Nein",
     "continue": "Ja",
+    "ok": "Ok",
     "force_delete": "Willst du diese Dateien/Ordner wirklich löschen (nicht wiederherstellbar)?",
     "trash_delete": "Willst du diese Dateien/Ordner in den Papierkorb verschieben (wiederherstellbar)?",
     "restore": "Willst du diese Datei/Order wiederherstellen?",
@@ -306,5 +353,8 @@
     "hint_22": "Die Benutzeroberfläche hat einen eingebauten Editor für Textdateien. Du kannst entweder eine neue Datei erstellen mittels der Aktion (<span class='gr-icon gr-i-file-add'></span>) oder eine existierende Textdatei öffnen (Doppelklick oder [Enter]).",
     "hint_23": "Die ganze Benutzeroberfläche arbeitet alle Anfragen asynchron ab. Wenn das Interface aktuell Daten mit dem Server am Austauschen ist, siehst du das anhand des Symbols (<span class='fs-loader'></span>). Wenn du eine Schreibaktion ausgelöst hast, erscheint als Feedback ein Symbol (<span class='gr-icon gr-i-check'></span>), wenn die Anfrage erfolgreich war.",
     "hint_24": "Du kannst diverse Aktionen mit deiner Tastatur auslösen. [SHIFT]+[N] (Ordner hinzufügen), [SHIFT]+[X] (Ausschneiden), [SHIFT]+[C] (Kopieren), [SHIFT]+[V] (Einfügen), [SHIFT]+[U] (Hochladen), [SHIFT]+[D] (Download), [SHIFT]+[A] (Datei hinzufügen), [SHIFT]+[R] (Wiederherstellen)."
+  },
+  "snackbar": {
+    "default": "Die Anfrage wurde erfolreich ausgeführt"
   }
 }

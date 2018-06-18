@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "balloon"
+    "title": "Balloon"
   },
   "login": {
     "username": "Username",
@@ -9,6 +9,7 @@
     "logout": "Logout",
     "events": "Events",
     "profile": "Profile",
+    "settings": "Settings",
     "error": {
       "server": "The balloon server reports an ongoing incident, please try it again later.",
       "basic": "Wrong username or password given.",
@@ -17,11 +18,18 @@
   },
   "profile": {
     "quota": "Quota",
-    "quota_max": "Total Storage:",
-    "quota_left": "Free Storage:",
-    "quota_used": "Used Storage:",
+    "quota_max": "Total Storage",
+    "quota_left": "Free Storage",
+    "quota_used": "Used Storage",
     "quota_unlimited": "Unlimited",
-    "user": "User"
+    "user": "User",
+    "attribute": {
+      "id": "User Id",
+      "created": "Created",
+      "username": "Username",
+      "name": "Name",
+      "mail": "E-mail"
+    }
   },
   "nav": {
     "action": {
@@ -36,14 +44,15 @@
       "copy": "Copy",
       "cut": "Cut",
       "paste": "Paste",
-      "filter": "Filter"
+      "filter": "Filter",
+      "rename": "Rename"
     },
     "view": {
       "preview": "Preview",
       "properties": "Properties",
       "history": "History",
       "share_folder": "Share folder",
-      "share_link": "Share",
+      "share_link": "Share link",
       "events": "Events",
       "advanced": "Advanced"
     }
@@ -57,8 +66,9 @@
     "search": "Search"
   },
   "search": {
-    "hide_filter": "Hide filter",
-    "show_filter": "Show filter",
+    "results": "Searchresults",
+    "reset_filter": "Reset",
+    "apply_filter": "Apply",
     "filter": {
       "color": "Color",
       "tags": "Tags",
@@ -89,11 +99,12 @@
     "new_file": "New File",
     "selected": "({{count}} item selected)",
     "selected_plural": "({{count}} items selected)",
-    "no_nodes": "<No files were found>"
+    "no_nodes": "<No files were found>",
+    "folderup": "Back"
   },
   "user": {
     "disk_space": "Disk space:",
-    "quota_left": "(%s left)",
+    "quota_left": "%s left",
     "quota_detail": "User quota: %s / %s (%s%%) => %s left",
     "quota_unlimited": "%s of unlimited"
   },
@@ -153,25 +164,49 @@
       "role": "Role"
     },
     "share": {
-      "hint_add": "A shared folder will be automatically placed into the share members root folder (This will take some minutes).",
+      "hint_add": "A shared folder will be automatically placed into the share members root folder<br />(This will take some minutes).",
       "name": "Enter a name for this share",
-      "search_user": "Search for User/Groups...",
+      "search_user": "Search User/Groups",
       "resource": "Resource",
       "privilege_m": "Manager",
       "privilege_rw": "Read/Write",
       "privilege_r": "Readonly",
       "privilege_w+": "Mailbox",
-      "password": "Password (Optional)",
-      "create": "Create",
-      "update": "Update",
+      "remove_privilege": "Remove person",
+      "create": "Share collection",
+      "save": "Save changes",
+      "edit": "Edit share",
+      "cancel": "Cancel",
       "hint_remove": "If you remove this share it will get back into a normal folder. Share members would not have accesss anymore. This share will be removed from their accounts immediately.",
-      "delete": "Remove",
-      "hint_create_url": "With a global share link you are able to share a file/folder with everyone even with those who do not have an own login.",
-      "expiration": "Expiration Date/Time (Optional)",
-      "hint_remove_url": "If you remove this share, any share links (tokens) will be immediately invalid and can not get restored.",
+      "delete": "Remove share",
       "group_in_list": "ACL group %s is already in list",
       "user_in_list": "ACL user %s is already in list",
-      "prompt_remove_share": "Do you really want to remove this share %s?</br> All members wouldn't have access anymore to this folder, except you."
+      "prompt_remove_share": "Do you really want to remove this share %s?</br> All members wouldn't have access anymore to this folder, except you.",
+      "access_rights": "Zugriffsrechte",
+      "owner_only": "Only you have access",
+      "privilege_text_m": "%s has the privilege manager",
+      "privilege_text_rw": "%s has the privilege read/write",
+      "privilege_text_r": "%s has the privilege readonly",
+      "privilege_text_w+": "%s has the privilege Mailbox"
+    },
+    "share_link": {
+      "hint_create_url": "With a global share link you are able to share a file/folder with everyone even with those who do not have an own login.",
+      "hint_remove_url": "If you remove this share, any share links (tokens) will be immediately invalid and can not get restored.",
+      "create": "Create link",
+      "edit": "Edit link",
+      "delete": "Delete link",
+      "link_settings": "Link settings",
+      "link_copied": "The link has been copied to the clipboard",
+      "global_link": "Global link",
+      "global_link_hint": "(click link to copy it to clipboard)",
+      "settings": {
+        "title": "Linksettings for „%s“",
+        "cancel": "Cancel",
+        "save": "Save settings",
+        "expiration_date": "Expiration",
+        "expiration_time": "Time <span>(optional)</span>",
+        "password": "Password <span>(optional)</span>"
+      }
     },
     "history": {
       "version": "Version %s",
@@ -188,9 +223,20 @@
       "user_deleted": "[user deleted]"
     },
     "advanced": {
-      "destroyable": "Self-Destruction: (The node will destroy itself at the time specified (Not-restorable!)):",
+      "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",
+      "destroy_date": "Destruction date",
+      "set_destroy_date": "Set date",
+      "edit_destroy_date": "Edit date",
       "prompt_destroy": "Would you really like to set the date/time %s for node %s for self destruction?",
-      "readonly": "Readonly (No content changes can be made anymore, but you can still modify meta data)"
+      "readonly": "Readonly (No content changes can be made anymore, but you can still modify meta data)",
+      "destroy_date_window": {
+        "title": "Set destruction date",
+        "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",
+        "cancel": "Cancel",
+        "save": "Save",
+        "destroy_date": "Destruction date",
+        "destroy_time": "Time <span>(optional)</span>"
+      }
     }
   },
   "error": {
@@ -207,17 +253,19 @@
     "uploadmgr": "Upload Manager",
     "details": "Details",
     "waitlist": "Waitlist",
-    "progress": "Progress",
+    "progress": "Overall progress",
     "transfer": "Transfer",
     "files_uploaded": "%s / %s file uploaded",
     "files_uploaded_plural": "%s / %s files uploaded",
     "time_left": "%s left",
-    "finished": "finished"
+    "finished": "finished",
+    "max_size": "(Maximal filesize: 1.0 GB)"
   },
   "prompt": {
     "confirm": "Confirm",
     "cancel": "No",
     "continue": "Yes",
+    "ok": "Ok",
     "force_delete": "Do you really want to remove these items (inversable)?",
     "trash_delete": "Do you really want to move these items to the trash (restoreable)?",
     "restore": "Would you like to restore this item?",
@@ -305,5 +353,8 @@
     "hint_22": "This interface has a built-in file editor for text files. Your can either create a new empty file via the file action icon (<span class='gr-icon gr-i-file-add'></span>) or edit an existing text file. Instead a download or preview it will open the editor if you double click on a node.",
     "hint_23": "The whole interface talks completely asynchronous with the server, if a request is currently running you will notice the loader icon (<span class='fs-loader'></span>) in the top bar. If the interface is currently doing a change or modification you will get a feedback (<span class='gr-icon gr-i-check'></span>) right next to the loader if the request was successful.",
     "hint_24": "You can perform various actions using only your keyboard. [SHIFT]+[N] (add folder), [SHIFT]+[X] (cut), [SHIFT]+[C] (copy), [SHIFT]+[V] (paste), [SHIFT]+[U] (upload), [SHIFT]+[D] (download), [SHIFT]+[A] (add file), [SHIFT]+[R] (undelete)."
+  },
+  "snackbar": {
+    "default": "The request completed successfully"
   }
 }

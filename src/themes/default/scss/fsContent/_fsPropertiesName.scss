@@ -1,0 +1,17 @@
+#fs-browser-summary,
+#fs-properties-name {
+  line-height: 18px;
+
+  font-size: 15px;
+  font-weight: bold;
+
+  .fs-ext {
+    text-transform: uppercase;
+  }
+}
+
+#fs-browser-summary {
+  color: $colorMediumGrey;
+  font-weight: 400;
+  display: none;
+}

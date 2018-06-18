@@ -1,0 +1,71 @@
+@import './fsContentView/fsAdvanced';
+@import './fsContentView/fsEvents';
+@import './fsContentView/fsHistory';
+@import './fsContentView/fsPreview';
+@import './fsContentView/fsProperties';
+@import './fsContentView/fsShare';
+@import './fsContentView/fsShareLink';
+
+#fs-content-view {
+  margin-top: 20px;
+
+  dt {
+    position: relative;
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 20px;
+    color: $colorDarkGrey;
+    border-top: 1px solid $colorBrightGrey;
+    margin: 0 -1*$fsContentSidePadding 0;
+    padding: 16px $fsContentSidePadding 18px;
+    cursor: pointer;
+
+    .gr-icon {
+      display: block;
+      position: absolute;
+      top: 13px;
+      right: 20px;
+      color: $colorMediumGrey;
+    }
+
+    .gr-i-arrowhead-n {
+      display: none;
+    }
+
+    &.active {
+      .gr-i-arrowhead-s {
+        display: none;
+      }
+      .gr-i-arrowhead-n {
+        display: block;
+      }
+    }
+
+    &.disabled {
+      color: $colorLightGrey;
+
+      .gr-i-arrowhead-s {
+        color: $colorLightGrey;
+      }
+    }
+  }
+
+  dd {
+    display: none;
+    padding-top: 2px;
+    padding-bottom: 65px;
+
+    font-size: 13px;
+    line-height: 20px;
+    color: $colorMediumGrey;
+    vertical-align: middle;
+
+    &.active {
+      display: block;
+    }
+
+    &.disabled {
+      display: none !important;
+    }
+  }
+}

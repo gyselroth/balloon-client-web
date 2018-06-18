@@ -1,0 +1,181 @@
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin checkbox($checkboxSize) {
+  width: $checkboxSize;
+  height: $checkboxSize;
+  padding: 0;
+  border: 1px solid $colorMediumGrey;
+  border-radius: 2px;
+  font-size: $checkboxSize;
+  line-height: $checkboxSize;
+  text-align: center;
+}
+
+@mixin checkboxChecked {
+  border-color: $colorActiveBlue;
+  background-color: $colorActiveBlue;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxwb2x5Z29uIHBvaW50cz0iMTUuODYgOC4zNiAxMC41IDEzLjczIDguMTQgMTEuMzYgNi44NiAxMi42NCAxMC41IDE2LjI3IDE3LjE0IDkuNjQgMTUuODYgOC4zNiIgc3Ryb2tlPSIjZmZmIiBmaWxsPSIjZmZmIiAvPjwvc3ZnPg==');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 120%;
+}
+
+@mixin checkboxUndetermined {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxyZWN0IGZpbGw9IiMzOWE1ZmYiIHg9IjQiIHk9IjExIiB3aWR0aD0iMTYiIGhlaWdodD0iMiIvPjwvc3ZnPg==');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+@mixin icon-button($width:60px, $height:null) {
+  @if ($height == null) { $height: $width }
+
+  position: relative;
+  display: block;
+  width: $width;
+  height: $height;
+  cursor: pointer;
+  transition: color .5s ease-in-out, background-color .7s ease-in-out, border-color .7s ease-in-out;
+
+  .gr-icon {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right: 0;
+    margin: auto;
+  }
+}
+
+@mixin icon-button-small($width:60px, $height:null) {
+  @include icon-button($width, $height);
+
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: inline-block;
+  color: $colorActiveBlue;
+  border: 1px solid $colorLightGrey;
+  margin-right: 13px;
+
+  &:hover {
+    color: $colorHoverBlue;
+    border-color: $colorHoverBlue;
+  }
+}
+
+@mixin shadow-default {
+  box-shadow: 0 0 25px 0 rgba(77, 75, 89, 0.12);
+}
+
+@mixin shadow-hover {
+  box-shadow: 0 5px 30px 0 rgba(77, 75, 89, 0.24);
+}
+
+@mixin shadow-selected {
+  box-shadow: 0 2px 25px 0 rgba(77, 75, 89, 0.24);
+}
+
+@mixin dropdown($dropdownWidth:220px, $top:0, $paddingTop:0) {
+  display: block;
+  position: absolute;
+  top: $top;
+  width: $dropdownWidth;
+  z-index: 15;
+  padding-top: 9px + $paddingTop;
+
+  .bln-dropdown-spike {
+    position: absolute;
+    top: 1px + $paddingTop;
+    right: 50%;
+    display: block;
+
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 9px solid $colorLightGrey;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: -8px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-bottom: 8px solid $colorWhite;
+    }
+  }
+
+  .bln-dropdown-content {
+    width: 100%;
+    background-color: $colorWhite;
+    border-radius: 4px;
+    border: solid 1px $colorLightGrey;
+    z-index: 16;
+  }
+}
+
+@mixin events-list {
+  li {
+    @include clearfix;
+
+    $iconWidth: 40px;
+    $undoWidth: 45px;
+
+    border: 1px solid $colorLightGrey;
+    border-radius: 4px;
+    padding: 8px 0;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .fs-events-icon,
+    .fs-events-text,
+    .fs-events-undo {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+    .fs-events-icon {
+      width: $iconWidth;
+      color: $colorMediumGrey;
+      text-align: center;
+    }
+
+    .fs-events-text {
+      box-sizing: border-box;
+      width: calc(100% - #{$iconWidth} - #{$undoWidth});
+      padding: 0;
+
+      p {
+        line-height: 17px;
+        font-weight: 300;
+
+        &:first-child {
+          color: $colorDarkGrey;
+        }
+
+        .fs-event-name {
+          font-style: italic;
+        }
+      }
+    }
+
+    .fs-events-undo {
+      width: $undoWidth;
+      color: $colorActiveBlue;
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+}

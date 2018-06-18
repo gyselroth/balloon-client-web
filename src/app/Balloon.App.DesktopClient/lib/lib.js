@@ -6,21 +6,22 @@
  */
 
 import $ from "jquery";
-import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
-import css from '../styles/style.css';
+import css from '../styles/style.scss';
 import login from '../../../lib/auth.js';
 
 var app = {
+  id: 'Balloon.App.DesktopClient',
+
   render: function() {
-    this.$menu = $('<li id="fs-menu-user-desktop">'
-      +'<span class="gr-icon gr-i-laptop"></span>'
-      +'<span>'+i18next.t('app.balloon_app_desktopclient.menu')+'</span>'
+    this.$menu = $('<li id="fs-menu-user-desktop" data-i18n="[title]app.balloon_app_desktopclient.menu">'
+      +'<div class="fs-menu-left-icon">'
+        +'<svg class="gr-icon gr-i-arrow-s"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#arrow-s"></use></svg>'
+      +'</div>'
+      +'<div><span>'+i18next.t('app.balloon_app_desktopclient.menu')+'</span></div>'
     +'</li>');
 
-    $("#fs-identity-menu").css("height","+=20px");
-
-    this.$menu.insertAfter('#fs-menu-user-events');
+    this.$menu.appendTo('#fs-menu-left-bottom');
   },
 
   preInit: function(core)  {
@@ -31,32 +32,39 @@ var app = {
   },
 
   openPopup: function() {
+    var _self = this;
     var $div = $('<div id="fs-desktop">'
-      + '<div>'+i18next.t('app.balloon_app_desktopclient.description')+'</div>'
+      + '<p>'+i18next.t('app.balloon_app_desktopclient.description')+'</p>'
       + '<ul>'
-        + '<li id="fs-desktop-exe"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.windows')+'</span></li>'
-        + '<li id="fs-desktop-pkg"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.osx')+'</span></li>'
-        + '<li id="fs-desktop-zip"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.linux')+'</span></li>'
-        + '<li id="fs-desktop-deb"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.debian')+'</span></li>'
-        + '<li id="fs-desktop-rpm"><div></div><span>'+i18next.t('app.balloon_app_desktopclient.redhat')+'</span></li>'
+        + '<li id="fs-desktop-exe"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.windows')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-pkg"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.osx')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-zip"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.linux')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-deb"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.debian')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
+        + '<li id="fs-desktop-rpm"><div class="icon"></div><span class="title">'+i18next.t('app.balloon_app_desktopclient.redhat')+'</span><span class="download">'+i18next.t('app.balloon_app_desktopclient.download')+'</span></li>'
       + '</ul>'
     +'</div>');
 
     $div.off('click').on('click', 'li', this.download);
 
+    $('body .fs-desktop').remove();
     $('body').append($div);
 
 
-    app.$k_popup = $div.kendoWindow({
+    app.$k_popup = $div.kendoBalloonWindow({
       resizable: false,
       title: i18next.t('app.balloon_app_desktopclient.menu'),
       modal: true,
       draggable: true,
       open: function(e) {
+      },
+      close: function(e) {
+        _self.$menu.removeClass('fs-menu-left-active');
       }
-    }).data('kendoWindow');
+    }).data('kendoBalloonWindow');
 
-    this.$k_popup.open().center();
+    this.$k_popup.center().open();
+
+    this.$menu.addClass('fs-menu-left-active');
   },
 
   download: function(e) {
