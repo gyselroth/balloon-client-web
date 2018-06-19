@@ -36,7 +36,8 @@
 
     #fs-properties-meta-tags {
       $buttonHeight: 30px;
-
+      $buttonWidth: $buttonHeight+10px;
+      $labelWidth: 43px;
 
       padding: 9px 0 10px;
 
@@ -53,11 +54,11 @@
         }
 
         .fs-preview-label {
-          width: 0; //width given by content
+          width: 0;
         }
 
         #fs-preview-add-tag-button {
-          width: $buttonHeight+10px;
+          width: $buttonWidth;
 
           .fs-add {
             @include icon-button-small($buttonHeight, $buttonHeight);
@@ -72,6 +73,8 @@
         }
 
         #fs-preview-add-tag {
+          width: calc(100% - #{$labelWidth + $buttonWidth});
+
           .k-widget {
             margin: 0;
             padding: 0;
@@ -84,6 +87,7 @@
           .k-autocomplete {
             background: none;
             border: none;
+            width: 100%;
 
             input:focus,
             input.k-input:focus,
@@ -108,6 +112,7 @@
               padding: 0 6px;
               outline: none;
               margin: 0;
+              width: 100%;
             }
 
             .k-icon {
