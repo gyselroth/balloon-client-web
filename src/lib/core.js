@@ -4502,7 +4502,13 @@ var balloon = {
           subject: i18next.t('view.share_link.message.subject'),
           body: $('#fs-share-link-window-comment').val(),
           receiver: recipients
-        }
+        },
+        converters: {
+          //dealing with empty body in response
+          'text json': function(response) {
+            return (response === '') ? null : JSON.parse(response);
+          },
+        },
       }).fail(function() {
         promise.reject();
       }).done(function() {
