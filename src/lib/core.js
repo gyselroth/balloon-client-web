@@ -5925,13 +5925,13 @@ var balloon = {
    * @return  void|string
    */
   getFileExtension: function(node) {
-    if(typeof(node) == 'object' && node.directory == true) {
+    if(typeof(node) == 'object' && (node.directory == true || node.name === undefined)) {
       return null;
     }
     var ext;
     if(typeof(node) == 'string') {
       ext = node.split('.');
-    }    else {
+    } else {
       ext = node.name.split('.');
     }
 
