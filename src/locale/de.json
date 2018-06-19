@@ -233,7 +233,7 @@
       "destroy_date": "Löschdatum",
       "set_destroy_date": "Festlegen",
       "edit_destroy_date": "Editieren",
-      "prompt_destroy": "Möchtest du wirklich, dass am %s die die Datei/Ordner %s gelöscht wird?",
+      "prompt_destroy": "Möchtest du wirklich, dass am %s die Datei / der Ordner %s gelöscht wird?",
       "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)",
       "destroy_date_window": {
         "title": "Löschdatum festlegen",
