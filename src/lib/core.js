@@ -2136,7 +2136,8 @@ var balloon = {
             if(ts === null) {
               balloon.selfDestroyNode(node, ts, $k_win);
             } else {
-              var msg  = i18next.t('view.advanced.prompt_destroy', ts, node.name);
+              var dateHr = kendo.toString(date, kendo.culture().calendar.patterns.g)
+              var msg  = i18next.t('view.advanced.prompt_destroy', dateHr, node.name);
               balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win]);
             }
           } else {
