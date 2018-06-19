@@ -4271,6 +4271,10 @@ var balloon = {
             $k_fs_share_expr_time.value(curTime);
             $fs_share_expr_check.prop('checked', true);
           }
+
+          if(node.sharelink_has_password) {
+            $fs_share_pw_check.prop('checked', true);
+          }
         }
 
         $fs_share_expr_check.off('change').on('change', function() {
@@ -4322,14 +4326,30 @@ var balloon = {
             date = Math.round(date.getTime() / 1000);
           }
 
+          var data = {
+            id: balloon.id(node),
+            expiration: '0',
+            password: '0'
+          }
+
+          if(date !== null) {
+            data.expiration = date;
+          }
+
+          if($fs_share_pw_check.prop('checked')) {
+            var pw_val = $fs_share_pw.val();
+
+            if(pw_val !== '') {
+              data.password = pw_val;
+            } else {
+              data.password = null;
+            }
+          }
+
           balloon.xmlHttpRequest({
             type: 'POST',
             url: balloon.base+'/nodes/share-link',
-            data: {
-              id: balloon.id(node),
-              expiration: date,
-              password: $fs_share_pw.val()
-            },
+            data: data,
             complete: function() {
               $k_win.close();
               balloon.showShareLink();
