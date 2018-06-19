@@ -199,6 +199,12 @@
       "link_copied": "The link has been copied to the clipboard",
       "global_link": "Global link",
       "global_link_hint": "(click link to copy it to clipboard)",
+      "recipient": "Email / User",
+      "comment": "Comment",
+      "send": "Send link",
+      "message": {
+        "subject": "A balloon link has been shared with you"
+      },
       "settings": {
         "title": "Linksettings for „%s“",
         "cancel": "Cancel",

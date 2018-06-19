@@ -200,6 +200,12 @@
       "link_copied": "Der Link wurde in die Zwischenablage kopiert",
       "global_link": "Globaler Link",
       "global_link_hint": "(zum Kopieren auf den Link klicken)",
+      "recipient": "E-Mail / Benutzer",
+      "comment": "Kommentar",
+      "send": "Link versenden",
+      "message": {
+        "subject": "Ein Balloon Link wurde geteilt"
+      },
       "settings": {
         "title": "Linkeinstellungen für „%s“",
         "cancel": "Abbrechen",

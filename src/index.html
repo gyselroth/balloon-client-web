@@ -301,7 +301,7 @@
                                         </div>
                                     </div>
                                     <div id="fs-properties-meta-tags-tags">
-                                        <ul></ul>
+                                        <ul class="tag-list"></ul>
                                     </div>
                                 </div>
 
@@ -712,6 +712,23 @@
                     <svg class="gr-icon gr-i-info"><use xlink:href="/assets/icons.svg#info"></use></svg>
                     <p class="fs-hint" data-i18n="view.share_link.hint_remove_url"></p>
                 </div>
+
+                <fieldset id="fs-share-link-window-message-form">
+                    <hr class="full-width" />
+
+                    <label for="fs-share-link-window-recipient" data-i18n="view.share_link.recipient"></label>
+
+                    <label for="fs-share-link-window-recipient" id="fs-share-link-window-recipient-list">
+                        <input type="text" id="fs-share-link-window-recipient" name="recipient" />
+                    </label>
+
+                    <label for="fs-share-link-window-comment" data-i18n="view.share_link.comment"></label>
+                    <textarea id="fs-share-link-window-comment" name="comment"></textarea>
+
+                    <div class="fs-window-secondary-actions">
+                        <input type="submit" tabindex="1" name="send" data-i18n="[value]view.share_link.send" class="fs-button-primary" />
+                    </div>
+                </fieldset>
             </div>
         </div>
 
