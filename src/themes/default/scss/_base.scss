@@ -65,6 +65,7 @@ input[type="checkbox"] {
     vertical-align: text-top;
     min-height: 20px;
     margin-top: -3px;
+    cursor: pointer;
 
     &:before {
       @include checkbox(18px);
