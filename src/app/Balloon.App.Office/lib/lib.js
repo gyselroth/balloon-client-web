@@ -13,12 +13,6 @@ var app = {
   id: 'Balloon.App.Office',
 
   render: function() {
-  },
-
-  preInit: function(core)  {
-    this.balloon = core;
-    app.balloon._treeDblclick = app.treeDblclick;
-
     var $add_node = $('#fs-action-add-select').find('ul');
 
     $add_node.append(
@@ -44,13 +38,14 @@ var app = {
         '<input type="text" placeholder="" />'+
       '</li>'
     );
+  },
 
+  preInit: function(core)  {
+    this.balloon = core;
+    app.balloon._treeDblclick = app.treeDblclick;
     this.balloon.add_file_handlers.docx = this.addOfficeFile;
     this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
     this.balloon.add_file_handlers.pptx = this.addOfficeFile;
-  },
-
-  resetView: function() {
   },
 
   edit: function(node) {

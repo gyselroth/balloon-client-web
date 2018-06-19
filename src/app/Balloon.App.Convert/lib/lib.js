@@ -69,6 +69,9 @@ var app = {
       $('#fs-properties').prepend($node);
     }
 
+    if(app.balloon.last.directory || app.balloon.last.deleted) {
+      return;
+    }
   },
 
   onActivate: function() {
@@ -111,7 +114,7 @@ var app = {
       success: function(data) {
         var $content = app.$content,
           $submit = $content.find('input'),
-          $add = $content.find('.gr-i-add'),
+          $add = $content.find('#fs-shadow-formats-add'),
           $select = $content.find('select');
 
         if(data.length === 0) {

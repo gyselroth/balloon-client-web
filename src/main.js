@@ -5,8 +5,6 @@
  * @license     GPL-3.0 https://opensource.org/licenses/GPL-3.0
  */
 
-import layout from './themes/default/css/layout.css';
-
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 import $ from "jquery";

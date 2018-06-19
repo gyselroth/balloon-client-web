@@ -9,6 +9,11 @@ module.exports = merge(common, {
         target: process.env.BALLOON_API_URL || 'https://localhost:8081',
         changeOrigin: true,
         secure: (process.env.BALLOON_API_URL_SECURE || 'false') === 'true'
+      },
+      '/share': {
+        target: process.env.BALLOON_API_URL || 'https://localhost:8081',
+        changeOrigin: true,
+        secure: (process.env.BALLOON_API_URL_SECURE || 'false') === 'true'
       }
     }
   }
