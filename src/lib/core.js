@@ -4474,7 +4474,7 @@ var balloon = {
 
     var emails = [], users = [], groups = [];
 
-    $recipient_list.find('.tag').each(function(i, item) {
+    $recipient_list.find('.tag').not('.is-invalid').each(function(i, item) {
       var data = $(item).data();
 
       switch(data.recipientType) {
