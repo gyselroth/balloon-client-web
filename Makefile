@@ -6,6 +6,7 @@ NODE_MODULES_DIR = $(BASE_DIR)/node_modules
 DIST_DIR = $(BASE_DIR)/dist
 BUILD_DIR = $(BASE_DIR)/build
 PACK_DIR = $(BASE_DIR)/pack
+INSTALL_PREFIX = "/"
 
 # VERSION
 ifeq ($(VERSION),)
@@ -13,8 +14,7 @@ VERSION := "0.0.1"
 endif
 
 # PACKAGES
-DEB_LIGHT = $(DIST_DIR)/balloon-web-light-$(VERSION).deb
-DEB_FULL = $(DIST_DIR)/balloon-web-full-$(VERSION).deb
+DEB = $(DIST_DIR)/balloon-web-$(VERSION).deb
 TAR = $(DIST_DIR)/balloon-web-$(VERSION).tar.gz
 
 # NPM STUFF
@@ -22,6 +22,7 @@ NPM_BIN = npm
 ESLINT_BIN = $(NODE_MODULES_DIR)/.bin/eslint
 
 # TARGET ALIASES
+INSTALL_TARGET = "$(INSTALL_PREFIX)usr/share/balloon-web"
 NPM_TARGET = $(NODE_MODULES_DIR)
 WEBPACK_TARGET = $(BUILD_DIR)
 ESLINT_TARGET = $(BASE_DIR)
@@ -30,7 +31,7 @@ BUILD_TARGET = $(ESLINT_TARGET) $(WEBPACK_TARGET)
 
 # TARGETS
 .PHONY: all
-all: dist
+all: build
 
 
 .PHONY: clean
@@ -58,14 +59,14 @@ dist: tar deb
 
 
 .PHONY: deb
-deb: $(DIST_DIR)/balloon-web-light-$(VERSION).deb $(DIST_DIR)/balloon-web-full-$(VERSION).deb
+deb: $(DIST_DIR)/balloon-web-$(VERSION).deb
 
-$(DIST_DIR)/balloon-web-%-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
+$(DIST_DIR)/balloon-web-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
 	@-test ! -d $(PACK_DIR) || rm -rfv $(PACK_DIR)
 	@mkdir -p $(PACK_DIR)/DEBIAN
-	@cp $(BASE_DIR)/packaging/debian/control-$* $(PACK_DIR)/DEBIAN/control
+	@cp $(BASE_DIR)/packaging/debian/control $(PACK_DIR)/DEBIAN/control
 	@sed -i s/'{version}'/$(VERSION)/g $(PACK_DIR)/DEBIAN/control
-	@if [ $* == "full" ]; then cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst; fi
+	@cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst
 	@mkdir -p $(PACK_DIR)/usr/share/balloon-web
 	@cp -Rp $(BUILD_DIR)/* $(PACK_DIR)/usr/share/balloon-web
 	@mkdir $(PACK_DIR)/usr/share/balloon-web/nginx
@@ -177,3 +178,11 @@ webpack: $(WEBPACK_TARGET)
 $(WEBPACK_TARGET) : $(NPM_TARGET) $(BASE_DIR)/webpack.common.js
 	$(NPM_BIN) run build
 	@touch $@
+
+.PHONY: install
+install: $(INSTALL_TARGET)
+
+$(INSTALL_TARGET): $(BUILD_TARGET)
+	@cp -Rp $(BUILD_DIR)/* $(INSTALL_PREFIX)/usr/share/balloon-web
+	@mkdir -p /etc/nginx/conf.d
+	@cp -Rp $(BASE_DIR)/packaging/nginx.conf /etc/nginx/conf.d

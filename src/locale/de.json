@@ -33,8 +33,7 @@
   },
   "nav": {
     "action": {
-      "add_file": "Datei hinzufügen",
-      "add_folder": "Ordner hinzufügen",
+      "add": "Neu",
       "upload": "Hochladen",
       "refresh": "Aktualisieren",
       "download": "Download",

@@ -1,6 +1,7 @@
-Package: balloon-web-light
+Package: balloon-web
 Version: {version}
 Architecture: all
 Maintainer: Raffael Sahli <sahli@gyselroth.com>
+Depends: nginx, openssl
 Homepage: https://github.com/gyselroth/balloon-client-web
 Description: balloon web ui
