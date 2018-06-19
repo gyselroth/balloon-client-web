@@ -3571,7 +3571,7 @@ var balloon = {
 
         $input.select();
 
-        $input.show().focus().off('keydown').on('keydown', function(e) {
+        $input.show().focus().off('keyup').on('keyup', function(e) {
           e.stopImmediatePropagation();
           var name = $(this).val();
 
