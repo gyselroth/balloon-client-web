@@ -3774,17 +3774,17 @@ var balloon = {
         var $li_consumer = $('<li><div><span></span><p>'+ i18next.t('view.share.privilege_text_'+curAcl.privilege, curAcl.role.name) +'</p></div></li>');
         $fs_share_consumers_ul.append($li_consumer);
 
-        //TODO pixtron - add users avatar to li as inline background-image
-        /*balloon.xmlHttpRequest({
+        balloon.xmlHttpRequest({
           url: balloon.base+'/users/' + curAcl.id + '/avatar',
           type: 'GET',
+          mimeType: "text/plain; charset=x-user-defined",
           success: function(body) {
-            $li_consumer.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
+            $li_consumer.css('background-image', 'url(data:image/png;base64,'+balloon.base64Encode(body)+')');
           },
           error: function() {
             //empty method to avoid error message bubbling up
           }
-        });*/
+        });
       }
 
       if(maxConsumersDisplayed < numConsumers) {
