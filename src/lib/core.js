@@ -3766,7 +3766,7 @@ var balloon = {
     if(!node.shared && !node.reference) {
       $fs_share_consumers.find('.fs-share-hint-owner-only').show();
     } else {
-      var numConsumers = acl.length + 1;
+      var numConsumers = acl.length;
       var maxConsumersDisplayed = 5;
 
       for(var i=0; i < maxConsumersDisplayed-1 && i < numConsumers; i++) {
