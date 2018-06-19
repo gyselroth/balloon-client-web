@@ -125,17 +125,19 @@
 
 @mixin tag-list {
   .tag {
+    position: relative;
     float: left;
     display: block;
     background-color: $colorBrightGrey;
     border: 1px solid $colorLightGrey;
     border-radius: 4px;
     margin: 5px 5px 0 0;
-    height: 30px;
-    padding: 0 6px 0 10px;
+    height: auto;
+    padding: 0 20px 0 10px;
     box-sizing: border-box;
     font-size: 13px;
     line-height: 28px;
+    word-break: break-all;
 
     &:last-child {
       margin-right: 0;
@@ -156,6 +158,9 @@
 
     .fs-delete {
       color: $colorMediumGrey;
+      position: absolute;
+      top: 0;
+      right: 6px;
 
       .gr-icon {
         position: relative;
