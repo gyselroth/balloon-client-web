@@ -4546,7 +4546,7 @@ var balloon = {
     $input_comment.val('');
     $btn_send.prop('disabled', true);
 
-    function addRecipient(recipient, noReFocus) {
+    function addRecipient(recipient, isBlured) {
       var label = '';
       var valid = true;
       var type, address;
@@ -4578,8 +4578,10 @@ var balloon = {
 
       $recipient.insertBefore($input_recipient.parent());
       $input_recipient.val('');
-      $input_recipient.blur();
-      if(!noReFocus) $input_recipient.focus();
+      if(!isBlured) {
+        $input_recipient.blur();
+        $input_recipient.focus();
+      }
       mightSendForm();
     }
 
