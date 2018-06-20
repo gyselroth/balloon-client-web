@@ -1143,7 +1143,6 @@ var balloon = {
       'share-link',
     ]);
 
-    balloon.displayProperties(node);
     var view  = balloon.getURLParam('view');
 
     if(balloon.previous !== null && balloon.previous.id !== balloon.last.id || view === null || balloon.last.id === '_FOLDERUP') {
@@ -6145,18 +6144,7 @@ var balloon = {
 
       case 'meta':
         for(var meta_attr in node.meta) {
-          $field = $('#fs-properties-'+meta_attr).find('.fs-value');
-          switch(meta_attr) {
-          case 'description':
-            $field = $('#fs-properties-'+meta_attr).find('textarea');
-            $field.val(node.meta[meta_attr]);
-            break;
-
-          default:
-            $field = $('#fs-properties-'+meta_attr);
-            $field.val(node.meta[meta_attr]);
-            break;
-          }
+          $('#fs-properties-'+meta_attr).val(node.meta[meta_attr]);
         }
         break;
       case 'share':
