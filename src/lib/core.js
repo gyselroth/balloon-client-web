@@ -3571,9 +3571,7 @@ var balloon = {
           $input.val(i18next.t('tree.new_file'));
         }
 
-        $input.select();
-
-        $input.show().focus().off('keyup').on('keyup', function(e) {
+        $input.show().focus().select().off('keyup').on('keyup', function(e) {
           e.stopImmediatePropagation();
           var name = $(this).val();
 
