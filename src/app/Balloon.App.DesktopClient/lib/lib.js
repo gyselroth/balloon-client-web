@@ -16,7 +16,7 @@ var app = {
   render: function() {
     this.$menu = $('<li id="fs-menu-user-desktop" data-i18n="[title]app.balloon_app_desktopclient.menu">'
       +'<div class="fs-menu-left-icon">'
-        +'<svg class="gr-icon gr-i-arrow-s"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#arrow-s"></use></svg>'
+        +'<svg class="gr-icon gr-i-app-download"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#app-download"></use></svg>'
       +'</div>'
       +'<div><span>'+i18next.t('app.balloon_app_desktopclient.menu')+'</span></div>'
     +'</li>');

@@ -615,7 +615,7 @@ var balloon = {
 
     clue = clue.substr(0, clue.search('</span>')+7);
 
-    clue += '<svg viewBox="0 0 24 24" class="gr-icon gr-i-file"><use xlink:href="/assets/icons.svg#file"></use></svg>';
+    clue += '<svg viewBox="0 0 24 24" class="gr-icon gr-i-file-drag"><use xlink:href="/assets/icons.svg#file-drag"></use></svg>';
     clue += '<div class="clue-item-count">' + $itemCount + '</span>';
 
     $('.k-drag-clue').html(clue);
@@ -2700,7 +2700,7 @@ var balloon = {
   _sortTree: function() {
     var field = $(this).attr('id').substr(18);
 
-    $('#fs-browser-header').find('span').removeAttr('class');
+    $('#fs-browser-header').find('span').empty();
 
     var dir;
 
@@ -2714,11 +2714,9 @@ var balloon = {
       dir = 'asc';
     }
 
-    if(dir == 'asc') {
-      $(this).find('span').addClass('k-icon').addClass('k-i-arrow-s');
-    } else {
-      $(this).find('span').addClass('k-icon').addClass('k-i-arrow-n');
-    }
+    var iconId = dir === 'asc' ? 'expand' : 'collapse';
+
+    $(this).find('span').append('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#' + iconId + '"></use></svg>');
 
     balloon.sortTree(field, dir);
   },

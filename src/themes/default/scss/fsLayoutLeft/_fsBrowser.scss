@@ -29,6 +29,16 @@
 
     &.fs-browser-column-sortable {
       cursor: pointer;
+
+      .gr-icon {
+        $iconSize: 20px;
+
+        position: relative;
+        top: 5px;
+        left: 0;
+        width: $iconSize;
+        height: $iconSize;
+      }
     }
   }
 
@@ -97,6 +107,18 @@
       }
     }
 
+    .fs-browser-column-icon {
+      .gr-icon {
+        $iconSize: 13px;
+
+        position: relative;
+        top: 0;
+        left: 3px;
+        width: $iconSize;
+        height: $iconSize;
+      }
+    }
+
     #fs-action-filter {
       position: absolute;
       left: 0;
@@ -109,7 +131,7 @@
     #fs-action-filter-select {
       @include dropdown(140px, 24px, 10px);
 
-      left: 0;
+      left: -1px;
       display: none;
 
       .bln-dropdown-spike {
