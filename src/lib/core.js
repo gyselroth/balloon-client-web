@@ -6883,8 +6883,7 @@ var balloon = {
 
         if($k_tree !== undefined) {
           $k_tree.destroy();
-          $tree.remove();
-          $("#fs-browser").append('<div id="fs-browser-tree"></div>');
+          $tree.replaceWith('<div id="fs-browser-tree"></div>');
         }
         $('#fs-browser-fresh').hide();
         break;
