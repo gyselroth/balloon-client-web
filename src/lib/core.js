@@ -1292,8 +1292,13 @@ var balloon = {
       exec = 'pushState';
     }
 
-    var url = '?'+balloon.param('menu', balloon.getMenuName())+'&'+balloon.param('menu')+'&'+balloon.param('collection', balloon.getCurrentCollectionId())+'&'
-         +balloon.param('selected', list)+'&'+balloon.param('view', 'preview');
+    var view = $('#fs-content-view dd.active').attr('id').replace('fs-', '');
+
+    var url = '?' + balloon.param('menu', balloon.getMenuName())
+            + '&' + balloon.param('menu')
+            + '&' + balloon.param('collection', balloon.getCurrentCollectionId())
+            + '&' + balloon.param('selected', list)
+            + '&' + balloon.param('view', view);
 
     if(balloon.history_last_url !== url) {
       window.history[exec](
