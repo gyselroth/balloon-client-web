@@ -60,6 +60,10 @@ var app = {
       var exclude_me = app.balloon.last.subscription_exclude_me;
     }
 
+    if(app.balloon.last.directory === false) {
+      $recursive.parent().hide();
+    }
+
     app._toggleCheckboxDisabled(app.balloon.last.subscription);
 
     $subscribe.prop('checked', app.balloon.last.subscription);
