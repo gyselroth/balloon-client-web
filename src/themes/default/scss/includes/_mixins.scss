@@ -33,6 +33,15 @@
   background-size: 100%;
 }
 
+@mixin checkboxDisabled {
+  border-color: $colorLightGrey;
+}
+
+@mixin checkboxCheckedDisabled {
+  border-color: $colorLightGrey;
+  background-color: $colorLightGrey;
+}
+
 @mixin icon-button($width:60px, $height:null) {
   @if ($height == null) { $height: $width }
 

@@ -17,9 +17,9 @@ var app = {
 
     var $content = $('<dd id="fs-notification">'+
       '<div id="fs-notification-description">'+i18next.t('app.balloon_app_notification.description')+'</div>'+
-      '<div><input type="checkbox" id="fs-notification-subscribe" name="subscribe" value="1"/><label for="fs-notification-subscribe">'+i18next.t('app.balloon_app_notification.subscribe')+'</label></div>'+
-      '<div><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1"/><label for="fs-notification-exclude_me">'+i18next.t('app.balloon_app_notification.exclude_me')+'</label></div>'+
-      '<div> <input type="checkbox" id="fs-notification-recursive" name="recursive" value="1"/><label for="fs-notification-recursive">'+i18next.t('app.balloon_app_notification.recursive')+'</label></div>'+
+      '<div><input type="checkbox" id="fs-notification-subscribe" name="subscribe" value="1" /><label for="fs-notification-subscribe">'+i18next.t('app.balloon_app_notification.subscribe')+'</label></div>'+
+      '<div><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1" disabled /><label for="fs-notification-exclude_me">'+i18next.t('app.balloon_app_notification.exclude_me')+'</label></div>'+
+      '<div> <input type="checkbox" id="fs-notification-recursive" name="recursive" value="1" disabled /><label for="fs-notification-recursive">'+i18next.t('app.balloon_app_notification.recursive')+'</label></div>'+
       '<input type="submit" class="fs-button-primary" value="'+i18next.t('app.balloon_app_notification.save')+'">'+
     '</dd>');
 
@@ -50,15 +50,38 @@ var app = {
   },
 
   onActivate: function() {
+    var $subscribe = app.$content.find('input[name=subscribe]');
+    var $exclude_me = app.$content.find('input[name=exclude_me]');
+    var $recursive = app.$content.find('input[name=recursive]');
+
     if(app.balloon.last.subscription === false) {
       var exclude_me = true;
     } else {
       var exclude_me = app.balloon.last.subscription_exclude_me;
     }
 
-    app.$content.find('input[name=subscribe]').prop('checked', app.balloon.last.subscription);
-    app.$content.find('input[name=exclude_me]').prop('checked', exclude_me);
-    app.$content.find('input[name=recursive]').prop('checked', app.balloon.last.subscription_recursive);
+    app._toggleCheckboxDisabled(app.balloon.last.subscription);
+
+    $subscribe.prop('checked', app.balloon.last.subscription);
+    $exclude_me.prop('checked', exclude_me);
+    $recursive.prop('checked', app.balloon.last.subscription_recursive);
+
+    $subscribe.off('change').on('change', function() {
+      app._toggleCheckboxDisabled($subscribe.prop('checked'));
+    });
+  },
+
+  _toggleCheckboxDisabled: function(subscribed) {
+    var $exclude_me = app.$content.find('input[name=exclude_me]');
+    var $recursive = app.$content.find('input[name=recursive]');
+
+    if(subscribed) {
+      $exclude_me.prop('disabled', false);
+      $recursive.prop('disabled', false);
+    } else {
+      $exclude_me.prop('disabled', true);
+      $recursive.prop('disabled', true);
+    }
   },
 
   subscribe: function(node, subscription, exclude_me, recursive) {

@@ -87,6 +87,23 @@ input[type="checkbox"] {
       @include checkboxChecked;
     }
   }
+
+  &:disabled + label,
+  &:disabled:hover + label {
+    &:before,
+    &:hover:before {
+      @include checkboxDisabled;
+    }
+  }
+
+  &:checked:disabled + label,
+  &:checked:disabled:hover + label {
+
+    &:before,
+    &:hover:before {
+      @include checkboxCheckedDisabled;
+    }
+  }
 }
 
 button,
