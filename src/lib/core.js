@@ -6149,10 +6149,7 @@ var balloon = {
         break;
       case 'share':
       case 'shared':
-        //TODO pixtron - implement this or revert this change from merging master
         if('shareowner' in node) {
-          $field = $('#fs-properties-share').find('.fs-value');
-          $('#fs-properties-share').parent().show();
           var access = i18next.t('view.share.privilege_'+node.access);
 
           if(node.shared === true) {
@@ -6163,17 +6160,14 @@ var balloon = {
             continue;
           }
 
-          $field.html(msg)
-            .parent().parent().css('display','table-row');
+          var $icon = $('#fs-properties-share').find('svg');
+          $field = $('#fs-properties-share').find('.fs-value');
+          $('#fs-properties-share').parent().show();
 
-          var sclass = '';
-          if(node.shareowner.name == login.username) {
-            sclass = 'gr-icon gr-i-folder-shared';
-          } else {
-            sclass = 'gr-icon gr-i-folder-received';
-          }
+          $field.html(msg);
 
-          $field.parent().find('div:first-child').attr('class', sclass);
+          var iconId = node.shareowner.name == login.username ? 'folder-shared' : 'folder-received';
+          $icon.replaceWith('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#' + iconId + '"></use></svg>');
         }
         break;
 

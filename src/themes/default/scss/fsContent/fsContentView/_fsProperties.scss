@@ -21,6 +21,23 @@
 
     td {
       padding-left: 30px;
+
+      &#fs-properties-share {
+        .gr-icon,
+        .fs-value {
+          display: inline-block;
+        }
+
+        .gr-icon {
+          $iconSize: 20px;
+
+          position: relative;
+          top: 5px;
+          left: -3px;
+          width: $iconSize;
+          height: $iconSize;
+        }
+      }
     }
   }
 
