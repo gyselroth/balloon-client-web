@@ -1960,6 +1960,7 @@ var balloon = {
       balloon.resetDom('breadcrumb-search');
       $('#fs-crumb-home-list').hide();
       $('#fs-crumb-search-list').show();
+      $('#fs-crumb-search').html(i18next.t('menu.' + action));
     }
 
     if(exec === false) {
