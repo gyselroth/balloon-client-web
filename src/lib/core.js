@@ -1960,10 +1960,12 @@ var balloon = {
       $('#fs-crumb-search-list').hide();
       $('#fs-crumb-home-list').show();
       $('#fs-browser-action').show();
+      $('#fs-browser-header .fs-browser-column-icon').children().show();
     } else {
       balloon.resetDom('breadcrumb-search');
       $('#fs-crumb-home-list').hide();
       $('#fs-crumb-search-list').show();
+      $('#fs-browser-header .fs-browser-column-icon').children().hide();
       $('#fs-crumb-search').html(i18next.t('menu.' + action));
     }
 
@@ -4719,6 +4721,7 @@ var balloon = {
     balloon.resetDom(['breadcrumb-search']);
     $('#fs-crumb-home-list').hide();
     $('#fs-browser-action').hide();
+    $('#fs-browser-header .fs-browser-column-icon').children().hide();
     $('#fs-crumb-search-list').show();
 
     $('#fs-crumb-search').find('li:first-child').html(i18next.t('search.results'));
