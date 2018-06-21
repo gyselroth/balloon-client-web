@@ -1292,13 +1292,15 @@ var balloon = {
       exec = 'pushState';
     }
 
-    var view = $('#fs-content-view dd.active').attr('id').replace('fs-', '');
+    var curViewId = $('#fs-content-view dd.active').attr('id');
+    var view = curViewId ? curViewId.replace('fs-', '') : null;
 
     var url = '?' + balloon.param('menu', balloon.getMenuName())
             + '&' + balloon.param('menu')
             + '&' + balloon.param('collection', balloon.getCurrentCollectionId())
-            + '&' + balloon.param('selected', list)
-            + '&' + balloon.param('view', view);
+            + '&' + balloon.param('selected', list);
+
+    if(view) url += '&' + balloon.param('view', view)
 
     if(balloon.history_last_url !== url) {
       window.history[exec](
