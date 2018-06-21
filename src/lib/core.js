@@ -2587,6 +2587,10 @@ var balloon = {
                 crumbs = crumbs.slice(-1);
                 $(crumbs).show();
                 balloon.getCrumb().find('li:last-child').remove();
+
+                if(balloon.getCrumb().find('li').get().length <= 5) {
+                  balloon.getCrumb().find('li.removed').remove();
+                }
               }
 
               if(balloon.datasource._ds_params.nostate !== true && balloon.getCurrentNode() !== null) {
@@ -3341,6 +3345,8 @@ var balloon = {
         $that = $(this),
         id = $that.attr('fs-id');
 
+      if($that.hasClass('removed')) return;
+
       if(id === '') {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
@@ -3356,6 +3362,11 @@ var balloon = {
       crumbs = crumbs.slice($next.length * -1);
       $(crumbs).show();
       $next.remove();
+
+      if(balloon.getCrumb().find('li').get().length <= 5) {
+        balloon.getCrumb().find('li.removed').remove();
+      }
+
       //balloon.resetDom('search');
     });
   },
@@ -3415,9 +3426,13 @@ var balloon = {
       return;
     }
 
+    $('#fs-crumb li.removed').remove();
     var $crumbs = $('#fs-crumb').find('li:not(#fs-crumb-home,#fs-crumb-search)').filter(':visible');
+    var $crumbsInvisble = $('#fs-crumb').find('li:not(#fs-crumb-home,#fs-crumb-search)').not(':visible');
+
     if($crumbs.length > 2) {
       $($crumbs[0]).hide();
+      $('<li class="removed">...</li>').insertAfter('#fs-crumb li:first-child');
     }
 
     var child = '<li fs-id="'+node.id+'">'+node.name+'</li>';
@@ -3431,7 +3446,7 @@ var balloon = {
    * @return void
    */
   getFolderDepth: function() {
-    return balloon.getCrumb().find('li').length;
+    return balloon.getCrumb().find('li').not('.removed').length;
   },
 
 

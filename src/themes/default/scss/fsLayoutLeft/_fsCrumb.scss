@@ -47,6 +47,10 @@
         }
       }
 
+      &.removed {
+        cursor: default;
+      }
+
       @media screen and (min-width: $breakpointBreadcrumb) {
         display: inline-block;
 
