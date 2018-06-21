@@ -2069,7 +2069,7 @@ var balloon = {
         type: 'PATCH',
         data: {
           id: balloon.id(node),
-          readonly: node.readonly
+          readonly: $fs_readonly.prop('checked')
         },
         success: function(data) {
           node.readonly = data.readonly;
