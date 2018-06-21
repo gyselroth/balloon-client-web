@@ -3906,7 +3906,8 @@ var balloon = {
           read: function(operation) {
             var value = $input.data("kendoAutoComplete").value()
             if(value === '' || value === undefined) {
-              operation.success({data:null});
+              operation.success([]);
+              $input.data('kendoAutoComplete').close();
               return;
             }
 
