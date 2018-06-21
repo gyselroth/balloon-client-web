@@ -1951,8 +1951,7 @@ var balloon = {
 
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
-    //TODO pixtron - do we really need to toggle the pannel here?
-    balloon.togglePannel();
+    balloon.togglePannel(false);
     balloon.resetDom(['search']);
 
     if(action === 'cloud') {
