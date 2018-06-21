@@ -4525,7 +4525,7 @@ var balloon = {
     $input_comment.val('');
     $btn_send.prop('disabled', true);
 
-    function addRecipient(recipient, isBlured) {
+    function addRecipient(recipient) {
       var label = '';
       var valid = true;
       var type, address;
@@ -4557,10 +4557,6 @@ var balloon = {
 
       $recipient.insertBefore($input_recipient.parent());
       $input_recipient.val('');
-      if(!isBlured) {
-        $input_recipient.blur();
-        $input_recipient.focus();
-      }
       mightSendForm();
     }
 
@@ -4573,7 +4569,7 @@ var balloon = {
     }
 
     $input_recipient.off('blur').on('blur', function() {
-      addRecipient($input_recipient.val(), true);
+      addRecipient($input_recipient.val());
     });
 
     $input_comment.off('keyup').on('keyup', function() {
