@@ -12,6 +12,7 @@
     &.fs-action-disabled,
     &.fs-action-disabled:hover {
       color: $colorLightGrey;
+      border-color: $colorLightGrey;
       cursor: default;
     }
   }
