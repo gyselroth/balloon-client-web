@@ -2439,6 +2439,8 @@ var balloon = {
    * @return  void
    */
   _searchKeyup: function(e){
+    //TODO pixtron search - is this still needed?
+    return;
     var $that = $(this);
     $('.fs-search-reset-button').show();
 
@@ -2456,6 +2458,7 @@ var balloon = {
    * @return  void
    */
   resetSearch: function(e) {
+    //TODO pixtron search - is this still needed?
     balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-browser-action').show();
     $('#fs-search-filter').hide();
@@ -4937,6 +4940,7 @@ var balloon = {
    * @return  void
    */
   search: function(search_query) {
+    //TODO pixtron - is this method still needed?
     var value = search_query, query;
     if(value == '') {
       return balloon.resetSearch();
@@ -6354,9 +6358,10 @@ var balloon = {
         return;
       }
 
-      //TODO pixtron - search: fix advanced search
+      //TODO pixtron seearch - fix advanced search
       balloon.advancedSearch();
       var value = 'meta.tags:'+$(this).find('.tag-name').text();
+      //TODO pixtron search - why advancedSearch and search?
       balloon.search(value);
     });
 
