@@ -4587,13 +4587,20 @@ var balloon = {
       case 32:
         addRecipient($input_recipient.val());
         break;
+      };
+    });
+
+    $input_recipient.off('keydown').on('keydown', function(event) {
+      event.stopImmediatePropagation();
+
+      switch(event.keyCode) {
       case 8:
         if($input_recipient.val().trim() === '') {
           $recipient_list.find('.tag').last().remove();
           mightSendForm();
         }
         break;
-      }
+      };
     });
 
     balloon._userAndGroupAutocomplete($input_recipient, false, function(item) {
