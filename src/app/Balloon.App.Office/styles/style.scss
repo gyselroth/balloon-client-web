@@ -1,3 +1,12 @@
-#fs-office-join-prompt ul {
-    margin-top: 10px;
+#fs-office-join-prompt {
+  .fs-prompt-window-content {
+    ul {
+      margin-top: 10px;
+
+      input[type="radio"] {
+        display: inline-block;
+        margin-right: 5px;
+      }
+    }
+  }
 }

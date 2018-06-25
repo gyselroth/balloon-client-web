@@ -78,13 +78,14 @@ var app = {
     }
     msg += '</ul>';
 
-    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window" title="'+i18next.t('app.office.session.prompt.title')+'">'
-            +'<div id="fs-prompt-window-content">'+msg+'</div>'
-            +'<div id="fs-prompt-window-button-wrapper">'
+    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.session.prompt.title')+'">'
+            +'<div id="fs-office-join-prompt-content" class="fs-prompt-window-content">'+msg+'</div>'
+            +'<div class="fs-window-secondary-actions">'
             +'    <input type="button" tabindex="2" name="new" value="'+i18next.t('app.office.session.prompt.new')+'"/>'
-            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'"/>'
+            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'" class="fs-button-primary" />'
             +'</div>'
         +'</div>');
+
     $("#fs-namespace").append($div);
     $div.find('input[name=session]:first').attr('checked', true);
 
@@ -125,11 +126,11 @@ var app = {
 
   promptSingleSessionJoin: function(node, doc, session) {
     $("#fs-office-join-prompt").remove();
-    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window" title="'+i18next.t('app.office.session.prompt.title')+'">'
-            +'<div id="fs-prompt-window-content">'+i18next.t('app.office.session.prompt.message_one', node.name, session.user.name, app.balloon.timeSince(new Date((session.created*1000))))+'</div>'
-            +'<div id="fs-prompt-window-button-wrapper">'
+    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.session.prompt.title')+'">'
+            +'<div id="fs-office-join-prompt" fs-prompt-window-content>'+i18next.t('app.office.session.prompt.message_one', node.name, session.user.name, app.balloon.timeSince(new Date((session.created*1000))))+'</div>'
+            +'<div class="fs-window-secondary-actions">'
             +'    <input type="button" tabindex="2" name="new" value="'+i18next.t('app.office.session.prompt.new')+'"/>'
-            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'"/>'
+            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'" class="fs-button-primary"/>'
             +'</div>'
         +'</div>');
     $("#fs-namespace").append($div);
@@ -239,13 +240,14 @@ var app = {
 
     $("#fs-libreoffice-prompt").remove();
 
-    var $div = $('<div id="fs-libreoffice-prompt" class="fs-prompt-window" title="'+i18next.t('app.office.startup_prompt.title')+'">'
-            +'<div id="fs-prompt-window-content">'+i18next.t('app.office.startup_prompt.message')+'</div>'
-            +'<div id="fs-prompt-window-button-wrapper">'
-            +'    <input type="button" tabindex="2" name="hide" value="'+i18next.t('app.office.startup_prompt.dont_show_again')+'"/>'
-            +'    <input type="button" tabindex="1" name="close" value="'+i18next.t('app.office.startup_prompt.close')+'"/>'
+    var $div = $('<div id="fs-libreoffice-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.startup_prompt.title')+'">'
+            +'<div id="fs-libreoffice-prompt-content" class="fs-prompt-window-content">'+i18next.t('app.office.startup_prompt.message')+'</div>'
+            +'<div class="fs-window-secondary-actions">'
+            +'    <input type="button" tabindex="2" name="hide" value="'+i18next.t('app.office.startup_prompt.dont_show_again')+'" />'
+            +'    <input type="button" tabindex="1" name="close" value="'+i18next.t('app.office.startup_prompt.close')+'" class="fs-button-primary" />'
             +'</div>'
         +'</div>');
+
     $("#fs-namespace").append($div);
 
     var $k_prompt = $div.kendoBalloonWindow({
