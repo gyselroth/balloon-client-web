@@ -88,7 +88,7 @@ var login = {
       var $login = $('#login').show();
 
       $('#fs-namespace').hide();
-      $login.find('input[type=submit]').off('click').on('click', login.initBasicAuth);
+      $login.find('input[type=submit]').on('click', login.initBasicAuth);
 
       if(localStorage.username !== undefined) {
         $login.find('input[name=username]').val(localStorage.username);
@@ -262,8 +262,8 @@ var login = {
   initBasicAuth: function() {
     var $login = $('#login');
     $login.find('.error-message').hide();
-    var $username_input = $login.find('input[type=text]');
-    var $password_input = $login.find('input[type=password]');
+    var $username_input = $login.find('input[name=username]');
+    var $password_input = $login.find('input[name=password]');
 
     var username = $username_input.val();
     var password = $password_input.val();
@@ -286,8 +286,8 @@ var login = {
 
   verifyIdentity: function() {
     var $login = $('#login');
-    var $username_input = $login.find('input[type=text]');
-    var $password_input = $login.find('input[type=password]');
+    var $username_input = $login.find('input[name=username]');
+    var $password_input = $login.find('input[name=password]');
 
     $.ajax({
       type: 'GET',

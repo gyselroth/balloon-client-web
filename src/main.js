@@ -15,6 +15,8 @@ import icons from '@gyselroth/icon-collection/src/icons.css';
 import $ from "jquery";
 import translate from './lib/translate.js';
 
+window.jquery = $;
+
 $.ajax({
    url: '/config.json',
    success: function(body, responseText, response) {
