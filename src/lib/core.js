@@ -5292,16 +5292,36 @@ var balloon = {
    * @return  void
    */
   move: function(source, destination, conflict, clone) {
+    var destName;
+    var action;
+    var successMessage;
+
+    if(destination === null) {
+      destName = i18next.t('menu.cloud');
+    } else if(typeof destination !== 'string') {
+      destName = destination.name;
+    }
+
     if(clone === true) {
-      var action = 'clone'
+      action = 'clone'
+      successMessage = 'snackbar.node_cloned';
     } else {
-      var action = 'move';
+      action = 'move';
+      successMessage = destName !== undefined ? 'snackbar.node_moved' : 'snackbar.node_moved_folderup';
     }
 
     balloon.xmlHttpRequest({
       url: balloon.base+'/nodes/'+action,
       type: 'POST',
       dataType: 'json',
+      snackbar: {
+        message: successMessage,
+        values: {
+          count: Array.isArray(source) ? source.length : 1,
+          dest: destName
+        },
+        icon: 'undo'
+      },
       data: {
         id: balloon.id(source),
         destid: balloon.id(destination),

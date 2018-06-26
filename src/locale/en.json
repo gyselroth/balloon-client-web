@@ -361,6 +361,12 @@
     "hint_24": "You can perform various actions using only your keyboard. [SHIFT]+[N] (add folder), [SHIFT]+[X] (cut), [SHIFT]+[C] (copy), [SHIFT]+[V] (paste), [SHIFT]+[U] (upload), [SHIFT]+[D] (download), [SHIFT]+[A] (add file), [SHIFT]+[R] (undelete)."
   },
   "snackbar": {
-    "default": "The request completed successfully"
+    "default": "The request completed successfully",
+    "node_cloned": "{{count}} Element has been copied.",
+    "node_cloned_plural": "{{count}} Elements have been copied.",
+    "node_moved": "{{count}} Element has been moved to <b>{{dest}}</b>.",
+    "node_moved_plural": "{{count}} Elements have been moved to <b>{{dest}}</b>.",
+    "node_moved_folderup": "{{count}} Element has been moved to <b>the parent folder</b>.",
+    "node_moved_folderup_plural": "{{count}} Elements have been moved to <b>the parent folder</b>."
   }
 }

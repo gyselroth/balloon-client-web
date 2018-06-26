@@ -361,6 +361,12 @@
     "hint_24": "Du kannst diverse Aktionen mit deiner Tastatur auslösen. [SHIFT]+[N] (Ordner hinzufügen), [SHIFT]+[X] (Ausschneiden), [SHIFT]+[C] (Kopieren), [SHIFT]+[V] (Einfügen), [SHIFT]+[U] (Hochladen), [SHIFT]+[D] (Download), [SHIFT]+[A] (Datei hinzufügen), [SHIFT]+[R] (Wiederherstellen)."
   },
   "snackbar": {
-    "default": "Die Anfrage wurde erfolreich ausgeführt"
+    "default": "Die Anfrage wurde erfolreich ausgeführt",
+    "node_cloned": "{{count}} Element wurde kopiert.",
+    "node_cloned_plural": "{{count}} Elemente wurden kopiert.",
+    "node_moved": "{{count}} Element wurde nach <b>{{dest}}</b> verschoben.",
+    "node_moved_plural": "{{count}} Elemente wurden nach <b>{{dest}}</b> verschoben.",
+    "node_moved_folderup": "{{count}} Element wurde <b>in den übergeordneten Ordner</b> verschoben.",
+    "node_moved_folderup_plural": "{{count}} Elemente wurden <b>in den übergeordneten Ordner</b> verschoben."
   }
 }
