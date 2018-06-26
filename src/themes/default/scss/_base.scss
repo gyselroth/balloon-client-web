@@ -17,14 +17,19 @@ button {
 input,
 textarea,
 select {
-  border-radius: 4px;
-  border: 1px solid $colorLightGrey;
   box-sizing: border-box;
   outline: none;
   line-height: 16px;
   font-weight: 300;
   color: $colorDarkGrey;
   caret-color: $colorActiveBlue;
+}
+
+input:not([type="radio"]),
+textarea,
+select {
+  border-radius: 4px;
+  border: 1px solid $colorLightGrey;
 }
 
 input:not([type="radio"]),
