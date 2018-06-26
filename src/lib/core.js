@@ -4425,13 +4425,12 @@ var balloon = {
             data: data
           });
 
-          $.when(shareLinkRequest, destroyRequest).then(function() {
-            $k_win.close();
-            balloon.showShareLink();
-          }).done(function(destroy, shareLinkBody) {
-            balloon.last = shareLinkBody;
+          $.when(shareLinkRequest, destroyRequest).done(function() {
             balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
             balloon.switchView('share-link');
+          }).then(function() {
+            $k_win.close();
+            balloon.showShareLink();
           });
         });
 
