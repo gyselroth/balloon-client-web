@@ -6947,7 +6947,7 @@ var balloon = {
 
       case 'prompt':
         balloon.resetWindow('fs-prompt-window');
-        $("#fs-prompt-window").addClass("fs-prompt-window");
+        $("#fs-prompt-window").addClass("fs-prompt-window-inner");
         break;
 
       case 'edit':
