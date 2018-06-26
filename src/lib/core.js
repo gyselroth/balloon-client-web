@@ -2378,6 +2378,11 @@ var balloon = {
   _updateCheckAllState: function() {
     var $fs_browser_header_checkbox = $('#fs-browser-header-checkbox');
     var nodeCount = balloon.datasource._pristineData.length;
+    var currentCollectionId = balloon.getCurrentCollectionId();
+
+    if(currentCollectionId !== null) {
+      nodeCount--;
+    }
 
     $fs_browser_header_checkbox.removeClass('fs-browser-header-checkbox-checked');
     $fs_browser_header_checkbox.removeClass('fs-browser-header-checkbox-undetermined');
@@ -2388,7 +2393,7 @@ var balloon = {
       } else {
         $fs_browser_header_checkbox.addClass('fs-browser-header-checkbox-undetermined');
       }
-    } else if(balloon.last) {
+    } else if(balloon.last && balloon.last.id !== currentCollectionId && balloon.isSystemNode(balloon.last) === false) {
       //one node selected
       if(nodeCount === 1) {
         $fs_browser_header_checkbox.addClass('fs-browser-header-checkbox-checked');
