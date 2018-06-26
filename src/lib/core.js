@@ -2114,7 +2114,6 @@ var balloon = {
 
         $fs_destroy_date_win.find('input:submit').unbind().click(function() {
           var ts = null;
-          var curTs = (new Date(node.destroy)).getTime() / 1000;
           var date = $k_fs_destroy_date.value();
           var time = $k_fs_destroy_time.value();
 
@@ -2132,17 +2131,7 @@ var balloon = {
             ts = Math.round(date.getTime() / 1000);
           }
 
-          if(ts !== curTs) {
-            if(ts === null) {
-              balloon.selfDestroyNode(node, ts, $k_win);
-            } else {
-              var dateHr = kendo.toString(date, kendo.culture().calendar.patterns.g)
-              var msg  = i18next.t('view.advanced.prompt_destroy', dateHr, node.name);
-              balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win]);
-            }
-          } else {
-            $k_win.close();
-          }
+          balloon._setDestroy(node, ts, $k_win);
         });
 
         $fs_destroy_date_win.find('input:button').unbind().click(function() {
@@ -2153,14 +2142,53 @@ var balloon = {
   },
 
 
+
   /**
    * Set self destroy node
    *
    * @param object node
    * @param null|integer ts
    */
-  selfDestroyNode: function(node, ts, $k_win) {
+  _setDestroy: function(node, ts, $k_win) {
+    var curTs = (new Date(node.destroy)).getTime() / 1000;
+    var $d = $.Deferred();
+
+    if(ts !== curTs) {
+      if(ts === null) {
+        balloon.selfDestroyNode(node, ts, $k_win, $d);
+      } else {
+        var dateHr = kendo.toString(new Date(ts), kendo.culture().calendar.patterns.g)
+        var msg  = i18next.t('view.advanced.prompt_destroy', dateHr, node.name);
+        balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win]).then(function() {
+          $d.resolve();
+        }, function() {
+          $d.resolve();
+        });
+      }
+    } else {
+      if($k_win) {
+        $k_win.close();
+      }
+      $d.resolve();
+    }
+
+    return $d;
+  },
+
+
+  /**
+   * Set self destroy node
+   *
+   * @param object node
+   * @param null|integer ts
+   */
+  selfDestroyNode: function(node, ts, $k_win, $d) {
     var url;
+
+    if(typeof $k_win === 'object' && typeof $k_win.resolve === 'function') {
+      $d = $k_win;
+      $k_win = undefined;
+    }
 
     if(ts !== null) {
       url = balloon.base+'/nodes?id='+balloon.id(node)+'&'+'at='+ts;
@@ -2174,6 +2202,10 @@ var balloon = {
       complete: function() {
         if($k_win) {
           $k_win.close();
+        }
+
+        if(typeof $d === 'object' && typeof $d.resolve === 'function') {
+          $d.resolve();
         }
 
         node.destroy = ts === null ? undefined : (new Date(ts * 1000)).toISOString();
@@ -4254,6 +4286,7 @@ var balloon = {
 
     if(!node) return;
 
+    balloon.resetDom('share-link-settings');
     var $fs_share_link_settings_win = $('#fs-share-link-settings-window');
 
     var $k_win = $fs_share_link_settings_win.kendoBalloonWindow({
@@ -4262,11 +4295,12 @@ var balloon = {
       modal: true,
       open: function() {
         var token;
+        var destroy_checked = false;
 
         var $fs_share_expr_check = $fs_share_link_settings_win.find('#fs-share-link-expiration-check');
         var $fs_share_pw_check = $fs_share_link_settings_win.find('#fs-share-link-password-check');
+        var $fs_share_destroy_check = $fs_share_link_settings_win.find('#fs-share-link-destroy');
         var $fs_share_pw = $fs_share_link_settings_win.find('input[name=share_password]');
-
 
         var $k_fs_share_expr_date = $fs_share_link_settings_win.find('input[name=share_expiration_date]').kendoBalloonDatePicker({
           format: kendo.culture().calendar.patterns.d,
@@ -4293,10 +4327,16 @@ var balloon = {
             $k_fs_share_expr_date.value(curDate);
             $k_fs_share_expr_time.value(curTime);
             $fs_share_expr_check.prop('checked', true);
+            $fs_share_destroy_check.prop('disabled', false);
           }
 
           if(node.sharelink_has_password) {
             $fs_share_pw_check.prop('checked', true);
+          }
+
+          if(node.sharelink_expire && node.destroy && node.sharelink_expire === node.destroy) {
+            $fs_share_destroy_check.prop('checked', true);
+            destroy_checked = true;
           }
         }
 
@@ -4304,11 +4344,13 @@ var balloon = {
           if($fs_share_expr_check.prop('checked') === false) {
             $k_fs_share_expr_date.value(null);
             $k_fs_share_expr_time.value(null);
+            $fs_share_destroy_check.prop('checked', false).prop('disabled', true);
           } else {
             if($k_fs_share_expr_date.value() === null) {
               var defaultDate = new Date();
               defaultDate.setDate(defaultDate.getDate() + 1);
               $k_fs_share_expr_date.value(defaultDate);
+              $fs_share_destroy_check.prop('disabled', false);
             }
 
             $k_fs_share_expr_date.open();
@@ -4316,7 +4358,13 @@ var balloon = {
         });
 
         $k_fs_share_expr_date.unbind().bind('change', function() {
-          $fs_share_expr_check.prop('checked', $k_fs_share_expr_date.value() !== null);
+          if($k_fs_share_expr_date.value() !== null) {
+            $fs_share_expr_check.prop('checked', true);
+            $fs_share_destroy_check.prop('disabled', false);
+          } else {
+            $fs_share_expr_check.prop('checked', false);
+            $fs_share_destroy_check.prop('checked', false).prop('disabled', true);
+          }
         });
 
         $fs_share_pw_check.off('change').on('change', function() {
@@ -4369,19 +4417,21 @@ var balloon = {
             }
           }
 
-          balloon.xmlHttpRequest({
+          var destroyRequest = balloon._setShareLinkDestroy(node, destroy_checked, $fs_share_destroy_check.prop('checked'), date);
+
+          var shareLinkRequest = balloon.xmlHttpRequest({
             type: 'POST',
             url: balloon.base+'/nodes/share-link',
-            data: data,
-            complete: function() {
-              $k_win.close();
-              balloon.showShareLink();
-            },
-            success: function(body) {
-              balloon.last = body;
-              balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-              balloon.switchView('share-link');
-            }
+            data: data
+          });
+
+          $.when(shareLinkRequest, destroyRequest).then(function() {
+            $k_win.close();
+            balloon.showShareLink();
+          }).done(function(destroy, shareLinkBody) {
+            balloon.last = shareLinkBody;
+            balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+            balloon.switchView('share-link');
           });
         });
 
@@ -4391,6 +4441,27 @@ var balloon = {
         });
       }
     }).data('kendoBalloonWindow').center().open();
+  },
+
+  /**
+   * Sets the destroy date from within share-link-settings
+   *
+   * @param  object node to set destroy on
+   * @param  boolean initial_destroy initial state of destroy checkbox
+   * @param  boolean current_destroy current state of destroy checkbox
+   * @param  date number the date to set for destroy date
+   * @return Deferred|bool true
+   */
+  _setShareLinkDestroy: function(node, initial_destroy, current_destroy, date) {
+    var curDestroyDate = node.destroy ? (new Date(node.destroy)).getTime() : null;
+
+    if(current_destroy && (initial_destroy === false || curDestroyDate !== date)) {
+      return balloon._setDestroy(node, date);
+    } else if(current_destroy === false && initial_destroy === true){
+      return balloon._setDestroy(node, null);
+    } else {
+      return true;
+    }
   },
 
   /**
@@ -5061,6 +5132,9 @@ var balloon = {
    */
   promptConfirm: function(msg, action, params) {
     balloon.resetDom('prompt');
+
+    var $d = $.Deferred();
+
     var $div = $("#fs-prompt-window"),
       $k_prompt = $div.data('kendoBalloonWindow');
     $('#fs-prompt-window-content').html(msg);
@@ -5080,30 +5154,41 @@ var balloon = {
       if(e.keyCode === 27) {
         e.stopImmediatePropagation();
         $k_prompt.close();
+        $d.reject();
       }
     });
 
     $div.find('input[name=cancel]').unbind('click').bind('click', function(e) {
       e.stopImmediatePropagation();
       $k_prompt.close();
+      $d.reject();
     });
 
     var $parent = this;
     $div.find('input[name=confirm]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
+
       if(action.constructor === Array) {
+        params = action[i].params;
+        params.push($d);
+
         for(var i in action) {
           if(action[i] !== null) {
-            $parent[action[i].action].apply($parent,action[i].params);
+            $parent[action[i].action].apply($parent,params);
           }
         }
       } else if(typeof action === 'string') {
+        params.push($d);
         $parent[action].apply($parent,params);
       } else {
+        params.push($d);
         action.apply($parent,params);
       }
+
       $k_prompt.close();
     });
+
+    return $d;
   },
 
 
@@ -6922,6 +7007,16 @@ var balloon = {
 
       case 'share-link':
         $('#fs-share-link button').hide();
+        break;
+
+      case 'share-link-settings':
+        var $fs_share_link_settings_win = $('#fs-share-link-settings-window');
+        $fs_share_link_settings_win.find('#fs-share-link-expiration-check').prop('checked', false);
+        $fs_share_link_settings_win.find('#fs-share-link-password-check').prop('checked', false);
+        $fs_share_link_settings_win.find('#fs-share-link-destroy').prop('checked', false).prop('disabled', true);
+        $fs_share_link_settings_win.find('input[name=share_password]').val('');
+        $fs_share_link_settings_win.find('input[name=share_expiration_time]').val('');
+        $fs_share_link_settings_win.find('input[name=share_expiration_date]').val('');
         break;
 
       case 'tree':

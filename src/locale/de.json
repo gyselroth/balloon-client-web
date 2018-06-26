@@ -212,7 +212,8 @@
         "save": "Einstellungen speichern",
         "expiration_date": "Gültigkeitsdauer",
         "expiration_time": "Zeit <span>(optional)</span>",
-        "password": "Passwort <span>(optional)</span>"
+        "password": "Passwort <span>(optional)</span>",
+        "destroy": "Dokument nach Ablauf der Gültigkeit löschen"
       }
     },
     "history": {

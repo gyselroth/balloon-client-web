@@ -47,18 +47,25 @@
         input[type="checkbox"] + label {
           margin-top: -4px;
         }
-      }
 
-      & > label {
-        padding-left: 10px;
-        width: $labelWidth;
-        line-height: 45px;
+        & + label {
+          padding-left: 10px;
+          width: $labelWidth;
+          line-height: 45px;
 
-        span {
-          color: $colorMediumGrey;
+          span {
+            color: $colorMediumGrey;
+          }
         }
-
       }
+
+      #fs-share-link-destroy {
+        & + label {
+          padding-top: 1px;
+          font-size: 15px;
+        }
+      }
+
 
       & > .k-datepicker,
       & > .k-timepicker,

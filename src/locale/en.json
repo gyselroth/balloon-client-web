@@ -211,7 +211,8 @@
         "save": "Save settings",
         "expiration_date": "Expiration",
         "expiration_time": "Time <span>(optional)</span>",
-        "password": "Password <span>(optional)</span>"
+        "password": "Password <span>(optional)</span>",
+        "destroy": "Delete document after link expires"
       }
     },
     "history": {
