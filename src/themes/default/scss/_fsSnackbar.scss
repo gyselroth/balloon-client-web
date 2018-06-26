@@ -47,6 +47,10 @@ $snackBarVisibleDuration: 2s;
     width: 24px;
     margin-left: 10px;
 
+    &.has-action {
+      cursor: pointer;
+    }
+
     .gr-icon {
       display: none;
     }

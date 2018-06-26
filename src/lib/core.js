@@ -544,7 +544,7 @@ var balloon = {
         show  = (valid.indexOf(options.type) > -1);
 
       if(show && jqXHR.status.toString().substr(0, 1) === '2') {
-        balloon.showSnackbar();
+        balloon.showSnackbar((options.snackbar || {}));
       }
 
       if(complete !== undefined) {
@@ -579,12 +579,24 @@ var balloon = {
     var $snackbar = $('#fs-snackbar');
 
     var icon = options.icon || 'check';
+    var iconAction = options.iconAction || undefined;
     var message = options.message || 'snackbar.default';
+    var values = options.values || {};
 
     $snackbar.find('.gr-icon').hide();
     $snackbar.find('.gr-i-' + icon).show();
 
-    $snackbar.find('#fs-snackbar-message').html(i18next.t(message));
+    var $iconWrap = $snackbar.find('#fs-snackbar-icon');
+
+    $iconWrap.removeClass('has-action');
+    if(iconAction) $iconWrap.addClass('has-action');
+
+    $iconWrap.off('click').on('click', function() {
+      if(iconAction) iconAction();
+    });
+
+    var i18nextOptions = Object.assign(values, {'interpolation': {'escapeValue': false}});
+    $snackbar.find('#fs-snackbar-message').html(i18next.t(message, i18nextOptions));
     $snackbar.addClass('show');
 
     setTimeout(function() {
@@ -866,7 +878,7 @@ var balloon = {
       if(e.dropPosition != 'over') {
         dest = dest_parent;
       }
-    }    else if(dest === undefined) {
+    } else if(dest === undefined) {
       if($(e.dropTarget).attr('fs-id') != null) {
         dest = $(e.dropTarget).attr('fs-id');
       } else if($(e.dropTarget).parent().attr('fs-id') != null) {
@@ -6377,7 +6389,7 @@ var balloon = {
         return;
       }
 
-      //TODO pixtron seearch - fix advanced search
+      //TODO pixtron search - fix advanced search
       balloon.advancedSearch();
       var value = 'meta.tags:'+$(this).find('.tag-name').text();
       //TODO pixtron search - why advancedSearch and search?
