@@ -1407,7 +1407,7 @@ var balloon = {
         for(var log in body.data) {
           if(body.data[log].user === null) {
             username = '<user removed>';
-          } else if(body.data[log].user.name == login.getUsername()) {
+          } else if(body.data[log].user.name == login.user.username) {
             username = body.data[log].user.name+' ('+i18next.t('events.you')+')';
           } else {
             username = body.data[log].user.name;
@@ -3619,40 +3619,46 @@ var balloon = {
           return;
         }
 
-            var filter = JSON.stringify({'filter': {'name': {
-              "$regex": $share_role.data("kendoAutoComplete").value(),
-              "$options": "i"
-            }}});
+            var filter = JSON.stringify({'query': {'name': $share_role.data("kendoAutoComplete").value()}});
 
             balloon.xmlHttpRequest({
               url: balloon.base+'/groups?'+filter,
               contentType: "application/json",
               success: function(data) {
-                if(data.length > 1) {
+                if(data.count !== 1) {
                   return;
                 }
 
                 $share_role.val('').focus();
-                acl = balloon._addShareRole(data, acl);
+
+                var role = {
+                  type: 'group',
+                  role: data.data[0]
+                }
+
+                acl = balloon._addShareRole(role, acl);
               }
             });
 
-            filter = JSON.stringify({'filter': {'username': {
-              "$regex": $share_role.data("kendoAutoComplete").value(),
-              "$options": "i"
-            }}});
+            filter = JSON.stringify({'query': {'username': $share_role.data("kendoAutoComplete").value()}});
 
             balloon.xmlHttpRequest({
               url: balloon.base+'/users?'+filter,
               contentType: "application/json",
               dataType: 'json',
               success: function(data) {
-                if(data.length > 1) {
+                if(data.count !== 1) {
                   return;
                 }
 
                 $share_role.val('').focus();
-                acl = balloon._addShareRole(data, acl);
+
+                var role = {
+                  type: 'user',
+                  role: data.data[0]
+                }
+
+                acl = balloon._addShareRole(role, acl);
               }
             });
       }
@@ -3668,15 +3674,24 @@ var balloon = {
           read: function(operation) {
             var value = $share_role.data("kendoAutoComplete").value()
             if(value === '' || value === undefined) {
-              operation.success({data:[]});
+              operation.success([]);
               return;
             }
 
-            var filter = JSON.stringify({'query': {'name': {
-              "$regex": $share_role.data("kendoAutoComplete").value(),
-              "$options": "i"
-            }}});
+            var filter = {
+              'query': {
+                'name': {
+                  "$regex": $share_role.data("kendoAutoComplete").value(),
+                  "$options": "i"
+                },
+              }
+            };
 
+            if(login.user.namespace) {
+              filter.query.namespace = login.user.namespace;
+            }
+
+            filter = JSON.stringify(filter);
             var roles = null;
 
             balloon.xmlHttpRequest({
@@ -3696,10 +3711,20 @@ var balloon = {
               }
             });
 
-            filter = JSON.stringify({'query': {'username': {
-              "$regex": $share_role.data("kendoAutoComplete").value(),
-              "$options": "i"
-            }}});
+            filter = {
+              'query': {
+                'username': {
+                  "$regex": $share_role.data("kendoAutoComplete").value(),
+                  "$options": "i"
+                },
+              }
+            };
+
+            if(login.user.namespace) {
+              filter.query.namespace = login.user.namespace;
+            }
+
+            filter = JSON.stringify(filter);
 
             balloon.xmlHttpRequest({
               url: balloon.base+'/users?'+filter,
@@ -3809,6 +3834,11 @@ var balloon = {
     var $fs_share_collection     = $('#fs-share-collection'),
       $fs_share_collection_tbl   = $fs_share_collection.find('table'),
       $fs_share_collection_tbody = $fs_share_collection_tbl.find('tbody');
+    for(let role in acl) {
+      if(item.role.id === acl[role].id) {
+        return acl;
+      }
+    }
 
     var icon, name;
     if(item.type === 'user') {
@@ -5461,9 +5491,8 @@ var balloon = {
 
             $field.html(msg)
               .parent().parent().css('display','table-row');
-
             var sclass = '';
-            if(node.shareowner.name == login.username) {
+            if(node.shareowner.name == login.user.username) {
               sclass = 'gr-icon gr-i-folder-shared';
             } else {
               sclass = 'gr-icon gr-i-folder-received';

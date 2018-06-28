@@ -1,3 +1,10 @@
+## 2.0.0
+**Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
+**Date**: Thu Jun 28 10:37:34 CEST 2018
+
+* [FIX] fixes user/group namespaces in share ui
+
+
 ## 2.0.0-rc1
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Fri Jun 15 17:36:32 CEST 2018

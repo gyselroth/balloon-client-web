@@ -120,7 +120,7 @@ var translate = {
         }
 
         $locales.find('option[value='+current+']').attr('selected','selected');
-        $locales.unbind('change').change(function(){
+        $locales.change(function(){
           translate.loadCulture($(this).val());
           i18next.changeLanguage($(this).val(), function(){
             $('[data-i18n]').localize();

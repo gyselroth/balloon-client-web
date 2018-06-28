@@ -15,7 +15,7 @@ const {RedirectRequestHandler} = require('@openid/appauth/built/redirect_based_h
 var login = {
   token: undefined,
   adapter: null,
-  username: null,
+  user: null,
   basic: true,
   oidc: [],
   notifier: null,
@@ -188,9 +188,9 @@ var login = {
           break;
 
         case 200:
-          login.username = response.responseJSON.name;
-          localStorage.username = login.username;
-          $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+          login.user = response.responseJSON;
+          localStorage.username = login.user.username;
+          $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
 
           login.initBrowser();
           break;
@@ -211,15 +211,11 @@ var login = {
       dataType: 'json',
       cache: false,
       success: function(body) {
-        login.username = body.name;
-        localStorage.username = login.username;
+        login.user = body;
+        localStorage.username = login.user.username;
         $('#fs-identity').show().find('#fs-identity-username').html(body);
       }
     });
-  },
-
-  getUsername: function() {
-    return this.username;
   },
 
   getAccessToken: function() {
@@ -306,9 +302,9 @@ var login = {
           case 200:
           case 404:
             login.adapter = 'basic';
-            login.username = response.responseJSON.name;
-            localStorage.username = login.username;
-            $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+            login.user = response.responseJSON;
+            localStorage.username = login.user.username;
+            $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
             login.initBrowser();
             break;
 
