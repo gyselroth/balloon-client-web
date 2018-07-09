@@ -1,3 +1,11 @@
+## 2.0.1
+**Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
+**Date**: Mon Jul 09 14:54:33 CEST 2018
+
+* [FIX] fixes nginx.conf for webdav
+* [FIX] fixes quota handling for change in api v2, do not check for quota in chunked upload since this is now done through the api at each chunk
+
+
 ## 2.0.0
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Thu Jun 28 10:37:34 CEST 2018
