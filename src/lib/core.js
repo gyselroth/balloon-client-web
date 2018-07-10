@@ -119,14 +119,6 @@ var balloon = {
     collection: null
   },
 
-
-  /**
-   * Quota usage
-   *
-   * @var object
-   */
-  quota: {},
-
   /**
    * Add file handlers
    *
@@ -1302,17 +1294,22 @@ var balloon = {
                 $table.append('<tr><th>'+attribute+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
                 break;
 
-              case 'quota':
-                var used = balloon.getReadableFileSizeString(body.quota.used);
+              case 'hard_quota':
+              case 'soft_quota':
+              case 'available':
+              break;
+
+              case 'used':
+                var used = balloon.getReadableFileSizeString(body.used);
                 var max;
                 var free;
 
-                if(body.quota.hard_quota === -1) {
+                if(body.hard_quota === -1) {
                   $fs_quota_usage.hide();
                   max = i18next.t('profile.quota_unlimited');
                   free = max;
                 } else {
-                  var percentage = Math.round(body.quota.used/body.quota.hard_quota*100);
+                  var percentage = Math.round(body.used/body.hard_quota*100);
                   $k_progress.value(percentage);
 
                   if(percentage >= 90) {
@@ -1321,8 +1318,8 @@ var balloon = {
                     $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
                   }
 
-                  max  = balloon.getReadableFileSizeString(body.quota.hard_quota),
-                  free = balloon.getReadableFileSizeString(body.quota.hard_quota - body.quota.used);
+                  max  = balloon.getReadableFileSizeString(body.hard_quota),
+                  free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
                 }
 
                 $('#fs-profile-quota-used').find('td').html(used);
@@ -5078,12 +5075,11 @@ var balloon = {
     balloon.xmlHttpRequest({
       url: balloon.base+'/users/whoami',
       data: {
-        attributes: ['quota']
+        attributes: ['hard_quota','soft_quota','used','available']
       },
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        data = data.quota;
         var used = balloon.getReadableFileSizeString(data.used),
           max  = balloon.getReadableFileSizeString(data.hard_quota),
           free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
@@ -5100,8 +5096,6 @@ var balloon = {
           } else {
             $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
           }
-
-          balloon.quota = data;
 
           $('#fs-quota-total').html(i18next.t('user.quota_left', free));
           $('#fs-quota').attr('title', i18next.t('user.quota_detail', used, max,
@@ -6382,8 +6376,6 @@ var balloon = {
 
       if(file.blob.size === 0) {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
-      } else if(file.blob.size+balloon.quota.used > balloon.quota.hard_quota) {
-        balloon.displayError(new Error('Quota is too low to upload this file'));
       } else if(file.blob.size != 0) {
         progressnode = $('<div id="fs-upload-'+last+'">'+file.name+'</div>');
         $('#fs-upload-list').append(progressnode);
