@@ -30,6 +30,11 @@ var login = {
       if(config.auth.oidc) {
         this.oidc = config.auth.oidc;
       }
+
+      var type = window.location.hash.substr(1);
+      if(type) {
+        login.initOidcAuth(type);
+      }
     }
 
     $('#login-footer').find('span').html(process.env.VERSION);
@@ -123,7 +128,6 @@ var login = {
           } else {
             login.adapter = 'basic';
           }
-
           login.fetchIdentity();
           break;
 
@@ -211,9 +215,10 @@ var login = {
       dataType: 'json',
       cache: false,
       success: function(body) {
+        window.location.hash = '';
         login.user = body;
         localStorage.username = login.user.username;
-        $('#fs-identity').show().find('#fs-identity-username').html(body);
+        $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
       }
     });
   },
@@ -246,6 +251,10 @@ var login = {
 
   initOidcAuth: function(provider_url) {
     var idp = this.getIdpConfigByProviderUrl(provider_url);
+
+    if(!idp) {
+      return;
+    }
 
     AuthorizationServiceConfiguration.fetchFromIssuer(idp.providerUrl).then(configuration => {
       var request = new AuthorizationRequest(
@@ -284,11 +293,12 @@ var login = {
     var $login = $('#login');
     var $username_input = $login.find('input[name=username]');
     var $password_input = $login.find('input[name=password]');
+    window.location.hash = '';
 
     $.ajax({
       type: 'GET',
       dataType: 'json',
-      url: '/api/v2/users/whoami',
+      url: '/api/auth',
       complete: function(response) {
         switch(response.status) {
           case 401:
@@ -302,9 +312,7 @@ var login = {
           case 200:
           case 404:
             login.adapter = 'basic';
-            login.user = response.responseJSON;
-            localStorage.username = login.user.username;
-            $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
+            login.fetchIdentity();
             login.initBrowser();
             break;
 

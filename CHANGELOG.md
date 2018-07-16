@@ -1,3 +1,11 @@
+## 2.0.2
+**Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
+**Date**: Mon Jul 16 09:59:58 CEST 2018
+
+* [FIX] fixed last node not visible #54
+* [FIX] fixed wrong credentials will show a browser authentication prompt #53
+
+
 ## 2.0.1
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Mon Jul 09 14:54:33 CEST 2018

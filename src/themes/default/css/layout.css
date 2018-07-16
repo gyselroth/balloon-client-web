@@ -419,7 +419,7 @@ td {
 
 #fs-browser {
     border: none;
-    height: calc(100% - 120px);
+    height: calc(100% - 85px);
 }
 
 #fs-browser-header {
@@ -1557,7 +1557,7 @@ td {
 }
 
 #fs-browser-tree {
-    height: 100%;
+    height: calc(100% - 30px);
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
