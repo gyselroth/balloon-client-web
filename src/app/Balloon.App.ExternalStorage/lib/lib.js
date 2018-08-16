@@ -20,7 +20,7 @@ var app = {
     app.balloon.addFolder = app.addFolder;
 
     var $add_node = $('#fs-action-add-select').find('ul');
-    $add_node.append('<li data-type="external_storage"><span class="gr-i-folder gr-icon"></span><span>'+i18next.t('app.external_storage.folder')+'</span></li>');
+    $add_node.append('<li data-type="external_storage"><span class="gr-i-folder gr-icon"></span><span>'+i18next.t('app.externalstorage.external_storage')+'</span></li>');
     this.balloon.add_file_handlers.external_storage = this.storageWizard;
   },
 
@@ -32,15 +32,17 @@ var app = {
     $('body').append($div);
 
     $div.html(
+      '<div class="error-message"></div>'+
       '<select>'+
         '<option value="smb">'+i18next.t('app.externalstorage.smb_share')+'</option>'+
       '</select>'+
       '<label>'+i18next.t('tree.folder')+'</label><input name="name" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="share" type="text"/>'+
-      '<label>'+i18next.t('login.username')+'</label><input name="username" type="text"/>'+
-      '<label>'+i18next.t('login.password')+'</label><input name="password" type="password"/>'+
+      '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.username')+'</label><input name="username" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
+      '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
       '<input name="add" value='+i18next.t('button.save')+' type="submit"/>'+
       '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>');
 
@@ -62,13 +64,44 @@ var app = {
             return $k_display.close();
           }
 
+          var $input_host = $div.find('input[name=host]');
+          var $input_share = $div.find('input[name=share]');
+          var $input_name = $div.find('input[name=name]');
+
+          if($input_host.val() === '') {
+            $input_host.addClass('fs-node-exists');
+          } else {
+            $input_host.removeClass('fs-node-exists');
+
+          }
+
+          if($input_share.val() === '') {
+            $input_share.addClass('fs-node-exists');
+          } else {
+            $input_share.removeClass('fs-node-exists');
+
+          }
+
+          if($input_name.val() === '') {
+            $input_name.addClass('fs-node-exists');
+          } else {
+            $input_name.removeClass('fs-node-exists');
+
+          }
+
+          if($div.find('.fs-node-exists').length > 0) {
+            return;
+          }
+
           app.addExternalFolder(
-            $div.find('input[name=name]').val(),
+            $input_name.val(),
             $div.find('select').val(),
-            $div.find('input[name=host]').val(),
-            $div.find('input[name=share]').val(),
+            $input_host.val(),
+            $div.find('input[name=workgroup]').val(),
+            $input_share.val(),
             $div.find('input[name=username]').val(),
             $div.find('input[name=password]').val(),
+            $div.find('input[name=path]').val(),
           );
         })
       }
@@ -119,12 +152,14 @@ var app = {
     });
   },
 
-  addExternalFolder: function(name, adapter, host, share, username, password) {
+  addExternalFolder: function(name, adapter, host, workgroup, share, username, password, path) {
     if(app.balloon.nodeExists(name)) {
-      name = name+' ('+app.balloon.randomString(4)+').'+type;
+      name = name+' ('+app.balloon.randomString(4)+')'
     }
 
     name = encodeURI(name);
+
+    var $div = $('#fs-external-storage');
 
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/collections',
@@ -133,20 +168,35 @@ var app = {
         name: name,
         collection: app.balloon.getCurrentCollectionId(),
         attributes: {
-          external_storage: {
+          mount: {
             adapter: adapter,
             host: host,
+            workgroup: workgroup,
             share: share,
             username: username,
             password: password,
+            path: path
           }
         }
       },
-      complete: function() {
+      error: function(error) {
+        switch(error.responseJSON.error) {
+          case 'Icewind\\SMB\\Exception\\InvalidArgumentException':
+            $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_host'));
+          break;
+
+          case 'Icewind\\SMB\\Exception\\ForbiddenException':
+            $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_credentials'));
+          break;
+
+          default:
+            app.balloon.displayError(error);
+        }
       },
       success: function(data) {
         app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
         app.balloon.added_rename = data.id;
+        $div.data('kendoWindow').close();
       }
     });
   }

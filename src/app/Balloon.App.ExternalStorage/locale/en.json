@@ -1,10 +1,18 @@
 {
   "app": {
     "externalstorage": {
+      "external_storage": "External Storage",
       "smb_share": "SMB/CIFS Share",
       "hostname": "Hostame",
       "share_name": "Share name",
-      "path": "Path to a sub directory (Optional)"
+      "path": "Path to a sub directory (Optional)",
+      "workgroup": "Workgroup/Domain (Optional)",
+      "username": "Username (Optional)",
+      "password": "Password (Optional)",
+      "error": {
+        "not_found": "The host/share can not be found, please verify your input.",
+        "invalid_credentials": "Authentication failed, please verify your credentials."
+      }
     }
   }
 }

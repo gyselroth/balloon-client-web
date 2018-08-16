@@ -17,6 +17,7 @@ import app from './app.js'
 var translate = {
   config: {},
   load: function(url, options, callback, data) {
+console.log('/locale/'+url+'.json');
     $.ajax({
       url: '/locale/'+url+'.json',
       success: function(body, responseText, response) {
@@ -63,7 +64,7 @@ var translate = {
       }
       localStorage.i18next_version = locale_version;
     }
-
+console.log("loc1");
     i18next
       .use(i18nextXHRBackend)
       .use(i18nextBrowserLanguageDetector)
@@ -73,12 +74,12 @@ var translate = {
         postProcess: "sprintf",
         overloadTranslationOptionHandler: i18nextSprintfPostProcessor.overloadTranslationOptionHandler,
         compatibilityJSON: 'v2',
-        debug: false,
-        cache: {
+        debug: true,
+        /*cache: {
           enabled: true,
           prefix: 'i18next_res_',
           expirationTime: 60*60*120
-        },
+        },*/
         fallbackLng: translate.config.default_lang,
         backend: {
           ajax: translate.load,
