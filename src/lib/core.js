@@ -127,6 +127,13 @@ var balloon = {
   add_file_handlers: {},
 
   /**
+   * Menu handlers
+   *
+   * @var object
+   */
+  menu_handlers: {},
+
+  /**
    * Init file browsing
    *
    * @return void
@@ -1776,6 +1783,18 @@ var balloon = {
     return $('.fs-menu-left-active').attr('id').substr(8);
   },
 
+  /**
+   * Add menu
+   */
+  addMenu(name, label, icon, callback) {
+    $('#fs-menu-left').find('ul').append(
+      '<li id="fs-menu-'+name+'">'+
+        '<div class="gr-icon '+icon+'"></div>'+
+        '<div>'+label+'</div>'+
+    '</li>');
+
+    this.menu_handlers[name] = callback;
+  },
 
   /**
    * Main menu
@@ -1843,6 +1862,10 @@ var balloon = {
       balloon.tree.filter.deleted = 1;
       balloon.refreshTree('/nodes/trash', {}, {});
       break;
+    }
+
+    if(action in balloon.menu_handlers) {
+      balloon.menu_handlers[action]();
     }
   },
 

@@ -89,7 +89,10 @@
     "new_file": "Neue Datei",
     "selected": "({{count}} items ausgewählt)",
     "selected_plural": "({{count}} items ausgewählt)",
-    "no_nodes": "<Es wurden keine Daten gefunden>"
+    "no_nodes": "<Es wurden keine Daten gefunden>",
+    "error": {
+      "folder_exists": "Ein Ordner mit dem Name %s existiert bereits."
+    }
   },
   "user": {
     "disk_space": "Speicherplatz:",

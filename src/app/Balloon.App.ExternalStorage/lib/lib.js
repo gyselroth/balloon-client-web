@@ -22,6 +22,10 @@ var app = {
     var $add_node = $('#fs-action-add-select').find('ul');
     $add_node.append('<li data-type="external_storage"><span class="gr-i-folder gr-icon"></span><span>'+i18next.t('app.externalstorage.external_storage')+'</span></li>');
     this.balloon.add_file_handlers.external_storage = this.storageWizard;
+
+    app.balloon.addMenu('external_storage', i18next.t('app.externalstorage.external_storage'), 'gr-i-folder-received', function() {
+      app.balloon.refreshTree('/nodes', {query: {"mount": {$exists: 1}}}, {});
+    });
   },
 
   resetView: function() {
@@ -48,11 +52,11 @@ var app = {
 
     var $k_display = $div.kendoWindow({
       resizable: false,
-      title: +i18next.t('app.externalstorage.folder'),
+      title: +i18next.t('app.externalstorage.external_storage'),
       modal: true,
       draggable: true,
-      width: 400,
-      height: 470,
+      width: 440,
+      height: 490,
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
           return;
@@ -101,7 +105,7 @@ var app = {
             $input_share.val(),
             $div.find('input[name=username]').val(),
             $div.find('input[name=password]').val(),
-            $div.find('input[name=path]').val(),
+            $div.find('input[name=path]').val()
           );
         })
       }
@@ -153,12 +157,6 @@ var app = {
   },
 
   addExternalFolder: function(name, adapter, host, workgroup, share, username, password, path) {
-    if(app.balloon.nodeExists(name)) {
-      name = name+' ('+app.balloon.randomString(4)+')'
-    }
-
-    name = encodeURI(name);
-
     var $div = $('#fs-external-storage');
 
     app.balloon.xmlHttpRequest({
@@ -180,13 +178,25 @@ var app = {
         }
       },
       error: function(error) {
+        if(!error.responseJSON || !error.responseJSON.error) {
+          return app.balloon.displayError(error);
+        }
+
         switch(error.responseJSON.error) {
           case 'Icewind\\SMB\\Exception\\InvalidArgumentException':
-            $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_host'));
+            $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_host')).show();
           break;
 
           case 'Icewind\\SMB\\Exception\\ForbiddenException':
-            $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_credentials'));
+            $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_credentials')).show();
+          break;
+
+          case 'Balloon\\Filesystem\\Exception\\Conflict':
+            if(error.responseJSON.code == 19) {
+              $div.find('.error-message').html(i18next.t('tree.error.folder_exists')).show();
+            } else {
+              app.balloon.displayError(error);
+            }
           break;
 
           default:
