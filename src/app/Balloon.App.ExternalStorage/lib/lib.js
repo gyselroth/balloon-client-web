@@ -44,7 +44,7 @@ var app = {
       '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.username')+'</label><input name="username" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="off" name="username" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
       '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
       '<input name="add" value='+i18next.t('button.save')+' type="submit"/>'+
@@ -52,11 +52,11 @@ var app = {
 
     var $k_display = $div.kendoWindow({
       resizable: false,
-      title: +i18next.t('app.externalstorage.external_storage'),
+      title: i18next.t('app.externalstorage.external_storage'),
       modal: true,
       draggable: true,
       width: 440,
-      height: 490,
+      height: 520,
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
           return;
@@ -207,6 +207,7 @@ var app = {
         app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
         app.balloon.added_rename = data.id;
         $div.data('kendoWindow').close();
+        $div.remove();
       }
     });
   }
