@@ -1,3 +1,11 @@
+## 2.1.0
+**Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
+**Date**:
+
+* [FEATURE] Added ui for RFC-3 SMB external storage gyselroth/balloon#156
+* [FEATURE] Added menu register for virus quarantine
+
+
 ## 2.0.2
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Mon Jul 16 09:59:58 CEST 2018

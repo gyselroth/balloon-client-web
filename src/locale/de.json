@@ -1,7 +1,5 @@
 {
-  "app": {
-    "title": "balloon"
-  },
+  "title": "balloon",
   "login": {
     "username": "Benutzername",
     "password": "Passwort",

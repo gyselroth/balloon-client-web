@@ -20,10 +20,10 @@ var app = {
     app.balloon.addFolder = app.addFolder;
 
     var $add_node = $('#fs-action-add-select').find('ul');
-    $add_node.append('<li data-type="external_storage"><span class="gr-i-folder gr-icon"></span><span>'+i18next.t('app.externalstorage.external_storage')+'</span></li>');
+    $add_node.append('<li data-type="external_storage"><span class="gr-i-folder-storage gr-icon"></span><span>'+i18next.t('app.externalstorage.external_storage')+'</span></li>');
     this.balloon.add_file_handlers.external_storage = this.storageWizard;
 
-    app.balloon.addMenu('external_storage', i18next.t('app.externalstorage.external_storage'), 'gr-i-folder-received', function() {
+    app.balloon.addMenu('external_storage', i18next.t('app.externalstorage.external_storage'), 'gr-i-folder-storage', function() {
       app.balloon.refreshTree('/nodes', {query: {"mount": {$exists: 1}}}, {});
     });
   },
@@ -56,7 +56,7 @@ var app = {
       modal: true,
       draggable: true,
       width: 440,
-      height: 520,
+      height: 540,
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
           return;

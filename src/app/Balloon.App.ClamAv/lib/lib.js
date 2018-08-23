@@ -16,6 +16,11 @@ var app = {
   postInit: function(core)  {
     this.balloon = core;
     $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
+
+    app.balloon.addMenu('quarantine', i18next.t('app.clamav.quarantine'), 'gr-i-warning', function() {
+      app.balloon.tree.filter.deleted = 1;
+      app.balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\ClamAv.quarantine": true}}, {});
+    });
   },
 
   resetView: function() {
@@ -30,13 +35,13 @@ var app = {
 
     if(app.balloon.last.malware_quarantine === true) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-positive">'
-          +'<span>'+i18next.t('app.balloon_app_clamav.malware_found', app.balloon.last.malware_reason)+'</span>'
+          +'<span>'+i18next.t('app.clamav.malware_found', app.balloon.last.malware_reason)+'</span>'
         +'</li>');
 
       $('#fs-properties').prepend($node);
     } else if(app.balloon.last.malware_quarantine === false) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-negative">'
-          +'<span>'+i18next.t('app.balloon_app_clamav.clean')+'</span>'
+          +'<span>'+i18next.t('app.clamav.clean')+'</span>'
         +'</li>');
 
       $('#fs-properties').prepend($node);

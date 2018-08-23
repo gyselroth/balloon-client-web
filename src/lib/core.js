@@ -4794,11 +4794,19 @@ var balloon = {
           }          else {
             return 'gr-i-folder-filter';
           }
-        }        else if(node.shared === true && node.reference === true) {
+        } else if(node.mount) {
+          if(node.shared === true && node.reference === true) {
+            return 'gr-i-folder-storage-received';
+          } else if(node.shared === true) {
+            return 'gr-i-folder-storage-shared';
+          } else {
+            return 'gr-i-folder-storage';
+          }
+        } else if(node.shared === true && node.reference === true) {
           return 'gr-i-folder-received';
-        }        else if(node.shared === true) {
+        } else if(node.shared === true) {
           return 'gr-i-folder-shared';
-        }        else {
+        } else {
           return 'gr-i-folder';
         }
       }
