@@ -227,19 +227,7 @@ var login = {
   updateFsIdentity: function() {
     $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
 
-    return login.xmlHttpRequest({
-      url: '/api/v'+balloon.BALLOON_API_VERSION+'/users/avatar',
-      dataType: 'json',
-      cache: false,
-      success: function(body) {
-        var $avatar = $('#fs-identity-avatar');
-        $avatar.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
-      },
-      error: function() {
-        var $avatar = $('#fs-identity-avatar');
-        $avatar.css('background-image', '');
-      }
-    });;
+    return balloon.displayAvatar($('#fs-identity-avatar'));
   },
 
   getAccessToken: function() {

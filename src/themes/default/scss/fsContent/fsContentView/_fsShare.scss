@@ -24,18 +24,14 @@
       margin-left: 15px;
 
       li {
+        @include avatar;
+
         position: relative;
         display: inline-block;
-        border-radius: 50%;
         width: $consumerItemSize;
         height: $consumerItemSize;
         margin-left: 10px;
         cursor: pointer;
-
-        // TODO pixtron - add a placeholder avatar image
-        background-color: $colorLightGrey;
-        background-repeat: none;
-        background-size: cover;
 
         &:first-child {
           margin-left: 0;

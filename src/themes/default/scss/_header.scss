@@ -304,17 +304,13 @@
     }
 
     #fs-identity-avatar {
+      @include avatar;
+
       margin-left: 10px;
       margin-right: 15px;
 
-      // TODO pixtron - add a placeholder image
-      background-color: $colorLightGrey;
-      background-repeat: none;
-      background-size: cover;
-
       width: $identityHeight;
       height: $identityHeight;
-      border-radius: $identityHeight;
     }
   }
 

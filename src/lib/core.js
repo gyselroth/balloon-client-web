@@ -1360,6 +1360,25 @@ var balloon = {
     return out;
   },
 
+  displayAvatar: function($avatar, userId) {
+    $avatar.css('background-image', '').removeClass('has-avatar');
+
+    var endpoint = userId !== undefined ? '/users/' + userId + '/avatar' : '/users/avatar';
+
+    balloon.xmlHttpRequest({
+      url: balloon.base+endpoint,
+      type: 'GET',
+      mimeType: "text/plain; charset=x-user-defined",
+      cache: false,
+      success: function(body) {
+        $avatar.addClass('has-avatar').css('background-image', 'url(data:image/jpeg;base64,'+balloon.base64Encode(body)+')');
+      },
+      error: function() {
+        $avatar.css('background-image', '').removeClass('has-avatar');
+      }
+    });;
+  },
+
   /**
    * Display user profile
    *
@@ -1376,19 +1395,7 @@ var balloon = {
       height: '60%',
       width: '40%',
       open: function() {
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/users/avatar',
-          type: 'GET',
-          mimeType: "text/plain; charset=x-user-defined",
-          success: function(body) {
-            var $avatar = $('#fs-profile-avatar');
-            $avatar.css('background-image', 'url(data:image/png;base64,'+balloon.base64Encode(body)+')');
-          },
-          error: function() {
-            var $avatar = $('#fs-profile-avatar');
-            $avatar.css('background-image', '');
-          }
-        });
+        balloon.displayAvatar($('#fs-profile-avatar'));
 
         balloon.xmlHttpRequest({
           url: balloon.base+'/users/whoami',
@@ -3811,21 +3818,12 @@ var balloon = {
     var $fs_share_consumers = $('#fs-share-consumers');
     var $fs_share_consumers_ul = $fs_share_consumers.find('ul');
 
-    var $li_owner = $('<li></li>');
+    var $li_owner = $('<li class="avatar-user"></li>');
     $fs_share_consumers_ul.append($li_owner);
 
     $fs_share_consumers_ul.off('click').on('click', balloon.showShare);
 
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/users/avatar',
-      type: 'GET',
-      success: function(body) {
-        $li_owner.css('background-image', 'url(data:image/jpeg;base64,'+body+')');
-      },
-      error: function() {
-        //empty method to avoid error message bubbling up
-      }
-    });
+    balloon.displayAvatar($li_owner);
 
     if(!node.shared && !node.reference) {
       $fs_share_consumers.find('.fs-share-hint-owner-only').show();
@@ -3835,20 +3833,10 @@ var balloon = {
 
       for(var i=0; i < maxConsumersDisplayed-1 && i < numConsumers; i++) {
         var curAcl = acl[i];
-        var $li_consumer = $('<li><div><span></span><p>'+ i18next.t('view.share.privilege_text_'+curAcl.privilege, curAcl.role.name) +'</p></div></li>');
-        $fs_share_consumers_ul.append($li_consumer);
 
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/users/' + curAcl.id + '/avatar',
-          type: 'GET',
-          mimeType: "text/plain; charset=x-user-defined",
-          success: function(body) {
-            $li_consumer.css('background-image', 'url(data:image/png;base64,'+balloon.base64Encode(body)+')');
-          },
-          error: function() {
-            //empty method to avoid error message bubbling up
-          }
-        });
+        var $li_consumer = $('<li class="avatar-' + curAcl.type + '"><div><span></span><p>'+ i18next.t('view.share.privilege_text_'+curAcl.privilege, curAcl.role.name) +'</p></div></li>');
+        $fs_share_consumers_ul.append($li_consumer);
+        if(curAcl.type === 'user') balloon.displayAvatar($li_consumer, curAcl.id);
       }
 
       if(maxConsumersDisplayed < numConsumers) {
