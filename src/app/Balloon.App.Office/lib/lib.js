@@ -42,6 +42,8 @@ var app = {
 
   preInit: function(core)  {
     this.balloon = core;
+    app.origDblClick = app.balloon._treeDblclick;
+    //TODO pixtron - find a clean way for apps to hook into core. Just overriding core methods is quite a hack.
     app.balloon._treeDblclick = app.treeDblclick;
     this.balloon.add_file_handlers.docx = this.addOfficeFile;
     this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
@@ -285,48 +287,21 @@ var app = {
   },
 
   treeDblclick: function(e) {
-    if(app.balloon.last.directory === true) {
-      app.balloon.resetDom('selected');
-    }
-
     var supported_office = [
       'csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'
     ];
 
-    if(app.balloon.last !== null && app.balloon.last.directory) {
-      app.balloon.updatePannel('content', true);
-
-      var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
-
-      if(app.balloon.last.id == '_FOLDERUP') {
-        var params = {},
-          id     = app.balloon.getPreviousCollectionId();
-
-        if(id !== null) {
-          params.id = id;
-          app.balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
-        } else {
-          app.balloon.menuLeftAction(app.balloon.getCurrentMenu());
-        }
-      } else {
-        app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
-      }
-
-      app.balloon.resetDom(
-        ['selected','properties','preview','action-bar','multiselect','view-bar',
-          'history','share-collection','share-link']
-      );
-    } else if(supported_office.indexOf(app.balloon.getFileExtension(app.balloon.last.name)) > -1 && !app.balloon.isMobileViewPort()) {
+    if(
+      app.balloon.last !== null
+      && app.balloon.last.directory === false
+      && supported_office.indexOf(app.balloon.getFileExtension(app.balloon.last.name)) > -1
+      && !app.balloon.isMobileViewPort()
+    ) {
       app.edit(app.balloon.getCurrentNode());
-    } else if(app.balloon.isEditable(app.balloon.last.mime)) {
-      app.balloon.editFile(app.balloon.getCurrentNode());
-    } else if(app.balloon.isViewable(app.balloon.last.mime)) {
-      app.balloon.displayFile(app.balloon.getCurrentNode());
+      app.balloon.pushState();
     } else {
-      app.balloon.downloadNode(app.balloon.getCurrentNode());
+      app.origDblClick();
     }
-
-    app.balloon.pushState();
   },
 
   addOfficeFile: function(name, type) {

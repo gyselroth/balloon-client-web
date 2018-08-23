@@ -2369,6 +2369,12 @@ var balloon = {
     if(balloon.touch_move === true)  {
       return;
     }
+    var $target = $(e.target);
+
+
+    balloon.previous_clicked_id = balloon.last_clicked_id;
+    balloon.last_clicked_id = $target.attr('fs-id') || $target.parents('[fs-id]').attr('fs-id');
+
     balloon.last_click_event = e;
 
     if(balloon.rename_node !== null && balloon.rename_node !== undefined) {
@@ -2418,7 +2424,10 @@ var balloon = {
 
       balloon._updateCheckAllState();
       balloon.pushState();
+    } else if(balloon.last && balloon.last.id === '_FOLDERUP') {
+      balloon._folderUp();
     }
+
   },
 
   /**
@@ -2485,6 +2494,22 @@ var balloon = {
     }
   },
 
+  /**
+   * navigates to the parent folder
+   *
+   * @return  void
+   */
+  _folderUp: function() {
+    var params = {},
+      id   = balloon.getPreviousCollectionId();
+
+    if(id !== null) {
+      params.id = id;
+      balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
+    } else {
+      balloon.menuLeftAction(balloon.getCurrentMenu());
+    }
+  },
 
   /**
    * treeview dblclick
@@ -2493,6 +2518,11 @@ var balloon = {
    * @return  void
    */
   _treeDblclick: function(e) {
+    if(balloon.previous_clicked_id !== balloon.last_clicked_id) {
+      //this was a "double click" on two different nodes
+      return;
+    }
+
     if(balloon.last.directory === true) {
       balloon.resetDom('selected');
     }
@@ -2503,15 +2533,7 @@ var balloon = {
       var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
 
       if(balloon.last.id == '_FOLDERUP') {
-        var params = {},
-          id   = balloon.getPreviousCollectionId();
-
-        if(id !== null) {
-          params.id = id;
-          balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
-        } else {
-          balloon.menuLeftAction(balloon.getCurrentMenu());
-        }
+        if(balloon.isMobileViewPort()) balloon._folderUp();
       } else {
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
       }
