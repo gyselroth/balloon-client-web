@@ -199,10 +199,6 @@
 
         &:hover {
           color: $colorDarkGrey;
-
-          #fs-settings-menu-wrap {
-            display: block;
-          }
         }
 
         #fs-settings-menu-wrap {
@@ -210,6 +206,10 @@
 
           display: none;
           right: -48px;
+
+          &.fs-settings-menu-open {
+            display: block;
+          }
 
           .bln-dropdown-spike {
             right: 53px;

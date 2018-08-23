@@ -252,6 +252,27 @@ var balloon = {
       }
     });
 
+    $('#fs-settings').off('click').on('click', function(event) {
+      event.preventDefault();
+      var $menu = $('#fs-settings-menu-wrap');
+
+      if($menu.hasClass('fs-settings-menu-open')) {
+        $menu.removeClass('fs-settings-menu-open');
+
+        $(document).off('click.fs-settings');
+      } else {
+        $menu.addClass('fs-settings-menu-open');
+
+        $(document).off('click.fs-settings').on('click.fs-settings', function(event){
+          var $target = $(event.target);
+
+          if($target.attr('id') === 'fs-settings' || $target.parents('#fs-settings').length > 0) return;
+
+          $menu.removeClass('fs-settings-menu-open');
+        });
+      }
+    });
+
     balloon.createDatasource();
     balloon.initCrumb();
 
