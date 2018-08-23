@@ -193,7 +193,7 @@
       "hint_create_url": "With a global share link you are able to share a file/folder with everyone even with those who do not have an own login.",
       "hint_remove_url": "If you remove this share, any share links (tokens) will be immediately invalid and can not get restored.",
       "create": "Create link",
-      "edit": "Edit link",
+      "edit": "Show link",
       "delete": "Delete link",
       "link_settings": "Link settings",
       "link_copied": "The link has been copied to the clipboard",
@@ -210,8 +210,8 @@
         "cancel": "Cancel",
         "save": "Save settings",
         "expiration_date": "Expiration",
-        "expiration_time": "Time <span>(optional)</span>",
-        "password": "Password <span>(optional)</span>",
+        "expiration_time": "Time",
+        "password": "Password",
         "destroy": "Delete document after link expires"
       }
     },

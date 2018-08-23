@@ -194,7 +194,7 @@
       "hint_create_url": "Mit einem globalen Freigabe-Link kannst du eine/einen Datei/Ordner weltweit mit allen teilen, auch mit Benutzern, welche keinen Account besitzen.",
       "hint_remove_url": "Wenn du diese Freigabe entfernst, wird der Link ab sofort ungültig und kann nicht wiederhergestellt werden.",
       "create": "Link teilen",
-      "edit": "Link anpassen",
+      "edit": "Link anzeigen",
       "delete": "Link löschen",
       "link_settings": "Linkeinstellungen",
       "link_copied": "Der Link wurde in die Zwischenablage kopiert",
@@ -211,8 +211,8 @@
         "cancel": "Abbrechen",
         "save": "Einstellungen speichern",
         "expiration_date": "Gültigkeitsdauer",
-        "expiration_time": "Zeit <span>(optional)</span>",
-        "password": "Passwort <span>(optional)</span>",
+        "expiration_time": "Zeit",
+        "password": "Passwort",
         "destroy": "Dokument nach Ablauf der Gültigkeit löschen"
       }
     },
