@@ -5,6 +5,11 @@ body,
   position: relative;
 }
 
+svg,
+svg * {
+  pointer-events: none;
+}
+
 input,
 select,
 textarea,
