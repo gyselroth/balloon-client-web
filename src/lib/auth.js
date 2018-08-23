@@ -15,7 +15,7 @@ const {RedirectRequestHandler} = require('@openid/appauth/built/redirect_based_h
 var login = {
   token: undefined,
   adapter: null,
-  username: null,
+  user: null,
   basic: true,
   oidc: [],
   notifier: null,
@@ -29,6 +29,11 @@ var login = {
 
       if(config.auth.oidc) {
         this.oidc = config.auth.oidc;
+      }
+
+      var type = window.location.hash.substr(1);
+      if(type) {
+        login.initOidcAuth(type);
       }
     }
 
@@ -88,7 +93,7 @@ var login = {
       var $login = $('#login').show();
 
       $('#fs-namespace').hide();
-      $login.find('input[type=submit]').off('click').on('click', login.initBasicAuth);
+      $login.find('input[type=submit]').on('click', login.initBasicAuth);
 
       if(localStorage.username !== undefined) {
         $login.find('input[name=username]').val(localStorage.username);
@@ -123,7 +128,6 @@ var login = {
           } else {
             login.adapter = 'basic';
           }
-
           login.fetchIdentity();
           break;
 
@@ -188,8 +192,8 @@ var login = {
           break;
 
         case 200:
-          login.username = response.responseJSON.name;
-          localStorage.username = login.username;
+          login.user = response.responseJSON;
+          localStorage.username = login.user.username;
 
           login.updateFsIdentity();
 
@@ -212,16 +216,16 @@ var login = {
       dataType: 'json',
       cache: false,
       success: function(body) {
-        login.username = body.name;
-        localStorage.username = login.username;
-
+        window.location.hash = '';
+        login.user = body;
+        localStorage.username = login.user.username;
         login.updateFsIdentity();
       }
     });
   },
 
   updateFsIdentity: function() {
-    $('#fs-identity').show().find('#fs-identity-username').html(login.username);
+    $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
 
     return login.xmlHttpRequest({
       url: '/api/v'+balloon.BALLOON_API_VERSION+'/users/avatar',
@@ -236,10 +240,6 @@ var login = {
         $avatar.css('background-image', '');
       }
     });;
-  },
-
-  getUsername: function() {
-    return this.username;
   },
 
   getAccessToken: function() {
@@ -271,6 +271,10 @@ var login = {
   initOidcAuth: function(provider_url) {
     var idp = this.getIdpConfigByProviderUrl(provider_url);
 
+    if(!idp) {
+      return;
+    }
+
     AuthorizationServiceConfiguration.fetchFromIssuer(idp.providerUrl).then(configuration => {
       var request = new AuthorizationRequest(
         idp.clientId, idp.redirectUri, idp.scope, 'id_token token', undefined, {'nonce': Math.random().toString(36).slice(2)});
@@ -282,8 +286,8 @@ var login = {
   initBasicAuth: function() {
     var $login = $('#login');
     $login.find('.error-message').hide();
-    var $username_input = $login.find('input[type=text]');
-    var $password_input = $login.find('input[type=password]');
+    var $username_input = $login.find('input[name=username]');
+    var $password_input = $login.find('input[name=password]');
 
     var username = $username_input.val();
     var password = $password_input.val();
@@ -306,13 +310,14 @@ var login = {
 
   verifyIdentity: function() {
     var $login = $('#login');
-    var $username_input = $login.find('input[type=text]');
-    var $password_input = $login.find('input[type=password]');
+    var $username_input = $login.find('input[name=username]');
+    var $password_input = $login.find('input[name=password]');
+    window.location.hash = '';
 
     $.ajax({
       type: 'GET',
       dataType: 'json',
-      url: '/api/v2/users/whoami',
+      url: '/api/auth',
       complete: function(response) {
         switch(response.status) {
         case 401:
@@ -326,11 +331,7 @@ var login = {
         case 200:
         case 404:
           login.adapter = 'basic';
-          login.username = response.responseJSON.name;
-          localStorage.username = login.username;
-
-          login.updateFsIdentity();
-
+          login.fetchIdentity();
           login.initBrowser();
           break;
 

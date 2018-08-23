@@ -119,14 +119,6 @@ var balloon = {
     collection: null
   },
 
-
-  /**
-   * Quota usage
-   *
-   * @var object
-   */
-  quota: {},
-
   /**
    * Add file handlers
    *
@@ -1403,23 +1395,23 @@ var balloon = {
           type: 'GET',
           success: function(body) {
             // Quota
-            var used = balloon.getReadableFileSizeString(body.quota.used);
+            var used = balloon.getReadableFileSizeString(body.used);
             var max;
             var free;
             var percentage;
             var percentageText;
 
-            if(body.quota.hard_quota === -1) {
+            if(body.hard_quota === -1) {
               max = i18next.t('profile.quota_unlimited');
               free = max;
               percentage = 0;
               percentageText = max;
             } else {
-              percentage = Math.round(body.quota.used/body.quota.hard_quota*100);
+              percentage = Math.round(body.used/body.hard_quota*100);
               percentageText = percentage + '%';
 
-              max  = balloon.getReadableFileSizeString(body.quota.hard_quota),
-              free = balloon.getReadableFileSizeString(body.quota.hard_quota - body.quota.used);
+              max  = balloon.getReadableFileSizeString(body.hard_quota),
+              free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
             }
 
             var $fs_quota = $('#fs-quota-circle');
@@ -1453,7 +1445,38 @@ var balloon = {
 
                 $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
                 break;
+              case 'hard_quota':
+              case 'soft_quota':
+              case 'available':
+                break;
 
+              case 'used':
+                var used = balloon.getReadableFileSizeString(body.used);
+                var max;
+                var free;
+
+                if(body.hard_quota === -1) {
+                  $fs_quota_usage.hide();
+                  max = i18next.t('profile.quota_unlimited');
+                  free = max;
+                } else {
+                  var percentage = Math.round(body.used/body.hard_quota*100);
+                  $k_progress.value(percentage);
+
+                  if(percentage >= 90) {
+                    $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+                  } else {
+                    $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+                  }
+
+                  max  = balloon.getReadableFileSizeString(body.hard_quota),
+                  free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
+                }
+
+                $('#fs-profile-quota-used').find('td').html(used);
+                $('#fs-profile-quota-max').find('td').html(max);
+                $('#fs-profile-quota-left').find('td').html(free);
+              break;
               default:
                 $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+value+'</td></tr>')
                 break;
@@ -1534,7 +1557,7 @@ var balloon = {
         for(var log in body.data) {
           if(body.data[log].user === null) {
             username = '<user removed>';
-          } else if(body.data[log].user.name == login.getUsername()) {
+          } else if(body.data[log].user.name == login.user.username) {
             username = body.data[log].user.name+' ('+i18next.t('events.you')+')';
           } else {
             username = body.data[log].user.name;
@@ -3947,7 +3970,67 @@ var balloon = {
       }
     });
 
+    var selected = false;
+
+    $share_consumer_search.unbind('keyup').bind('keyup', function(e) {
+      if(e.keyCode == 13) {
+        if(selected === true) {
+          selected = false;
+          return;
+        }
+
+        var value = $share_consumer_search.data("kendoAutoComplete").value()
+        if(value === '' || value === undefined) {
+          return;
+        }
+
+        var filter = JSON.stringify({'query': {'name': $share_consumer_search.data("kendoAutoComplete").value()}});
+
+        balloon.xmlHttpRequest({
+          url: balloon.base+'/groups?'+filter,
+          contentType: "application/json",
+          success: function(data) {
+            if(data.count !== 1) {
+              return;
+            }
+
+            $share_consumer_search.val('').focus();
+
+            var role = {
+              type: 'group',
+              role: data.data[0]
+            }
+
+            acl = balloon._addShareConsumer(role, acl);
+          }
+        });
+
+        filter = JSON.stringify({'query': {'username': $share_consumer_search.data("kendoAutoComplete").value()}});
+
+        balloon.xmlHttpRequest({
+          url: balloon.base+'/users?'+filter,
+          contentType: "application/json",
+          dataType: 'json',
+          success: function(data) {
+            if(data.count !== 1) {
+              return;
+            }
+
+            $share_consumer_search.val('').focus();
+
+            var role = {
+              type: 'user',
+              role: data.data[0]
+            }
+
+            acl = balloon._addShareConsumer(role, acl);
+          }
+        });
+      }
+    });
+
     balloon._userAndGroupAutocomplete($share_consumer_search, true, function(item) {
+      selected = true;
       balloon._addShareConsumer(item, acl);
     });
   },
@@ -3978,10 +4061,20 @@ var balloon = {
             var consumers = null;
 
             if(includeGroups) {
-              var filter = JSON.stringify({'query': {'name': {
-                "$regex": $input.data("kendoAutoComplete").value(),
-                "$options": "i"
-              }}});
+              var filter = {
+                'query': {
+                  'name': {
+                    "$regex": $input.data("kendoAutoComplete").value(),
+                    "$options": "i"
+                  },
+                }
+              };
+
+              if(login.user.namespace) {
+                filter.query.namespace = login.user.namespace;
+              }
+
+              filter = JSON.stringify(filter);
 
               balloon.xmlHttpRequest({
                 url: balloon.base+'/groups?'+filter,
@@ -4003,10 +4096,20 @@ var balloon = {
               consumers = [];
             }
 
-            filter = JSON.stringify({'query': {'username': {
-              "$regex": $input.data("kendoAutoComplete").value(),
-              "$options": "i"
-            }}});
+            var filter = {
+              'query': {
+                'username': {
+                  "$regex": $input.data("kendoAutoComplete").value(),
+                  "$options": "i"
+                },
+              }
+            };
+
+            if(login.user.namespace) {
+              filter.query.namespace = login.user.namespace;
+            }
+
+            filter = JSON.stringify(filter);
 
             balloon.xmlHttpRequest({
               url: balloon.base+'/users?'+filter,
@@ -5876,12 +5979,11 @@ var balloon = {
     balloon.xmlHttpRequest({
       url: balloon.base+'/users/whoami',
       data: {
-        attributes: ['quota']
+        attributes: ['hard_quota','soft_quota','used','available']
       },
       type: 'GET',
       dataType: 'json',
       success: function(data) {
-        data = data.quota;
         var used = balloon.getReadableFileSizeString(data.used),
           max  = balloon.getReadableFileSizeString(data.hard_quota),
           free = balloon.getReadableFileSizeString(data.hard_quota - data.used);
@@ -6288,7 +6390,6 @@ var balloon = {
           $icon.replaceWith('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#' + iconId + '"></use></svg>');
         }
         break;
-
       default:
         if($field.length != 0 && prop !== 'access' && prop != 'shareowner') {
           $field.html(node[prop]);
@@ -7190,8 +7291,6 @@ var balloon = {
 
       if(file.blob.size === 0) {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
-      } else if(file.blob.size+balloon.quota.used > balloon.quota.hard_quota) {
-        balloon.displayError(new Error('Quota is too low to upload this file'));
       } else if(file.blob.size != 0) {
         var progressId = 'fs-upload-'+last;
         progressnode = $('<div id="'+progressId+'" class="fs-uploadmgr-progress"><div id="'+progressId+'-progress" class="fs-uploadmgr-progressbar"></div></div>');

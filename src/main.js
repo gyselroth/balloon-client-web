@@ -14,6 +14,8 @@ import svgxuse from 'svgxuse';
 import balloonCss from './themes/default/scss/balloon.scss';
 
 
+window.jquery = $;
+
 $.ajax({
   url: '/config.json',
   success: function(body, responseText, response) {
