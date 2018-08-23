@@ -22,14 +22,13 @@
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {
-    &.fs-content-expanded {
-      #fs-layout-left {
-        width: calc(100% - 400px);
-      }
+    $pannelWidth: 400px;
+    #fs-layout-left {
+      width: calc(100% - #{$pannelWidth});
+    }
 
-      #fs-content {
-        width: 400px;
-      }
+    #fs-content {
+      width: $pannelWidth;
     }
   }
 }

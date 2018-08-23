@@ -294,7 +294,7 @@ var app = {
     ];
 
     if(app.balloon.last !== null && app.balloon.last.directory) {
-      app.balloon.togglePannel('content', true);
+      app.balloon.updatePannel('content', true);
 
       var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
 

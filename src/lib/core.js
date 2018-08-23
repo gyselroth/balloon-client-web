@@ -409,7 +409,7 @@ var balloon = {
       var view = viewConfig.id;
 
       $fs_content_view.append(
-        '<dt id="fs-content-view-title-' + view + '">'+
+        '<dt id="fs-content-view-title-' + view + '" class="disabled">'+
             '<span>' + i18next.t(viewConfig.title) + '</span>'+
             '<svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="/assets/icons.svg#arrowhead-n"></use></svg>'+
             '<svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="/assets/icons.svg#arrowhead-s"></use></svg>'+
@@ -1143,7 +1143,7 @@ var balloon = {
     balloon.showView(views);
 
     if(!balloon.isMobileViewPort()) {
-      balloon.togglePannel(true);
+      balloon.updatePannel(true);
     }
 
     $('#fs-content-view dt').unbind('click').not('.disabled').click(function() {
@@ -1963,7 +1963,7 @@ var balloon = {
 
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
-    balloon.togglePannel(false);
+    balloon.updatePannel(false);
     balloon.resetDom(['search']);
 
     if(action === 'cloud') {
@@ -2315,7 +2315,7 @@ var balloon = {
 
     balloon.long_touch = true;
     //TODO pixtron - should pannel really open here?
-    balloon.togglePannel(true);
+    balloon.updatePannel(true);
 
     if(!balloon.isSystemNode(balloon.last)) {
       $('#fs-browser-tree').find('.k-in').removeClass('k-state-selected');
@@ -2470,7 +2470,7 @@ var balloon = {
     }
 
     if(balloon.last !== null && balloon.last.directory) {
-      balloon.togglePannel(false);
+      balloon.updatePannel(false);
 
       var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
 
@@ -3061,7 +3061,7 @@ var balloon = {
     }
 
     balloon.resetDom(['upload', 'preview', 'properties', 'history', 'selected', 'view-bar']);
-    balloon.togglePannel(true);
+    balloon.updatePannel(true);
 
     var index = balloon.multiselect.indexOf(node);
     var $selected = $('#fs-browser-tree').find('li[fs-id='+balloon.id(node)+']');
@@ -3095,7 +3095,7 @@ var balloon = {
     $k_tree.select($());
 
     balloon.multiselect = [];
-    balloon.togglePannel(false);
+    balloon.updatePannel(false);
     balloon.pushState(false, true);
   },
 
@@ -6762,14 +6762,12 @@ var balloon = {
    * @param boolean expand (optional)
    * @return void
    */
-  togglePannel: function(expand) {
+  updatePannel: function(enabled) {
     var $layout = $('#fs-browser-layout');
 
-    if(expand === undefined) {
-      expand = !$layout.hasClass('fs-content-expanded');
-    }
+    if(enabled === undefined) enabled = true;
 
-    if(expand === true) {
+    if(enabled === true) {
       var actions = ['download'];
 
       if(!balloon.isSearch() && !balloon.isMultiSelect()) {
@@ -6793,10 +6791,8 @@ var balloon = {
       }
 
       balloon.enableAction(actions, true);
-
-      $layout.addClass('fs-content-expanded');
     } else {
-      $layout.removeClass('fs-content-expanded');
+      balloon.enableAction([], true);
     }
   },
 
