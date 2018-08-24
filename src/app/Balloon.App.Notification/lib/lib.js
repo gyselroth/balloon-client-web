@@ -18,8 +18,8 @@ var app = {
     var $content = $('<dd id="fs-notification">'+
       '<div id="fs-notification-description">'+i18next.t('app.balloon_app_notification.description')+'</div>'+
       '<div><input type="checkbox" id="fs-notification-subscribe" name="subscribe" value="1" /><label for="fs-notification-subscribe">'+i18next.t('app.balloon_app_notification.subscribe')+'</label></div>'+
-      '<div><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1" disabled /><label for="fs-notification-exclude_me">'+i18next.t('app.balloon_app_notification.exclude_me')+'</label></div>'+
-      '<div> <input type="checkbox" id="fs-notification-recursive" name="recursive" value="1" disabled /><label for="fs-notification-recursive">'+i18next.t('app.balloon_app_notification.recursive')+'</label></div>'+
+      '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1" disabled /><label for="fs-notification-exclude_me">'+i18next.t('app.balloon_app_notification.exclude_me')+'</label></div>'+
+      '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-recursive" name="recursive" value="1" disabled /><label for="fs-notification-recursive">'+i18next.t('app.balloon_app_notification.recursive')+'</label></div>'+
       '<input type="submit" class="fs-button-primary" value="'+i18next.t('app.balloon_app_notification.save')+'">'+
     '</dd>');
 

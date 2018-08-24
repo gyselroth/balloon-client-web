@@ -6,6 +6,10 @@
     &:first-child {
       margin-bottom: 15px;
     }
+
+    &.fs-notification-suboption {
+      padding-left: 30px;
+    }
   }
 
   input[type="submit"] {
