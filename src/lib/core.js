@@ -330,7 +330,6 @@ var balloon = {
 
     balloon.displayQuota();
 
-
     var $fs_search = $('#fs-search');
     var $fs_search_input = $fs_search.find('#fs-search-input');
     var $fs_search_filter_toggle = $fs_search.find('#fs-search-toggle-filter');
@@ -338,28 +337,28 @@ var balloon = {
     $fs_search_input.off('focus').on('focus', function() {
       $fs_search.addClass('fs-search-focused');
 
-      // if field is empty it is a fresh search, wait for first change to occur
-      if($fs_search_input.val() === '') {
-        $fs_search_input.off('keypress').on('keypress', function() {
-          $fs_search_input.off('keypress');
-          balloon.advancedSearch();
-        });
-      } else {
+      if($('#fs-search-filter').data('initialized') !== true) {
+        //populate filters before opening
         balloon.advancedSearch();
       }
     });
 
     $fs_search_input.off('blur').on('blur', function() {
-      if($fs_search_input.val() === '') {
-        balloon.resetSearch();
-      }
+      $fs_search.removeClass('fs-search-focused');
     });
 
-    $fs_search.find('.gr-i-close').off('click').on('click', function() {
+    $fs_search_input.unbind('keyup').bind('keyup', balloon.buildExtendedSearchQuery);
+
+    $fs_search.find('#fs-search-reset').off('click').on('click', function() {
       balloon.resetSearch();
     });
 
     $fs_search_filter_toggle.off('click').on('click', function() {
+      if($('#fs-search-filter').data('initialized') !== true) {
+        //populate filters before opening
+        balloon.advancedSearch();
+      }
+
       $('#fs-search-filter').toggle();
     });
 
@@ -2577,8 +2576,8 @@ var balloon = {
    * @return  void
    */
   resetSearch: function(e) {
-    //TODO pixtron search - is this still needed?
     balloon.menuLeftAction(balloon.getCurrentMenu());
+    $('#fs-search-filter').data('initialized', false);
     $('#fs-browser-action').show();
     $('#fs-search-filter').hide();
 
@@ -5020,6 +5019,8 @@ var balloon = {
           balloon.buildExtendedSearchQuery();
           $fs_search_filter.hide();
         });
+
+        $('#fs-search-filter').data('initialized', true);
 
         balloon.buildExtendedSearchQuery();
       },

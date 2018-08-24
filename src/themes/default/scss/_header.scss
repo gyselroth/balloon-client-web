@@ -74,6 +74,8 @@
   #fs-search {
     @include clearfix;
 
+    $height: 36px;
+
     position: absolute;
     top: 12px;
     left: 0;
@@ -82,9 +84,9 @@
     display: none;
     margin: auto;
 
-    max-width: 400px;
-    width: 40%;
-    height: 36px;
+    width: 400px;
+    height: $height;
+    transition: width 0.5s ease-in-out;
 
     @media screen and (min-width: $breakpointSearchVisible) {
       display: block;
@@ -100,20 +102,30 @@
       left: 7px;
     }
 
-    .gr-i-close {
+    #fs-search-reset {
       display: none;
-      top: 11px;
-      right: 51px;
-      width: 14px;
-      height: 14px;
+      position: absolute;
+      width: 40px;
+      height: $height;
+      right: 44px;
+      top: 0;
       cursor: pointer;
+
+      .gr-i-close {
+        position: relative;
+        top: 11px;
+        left: 17px;
+        width: 14px;
+        height: 14px;
+        cursor: pointer;
+      }
     }
 
     #fs-search-input {
-      padding: 5px 6px 7px 45px;
+      padding: 5px 30px 7px 45px;
 
       float: left;
-      width: 100%;
+      width: calc(100% - 40px);
       height: 100%;
 
       background-color: $colorWhite;
@@ -140,29 +152,26 @@
 
     #fs-search-toggle-filter {
       @include icon-button-small(30px);
-      display: none;
+      display: block;
       margin: 3px 0 0 10px;
       float: left;
     }
 
     &.fs-search-focused {
-      max-width: 600px;
-
-      .gr-i-close {
+      #fs-search-reset {
         display: block;
       }
 
       #fs-search-input {
         @include shadow-selected;
-        padding: 4px 5px 6px 44px;
+        padding: 4px 30px 6px 44px;
 
         border-width: 2px;
         border-color: $colorActiveBlue;
-        width: calc(100% - 40px);
       }
 
-      #fs-search-toggle-filter {
-        display: block;
+      @media screen and (min-width: $breakpointSearchBig) {
+        width: 600px;
       }
     }
 
