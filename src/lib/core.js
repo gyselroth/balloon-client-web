@@ -2233,13 +2233,10 @@ var balloon = {
    * @param object node
    * @param null|integer ts
    */
-  selfDestroyNode: function(node, ts, $k_win, $d) {
+  selfDestroyNode: function(node, ts, $k_win) {
     var url;
 
-    if(typeof $k_win === 'object' && typeof $k_win.resolve === 'function') {
-      $d = $k_win;
-      $k_win = undefined;
-    }
+    var $d = $.Deferred();
 
     if(ts !== null) {
       url = balloon.base+'/nodes?id='+balloon.id(node)+'&'+'at='+ts;
@@ -2255,14 +2252,14 @@ var balloon = {
           $k_win.close();
         }
 
-        if(typeof $d === 'object' && typeof $d.resolve === 'function') {
-          $d.resolve();
-        }
+        $d.resolve();
 
         node.destroy = ts === null ? undefined : (new Date(ts * 1000)).toISOString();
         balloon.advancedOperations(node);
       }
     });
+
+    return $d;
   },
 
 
@@ -5273,6 +5270,8 @@ var balloon = {
 
     var $d = $.Deferred();
 
+    if(params === undefined || params.constructor !== Array) params = [];
+
     var $div = $("#fs-prompt-window"),
       $k_prompt = $div.data('kendoBalloonWindow');
     $('#fs-prompt-window-content').html(msg);
@@ -5307,20 +5306,34 @@ var balloon = {
       e.stopImmediatePropagation();
 
       if(action.constructor === Array) {
-        params = action[i].params;
-        params.push($d);
+        var actionDs = [];
 
         for(var i in action) {
           if(action[i] !== null) {
-            $parent[action[i].action].apply($parent,params);
+            var childAction = typeof action[i].action === 'string' ? $parent[action[i].action] : action[i].action;
+            var childActionD = childAction.apply($parent,action[i].params);
+
+            if(typeof childActionD === 'object' && typeof childActionD.resolve === 'function') {
+              actionDs.push(childActionD);
+            }
           }
         }
-      } else if(typeof action === 'string') {
-        params.push($d);
-        $parent[action].apply($parent,params);
+
+        $.when.apply($parent, actionDs).then(function() {
+          $d.resolve();
+        }, function() {
+          $d.reject();
+        });
       } else {
-        params.push($d);
-        action.apply($parent,params);
+        if(typeof action === 'string') {
+          action = $parent[action];
+        }
+
+        var actionD = action.apply($parent,params);
+
+        if(typeof actionD === 'object' && typeof actionD.resolve === 'function') {
+          actionD.then($d.resolve, $d.reject);
+        }
       }
 
       $k_prompt.close();
