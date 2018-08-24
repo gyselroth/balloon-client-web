@@ -3639,7 +3639,9 @@ var balloon = {
     }
 
     if($k_tree != undefined) {
-      $k_tree.dataSource.read();
+      return $k_tree.dataSource.read();
+    } else {
+      return $.Deferred().resolve().promise();
     }
   },
 
@@ -4562,11 +4564,11 @@ var balloon = {
           });
 
           $.when(shareLinkRequest, destroyRequest).done(function() {
-            balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-            balloon.switchView('share-link');
-          }).then(function() {
-            $k_win.close();
-            balloon.showShareLink();
+            balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
+              balloon.switchView('share-link');
+              $k_win.close();
+              balloon.showShareLink();
+            });
           });
         });
 
