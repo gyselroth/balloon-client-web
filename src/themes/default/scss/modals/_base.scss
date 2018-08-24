@@ -98,6 +98,10 @@
       display: inline-block;
       width: auto;
       margin-left: 8px;
+
+      &:first-child {
+        margin-left: 0;
+      }
     }
   }
 
@@ -142,6 +146,13 @@
 
     & > div.k-window-content {
       padding-top: 56px !important;
+      max-width: 100%;
+    }
+
+    .fs-window-secondary-actions {
+      input {
+        margin-bottom: 8px;
+      }
     }
   }
 }
