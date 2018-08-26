@@ -3701,7 +3701,23 @@ var balloon = {
 
           if(e.keyCode === 13) {
             if(balloon.add_file_handlers[type]) {
-              balloon.add_file_handlers[type](name, type);
+              var $d = balloon.add_file_handlers[type](name, type);
+
+              if($d && $d.then) {
+                $d.done(function(node) {
+                  balloon.added = node.id;
+
+                  balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
+                    var $createdNode = $('li[fs-id="' + node.id + '"]');
+
+                    if(!$createdNode) return;
+
+                    $('#fs-layout-left').animate({
+                      scrollTop: ($createdNode.offset().top - 70)
+                    }, 1000);
+                  });
+                });
+              }
             }
 
             setTimeout(function(){
@@ -3720,6 +3736,8 @@ var balloon = {
    * @return  void
    */
   addFolder: function(name) {
+    var $d = $.Deferred();
+
     balloon.xmlHttpRequest({
       url: balloon.base+'/collections',
       type: 'POST',
@@ -3728,11 +3746,18 @@ var balloon = {
         name: name,
       },
       dataType: 'json',
-      success: function(data) {
-        balloon.added = data.id;
-        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+      complete: function(jqXHR, textStatus) {
+        switch(textStatus) {
+        case 'success':
+          $d.resolve(jqXHR.responseJSON);
+          break;
+        default:
+          $d.reject();
+        }
       },
     });
+
+    return $d;
   },
 
 
@@ -3743,16 +3768,25 @@ var balloon = {
    * @return void
    */
   addFile: function(name) {
+    var $d = $.Deferred();
+
     name = encodeURI(name);
 
     balloon.xmlHttpRequest({
       url: balloon.base+'/files?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
       type: 'PUT',
-      success: function(data) {
-        balloon.added = data.id;
-        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+      complete: function(jqXHR, textStatus) {
+        switch(textStatus) {
+        case 'success':
+          $d.resolve(jqXHR.responseJSON);
+          break;
+        default:
+          $d.reject();
+        }
       },
     });
+
+    return $d;
   },
 
 

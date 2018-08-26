@@ -305,19 +305,27 @@ var app = {
   },
 
   addOfficeFile: function(name, type) {
+    var $d = $.Deferred();
+
     name = encodeURI(name);
 
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/office/documents?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
       type: 'POST',
-      complete: function() {
+      complete: function(jqXHR, textStatus) {
         $('#fs-new-file').remove();
+
+        switch(textStatus) {
+        case 'success':
+          $d.resolve(jqXHR.responseJSON);
+          break;
+        default:
+          $d.reject();
+        }
       },
-      success: function(data) {
-        app.balloon.added = data.id;
-        app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
-      }
     });
+
+    return $d;
   }
 }
 
