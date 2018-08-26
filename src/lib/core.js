@@ -6995,16 +6995,15 @@ var balloon = {
       name  = $that.attr('name'),
       checked = $that.is(':checked');
 
-    balloon.tree.filter[name] = checked;
+    if(name === 'deleted') {
+      balloon.tree.filter.deleted = checked ? 2 : 0;
+    } else {
+      balloon.tree.filter[name] = checked;
+    }
+
     $('#fs-action-filter-select').hide();
 
-    if(name === 'deleted' && balloon.tree.filter[name]) {
-      balloon.tree.filter.deleted = 2;
-      balloon.refreshTree(null, {id: balloon.getCurrentCollectionId()}, {deleted: 2});
-    } else {
-      balloon.tree.filter.deleted = 0;
-      balloon.refreshTree(null, {id: balloon.getCurrentCollectionId()}, {deleted: 0});
-    }
+    balloon.refreshTree(null, {id: balloon.getCurrentCollectionId()});
   },
 
 
