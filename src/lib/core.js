@@ -931,7 +931,7 @@ var balloon = {
       node = balloon.datasource.getByUid($(this).attr('data-uid'));
 
       var order = ['icon', 'name', 'meta', 'size', 'changed', 'checkbox'];
-      var metaOrder = ['color_tag', 'sharelink_token', 'deleted', 'readonly', 'destroy'];
+      var metaOrder = ['color_tag', 'sharelink_token', 'deleted', 'readonly', 'destroy', 'subscription'];
 
       if(balloon.isSystemNode(node)) {
         if(balloon.id(node) == '_FOLDERUP') {
@@ -1008,6 +1008,11 @@ var balloon = {
             case 'destroy':
               if(node.destroy) {
                 meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-flag"><use xlink:href="/assets/icons.svg#flag"></use></svg></div>');
+              }
+              break;
+            case 'subscription':
+              if(node.subscription) {
+                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-volume-up"><use xlink:href="/assets/icons.svg#volume-up"></use></svg></div>');
               }
               break;
             case 'color_tag':
