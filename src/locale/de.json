@@ -101,9 +101,6 @@
     },
     "open_folder": "Ordner öffnen",
     "folder": "Ordner",
-    "new_folder": "Neuer Ordner",
-    "txt_file": "Textdokument",
-    "new_file": "Neue Datei",
     "selected": "{{count}} Objekt ausgewählt",
     "selected_plural": "{{count}} Objekte ausgewählt",
     "no_nodes": "<Es wurden keine Daten gefunden>",
@@ -376,5 +373,12 @@
     "node_moved_plural": "{{count}} Elemente wurden nach <b>{{dest}}</b> verschoben.",
     "node_moved_folderup": "{{count}} Element wurde <b>in den übergeordneten Ordner</b> verschoben.",
     "node_moved_folderup_plural": "{{count}} Elemente wurden <b>in den übergeordneten Ordner</b> verschoben."
+  },
+  "new_node": {
+    "title": {
+      "folder": "Neuer Ordner",
+      "txt": "Neues Text Dokument"
+    },
+    "name": "Name"
   }
 }

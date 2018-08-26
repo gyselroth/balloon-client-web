@@ -23,5 +23,13 @@
       "excel_document": "Excel Dokument",
       "powerpoint_document": "Powerpoint Dokument"
     }
+  },
+
+  "new_node": {
+    "title": {
+      "docx": "Neues Word Dokument",
+      "xlsx": "Neues Excel Dokument",
+      "pptx": "Neues Powerpoint Dokument"
+    }
   }
 }

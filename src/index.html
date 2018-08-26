@@ -177,10 +177,10 @@
                                 <span class="bln-dropdown-spike fs-action-dropdown-spike"></span>
                                 <ul class="bln-dropdown-content fs-action-dropdown-content">
                                     <li data-type="folder">
-                                        <svg class="gr-icon gr-i-folder"><use xlink:href="/assets/icons.svg#folder"></use></svg><span data-i18n="tree.folder"></span><input type="text" data-i18n="[placeholder]tree.new_folder" />
+                                        <svg class="gr-icon gr-i-folder"><use xlink:href="/assets/icons.svg#folder"></use></svg><span data-i18n="tree.folder"></span>
                                     </li>
                                     <li data-type="txt">
-                                        <svg class="gr-icon gr-i-file-text"><use xlink:href="/assets/icons.svg#file-text"></use></svg><span data-i18n="tree.txt_file"></span><input type="text" data-i18n="[placeholder]tree.new_file" />
+                                        <svg class="gr-icon gr-i-file-text"><use xlink:href="/assets/icons.svg#file-text"></use></svg><span data-i18n="tree.txt_file"></span>
                                     </li>
                                 </ul>
                             </div>
@@ -796,6 +796,17 @@
                 <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.share.cancel" />
                 <input type="submit" tabindex="1" name="create" data-i18n="[value]view.share.create" class="fs-button-primary" />
                 <input type="submit" tabindex="1" name="save" data-i18n="[value]view.share.save" class="fs-button-primary" />
+            </div>
+        </div>
+
+        <div id="fs-new-node-window">
+            <div id="fs-new-node-window-content">
+                <label for="fs-new-node-window-name" data-i18n="new_node.name"></label>
+                <input type="text" id="fs-new-node-window-name" name="name" />
+            </div>
+            <div id="fs-destroy-date-window-button-wrapper" class="fs-window-secondary-actions">
+                <input type="button" tabindex="2" data-i18n="[value]view.advanced.destroy_date_window.cancel" />
+                <input type="submit" tabindex="1" name="share" data-i18n="[value]view.advanced.destroy_date_window.save" class="fs-button-primary" />
             </div>
         </div>
     </div>

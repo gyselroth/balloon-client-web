@@ -70,15 +70,6 @@
           color: $colorMediumGrey;
         }
 
-        input[type=text] {
-          display: inline-block;
-          width: calc(100% - 32px);
-
-          &.fs-node-exists {
-            border-color: $colorErrorRed;
-          }
-        }
-
         &:hover {
           background-color: $colorBrightGrey;
 
