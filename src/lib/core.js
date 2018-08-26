@@ -170,13 +170,13 @@ var balloon = {
       },
     },
     {
-      id: 'properties',
-      title: 'nav.view.properties',
+      id: 'metadata',
+      title: 'nav.view.metadata',
       isEnabled: function() {
         return true;
       },
       onActivate: function() {
-        balloon.displayProperties(balloon.getCurrentNode());
+        balloon.displayMetadata(balloon.getCurrentNode());
       },
     },
     {
@@ -202,13 +202,13 @@ var balloon = {
       },
     },
     {
-      id: 'advanced',
-      title: 'nav.view.advanced',
+      id: 'properties',
+      title: 'nav.view.properties',
       isEnabled: function() {
         return balloon.last.access != 'r';
       },
       onActivate: function() {
-        balloon.advancedOperations(balloon.getCurrentNode());
+        balloon.displayProperties(balloon.getCurrentNode());
       },
     },
   ],
@@ -1113,7 +1113,7 @@ var balloon = {
     }
 
     balloon.resetDom(
-      ['properties','preview','view-bar',
+      ['metadata','preview','view-bar',
         'history','share','share-link'
       ]);
 
@@ -1138,7 +1138,7 @@ var balloon = {
 
     balloon.resetDom([
       'selected',
-      'properties',
+      'metadata',
       'preview',
       'multiselect',
       'view-bar',
@@ -2057,6 +2057,7 @@ var balloon = {
 
     if(viewConfig.onActivate) viewConfig.onActivate.call(this);
 
+    balloon.displayName(balloon.getCurrentNode());
     balloon.pushState();
   },
 
@@ -2077,19 +2078,23 @@ var balloon = {
 
 
   /**
-   * Advanced operations
+   * Display Properties
    *
    * @param   object node
    * @return  void
    */
-  advancedOperations: function(node) {
-    balloon.resetDom('advanced');
+  displayProperties: function(node) {
+    balloon.resetDom('properties');
 
-    var $fs_advanced = $('#fs-advanced');
-    var $fs_readonly = $fs_advanced.find('input[name=readonly]');
-    var $fs_destroy_date_preview = $fs_advanced.find('#fs-advanced-destroy-date-preview');
-    var $fs_destroy_date_set = $fs_advanced.find('#fs-advanced-destroy-date-set');
-    var $fs_destroy_date_edit = $fs_advanced.find('#fs-advanced-destroy-date-edit');
+    if(!node) return;
+
+    var $fs_properties = $('#fs-properties');
+    var $fs_readonly = $fs_properties.find('input[name=readonly]');
+    var $fs_destroy_date_preview = $fs_properties.find('#fs-properties-destroy-date-preview');
+    var $fs_destroy_date_set = $fs_properties.find('#fs-properties-destroy-date-set');
+    var $fs_destroy_date_edit = $fs_properties.find('#fs-properties-destroy-date-edit');
+
+    $('#fs-properties').off('focusout').on('focusout', 'textarea,input,select', balloon._saveMetaAttributes);
 
     if(node.destroy !== undefined) {
       var formatedDate = kendo.toString(new Date(node.destroy), kendo.culture().calendar.patterns.g);
@@ -2124,7 +2129,11 @@ var balloon = {
       });
     });
 
-    $fs_advanced.find('button').off('click').on('click', balloon.showDestroyDate);
+    $fs_properties.find('button').off('click').on('click', balloon.showDestroyDate);
+
+    for(var meta_attr in node.meta) {
+      $('#fs-properties-'+meta_attr).val(node.meta[meta_attr]);
+    }
   },
 
   /**
@@ -2140,7 +2149,7 @@ var balloon = {
     var $fs_destroy_date_win = $('#fs-destroy-date-window');
 
     var $k_win = $fs_destroy_date_win.kendoBalloonWindow({
-      title: i18next.t('view.advanced.destroy_date_window.title'),
+      title: i18next.t('view.properties.destroy_date_window.title'),
       resizable: false,
       modal: true,
       open: function() {
@@ -2213,7 +2222,7 @@ var balloon = {
         balloon.selfDestroyNode(node, ts, $k_win, $d);
       } else {
         var dateHr = kendo.toString(new Date(ts), kendo.culture().calendar.patterns.g)
-        var msg  = i18next.t('view.advanced.prompt_destroy', dateHr, node.name);
+        var msg  = i18next.t('view.properties.prompt_destroy', dateHr, node.name);
         balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win]).then(function() {
           $d.resolve();
         }, function() {
@@ -2259,7 +2268,7 @@ var balloon = {
         $d.resolve();
 
         node.destroy = ts === null ? undefined : (new Date(ts * 1000)).toISOString();
-        balloon.advancedOperations(node);
+        balloon.displayProperties(node);
       }
     });
 
@@ -2540,7 +2549,7 @@ var balloon = {
       }
 
       balloon.resetDom(
-        ['selected','properties','preview','multiselect','view-bar',
+        ['selected','metadata','preview','multiselect','view-bar',
           'history','share','share-link']
       );
     } else if(balloon.isEditable(balloon.last.mime)) {
@@ -2590,7 +2599,7 @@ var balloon = {
     $fs_crumb_search_list.find('li').remove();
     $fs_crumb_search_list.append('<li fs-id="" id="fs-crumb-search">'+i18next.t('search.results')+'</li>');
 
-    balloon.resetDom(['selected', 'properties', 'preview', 'multiselect',
+    balloon.resetDom(['selected', 'metadata', 'preview', 'multiselect',
       'view-bar', 'history', 'share', 'share-link', 'search']);
   },
 
@@ -3075,7 +3084,7 @@ var balloon = {
 
         if(typeof(newNode) === 'object') {
           newNode.spriteCssClass = balloon.getSpriteClass(node);
-          balloon.displayProperties(newNode);
+          balloon.displayName(newNode);
         }
 
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
@@ -3111,7 +3120,7 @@ var balloon = {
       balloon.multiselect = [];
     }
 
-    balloon.resetDom(['upload', 'preview', 'properties', 'history', 'selected', 'view-bar']);
+    balloon.resetDom(['upload', 'preview', 'metadata', 'history', 'selected', 'view-bar']);
     balloon.updatePannel(true);
 
     var index = balloon.multiselect.indexOf(node);
@@ -5431,7 +5440,7 @@ var balloon = {
       type: 'DELETE',
       dataType: 'json',
       beforeSend: function() {
-        balloon.resetDom(['selected', 'properties', 'preview', 'multiselect',
+        balloon.resetDom(['selected', 'metadata', 'preview', 'multiselect',
           'view-bar', 'history', 'share', 'share-link', 'search', 'events']);
 
         var $tree = $('#fs-browser-tree').find('ul');
@@ -6407,32 +6416,49 @@ var balloon = {
     }
   },
 
+  /**
+   * Displays the name of the node
+   *
+   * @return  void
+   */
+  displayName: function(node) {
+    var $fs_prop_name = $('#fs-properties-name');
+    var $field = $fs_prop_name.find('.fs-value');
+
+    var ext = balloon.getFileExtension(node);
+    var name = node.name;
+
+    if(ext != null && node.directory == false) {
+      $fs_prop_name.find('.fs-ext').html('('+ext+')');
+      $field.html(name.substr(0, name.length-ext.length-1));
+    } else {
+      $fs_prop_name.find('.fs-ext').html('');
+      $field.html(name);
+    }
+  },
 
   /**
-   * Display properties of one node
+   * Display metadata of one node
    *
    * @param   object node
    * @return  void
    */
-  displayProperties: function(node) {
-    var $fs_prop_collection = $("#fs-properties-collection").hide(),
-      $fs_prop_file     = $("#fs-properties-file").hide();
+  displayMetadata: function(node) {
+    var $fs_fileonly = $('.fs-metadata-fileonly').hide();
 
-    $('#fs-properties').off('focusout').on('focusout', 'textarea,input,select', balloon._saveMetaAttributes);
-
-    if(node.directory == true) {
-      $fs_prop_collection.show();
-    } else {
-      $fs_prop_file.show();
+    if(node.directory === false) {
+      $fs_fileonly.show();
     }
 
-    $("#fs-properties-node").show();
     var $field;
 
     //TODO pixtron - rename prop to attribute
     for(var prop in node) {
-      $field = $('#fs-properties-'+prop).find('.fs-value');
-      $('#fs-properties-'+prop).parent().show();
+      var $parent = $('#fs-metadata-'+prop);
+      if($parent.length === 0) continue;
+
+      $field = $parent.find('.fs-value');
+      $parent.parent().show();
 
       switch(prop) {
       case 'changed':
@@ -6455,26 +6481,6 @@ var balloon = {
         }
         break;
 
-      case 'name':
-        var $fs_prop_name = $("#fs-properties-name");
-
-        var ext = balloon.getFileExtension(node),
-          name = node[prop];
-
-        if(ext != null && node.directory == false) {
-          $fs_prop_name.find(".fs-ext").html('('+ext+')');
-          $field.html(name.substr(0, name.length-ext.length-1));
-        } else {
-          $fs_prop_name.find(".fs-ext").html('');
-          $field.html(name);
-        }
-        break;
-
-      case 'meta':
-        for(var meta_attr in node.meta) {
-          $('#fs-properties-'+meta_attr).val(node.meta[meta_attr]);
-        }
-        break;
       case 'share':
       case 'shared':
         if('shareowner' in node) {
@@ -6488,9 +6494,9 @@ var balloon = {
             continue;
           }
 
-          var $icon = $('#fs-properties-share').find('svg');
-          $field = $('#fs-properties-share').find('.fs-value');
-          $('#fs-properties-share').parent().show();
+          var $icon = $('#fs-metadata-share').find('svg');
+          $field = $('#fs-metadata-share').find('.fs-value');
+          $('#fs-metadata-share').parent().show();
 
           $field.html(msg);
 
@@ -7045,7 +7051,7 @@ var balloon = {
       return balloon.resetDom([
         'shortcuts',
         'selected',
-        'properties',
+        'metadata',
         'preview',
         'action-bar',
         'multiselect',
@@ -7053,7 +7059,7 @@ var balloon = {
         'history',
         'share',
         'share-link',
-        'advanced',
+        'properties',
         'search',
         'prompt',
         'tree',
@@ -7099,27 +7105,26 @@ var balloon = {
         balloon.resetWindow('fs-profile-window');
         break;
 
-      case 'properties':
-        //TODO pixtron - is this still needed?
+      case 'metadata':
         balloon._rename();
         balloon._resetRenameView();
-        var $fs_prop = $('#fs-properties');
-        $fs_prop.find('tr:not(.fs-editable)').hide();
-        $fs_prop.find('textarea').val('');
-        $fs_prop.find('input').val('');
-        $fs_prop.find('select').val('');
-        $fs_prop.find('.fs-searchable').hide();
+        var $parent = $('#fs-metadata');
+        $parent.find('tr').hide();
 
-        $fs_prop.find("span").html('');
-        $('#fs-properties-root').hide();
-        $('#fs-properties-id').parent().show();
+        $parent.find("span").html('');
+        $('#fs-metadata-root').hide();
         $('#fs-view').hide();
-        $("#fs-properties-collection").hide();
-        $("#fs-properties-file").hide();
-        $("#fs-properties-node").hide();
+        $("#fs-metadata-collection").hide();
+        $(".fs-metadata-fileonly").hide();
+        $("#fs-metadata-node").hide();
+        $('#fs-metadata-share').parent().hide();
         break;
 
-      case 'advanced':
+      case 'properties':
+        var $parent = $('#fs-metadata');
+        $parent.find('textarea').val('');
+        $parent.find('input').val('');
+        $parent.find('select').val('');
         break;
 
       case 'selected':
@@ -7130,8 +7135,6 @@ var balloon = {
         break;
 
       case 'preview':
-        $('#fs-properties-share').parent().hide();
-
         var $fs_meta_tags = $('#fs-properties-meta-tags-tags');
         $fs_meta_tags.hide();
         $fs_meta_tags.find('ul').empty();

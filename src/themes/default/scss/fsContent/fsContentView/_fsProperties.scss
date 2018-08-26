@@ -1,46 +1,4 @@
 #fs-properties {
-  .fs-properties-group {
-    border-top: 1px solid $colorBrightGrey;
-
-    &:first-child {
-      border-top: none;
-    }
-  }
-
-  table {
-    border-collapse: collapse;
-
-
-    th,
-    td {
-      line-height: 20px;
-      font-weight: 300;
-      padding: 0 0 17px 0;
-      text-align: left;
-    }
-
-    td {
-      padding-left: 30px;
-
-      &#fs-properties-share {
-        .gr-icon,
-        .fs-value {
-          display: inline-block;
-        }
-
-        .gr-icon {
-          $iconSize: 20px;
-
-          position: relative;
-          top: 5px;
-          left: -3px;
-          width: $iconSize;
-          height: $iconSize;
-        }
-      }
-    }
-  }
-
   fieldset {
     padding-top: 17px;
     margin: 0;
@@ -71,5 +29,42 @@
     }
   }
 
+  .fs-properties-group {
+    border-top: 1px solid $colorBrightGrey;
+    padding-bottom: 17px;
+    padding-top: 18px;
 
+    &:last-child {
+      padding-bottom: 0;
+    }
+
+    &:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+  }
+
+  #fs-properties-destroy-date {
+    @include clearfix;
+
+    padding-top: 10px;
+
+    div {
+      font-size: 13px;
+      line-height: 30px;
+      float: left;
+
+      &#fs-properties-destroy-date-preview {
+        margin: 0 10px 0 28px;
+        color: $colorDarkGrey;
+      }
+    }
+
+    button {
+      float: right;
+      min-width: 90px;
+      padding-left: 18px;
+      padding-right: 18px;
+    }
+  }
 }

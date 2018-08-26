@@ -330,71 +330,67 @@
                                 <span class="fs-share-hint-owner-only" data-i18n="view.share.owner_only"></span>
                             </div>
                         </dd>
-                        <dd id="fs-properties">
-                            <table id="fs-properties-fixed" class="fs-properties-group">
-                                <tbody id="fs-properties-collection">
-                                    <tr>
-                                    <td colspan="2"></td>
-                                 </tr>
-                                </tbody>
-                                <tbody id="fs-properties-file">
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.version"></th>
-                                        <td id="fs-properties-version"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.hash"></th>
-                                        <td id="fs-properties-hash"><span class="fs-value"></span></td>
-                                    </tr>
-                                </tbody>
-                                <tbody id="fs-properties-node">
+                        <dd id="fs-metadata">
+                            <table class="fs-metadata-group">
+                                <tbody>
                                     <tr class="fs-searchable">
                                         <th data-i18n="view.prop.head.deleted"></th>
-                                        <td id="fs-properties-deleted"><span class="fs-value"></span></td>
+                                        <td id="fs-metadata-deleted"><span class="fs-value"></span></td>
                                     </tr>
                                     <tr class="fs-searchable">
                                         <th data-i18n="view.prop.head.created"></th>
-                                        <td id="fs-properties-created"><span class="fs-value"></span></td>
+                                        <td id="fs-metadata-created"><span class="fs-value"></span></td>
                                     </tr>
                                     <tr class="fs-searchable">
                                         <th data-i18n="view.prop.head.changed"></th>
-                                        <td id="fs-properties-changed"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.mime"></th>
-                                        <td id="fs-properties-mime"><span class="fs-value"></span></td>
+                                        <td id="fs-metadata-changed"><span class="fs-value"></span></td>
                                     </tr>
                                     <tr class="fs-searchable">
                                         <th data-i18n="view.prop.head.size"></th>
-                                        <td id="fs-properties-size"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.id"></th>
-                                        <td id="fs-properties-id"><span class="fs-value"></span></td>
+                                        <td id="fs-metadata-size"><span class="fs-value"></span></td>
                                     </tr>
                                     <tr>
                                         <th data-i18n="view.prop.head.path"></th>
-                                        <td id="fs-properties-path"><span class="fs-value"></span></td>
+                                        <td id="fs-metadata-path"><span class="fs-value"></span></td>
+                                    </tr>
+                                </tbody>
+
+                                <tbody>
+                                    <tr class="fs-searchable fs-metadata-fileonly">
+                                        <th data-i18n="view.prop.head.version"></th>
+                                        <td id="fs-metadata-version"><span class="fs-value"></span></td>
+                                    </tr>
+                                    <tr class="fs-searchable fs-metadata-fileonly">
+                                        <th data-i18n="view.prop.head.hash"></th>
+                                        <td id="fs-metadata-hash"><span class="fs-value"></span></td>
                                     </tr>
                                     <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.contains"></th>
-                                        <td id="fs-properties-childcount"><span class="fs-value"></span></td>
+                                        <th data-i18n="view.prop.head.mime"></th>
+                                        <td id="fs-metadata-mime"><span class="fs-value"></span></td>
                                     </tr>
                                     <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.changed"></th>
-                                        <td id="fs-properties-changed"><span class="fs-value"></span></td>
+                                        <th data-i18n="view.prop.head.id"></th>
+                                        <td id="fs-metadata-id"><span class="fs-value"></span></td>
                                     </tr>
                                     <tr class="fs-searchable">
                                         <th data-i18n="view.prop.head.share"></th>
-                                        <td id="fs-properties-share">
+                                        <td id="fs-metadata-share">
                                             <svg class="gr-icon gr-i-folder-shared" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#folder-shared"></use></svg>
                                             <div class="fs-value"></div>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-
-                            <fieldset id="fs-properties-editable" class="fs-properties-group">
+                        </dd>
+                        <dd id="fs-history">
+                            <ul></ul>
+                            <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                        </dd>
+                        <dd id="fs-events">
+                            <ul></ul>
+                        </dd>
+                        <dd id="fs-properties">
+                            <fieldset class="fs-properties-group">
                                 <div>
                                     <label for="fs-properties-description" data-i18n="view.prop.head.description"></label>
                                     <textarea id="fs-properties-description"></textarea>
@@ -412,24 +408,16 @@
                                     <input id="fs-properties-license" type="text"/>
                                 </div>
                             </fieldset>
-                        </dd>
-                        <dd id="fs-history">
-                            <ul></ul>
-                            <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
-                        </dd>
-                        <dd id="fs-events">
-                            <ul></ul>
-                        </dd>
-                        <dd id="fs-advanced">
-                            <div class="fs-advanced-group">
+
+                            <div class="fs-properties-group">
                                 <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
-                                <label for="fs-readonly" data-i18n="view.advanced.readonly"></label>
+                                <label for="fs-readonly" data-i18n="view.properties.readonly"></label>
                             </div>
-                            <div class="fs-advanced-group" id="fs-advanced-destroy-date">
-                                <div class="fs-advanced-label" data-i18n="view.advanced.destroy_date"></div>
-                                <div id="fs-advanced-destroy-date-preview"></div>
-                                <button id="fs-advanced-destroy-date-set" class="fs-button-small" data-i18n="view.advanced.set_destroy_date"></button>
-                                <button id="fs-advanced-destroy-date-edit" class="fs-button-small" data-i18n="view.advanced.edit_destroy_date"></button>
+                            <div class="fs-properties-group" id="fs-properties-destroy-date">
+                                <div class="fs-properties-label" data-i18n="view.properties.destroy_date"></div>
+                                <div id="fs-properties-destroy-date-preview"></div>
+                                <button id="fs-properties-destroy-date-set" class="fs-button-small" data-i18n="view.properties.set_destroy_date"></button>
+                                <button id="fs-properties-destroy-date-edit" class="fs-button-small" data-i18n="view.properties.edit_destroy_date"></button>
                             </div>
                         </dd>
                     </dl>

@@ -49,12 +49,12 @@
     },
     "view": {
       "preview": "Vorschau",
+      "metadata": "Metadaten",
       "properties": "Eigenschaften",
       "history": "Verlauf",
       "share_folder": "Ordner freigeben",
       "share_link": "Link Teilen",
-      "events": "Events",
-      "advanced": "Erweitert"
+      "events": "Events"
     }
   },
   "menu": {
@@ -234,7 +234,7 @@
       "changed_since": "Vor %s (%s)",
       "user_deleted": "[gelöschter User]"
     },
-    "advanced": {
+    "properties": {
       "destroy_date": "Löschdatum",
       "set_destroy_date": "Festlegen",
       "edit_destroy_date": "Editieren",

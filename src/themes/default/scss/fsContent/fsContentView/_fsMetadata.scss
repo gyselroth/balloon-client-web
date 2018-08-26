@@ -1,0 +1,57 @@
+#fs-metadata {
+  .fs-metadata-group {
+    border-top: 1px solid $colorBrightGrey;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    tbody {
+      display: block;
+      border-bottom: 1px solid $colorBrightGrey;
+      margin-top: 17px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    th,
+    td {
+      line-height: 20px;
+      font-weight: 300;
+      padding: 0 0 17px 0;
+      text-align: left;
+    }
+
+    td {
+      padding-left: 30px;
+
+      &#fs-metadata-share {
+        .gr-icon,
+        .fs-value {
+          display: inline-block;
+        }
+
+        .gr-icon {
+          $iconSize: 20px;
+
+          position: relative;
+          top: 5px;
+          left: -3px;
+          width: $iconSize;
+          height: $iconSize;
+        }
+      }
+    }
+  }
+}
