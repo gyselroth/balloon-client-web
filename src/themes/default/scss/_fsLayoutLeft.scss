@@ -36,18 +36,4 @@
       display: none;
     }
   }
-
-  #fs-action-refresh {
-    @include icon-button(30px, 30px);
-
-    float: right;
-    background-color: $colorWhite;
-    color: $colorActiveBlue;
-    border-radius: 4px;
-    margin-top: 30px;
-
-    &:hover {
-      color: $colorHoverBlue;
-    }
-  }
 }
