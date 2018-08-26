@@ -992,27 +992,27 @@ var balloon = {
             switch(metaOrder[metaProp]) {
             case 'sharelink_token':
               if(node.sharelink_token) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.sharelink') + '"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg></div>');
               }
               break;
             case 'deleted':
               if(node.deleted) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.deleted') + '"><svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg></div>');
               }
               break;
             case 'readonly':
               if(node.readonly) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-lock"><use xlink:href="/assets/icons.svg#lock"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.readonly') + '"><svg class="gr-icon gr-i-lock"><use xlink:href="/assets/icons.svg#lock"></use></svg></div>');
               }
               break;
             case 'destroy':
               if(node.destroy) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-flag"><use xlink:href="/assets/icons.svg#flag"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.destroy') + '"><svg class="gr-icon gr-i-flag"><use xlink:href="/assets/icons.svg#flag"></use></svg></div>');
               }
               break;
             case 'subscription':
               if(node.subscription) {
-                meta_html_children.push('<div class="fs-node-state"><svg class="gr-icon gr-i-volume-up"><use xlink:href="/assets/icons.svg#volume-up"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.subscription') + '"><svg class="gr-icon gr-i-volume-up"><use xlink:href="/assets/icons.svg#volume-up"></use></svg></div>');
               }
               break;
             case 'color_tag':

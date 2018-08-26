@@ -84,6 +84,13 @@
       "changed": "Geändert",
       "size": "Grösse"
     },
+    "node_states": {
+      "sharelink": "Als link geteilt",
+      "deleted": "Gelöscht",
+      "readonly": "Nur lesen",
+      "destroy": "Löschdatum gesetzt",
+      "subscription": "Abonniert"
+    },
     "filter": {
         "label": "Filter:",
         "files": "Dateien",
