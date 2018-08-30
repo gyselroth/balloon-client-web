@@ -192,7 +192,9 @@
       "privilege_text_m": "%s hat den Zugriff Administrator",
       "privilege_text_rw": "%s hat den Zugriff lesen/schreiben",
       "privilege_text_r": "%s hat den Zugriff nur lesen",
-      "privilege_text_w+": "%s hat den Zugriff Briefkasten"
+      "privilege_text_w+": "%s hat den Zugriff Briefkasten",
+      "expand": "Alle Benutzer/Gruppen anzeigen",
+      "collapse": "Weniger Benutzer/Gruppen anzeigen"
     },
     "share_link": {
       "hint_create_url": "Mit einem globalen Freigabe-Link kannst du eine/einen Datei/Ordner weltweit mit allen teilen, auch mit Benutzern, welche keinen Account besitzen.",

@@ -194,7 +194,9 @@
       "privilege_text_m": "%s has the privilege manager",
       "privilege_text_rw": "%s has the privilege read/write",
       "privilege_text_r": "%s has the privilege readonly",
-      "privilege_text_w+": "%s has the privilege Mailbox"
+      "privilege_text_w+": "%s has the privilege Mailbox",
+      "expand": "Show all users/groups",
+      "collapse": "Show less users/groups"
     },
     "share_link": {
       "hint_create_url": "With a global share link you are able to share a file/folder with everyone even with those who do not have an own login.",

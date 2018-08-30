@@ -45,9 +45,6 @@
     }
 
     .fs-share-window-privilege-selector {
-      position: absolute;
-      top: calc(50% - 12px);
-      right: 0;
       padding: 0;
 
       .fs-share-window-selected-privilege {
@@ -146,36 +143,73 @@
       }
 
       #fs-share-window-search-role {
+        position: absolute;
+        top: calc(50% - 12px);
         right: 10px;
       }
     }
 
     #fs-share-window-consumers {
+      $maxDisplayed: 4;
+
+      position: relative;
+      left: -30px;
+      width: calc(100% + 60px);
       margin-top: 29px;
 
-      & > li {
-        position: relative;
-        color: $colorDarkGrey;
-        font-size: 15px;
-        line-height: 30px;
-        margin: 0 -30px;
-        padding: 0 30px;
-        border-bottom: 1px solid $colorBrightGrey;
+      & > ul {
+        display: block;
+        width: 100%;
+        max-height: $maxDisplayed * 31px + 1px;
+        overflow-y: scroll;
 
-        &:first-child {
-          border-top: 1px solid $colorBrightGrey;
-        }
+        & > li {
+          color: $colorDarkGrey;
+          font-size: 15px;
+          line-height: 30px;
+          margin: 0;
+          padding-left: 30px;
+          border-bottom: 1px solid $colorBrightGrey;
 
-        .fs-share-window-privilege-selector {
-          top: 0;
-          right: 24px;
+          &:first-child {
+            border-top: 1px solid $colorBrightGrey;
+          }
 
-          ul.fs-share-window-privileges {
-            top: -1px;
-            right: -7px;
+          .fs-share-window-privilege-selector {
+            float: right;
+            margin-right: 24px;
+
+            ul.fs-share-window-privileges {
+              top: -1px;
+              right: 30px;
+            }
           }
         }
       }
+    }
+
+    #fs-share-window-toggle-consumers {
+      border-top: 1px solid $colorBrightGrey;
+      border-bottom: 1px solid $colorBrightGrey;
+      margin: -1px -30px 0 -30px;
+      padding: 0 30px;
+      display: none;
+
+      &.visible {
+        display: block;
+      }
+
+      a {
+        color: $colorActiveBlue;
+        font-size: 13px;
+        line-height: 38px;
+        cursor: pointer;
+
+        &.toggle-condense {
+          display: none;
+        }
+      }
+
     }
 
     #fs-share-window-remove {
@@ -204,6 +238,37 @@
       hr {
         margin-top: 0;
         margin-bottom: 0;
+      }
+    }
+
+    &.fs-share-window-consumers-expanded {
+      #fs-share-window-search,
+      #fs-share-window-remove,
+      p.fs-hint,
+      input,
+      h2 {
+        display: none;
+      }
+
+      #fs-share-window-consumers {
+        & > ul {
+          $maxDisplayed: 20;
+
+          max-height: $maxDisplayed * 31px + 1px;
+        }
+      }
+
+      #fs-share-window-toggle-consumers {
+        a {
+
+          &.toggle-expand {
+            display: none;
+          }
+
+          &.toggle-condense {
+            display: block;
+          }
+        }
       }
     }
   }

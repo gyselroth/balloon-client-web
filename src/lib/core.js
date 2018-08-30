@@ -3974,9 +3974,12 @@ var balloon = {
     var $fs_share_win_cancel = $fs_share_win.find('input[name=cancel]');
     var $fs_share_win_remove = $fs_share_win.find('#fs-share-window-remove');
     var $fs_share_win_remove_btn = $fs_share_win.find('input[name=unshare]');
+    var $fs_share_win_consumers = $fs_share_win.find('#fs-share-window-consumers');
     var $share_name = $fs_share_win.find('input[name=share_name]');
 
-    $fs_share_win.find('#fs-share-window-consumers').empty().hide();
+    $fs_share_win_consumers.hide();
+    $fs_share_win_consumers.find('ul').empty()
+    $fs_share_win.find('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
 
     if(node.shared === false) {
       $fs_share_win_create.show();
@@ -4100,7 +4103,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl);
+            acl = balloon._addShareConsumer(role, acl, true);
           }
         });
 
@@ -4122,7 +4125,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl);
+            acl = balloon._addShareConsumer(role, acl, true);
           }
         });
       }
@@ -4130,7 +4133,12 @@ var balloon = {
 
     balloon._userAndGroupAutocomplete($share_consumer_search, true, function(item) {
       selected = true;
-      balloon._addShareConsumer(item, acl);
+      balloon._addShareConsumer(item, acl, true);
+    });
+
+    $fs_share_win.find('#fs-share-window-toggle-consumers a').off('click').on('click', function() {
+      $fs_share_win.find('#fs-share-window-content').toggleClass('fs-share-window-consumers-expanded');
+      $fs_share_win.data('kendoBalloonWindow').center();
     });
   },
 
@@ -4256,8 +4264,9 @@ var balloon = {
    * @param  Array acl
    * @return object
    */
-  _addShareConsumer: function(item, acl) {
+  _addShareConsumer: function(item, acl, scrollToItem) {
     var $fs_share_win_consumers = $('#fs-share-window-consumers');
+    var $fs_share_win_consumers_ul = $fs_share_win_consumers.find('> ul');
 
     if(acl.filter(function(role) {
       return role.id === item.role.id;
@@ -4315,10 +4324,25 @@ var balloon = {
     $consumer_privilege_selector.append($consumer_privilege_selector_item_remove);
 
     $consumer_privilege.append($consumer_privilege_selector);
+
+    $consumer_privilege.on('mouseenter', function() {
+      $consumer_privilege_selector.css('top', ($consumer_privilege.position().top-1)+'px');
+    });
+
     $consumer.append($consumer_privilege);
 
-    $fs_share_win_consumers.append($consumer);
+    $fs_share_win_consumers_ul.append($consumer);
     $fs_share_win_consumers.show();
+
+    if(acl.length >= 4) {
+      $('#fs-share-window-toggle-consumers').addClass('visible');
+    }
+
+    if(scrollToItem) {
+      $fs_share_win_consumers_ul.animate({scrollTop: $fs_share_win_consumers_ul.prop('scrollHeight')}, 250);
+    }
+
+    $('#fs-share-window').data('kendoBalloonWindow').center();
 
     $('#fs-share-window .fs-window-secondary-actions input[type="submit"]').prop('disabled', ($('#fs-share-window input[name=share_name]').val() === ''));
 
@@ -4358,6 +4382,13 @@ var balloon = {
         break;
       }
     }
+
+    if(acl.length < 4) {
+      $('#fs-share-window-toggle-consumers').removeClass('visible');
+      $('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
+    }
+
+    $('#fs-share-window').data('kendoBalloonWindow').center();
 
     if(acl.length === 0) {
       $('#fs-share-window-consumers').hide();
