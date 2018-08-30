@@ -6977,8 +6977,14 @@ var balloon = {
 
     if(enabled === undefined) enabled = true;
 
+    var actions = [];
+
+    if(balloon.selected_action.command !== null) {
+      actions.push('paste');
+    }
+
     if(enabled === true) {
-      var actions = ['download'];
+      actions.push('download');
 
       if(!balloon.isSearch() && !balloon.isMultiSelect()) {
         actions.push('rename');
@@ -6996,13 +7002,9 @@ var balloon = {
         actions.push('restore');
       }
 
-      if(balloon.selected_action.command !== null) {
-        actions.push('paste');
-      }
-
       balloon.enableAction(actions, true);
     } else {
-      balloon.enableAction([], true);
+      balloon.enableAction(actions, true);
     }
   },
 
@@ -7057,6 +7059,10 @@ var balloon = {
       balloon.selected_action.command  = name;
       balloon.selected_action.nodes    = balloon.getSelected(balloon.getCurrentNode());
       balloon.selected_action.collection = balloon.getCurrentCollectionId();
+
+      var count = Array.isArray(balloon.selected_action.nodes) ? balloon.selected_action.nodes.length : 1;
+      $('#fs-action-paste-count').html(count);
+
       balloon.enableAction('paste');
       break;
 

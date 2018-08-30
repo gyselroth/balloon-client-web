@@ -8,12 +8,33 @@
     //TODO pixtron move buttonHeight to global scope
     @include icon-button-small($buttonHeight, $buttonHeight);
 
+    #fs-action-paste-count {
+      $size: 16px;
+
+      position: absolute;
+      top: -1 * $size / 2;
+      right: -1 * $size / 2;
+      width: $size;
+      height: $size;
+      background-color: $colorActiveBlue;
+      border-radius: 50%;
+      color: $colorWhite;
+      font-size: 10px;
+      line-height: $size;
+      text-align: center;
+      font-weight: bold;
+    }
+
     // TODO pixtron - move disabled to button?
     &.fs-action-disabled,
     &.fs-action-disabled:hover {
       color: $colorLightGrey;
       border-color: $colorLightGrey;
       cursor: default;
+
+      #fs-action-paste-count {
+        display: none;
+      }
     }
   }
 }
