@@ -1,0 +1,135 @@
+/**
+ * Kendo calendar popup for datepicker
+ */
+
+.k-popup.k-calendar-container {
+  @include shadow-default;
+
+  border-radius: 4px !important;
+  border-width: 1px;
+  border-color: $colorLightGrey;
+  padding: 0;
+  background-color: transparent;
+  width: 300px;
+
+  .k-calendar {
+    display: block;
+    width: 100%;
+    border-radius: 4px;
+
+    .k-header {
+      width: 100%;
+      background-color: $colorBrightGrey;
+
+      .k-link {
+        font-size: 15px;
+        line-height: 28px !important;
+        height: 28px !important;
+        margin-top: 0;
+        margin-bottom: 0;
+        background-color: transparent;
+
+
+        &.k-nav-prev,
+        &.k-nav-next {
+          top: 9px;
+          width: 24px;
+          background-color: transparent;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: contain;
+
+          span.k-icon {
+            display: none;
+          }
+        }
+
+        &.k-nav-prev {
+          left: 10px;
+          background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiM5OTk5OTkiPjxwb2x5Z29uIHBvaW50cz0iMTMuNDkgMTYuOTEgOC41OSAxMiAxMy40OSA3LjA5IDE0LjkxIDguNTEgMTEuNDEgMTIgMTQuOTEgMTUuNDkgMTMuNDkgMTYuOTEiLz48L3N2Zz4=');
+        }
+
+        &.k-nav-fast {
+          margin-top: 9px;
+          margin-bottom: 8px;
+        }
+
+        &.k-nav-next {
+          right: 10px;
+          background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiM5OTk5OTkiPjxwb2x5Z29uIHBvaW50cz0iMTAuNTEgMTYuOTEgOS4wOSAxNS40OSAxMi41OSAxMiA5LjA5IDguNTEgMTAuNTEgNy4wOSAxNS40MSAxMiAxMC41MSAxNi45MSIvPjwvc3ZnPg==');
+        }
+      }
+    }
+
+    .k-content {
+      padding: 0 15px;
+
+      th,
+      td {
+        padding: 2px 6px 2px 2px;
+        font-size: 13px;
+        line-height: 26px;
+        color: $colorDarkGrey;
+        text-align: center;
+        width: 26px;
+        height: 26px;
+        overflow: hidden;
+
+        &:last-child {
+          padding-right: 2px;
+        }
+      }
+
+      th {
+        font-weight: bold;
+        background-color: transparent !important;
+      }
+
+      td {
+        background-color: transparent !important;
+
+        a {
+          padding: 0;
+          border-radius: 2px;
+
+          &.k-link {
+            font-size: 13px;
+            line-height: 26px;
+          }
+        }
+
+        &.k-alt {
+          //week numbers
+          color: $colorMediumGrey;
+        }
+
+        &.k-other-month {
+          color: $colorLightGrey;
+        }
+
+        &.k-state-hover {
+          a {
+            background-color: $colorLightGrey;
+          }
+        }
+
+        &.k-today {
+          a {
+            background-color: $colorMediumGrey;
+          }
+        }
+
+        &.k-state-selected {
+          a {
+            background-color: $colorDarkGrey;
+            color: $colorWhite;
+          }
+        }
+      }
+    }
+
+    .k-footer {
+      display: none !important;
+    }
+  }
+}
