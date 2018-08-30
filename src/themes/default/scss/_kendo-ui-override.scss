@@ -1,4 +1,4 @@
-// Autocomplete
+//scrollable list popups
 .k-list-container.k-popup {
   background-color: $colorWhite;
   border: 1px solid $colorLightGrey;
@@ -8,19 +8,18 @@
   -webkit-box-shadow: none;
   overflow: hidden;
 
-  .k-list-scroller {
-    ul {
-      li {
-        background-color: $colorWhite;
-        font-size: 15px;
-        line-height: 30px;
-        color: $colorDarkGrey;
-        cursor: pointer;
-        padding: 0 14px;
+  ul.k-list {
+    li {
+      background-color: $colorWhite;
+      font-size: 15px;
+      line-height: 30px;
+      color: $colorDarkGrey;
+      cursor: pointer;
+      padding: 0 14px;
+      background-image: none !important;
 
-        &:hover {
-          background: $colorBrightGrey !important;
-        }
+      &:hover {
+        background: $colorBrightGrey !important;
       }
     }
   }
