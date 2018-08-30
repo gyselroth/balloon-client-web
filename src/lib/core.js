@@ -4285,7 +4285,13 @@ var balloon = {
       privilege: privilege,
     });
 
-    var $consumer = $('<li id="fs-share-window-consumer-' + item.role.id + '">'+name+'</li>');
+    var icon = item.type === 'group' ? 'group' : 'person';
+    var $consumer = $(
+      '<li id="fs-share-window-consumer-' + item.role.id + '">'+
+        '<svg class="gr-icon gr-i-'+icon+'"><use xlink:href="/assets/icons.svg#'+icon+'"></use></svg>'+
+        '<span>'+name+'</span>'+
+      '</li>'
+    );
 
     var $consumer_privilege = $(
       '<div class="fs-share-window-privilege-selector">'+

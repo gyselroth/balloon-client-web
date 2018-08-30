@@ -175,6 +175,13 @@
             border-top: 1px solid $colorBrightGrey;
           }
 
+          .gr-icon {
+            float: left;
+            margin-top: 3px;
+            margin-right: 3px;
+            fill: $colorMediumGrey;
+          }
+
           .fs-share-window-privilege-selector {
             float: right;
             margin-right: 24px;
