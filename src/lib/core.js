@@ -3208,6 +3208,7 @@ var balloon = {
 
     balloon.multiselect = [];
     balloon.updatePannel(false);
+    balloon.resetDom(['view-bar', 'multiselect']);
     balloon.pushState(false, true);
   },
 
