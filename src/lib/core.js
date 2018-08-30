@@ -1057,7 +1057,59 @@ var balloon = {
           break;
 
         case 'checkbox':
-          $node_el.append('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
+          var $checkbox = $('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
+
+          $checkbox.on('click', function() {
+            event.stopPropagation();
+
+            var $k_tree = $('#fs-browser-tree').data('kendoTreeView');
+            var selected = $k_tree.dataItem($k_tree.select());
+            var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
+
+            if(balloon.isMultiSelect()) {
+              balloon.multiSelect(balloon.datasource._pristineData[node.index]);
+
+              if(balloon.multiselect.length === 1) {
+                var selected_dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(balloon.multiselect[0])+']');
+                balloon.deselectAll();
+
+                $k_tree.select(selected_dom_node);
+                $k_tree.trigger('select', {node: selected_dom_node});
+                balloon.resetDom('multiselect');
+              } else {
+                var res = balloon.multiselect.filter(function(selectedNode) {
+                  return selectedNode.id === node.id;
+                });
+
+                if(res.length === 0) {
+                  $k_tree.select($());
+                }
+              }
+
+              balloon.updatePannel(true);
+            } else if(selected && selected.id !== node.id) {
+              balloon.deselectAll();
+              balloon.multiSelect(balloon.datasource._pristineData[node.index]);
+              balloon.multiSelect(balloon.datasource._pristineData[selected.index]);
+              $k_tree.select($());
+
+              balloon.updatePannel(true);
+            } else if(selected && selected.id === node.id) {
+              $k_tree.select($());
+              balloon.updatePannel(false);
+              balloon.resetDom('view-bar');
+              balloon.last = null;
+            } else if(!selected) {
+              $k_tree.select(dom_node);
+              $k_tree.trigger('select', {node: dom_node});
+              balloon.updatePannel(true);
+            }
+
+            balloon._updateCheckAllState();
+            balloon.pushState();
+          });
+
+          $node_el.append($checkbox);
           break;
         }
       }
@@ -1072,7 +1124,7 @@ var balloon = {
 
       if(selected !== null && typeof(selected) === 'object' && selected.indexOf(balloon.id(node)) > -1) {
         if(selected.length > 1) {
-          balloon.multiSelect(node);
+          balloon.multiSelect(balloon.datasource._pristineData[node.index]);
         }
 
         var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
@@ -1162,10 +1214,10 @@ var balloon = {
       }
     }
 
+    balloon.showView(views);
     balloon.switchView(view);
     $('#fs-properties-name').show();
 
-    balloon.showView(views);
 
     if(!balloon.isMobileViewPort()) {
       balloon.updatePannel(true);
@@ -7212,7 +7264,8 @@ var balloon = {
         break;
 
       case 'view-bar':
-        $('#fs-content-view').find('dt,dd').addClass('disabled');
+        $('#fs-content-view').find('dt,dd').addClass('disabled').removeClass('active');
+        $('#fs-properties-name span').html('');
         break;
 
       case 'action-bar':
