@@ -3716,6 +3716,7 @@ var balloon = {
    * @return void
    */
   showNewNode: function(type) {
+    var mayCreate = false;
     var $fs_new_node_win = $('#fs-new-node-window');
 
     var $k_win = $fs_new_node_win.kendoBalloonWindow({
@@ -3730,12 +3731,13 @@ var balloon = {
         var $submit = $fs_new_node_win.find('input:submit');
 
         $input.val('');
+        $submit.attr('disabled', true);
 
         $input.off('keyup').on('keyup', function(e) {
           var name = $(this).val();
 
           if(e.keyCode === 13) {
-            $submit.click();
+            if(mayCreate) $submit.click();
             return;
           }
 
@@ -3743,10 +3745,14 @@ var balloon = {
             name = name+'.'+type;
           }
 
-          if(balloon.nodeExists(name)) {
+          if(balloon.nodeExists(name) || name === '') {
+            mayCreate = false;
             $(this).addClass('fs-node-exists');
+            $submit.attr('disabled', true);
           } else {
+            mayCreate = true;
             $(this).removeClass('fs-node-exists');
+            $submit.attr('disabled', false);
           }
         });
 
