@@ -32,16 +32,18 @@ var app = {
 
     if(app.balloon.last.malware_quarantine === true) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-positive">'
+          +'<svg class="gr-icon gr-i-checked-false"><use xlink:href="/assets/icons.svg#checked-false"></use></svg>'
           +'<span>'+i18next.t('app.balloon_app_clamav.malware_found', app.balloon.last.malware_reason)+'</span>'
-        +'</li>');
+        +'</div>');
 
-      $('#fs-properties').prepend($node);
+      $('#fs-metadata').prepend($node);
     } else if(app.balloon.last.malware_quarantine === false) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-negative">'
+          +'<svg class="gr-icon gr-i-checked-true"><use xlink:href="/assets/icons.svg#checked-true"></use></svg>'
           +'<span>'+i18next.t('app.balloon_app_clamav.clean')+'</span>'
-        +'</li>');
+        +'</div>');
 
-      $('#fs-properties').prepend($node);
+      $('#fs-metadata').prepend($node);
     }
   },
 }
