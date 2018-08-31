@@ -1715,7 +1715,7 @@ var balloon = {
           case 'renameCollectionShare':
           case 'renameCollectionReference':
             undo = true;
-            icon = 'italic';
+            icon = 'text-edit';
             break;
           case 'moveFile':
           case 'moveCollection':
