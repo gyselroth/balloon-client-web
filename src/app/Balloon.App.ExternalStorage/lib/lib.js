@@ -40,13 +40,13 @@ var app = {
       '<select>'+
         '<option value="smb">'+i18next.t('app.externalstorage.smb_share')+'</option>'+
       '</select>'+
-      '<label>'+i18next.t('tree.folder')+'</label><input name="name" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.folder')+'</label><input name="name" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="off" name="username" type="text"/>'+
       '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
       '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
+      '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
       '<input name="add" value='+i18next.t('button.save')+' type="submit"/>'+
       '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>');
 
@@ -164,7 +164,7 @@ var app = {
       type: 'POST',
       data: {
         name: name,
-        collection: app.balloon.getCurrentCollectionId(),
+        id: app.balloon.getCurrentCollectionId(),
         attributes: {
           mount: {
             adapter: adapter,
@@ -184,16 +184,23 @@ var app = {
 
         switch(error.responseJSON.error) {
           case 'Icewind\\SMB\\Exception\\InvalidArgumentException':
+          case 'Icewind\\SMB\\Exception\\NoRouteToHostException':
+          case 'Icewind\\SMB\\Exception\\HostDownException':
             $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_host')).show();
           break;
 
           case 'Icewind\\SMB\\Exception\\ForbiddenException':
+          case 'Icewind\\SMB\\Exception\\AuthenticationException':
             $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_credentials')).show();
+          break;
+
+          case 'Icewind\\SMB\\Exception\\NotFoundException':
+            $div.find('.error-message').html(i18next.t('app.externalstorage.error.invalid_share')).show();
           break;
 
           case 'Balloon\\Filesystem\\Exception\\Conflict':
             if(error.responseJSON.code == 19) {
-              $div.find('.error-message').html(i18next.t('tree.error.folder_exists')).show();
+              $div.find('.error-message').html(i18next.t('tree.error.folder_exists', name)).show();
             } else {
               app.balloon.displayError(error);
             }
