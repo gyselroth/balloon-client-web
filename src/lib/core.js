@@ -196,9 +196,22 @@ var balloon = {
         return true;
       },
       onActivate: function() {
+        var node = balloon.getCurrentNode();
+        var $fs_events_all = $('#fs-events-all').hide();
+
         var $view_list = $('#fs-events ul');
-        balloon.displayEventsInfiniteScroll($view_list, balloon.getCurrentNode());
-        balloon.displayEvents($view_list, balloon.getCurrentNode());
+        $view_list.children().remove();
+
+        var req = balloon.displayEvents($view_list, node, {skip: 0, limit: 3})
+
+
+        req.done(function(body) {
+          if(body && body.count < body.total) {
+            $fs_events_all.off('click').on('click', function() {
+              balloon.displayEventsWindow(node);
+            }).show();
+          }
+        });
       },
     },
     {
@@ -1612,7 +1625,7 @@ var balloon = {
       'copyCollectionReference'
     ];
 
-    balloon.xmlHttpRequest({
+    return balloon.xmlHttpRequest({
       url: balloon.base+'/nodes/event-log',
       data: params,
       type: 'GET',
@@ -1789,8 +1802,11 @@ var balloon = {
 
 
           if(undo === true) {
+            var that = this;
             $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="/assets/icons.svg#undo"></use></svg></div>').unbind('click').bind('click',
-              body.data[log], balloon._undoEvent);
+              body.data[log], function(e) {
+                balloon._undoEvent.apply(that, [e, node]);
+              });
             $node.append($undo);
           }
 
@@ -1825,19 +1841,19 @@ var balloon = {
    *
    * @return void
    */
-  displayEventsWindow: function() {
+  displayEventsWindow: function(node) {
     var $fs_event_win   = $('#fs-event-window'),
       $fs_event_list  = $fs_event_win.find('ul'),
       datastore     = [];
 
     if($fs_event_win.is(':visible')) {
-      balloon.displayEventsInfiniteScroll($fs_event_list);
-      balloon.displayEvents($fs_event_list);
+      balloon.displayEventsInfiniteScroll($fs_event_list, node);
+      balloon.displayEvents($fs_event_list, node);
     } else {
       balloon.resetDom('events-win');
       $fs_event_win   = $('#fs-event-window'),
       $fs_event_list  = $fs_event_win.find('ul'),
-      balloon.displayEventsInfiniteScroll($fs_event_list);
+      balloon.displayEventsInfiniteScroll($fs_event_list, node);
 
       $fs_event_win.kendoBalloonWindow({
         title: $fs_event_win.attr('title'),
@@ -1846,7 +1862,7 @@ var balloon = {
         height: '400px',
         width: '800px',
         open: function() {
-          balloon.displayEvents($fs_event_list);
+          balloon.displayEvents($fs_event_list, node);
         }
       }).data("kendoBalloonWindow").center().open();
     }
@@ -1857,12 +1873,16 @@ var balloon = {
    * Undo event
    *
    * @param  object e
+   * @param  object node
    * @return void
    */
-  _undoEvent: function(e) {
+  _undoEvent: function(e, node) {
     var successAction;
     if($('#fs-event-window.k-window-content').is(':visible')) {
-      successAction = {action: 'displayEventsWindow'};
+      successAction = {
+        action: 'displayEventsWindow',
+        params: [node]
+      };
     } else {
       successAction = {
         action: 'switchView',

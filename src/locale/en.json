@@ -253,6 +253,9 @@
         "destroy_date": "Destruction date",
         "destroy_time": "Time <span>(optional)</span>"
       }
+    },
+    "events": {
+      "show_all": "Show all events"
     }
   },
   "error": {
