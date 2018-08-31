@@ -16,12 +16,14 @@
       border-bottom: 1px solid $colorBrightGrey;
       margin-top: 17px;
 
-      &:first-child {
-        margin-top: 0;
-      }
-
       &:last-child {
         border-bottom: none;
+      }
+    }
+
+    &:first-child {
+      tbody:first-child {
+        margin-top: 0;
       }
     }
 
