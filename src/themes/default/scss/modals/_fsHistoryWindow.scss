@@ -1,0 +1,40 @@
+#fs-history-window {
+  display: none;
+
+  $buttonWrapHeight: 100px;
+
+  #fs-history-window-content {
+    position: relative;
+    height: calc(100% - #{$buttonWrapHeight});
+    overflow-y: scroll;
+
+    ul {
+      padding-bottom: 40px;
+
+      @include history-list;
+    }
+
+    #fs-history-window-footer {
+      display: none;
+      position: fixed;
+      bottom: $buttonWrapHeight;
+      left: 0;
+
+      display: block;
+      height: 40px;
+      width: 100%;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+    }
+  }
+
+  #fs-history-window-button-wrapper {
+    position: fixed;
+    width: 100%;
+    bottom: 30px;
+    left: 0;
+
+    input:last-child {
+      margin-right: 60px;
+    }
+  }
+}

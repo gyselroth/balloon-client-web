@@ -186,7 +186,7 @@ var balloon = {
         return !balloon.last.directory;
       },
       onActivate: function() {
-        balloon.displayHistory(balloon.getCurrentNode());
+        balloon.displayHistoryView();
       },
     },
     {
@@ -6393,20 +6393,41 @@ var balloon = {
     }
   },
 
-
   /**
-   * Display file history
+   * Display file history in view bar
    *
-   * @param   object node
    * @return  void
    */
-  displayHistory: function(node) {
-    balloon.resetDom('history');
+  displayHistoryView: function() {
+    var limit = 2;
+    var node = balloon.getCurrentNode();
+    var $fs_history = $('#fs-history');
+    var $show_more = $fs_history.find('#fs-history-actions button');
+    $show_more.hide();
 
-    var $view = $("#fs-history"),
-      $fs_history = $view.find("> ul");
+    var req = balloon.displayHistory($fs_history, node, limit);
+    req.done(function(body) {
+      if(body && body.data && body.data.length > limit) {
+        $show_more.off('click').on('click', function() {
+          balloon.displayHistoryWindow(node);
+        }).show();
+      }
+    });
+  },
 
-    balloon.xmlHttpRequest({
+  /**
+   * Display file history in given $dom
+   *
+   * @param   object $dom
+   * @param   object node
+   * @param   int limit
+   * @return  void
+   */
+  displayHistory: function($dom, node, limit) {
+    var $fs_history = $dom.find("ul");
+    $fs_history.empty();
+
+    return balloon.xmlHttpRequest({
       dataType: "json",
       url: balloon.base+'/files/history',
       type: "GET",
@@ -6417,7 +6438,9 @@ var balloon = {
         var action, dom_node, ts, since, radio;
         data.data.reverse();
 
-        for(var i in data.data) {
+        limit = limit || data.data.length;
+
+        for(var i=0; i < limit && i < data.data.length; i++) {
           switch(data.data[i].type) {
           case 0:
             action = '<span class="fs-history-text-action">'+ i18next.t('view.history.added')+'</span>';
@@ -6470,7 +6493,7 @@ var balloon = {
           $fs_history.append(dom_node);
         }
 
-        var $submit = $view.find('input[type=submit]');
+        var $submit = $dom.find('input[type=submit]');
         if(data.data.length > 1) {
           $submit.show();
         }
@@ -6492,6 +6515,42 @@ var balloon = {
 
 
   /**
+   * Display file history in modal
+   *
+   * @param   object node
+   * @return  void
+   */
+  displayHistoryWindow: function(node) {
+    var $fs_history_win   = $('#fs-history-window');
+
+    if($fs_history_win.is(':visible')) {
+      balloon.displayHistory($fs_history_win, node);
+    } else {
+      $fs_history_win.kendoBalloonWindow({
+        title: $fs_history_win.attr('title'),
+        resizable: false,
+        modal: true,
+        height: '400px',
+        width: '800px',
+        open: function() {
+          balloon.displayHistory($fs_history_win, node);
+
+          $fs_history_win.find('input[name="apply"]').off('click').on('click', function(){
+            var version = $fs_history_win.find('input[name=version]:checked').val();
+            if(version !== undefined) {
+              balloon.restoreVersion(node, version);
+            }
+          });
+
+          $fs_history_win.find('input[name="cancel"]').off('click').on('click', function(){
+            $fs_history_win.data("kendoBalloonWindow").close();
+          });
+        }
+      }).data('kendoBalloonWindow').center().open();
+    }
+  },
+
+  /**
    * Restore file to a previous version
    *
    * @param   string|object node
@@ -6508,7 +6567,11 @@ var balloon = {
       },
       success: function(data) {
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        balloon.displayHistory(node);
+        balloon.displayHistoryView();
+
+        if($('#fs-history-window').is(':visible')) {
+          balloon.displayHistoryWindow(node);
+        }
       }
     });
   },

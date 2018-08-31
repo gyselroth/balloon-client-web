@@ -8,6 +8,7 @@
     "login": "Login",
     "logout": "Logout",
     "events": "Events",
+    "history": "History",
     "profile": "Profile",
     "settings": "Settings",
     "error": {
@@ -236,7 +237,9 @@
       "restored_to": "Restored file to version %s",
       "changed_by": "Changed by %s %s ago (%s)",
       "changed_since": "%s ago (%s)",
-      "user_deleted": "[user deleted]"
+      "user_deleted": "[user deleted]",
+      "show_all": "Show all",
+      "cancel": "Cancel"
     },
     "advanced": {
       "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",

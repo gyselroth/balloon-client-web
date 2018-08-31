@@ -385,7 +385,10 @@
                         </dd>
                         <dd id="fs-history">
                             <ul></ul>
-                            <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                            <div id="fs-history-actions">
+                                <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                                <button class="fs-button-small" id="fs-events-all" data-i18n="view.history.show_all" />
+                            </div>
                         </dd>
                         <dd id="fs-events">
                             <ul></ul>
@@ -473,6 +476,18 @@
             <div id="fs-event-window-content">
                 <ul></ul>
                 <div id="fs-event-window-footer"></div>
+            </div>
+        </div>
+
+        <div id="fs-history-window" data-i18n="[title]login.history">
+            <div id="fs-history-window-content">
+                <ul></ul>
+                <div id="fs-history-window-footer"></div>
+            </div>
+            <div id="fs-history-window-button-wrapper" class="fs-window-secondary-actions">
+                <hr />
+                <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.history.cancel"/>
+                <input type="button" tabindex="1" name="apply" class="fs-button-primary" data-i18n="[value]view.history.restore"/>
             </div>
         </div>
 
