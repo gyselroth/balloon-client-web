@@ -8,7 +8,6 @@
     "login": "Login",
     "logout": "Logout",
     "events": "Events",
-    "history": "Verlauf",
     "profile": "Profil",
     "settings": "Einstellungen",
     "error": {
@@ -237,7 +236,8 @@
       "changed_since": "Vor %s (%s)",
       "user_deleted": "[gelöschter User]",
       "show_all": "Alle anzeigen",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "history_for": "Verlauf für „%s“"
     },
     "properties": {
       "destroy_date": "Löschdatum",

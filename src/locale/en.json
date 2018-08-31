@@ -8,7 +8,6 @@
     "login": "Login",
     "logout": "Logout",
     "events": "Events",
-    "history": "History",
     "profile": "Profile",
     "settings": "Settings",
     "error": {
@@ -239,7 +238,8 @@
       "changed_since": "%s ago (%s)",
       "user_deleted": "[user deleted]",
       "show_all": "Show all",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "history_for": "History for „%s“"
     },
     "advanced": {
       "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",

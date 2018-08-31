@@ -6399,7 +6399,7 @@ var balloon = {
    * @return  void
    */
   displayHistoryView: function() {
-    var limit = 2;
+    var limit = 3;
     var node = balloon.getCurrentNode();
     var $fs_history = $('#fs-history');
     var $show_more = $fs_history.find('#fs-history-actions button');
@@ -6527,7 +6527,7 @@ var balloon = {
       balloon.displayHistory($fs_history_win, node);
     } else {
       $fs_history_win.kendoBalloonWindow({
-        title: $fs_history_win.attr('title'),
+        title: i18next.t('view.history.history_for', node.name),
         resizable: false,
         modal: true,
         height: '400px',
