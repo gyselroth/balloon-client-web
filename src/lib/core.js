@@ -2445,7 +2445,11 @@ var balloon = {
 
 
   /**
-   * Check if node has a hidden name (begins with ".")
+   * Check if node has a hidden name
+   *
+   * Either unix style (. prefix), windows style (~) or windows system files like:
+   * - desktop.ini
+   * - Thumbs.db
    *
    * @param   string|object node
    * @return  bool
@@ -2454,8 +2458,8 @@ var balloon = {
     if(typeof(node) == 'object') {
       node = node.name;
     }
-    var regex = /^\..*/;
-    return regex.test(node);
+
+    return /^\..*/.test(node) || node === 'Thumbs.db' || node === 'desktop.ini'
   },
 
 
