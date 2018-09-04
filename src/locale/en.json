@@ -128,7 +128,8 @@
     "second_plural": "{{count}} seconds"
   },
   "button": {
-    "save": "Save"
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "view": {
     "prop": {
