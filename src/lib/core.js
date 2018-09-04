@@ -15,7 +15,7 @@ import balloonTimePicker from './widget-balloon-timepicker.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
-
+window.$ = $;
 $.ajaxSetup({
   beforeSend:function(jqXHR,settings){
     if (settings.dataType === 'binary'){
@@ -265,23 +265,32 @@ var balloon = {
       }
     });
 
-    $('#fs-settings').off('click').on('click', function(event) {
+    $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
       event.preventDefault();
-      var $menu = $('#fs-settings-menu-wrap');
 
-      if($menu.hasClass('fs-settings-menu-open')) {
-        $menu.removeClass('fs-settings-menu-open');
+      var $parent = $(event.target);
+      var parentId = $parent.attr('id');
+      var $dropdown = $parent.find('.fs-identity-dropdown');
 
-        $(document).off('click.fs-settings');
+      if($dropdown.hasClass('fs-identity-dropdown-open')) {
+        $dropdown.removeClass('fs-identity-dropdown-open');
+
+        $(document).off('click.fs-identity-dropdown');
       } else {
-        $menu.addClass('fs-settings-menu-open');
+        $('.fs-identity-dropdown-open').removeClass('fs-identity-dropdown-open');
 
-        $(document).off('click.fs-settings').on('click.fs-settings', function(event){
+        $dropdown.addClass('fs-identity-dropdown-open');
+
+        $dropdown.find('li').off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function() {
+          $dropdown.removeClass('fs-identity-dropdown-open');
+        });
+
+        $(document).off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function(event){
           var $target = $(event.target);
 
-          if($target.attr('id') === 'fs-settings' || $target.parents('#fs-settings').length > 0) return;
+          if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
 
-          $menu.removeClass('fs-settings-menu-open');
+          $dropdown.removeClass('fs-identity-dropdown-open');
         });
       }
     });
