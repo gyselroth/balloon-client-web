@@ -101,9 +101,7 @@
     },
     "open_folder": "Open folder",
     "folder": "Folder",
-    "new_folder": "New Folder",
     "txt_file": "Text Document",
-    "new_file": "New File",
     "selected": "({{count}} item selected)",
     "selected_plural": "({{count}} items selected)",
     "no_nodes": "<No files were found>",
@@ -384,5 +382,12 @@
     "node_moved_plural": "{{count}} Elements have been moved to <b>{{dest}}</b>.",
     "node_moved_folderup": "{{count}} Element has been moved to <b>the parent folder</b>.",
     "node_moved_folderup_plural": "{{count}} Elements have been moved to <b>the parent folder</b>."
+  },
+  "new_node": {
+    "title": {
+      "folder": "New Folder",
+      "txt": "New Text Document"
+    },
+    "name": "Name"
   }
 }

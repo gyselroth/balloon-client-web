@@ -101,6 +101,7 @@
     },
     "open_folder": "Ordner öffnen",
     "folder": "Ordner",
+    "txt_file": "Textdokument",
     "selected": "{{count}} Objekt ausgewählt",
     "selected_plural": "{{count}} Objekte ausgewählt",
     "no_nodes": "<Es wurden keine Daten gefunden>",
