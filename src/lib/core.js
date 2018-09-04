@@ -2459,7 +2459,7 @@ var balloon = {
       node = node.name;
     }
 
-    return /^\..*/.test(node) || node === 'Thumbs.db' || node === 'desktop.ini'
+    return /^\./.test(node) || /^\~/.test(node) || node === 'Thumbs.db' || node === 'desktop.ini'
   },
 
 
