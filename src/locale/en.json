@@ -49,12 +49,12 @@
     },
     "view": {
       "preview": "Preview",
+      "metadata": "Metadata",
       "properties": "Properties",
       "history": "History",
       "share_folder": "Share folder",
       "share_link": "Share link",
-      "events": "Events",
-      "advanced": "Advanced"
+      "events": "Events"
     }
   },
   "menu": {
@@ -239,8 +239,7 @@
       "cancel": "Cancel",
       "history_for": "History for „%s“"
     },
-    "advanced": {
-      "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",
+    "properties": {
       "destroy_date": "Destruction date",
       "set_destroy_date": "Set date",
       "edit_destroy_date": "Edit date",
