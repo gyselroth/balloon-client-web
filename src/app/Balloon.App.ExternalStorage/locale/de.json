@@ -1,0 +1,20 @@
+{
+  "app": {
+    "externalstorage": {
+      "folder": "Folder (Name in balloon)",
+      "external_storage": "Externer Speicher",
+      "smb_share": "SMB/CIFS Freigabe",
+      "hostname": "Hostame/IP",
+      "share_name": "Freigabe",
+      "path": "Pfad zu einem untergeordneten Verzeichnis (Optional)",
+      "workgroup": "Workgroup/Domain (Optional)",
+      "username": "Benutzername (Optional)",
+      "password": "Passwort (Optional)",
+      "error": {
+        "invalid_host": "Der Server kann nicht gefunden werden. Bitte kontrolliere deine Eingabe.",
+        "invalid_share": "Die Freigabe auf dem Server kann nicht gefunden werden. Bitte kontrolliere deine Eingabe.",
+        "invalid_credentials": "Die Authentifzierung ist fehlgeschlagen. Bitte kontrolliere deine Eingabe."
+      }
+    }
+  }
+}

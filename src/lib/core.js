@@ -126,6 +126,14 @@ var balloon = {
    */
   add_file_handlers: {},
 
+
+  /**
+   * Menu handlers
+   *
+   * @var object
+   */
+  menu_handlers: {},
+
   /**
    * Content views in side pannel
    *
@@ -233,8 +241,12 @@ var balloon = {
    */
   init: function() {
     balloon.add_file_handlers = {
-      txt: balloon.addFile,
-      folder: balloon.addFolder,
+      txt: function(type) {
+        return balloon.showNewNode(type, balloon.addFile)
+      },
+      folder: function(type) {
+        return balloon.showNewNode(type, balloon.addFolder)
+      }
     };
 
     if(balloon.isInitialized()) {
@@ -2043,6 +2055,42 @@ var balloon = {
 
 
   /**
+   * Add menu
+   */
+  addNew(name, label, icon, callback) {
+    $('#fs-action-add-select').find('ul').append(
+      '<li data-type='+name+'>'+
+          '<svg class="gr-icon gr-i-'+icon+'">'+
+            '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+icon+'">'+
+          '</svg>'+
+          '<span>'+label+'</span>'+
+      '</li>');
+
+    this.add_file_handlers[name] = callback;
+  },
+
+
+  /**
+   * Add menu
+   */
+  addMenu(name, label, icon, callback) {
+    $('#fs-menu-left-top').append(
+      '<li id="fs-menu-'+name+'" title="'+label+'">'+
+        '<div class="fs-menu-left-icon">'+
+          '<svg class="gr-icon gr-i-'+icon+'">'+
+            '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+icon+'">'+
+          '</svg>'+
+        '</div>'+
+        '<div>'+
+          '<span>'+label+'</span>'+
+        '</div>'+
+      '</li>');
+
+    this.menu_handlers[name] = callback;
+  },
+
+
+  /**
    * Main menu
    *
    * @return void
@@ -2111,6 +2159,10 @@ var balloon = {
       balloon.tree.filter.deleted = 1;
       balloon.refreshTree('/nodes/trash', {}, {});
       break;
+    }
+
+    if(action in balloon.menu_handlers) {
+      balloon.menu_handlers[action]();
     }
   },
 
@@ -2857,7 +2909,11 @@ var balloon = {
 
 
   /**
-   * Check if node has a hidden name (begins with ".")
+   * Check if node has a hidden name
+   *
+   * Either unix style (. prefix), windows style (~) or windows system files like:
+   *  - desktop.ini
+   *  - Thumbs.db
    *
    * @param   string|object node
    * @return  bool
@@ -2866,8 +2922,8 @@ var balloon = {
     if(typeof(node) == 'object') {
       node = node.name;
     }
-    var regex = /^\..*/;
-    return regex.test(node);
+
+    return /^\./.test(node) || /^\~/.test(node) || node === 'Thumbs.db' || node === 'desktop.ini';
   },
 
 
@@ -3736,7 +3792,9 @@ var balloon = {
    *
    * @return void
    */
-  showNewNode: function(type) {
+  showNewNode: function(type, callback) {
+    var $d = $.Deferred();
+
     var mayCreate = false;
     var $fs_new_node_win = $('#fs-new-node-window');
 
@@ -3753,17 +3811,18 @@ var balloon = {
 
         $input.val('');
         $submit.attr('disabled', true);
+        var name;
 
         $input.off('keyup').on('keyup', function(e) {
-          var name = $(this).val();
+          name = $(this).val();
+
+          if(type !== 'folder') {
+            name = name+'.'+type;
+          }
 
           if(e.keyCode === 13) {
             if(mayCreate) $submit.click();
             return;
-          }
-
-          if(type !== 'folder') {
-            name = name+'.'+type;
           }
 
           if(balloon.nodeExists(name) || name === '') {
@@ -3778,32 +3837,13 @@ var balloon = {
         });
 
         $submit.unbind().click(function() {
-          if(balloon.add_file_handlers[type]) {
-            var name = $input.val();
+          var $d_add = callback(name, type);
 
-            if(type !== 'folder') {
-              name = name+'.'+type;
-            }
-
-            var $d = balloon.add_file_handlers[type](name, type);
-
-            $k_win.close();
-
-            if($d && $d.then) {
-              $d.done(function(node) {
-                balloon.added = node.id;
-
-                balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
-                  var $createdNode = $('li[fs-id="' + node.id + '"]');
-
-                  if(!$createdNode) return;
-
-                  $('#fs-layout-left').animate({
-                    scrollTop: ($createdNode.offset().top - 70)
-                  }, 1000);
-                });
-              });
-            }
+          if($d_add && $d_add.then) {
+            $d_add.done(function(node) {
+              $d.resolve(node);
+              $k_win.close();
+            }).fail($d.reject);
           }
         });
 
@@ -3812,6 +3852,8 @@ var balloon = {
         });
       }
     }).data('kendoBalloonWindow').center().open();
+
+    return $d;
   },
 
   /**
@@ -3829,9 +3871,6 @@ var balloon = {
     var $select = $('#fs-action-add-select');
     var $spike = $select.find('.fs-action-dropdown-spike');
 
-    /*$('#fs-action-add-select').find('span').show();
-    $('#fs-action-add-select').find('input').hide().val('');*/
-
     $select.show();
 
     var spikeLeft = ($(this).offset().left + $(this).width() / 2) - $select.offset().left - ($spike.outerWidth() / 2);
@@ -3839,8 +3878,23 @@ var balloon = {
 
     $select.off('click', 'li').on('click', 'li', function() {
       var type = $(this).attr('data-type');
+      var $d = balloon.add_file_handlers[type](type);
 
-      balloon.showNewNode(type);
+      if($d && $d.then) {
+        $d.done(function(node) {
+          balloon.added = node.id;
+
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
+            var $createdNode = $('li[fs-id="' + node.id + '"]');
+
+            if(!$createdNode) return;
+
+            $('#fs-layout-left').animate({
+              scrollTop: ($createdNode.offset().top - 70)
+            }, 1000);
+          });
+        });
+      }
     });
   },
 
@@ -5881,6 +5935,14 @@ var balloon = {
             return 'gr-i-folder-filter-shared';
           }          else {
             return 'gr-i-folder-filter';
+          }
+        } else if(node.mount) {
+          if(node.shared === true && node.reference === true) {
+            return 'gr-i-folder-storage-received';
+          } else if(node.shared === true) {
+            return 'gr-i-folder-storage-shared';
+          } else {
+            return 'gr-i-folder-storage';
           }
         } else if(node.shared === true && node.reference === true) {
           return 'gr-i-folder-received';
