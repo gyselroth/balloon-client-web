@@ -18,11 +18,12 @@ var translate = {
   config: {},
   load: function(url, options, callback, data) {
     $.ajax({
+      cache: false,
       url: '/locale/'+url+'.json',
       success: function(body, responseText, response) {
         callback(response.responseText, {status: '200'});
       },
-      error: function() {
+      error: function(e) {
         callback(null, {status: '404'});
       }
     });

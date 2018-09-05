@@ -1,7 +1,5 @@
 {
-  "app": {
-    "title": "Balloon"
-  },
+  "title": "Balloon",
   "login": {
     "username": "Benutzername",
     "password": "Passwort",
@@ -105,6 +103,9 @@
     "selected": "{{count}} Objekt ausgewählt",
     "selected_plural": "{{count}} Objekte ausgewählt",
     "no_nodes": "<Es wurden keine Daten gefunden>",
+    "error": {
+      "folder_exists": "Ein Ordner mit dem Name %s existiert bereits."
+    },
     "folderup": "Zurück"
   },
   "user": {

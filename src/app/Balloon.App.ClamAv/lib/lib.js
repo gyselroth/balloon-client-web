@@ -18,6 +18,11 @@ var app = {
   postInit: function(core)  {
     this.balloon = core;
     $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
+
+    app.balloon.addMenu('quarantine', i18next.t('app.clamav.quarantine'), 'warning', function() {
+      app.balloon.tree.filter.deleted = 1;
+      app.balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\ClamAv.quarantine": true}}, {});
+    });
   },
 
   resetView: function() {
@@ -33,14 +38,14 @@ var app = {
     if(app.balloon.last.malware_quarantine === true) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-positive">'
           +'<svg class="gr-icon gr-i-checked-false"><use xlink:href="/assets/icons.svg#checked-false"></use></svg>'
-          +'<span>'+i18next.t('app.balloon_app_clamav.malware_found', app.balloon.last.malware_reason)+'</span>'
+          +'<span>'+i18next.t('app.clamav.malware_found', app.balloon.last.malware_reason)+'</span>'
         +'</div>');
 
       $('#fs-metadata').prepend($node);
     } else if(app.balloon.last.malware_quarantine === false) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-negative">'
           +'<svg class="gr-icon gr-i-checked-true"><use xlink:href="/assets/icons.svg#checked-true"></use></svg>'
-          +'<span>'+i18next.t('app.balloon_app_clamav.clean')+'</span>'
+          +'<span>'+i18next.t('app.clamav.clean')+'</span>'
         +'</div>');
 
       $('#fs-metadata').prepend($node);
