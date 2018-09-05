@@ -83,11 +83,11 @@ module.exports = {
       "output": {
         "groupBy": [
           {
-            "pattern": "{./locale/en.json,./app/*/locale/en.json}",
+            "pattern": "{./src/locale/en.json,./src/app/*/locale/en.json}",
             "fileName": "locale/en.json"
           },
           {
-            "pattern": "{./locale/de.json,./app/*/locale/de.json}",
+            "pattern": "{./src/locale/de.json,./src/app/*/locale/de.json}",
             "fileName": "locale/de.json"
           }
         ]
