@@ -9,6 +9,7 @@ import $ from "jquery";
 import i18next from 'i18next';
 import css from '../styles/style.scss';
 import login from '../../../lib/auth.js';
+import balloonWindow from '../../../lib/widget-balloon-window.js';
 
 var app = {
   id: 'Balloon.App.DesktopClient',

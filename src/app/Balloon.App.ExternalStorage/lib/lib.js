@@ -6,11 +6,13 @@
  */
 
 import $ from "jquery";
-import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
+import balloonWindow from '../../../lib/widget-balloon-window.js';
 import i18next from 'i18next';
 import css from '../styles/style.scss';
 
 var app = {
+  id: 'Balloon.App.ExternalStorage',
+
   render: function() {
   },
 
@@ -46,7 +48,7 @@ var app = {
       '<input class="fs-button-primary" name="add" value='+i18next.t('button.save')+' type="submit"/>'+
       '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>');
 
-    var $k_display = $div.kendoWindow({
+    var $k_display = $div.kendoBalloonWindow({
       resizable: false,
       title: i18next.t('app.externalstorage.external_storage'),
       modal: true,
@@ -106,7 +108,7 @@ var app = {
           );
         })
       }
-    }).data("kendoWindow").center();
+    }).data("kendoBalloonWindow").center();
 
     return $d;
   },
@@ -168,7 +170,7 @@ var app = {
       success: function(data) {
         app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
         app.balloon.added_rename = data.id;
-        $div.data('kendoWindow').close();
+        $div.data('kendoBalloonWindow').close();
         $div.remove();
         promise.resolve(data);
       }

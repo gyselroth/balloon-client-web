@@ -1,6 +1,7 @@
 {
   "app": {
     "clamav": {
+      "quarantine": "Quarantäne",
       "malware_found": "Diese Datei wurde mit einer Malware identifziert [%s] und ist in Qurantäne.",
       "clean": "Diese Datei wurde erfolgreich auf Malware geprüft."
     }
