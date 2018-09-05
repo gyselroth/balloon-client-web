@@ -2057,7 +2057,7 @@ var balloon = {
   /**
    * Add menu
    */
-  addNew(name, label, icon, callback) {
+  addNew: function(name, label, icon, callback) {
     $('#fs-action-add-select').find('ul').append(
       '<li data-type='+name+'>'+
           '<svg class="gr-icon gr-i-'+icon+'">'+
@@ -2073,7 +2073,7 @@ var balloon = {
   /**
    * Add menu
    */
-  addMenu(name, label, icon, callback) {
+  addMenu: function(name, label, icon, callback) {
     $('#fs-menu-left-top').append(
       '<li id="fs-menu-'+name+'" title="'+label+'">'+
         '<div class="fs-menu-left-icon">'+
