@@ -18,6 +18,7 @@ import kendoDateTimePicker from 'kendo-ui-core/js/kendo.datetimepicker.js';
 
     options: {
       name: 'BalloonDatePicker',
+      weekNumber: true
     }
   });
 

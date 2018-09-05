@@ -1,5 +1,12 @@
-#fs-notification {
+@import '../../../themes/default/scss/includes/colors';
+@import '../../../themes/default/scss/includes/mixins';
 
+@import './messages/dropdown';
+
+/**
+Styles for side pannel
+**/
+#fs-notification {
   div {
     margin-bottom: 5px;
 

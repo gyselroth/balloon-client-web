@@ -1,7 +1,5 @@
 {
-  "app": {
-    "title": "Balloon"
-  },
+  "title": "Balloon",
   "login": {
     "username": "Benutzername",
     "password": "Passwort",
@@ -101,9 +99,13 @@
     },
     "open_folder": "Ordner öffnen",
     "folder": "Ordner",
+    "txt_file": "Textdokument",
     "selected": "{{count}} Objekt ausgewählt",
     "selected_plural": "{{count}} Objekte ausgewählt",
     "no_nodes": "<Es wurden keine Daten gefunden>",
+    "error": {
+      "folder_exists": "Ein Ordner mit dem Name %s existiert bereits."
+    },
     "folderup": "Zurück"
   },
   "user": {
@@ -127,7 +129,8 @@
     "second_plural": "{{count}} Sekunden"
   },
   "button": {
-    "save": "Speichern"
+    "save": "Speichern",
+    "cancel": "Abbrechen"
   },
   "view": {
     "prop": {
@@ -192,7 +195,9 @@
       "privilege_text_m": "%s hat den Zugriff Administrator",
       "privilege_text_rw": "%s hat den Zugriff lesen/schreiben",
       "privilege_text_r": "%s hat den Zugriff nur lesen",
-      "privilege_text_w+": "%s hat den Zugriff Briefkasten"
+      "privilege_text_w+": "%s hat den Zugriff Briefkasten",
+      "expand": "Alle Benutzer/Gruppen anzeigen",
+      "collapse": "Weniger Benutzer/Gruppen anzeigen"
     },
     "share_link": {
       "hint_create_url": "Mit einem globalen Freigabe-Link kannst du eine/einen Datei/Ordner weltweit mit allen teilen, auch mit Benutzern, welche keinen Account besitzen.",
@@ -232,7 +237,10 @@
       "restored_to": "Datei auf Version %s wiederhergestellt",
       "changed_by": "Geändert von %s vor %s (%s)",
       "changed_since": "Vor %s (%s)",
-      "user_deleted": "[gelöschter User]"
+      "user_deleted": "[gelöschter User]",
+      "show_all": "Alle anzeigen",
+      "cancel": "Abbrechen",
+      "history_for": "Verlauf für „%s“"
     },
     "properties": {
       "destroy_date": "Löschdatum",
@@ -248,6 +256,9 @@
         "destroy_date": "Löschdatum",
         "destroy_time": "Zeit <span>(optional)</span>"
       }
+    },
+    "events": {
+      "show_all": "Alle Events anzeigen"
     }
   },
   "error": {

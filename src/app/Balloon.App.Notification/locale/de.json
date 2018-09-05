@@ -1,12 +1,19 @@
 {
   "app": {
     "balloon_app_notification": {
-      "menu_title": "Abonnieren",
-      "subscribe": "Abonnieren",
-      "save": "Speichern",
-      "exclude_me": "Meine eigenen Änderungen ausschliessen",
-      "recursive": "Verschachtelte Elemente einschliessen",
-      "description": "Erhalte eine Benachrichtung, falls diese Datei/dieser Ordner aktualisiert wird."
+      "settings": {
+        "menu_title": "Abonnieren",
+        "subscribe": "Abonnieren",
+        "save": "Speichern",
+        "exclude_me": "Meine eigenen Änderungen ausschliessen",
+        "recursive": "Verschachtelte Elemente einschliessen",
+        "description": "Erhalte eine Benachrichtung, falls diese Datei/dieser Ordner aktualisiert wird."
+      },
+      "messages": {
+        "title": "Benachrichtigungen",
+        "no_messages": "Du hast keine neuen Benachrichtigungen",
+        "message_meta": "Von %s"
+      }
     }
   }
 }

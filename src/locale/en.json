@@ -1,7 +1,5 @@
 {
-  "app": {
-    "title": "Balloon"
-  },
+  "title": "Balloon",
   "login": {
     "username": "Username",
     "password": "Password",
@@ -49,12 +47,12 @@
     },
     "view": {
       "preview": "Preview",
+      "metadata": "Metadata",
       "properties": "Properties",
       "history": "History",
       "share_folder": "Share folder",
       "share_link": "Share link",
-      "events": "Events",
-      "advanced": "Advanced"
+      "events": "Events"
     }
   },
   "menu": {
@@ -101,12 +99,13 @@
     },
     "open_folder": "Open folder",
     "folder": "Folder",
-    "new_folder": "New Folder",
     "txt_file": "Text Document",
-    "new_file": "New File",
     "selected": "({{count}} item selected)",
     "selected_plural": "({{count}} items selected)",
     "no_nodes": "<No files were found>",
+    "error": {
+      "folder_exists": "A folder named %s does already exists."
+    },
     "folderup": "Back"
   },
   "user": {
@@ -130,7 +129,8 @@
     "second_plural": "{{count}} seconds"
   },
   "button": {
-    "save": "Save"
+    "save": "Save",
+    "cancel": "Cancel"
   },
   "view": {
     "prop": {
@@ -194,7 +194,9 @@
       "privilege_text_m": "%s has the privilege manager",
       "privilege_text_rw": "%s has the privilege read/write",
       "privilege_text_r": "%s has the privilege readonly",
-      "privilege_text_w+": "%s has the privilege Mailbox"
+      "privilege_text_w+": "%s has the privilege Mailbox",
+      "expand": "Show all users/groups",
+      "collapse": "Show less users/groups"
     },
     "share_link": {
       "hint_create_url": "With a global share link you are able to share a file/folder with everyone even with those who do not have an own login.",
@@ -234,10 +236,12 @@
       "restored_to": "Restored file to version %s",
       "changed_by": "Changed by %s %s ago (%s)",
       "changed_since": "%s ago (%s)",
-      "user_deleted": "[user deleted]"
+      "user_deleted": "[user deleted]",
+      "show_all": "Show all",
+      "cancel": "Cancel",
+      "history_for": "History for „%s“"
     },
-    "advanced": {
-      "destroyable": "The node will destroy itself at the time specified (Not-restorable!)",
+    "properties": {
       "destroy_date": "Destruction date",
       "set_destroy_date": "Set date",
       "edit_destroy_date": "Edit date",
@@ -251,6 +255,9 @@
         "destroy_date": "Destruction date",
         "destroy_time": "Time <span>(optional)</span>"
       }
+    },
+    "events": {
+      "show_all": "Show all events"
     }
   },
   "error": {
@@ -376,5 +383,12 @@
     "node_moved_plural": "{{count}} Elements have been moved to <b>{{dest}}</b>.",
     "node_moved_folderup": "{{count}} Element has been moved to <b>the parent folder</b>.",
     "node_moved_folderup_plural": "{{count}} Elements have been moved to <b>the parent folder</b>."
+  },
+  "new_node": {
+    "title": {
+      "folder": "New Folder",
+      "txt": "New Text Document"
+    },
+    "name": "Name"
   }
 }

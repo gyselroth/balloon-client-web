@@ -1,65 +1,20 @@
 #fs-history {
 
   ul {
+    @include history-list;
+
     margin-bottom: 20px;
+  }
 
-    li {
-      @include clearfix;
+  #fs-history-actions {
+    @include clearfix;
 
-      $selectWidth: 16px;
+    input {
+      float: left;
+    }
 
-      border: 1px solid $colorLightGrey;
-      border-radius: 4px;
-      padding: 8px 15px;
-      margin-bottom: 10px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      &.selected {
-        padding: 7px 14px;
-        border: 2px solid $colorActiveBlue;
-      }
-
-      .fs-history-select,
-      .fs-history-text {
-        display: inline-block;
-        vertical-align: middle;
-      }
-
-      .fs-history-select {
-        width: $selectWidth;
-
-        input {
-          margin: 0;
-        }
-      }
-
-      .fs-history-text {
-        box-sizing: border-box;
-        width: calc(100% - #{$selectWidth});
-        padding-left: 9px;
-
-        h6,
-        p {
-          line-height: 17px;
-          font-weight: 300;
-
-          .fs-history-text-version {
-            color: $colorDarkGrey;
-          }
-
-          .fs-history-text-action {
-            &:before {
-              content: "";
-              width: 2px;
-              display: inline-block;
-            }
-          }
-        }
-      }
-
+    button {
+      float: right;
     }
   }
 }

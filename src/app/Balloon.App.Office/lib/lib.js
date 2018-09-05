@@ -13,38 +13,21 @@ var app = {
   id: 'Balloon.App.Office',
 
   render: function() {
-    var $add_node = $('#fs-action-add-select').find('ul');
-
-    $add_node.append(
-      '<li data-type="docx">'+
-        '<svg class="gr-icon gr-i-file-word"><use xlink:href="/assets/icons.svg#file-word"></use></svg>'+
-        '<span>'+i18next.t('app.office.word_document')+'</span>'+
-      '</li>'
-    );
-
-    $add_node.append(
-      '<li data-type="xlsx">'+
-        '<svg class="gr-icon gr-i-file-excel"><use xlink:href="/assets/icons.svg#file-excel"></use></svg>'+
-        '<span>'+i18next.t('app.office.excel_document')+'</span>'+
-      '</li>'
-    );
-
-    $add_node.append(
-      '<li data-type="pptx">'+
-        '<svg class="gr-icon gr-i-file-powerpoint"><use xlink:href="/assets/icons.svg#file-powerpoint"></use></svg>'+
-        '<span>'+i18next.t('app.office.powerpoint_document')+'</span>'+
-      '</li>'
-    );
   },
 
   preInit: function(core)  {
     this.balloon = core;
+
+    var callback = function(type) {
+      return core.showNewNode(type, app.addOfficeFile);
+    };
+
+    app.balloon.addNew('docx', i18next.t('app.office.word_document'), 'file-word', callback);
+    app.balloon.addNew('xlsx', i18next.t('app.office.excel_document'), 'file-excel', callback);
+    app.balloon.addNew('pptx', i18next.t('app.office.powerpoint_document'), 'file-powerpoint', callback);
     app.origDblClick = app.balloon._treeDblclick;
     //TODO pixtron - find a clean way for apps to hook into core. Just overriding core methods is quite a hack.
     app.balloon._treeDblclick = app.treeDblclick;
-    this.balloon.add_file_handlers.docx = this.addOfficeFile;
-    this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
-    this.balloon.add_file_handlers.pptx = this.addOfficeFile;
   },
 
   edit: function(node) {

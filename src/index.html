@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title data-i18n="app.title"></title>
+    <title data-i18n="title"></title>
 </head>
 <body>
     <div id="login-loader" class="fs-loader"></div>
@@ -11,7 +11,7 @@
         <div id="login-box">
             <div id="login-header">
                 <span id="login-logo"></span>
-                <span data-i18n="app.title">balloon</span>
+                <span data-i18n="title">balloon</span>
             </div>
             <div id="login-server-error" class="error-message" data-i18n="login.error.server"></div>
             <div id="login-body">
@@ -45,7 +45,7 @@
 
             <div id="fs-logo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><title>icon-black-2</title><path d="M15.88,28a.1.1,0,0,0-.08-.11l-2.95-.52a.1.1,0,0,1-.06,0l-.48-.68a.1.1,0,0,0-.06,0l-1.85-.34a.1.1,0,0,0-.11.08L10,27.88l5.7,1Z"/><path d="M9.48,30.91a.1.1,0,0,0,.08.11l5.51,1a.1.1,0,0,0,.11-.08l.43-2.42-5.7-1Z"/><path d="M17.78.23h0C12.53-.69,5.95,1,4.4,8.27c-1.59,7.53,6.44,14.85,6.44,14.85l.58.1c-2.1-3.07-4.51-9-3.66-14.12C8.72,3.42,13.4-.51,17.78.23Z"/><path d="M27.68,12.38C28.73,5,23.09,1.17,17.83.24,22.21,1,25.29,6.33,24.23,12c-1,5.12-5.24,9.85-8.26,12l.58.1S26.6,20,27.68,12.38Z"/><path d="M17.82.24h0Z"/><path d="M17.8.23h0Z"/><path d="M17.81.23h0Z"/><polygon points="17.82 0.24 17.82 0.24 17.82 0.23 17.82 0.23 17.81 0.23 17.82 0.24 17.82 0.24"/><circle cx="17.81" cy="0.23" transform="translate(14.62 17.76) rotate(-80.44)"/><path d="M17.82.24h0Z"/><path d="M12.24,10a43.38,43.38,0,0,0,.19,13.44l1.27.22h0l1.25.22a43.38,43.38,0,0,0,4.77-12.56c1-5.73.17-10.67-1.89-11h-.06C15.72-.1,13.25,4.25,12.24,10Z"/></svg>
-                <div id="fs-title" data-i18n="app.title"></div>
+                <div id="fs-title" data-i18n="title"></div>
             </div>
 
             <div id="fs-search">
@@ -65,9 +65,9 @@
                     <li id="fs-settings" data-i18n="[title]login.settings">
                         <svg class="gr-icon gr-i-cog"><use xlink:href="/assets/icons.svg#cog"></use></svg>
 
-                        <div id="fs-settings-menu-wrap" class="bln-dropdown">
+                        <div id="fs-settings-dropdown-wrap" class="bln-dropdown fs-identity-dropdown">
                             <span  class="bln-dropdown-spike"></span>
-                            <div id="fs-settings-menu" class="bln-dropdown-content">
+                            <div id="fs-settings-dropdown" class="bln-dropdown-content">
                                 <div id="fs-quota" data-i18n="[title]user.disk_space">
                                     <div id="fs-quota-usage"></div>
                                     <div id="fs-quota-percent"></div>
@@ -268,10 +268,11 @@
                             <svg class="gr-icon gr-i-cut"><use xlink:href="/assets/icons.svg#cut"></use></svg>
                         </li>
                         <li id="fs-action-paste" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.paste">
+                            <div id="fs-action-paste-count"></div>
                             <svg class="gr-icon gr-i-paste"><use xlink:href="/assets/icons.svg#paste"></use></svg>
                         </li>
                         <li id="fs-action-rename" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.rename">
-                            <svg class="gr-icon gr-i-pencil"><use xlink:href="/assets/icons.svg#pencil"></use></svg>
+                            <svg class="gr-icon gr-i-text-edit"><use xlink:href="/assets/icons.svg#text-edit"></use></svg>
                         </li>
                     </ul>
 
@@ -384,10 +385,14 @@
                         </dd>
                         <dd id="fs-history">
                             <ul></ul>
-                            <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                            <div id="fs-history-actions">
+                                <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                                <button class="fs-button-small" id="fs-history-all" data-i18n="view.history.show_all" />
+                            </div>
                         </dd>
                         <dd id="fs-events">
                             <ul></ul>
+                            <button class="fs-button-small" id="fs-events-all" data-i18n="view.events.show_all" />
                         </dd>
                         <dd id="fs-properties">
                             <fieldset class="fs-properties-group">
@@ -471,6 +476,18 @@
             <div id="fs-event-window-content">
                 <ul></ul>
                 <div id="fs-event-window-footer"></div>
+            </div>
+        </div>
+
+        <div id="fs-history-window" data-i18n="[title]login.history">
+            <div id="fs-history-window-content">
+                <ul></ul>
+                <div id="fs-history-window-footer"></div>
+            </div>
+            <div id="fs-history-window-button-wrapper" class="fs-window-secondary-actions">
+                <hr />
+                <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.history.cancel"/>
+                <input type="button" tabindex="1" name="apply" class="fs-button-primary" data-i18n="[value]view.history.restore"/>
             </div>
         </div>
 
@@ -615,22 +632,22 @@
 
         <div id="fs-destroy-date-window">
             <div id="fs-destroy-date-window-content">
-                <p data-i18n="view.advanced.destroy_date_window.destroyable"></p>
+                <p data-i18n="view.properties.destroy_date_window.destroyable"></p>
 
                 <fieldset>
                     <div id="fs-destroy-date-window-date">
-                        <label for="share_expiration_date" data-i18n="view.advanced.destroy_date_window.destroy_date"></label>
+                        <label for="share_expiration_date" data-i18n="view.properties.destroy_date_window.destroy_date"></label>
                         <input type="text" name="destroy_date" />
                     </div>
                     <div>
-                        <label for="share_expiration_time" data-i18n="[html]view.advanced.destroy_date_window.destroy_time"></label>
+                        <label for="share_expiration_time" data-i18n="[html]view.properties.destroy_date_window.destroy_time"></label>
                         <input type="text" name="destroy_time" />
                     </div>
                 </fieldset>
             </div>
             <div id="fs-destroy-date-window-button-wrapper" class="fs-window-secondary-actions">
-                <input type="button" tabindex="2" data-i18n="[value]view.advanced.destroy_date_window.cancel" />
-                <input type="submit" tabindex="1" name="share" data-i18n="[value]view.advanced.destroy_date_window.save" class="fs-button-primary" />
+                <input type="button" tabindex="2" data-i18n="[value]view.properties.destroy_date_window.cancel" />
+                <input type="submit" tabindex="1" name="share" data-i18n="[value]view.properties.destroy_date_window.save" class="fs-button-primary" />
             </div>
         </div>
 
@@ -766,7 +783,14 @@
                     </div>
                 </div>
 
-                <ul id="fs-share-window-consumers"></ul>
+                <div id="fs-share-window-consumers">
+                    <ul></ul>
+                </div>
+
+                <nav id="fs-share-window-toggle-consumers">
+                    <a class="toggle-expand" data-i18n="view.share.expand"></a>
+                    <a class="toggle-condense" data-i18n="view.share.collapse"></a>
+                </nav>
 
                 <div id="fs-share-window-remove">
                     <svg class="gr-icon gr-i-info"><use xlink:href="/assets/icons.svg#info"></use></svg>
@@ -788,8 +812,8 @@
                 <input type="text" id="fs-new-node-window-name" name="name" />
             </div>
             <div id="fs-destroy-date-window-button-wrapper" class="fs-window-secondary-actions">
-                <input type="button" tabindex="2" data-i18n="[value]view.advanced.destroy_date_window.cancel" />
-                <input type="submit" tabindex="1" name="share" data-i18n="[value]view.advanced.destroy_date_window.save" class="fs-button-primary" />
+                <input type="button" tabindex="2" data-i18n="[value]button.cancel" />
+                <input type="submit" tabindex="1" name="share" data-i18n="[value]button.save" class="fs-button-primary" />
             </div>
         </div>
     </div>

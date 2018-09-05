@@ -15,7 +15,7 @@ import balloonTimePicker from './widget-balloon-timepicker.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
-
+window.$ = $;
 $.ajaxSetup({
   beforeSend:function(jqXHR,settings){
     if (settings.dataType === 'binary'){
@@ -126,6 +126,14 @@ var balloon = {
    */
   add_file_handlers: {},
 
+
+  /**
+   * Menu handlers
+   *
+   * @var object
+   */
+  menu_handlers: {},
+
   /**
    * Content views in side pannel
    *
@@ -186,7 +194,7 @@ var balloon = {
         return !balloon.last.directory;
       },
       onActivate: function() {
-        balloon.displayHistory(balloon.getCurrentNode());
+        balloon.displayHistoryView();
       },
     },
     {
@@ -196,9 +204,22 @@ var balloon = {
         return true;
       },
       onActivate: function() {
+        var node = balloon.getCurrentNode();
+        var $fs_events_all = $('#fs-events-all').hide();
+
         var $view_list = $('#fs-events ul');
-        balloon.displayEventsInfiniteScroll($view_list, balloon.getCurrentNode());
-        balloon.displayEvents($view_list, balloon.getCurrentNode());
+        $view_list.children().remove();
+
+        var req = balloon.displayEvents($view_list, node, {skip: 0, limit: 3})
+
+
+        req.done(function(body) {
+          if(body && body.count < body.total) {
+            $fs_events_all.off('click').on('click', function() {
+              balloon.displayEventsWindow(node);
+            }).show();
+          }
+        });
       },
     },
     {
@@ -220,8 +241,12 @@ var balloon = {
    */
   init: function() {
     balloon.add_file_handlers = {
-      txt: balloon.addFile,
-      folder: balloon.addFolder,
+      txt: function(type) {
+        return balloon.showNewNode(type, balloon.addFile)
+      },
+      folder: function(type) {
+        return balloon.showNewNode(type, balloon.addFolder)
+      }
     };
 
     if(balloon.isInitialized()) {
@@ -252,23 +277,32 @@ var balloon = {
       }
     });
 
-    $('#fs-settings').off('click').on('click', function(event) {
+    $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
       event.preventDefault();
-      var $menu = $('#fs-settings-menu-wrap');
 
-      if($menu.hasClass('fs-settings-menu-open')) {
-        $menu.removeClass('fs-settings-menu-open');
+      var $parent = $(event.target);
+      var parentId = $parent.attr('id');
+      var $dropdown = $parent.find('.fs-identity-dropdown');
 
-        $(document).off('click.fs-settings');
+      if($dropdown.hasClass('fs-identity-dropdown-open')) {
+        $dropdown.removeClass('fs-identity-dropdown-open');
+
+        $(document).off('click.fs-identity-dropdown');
       } else {
-        $menu.addClass('fs-settings-menu-open');
+        $('.fs-identity-dropdown-open').removeClass('fs-identity-dropdown-open');
 
-        $(document).off('click.fs-settings').on('click.fs-settings', function(event){
+        $dropdown.addClass('fs-identity-dropdown-open');
+
+        $dropdown.find('li').off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function() {
+          $dropdown.removeClass('fs-identity-dropdown-open');
+        });
+
+        $(document).off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function(event){
           var $target = $(event.target);
 
-          if($target.attr('id') === 'fs-settings' || $target.parents('#fs-settings').length > 0) return;
+          if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
 
-          $menu.removeClass('fs-settings-menu-open');
+          $dropdown.removeClass('fs-identity-dropdown-open');
         });
       }
     });
@@ -1057,7 +1091,59 @@ var balloon = {
           break;
 
         case 'checkbox':
-          $node_el.append('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
+          var $checkbox = $('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
+
+          $checkbox.on('click', function() {
+            event.stopPropagation();
+
+            var $k_tree = $('#fs-browser-tree').data('kendoTreeView');
+            var selected = $k_tree.dataItem($k_tree.select());
+            var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
+
+            if(balloon.isMultiSelect()) {
+              balloon.multiSelect(balloon.datasource._pristineData[node.index]);
+
+              if(balloon.multiselect.length === 1) {
+                var selected_dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(balloon.multiselect[0])+']');
+                balloon.deselectAll();
+
+                $k_tree.select(selected_dom_node);
+                $k_tree.trigger('select', {node: selected_dom_node});
+                balloon.resetDom('multiselect');
+              } else {
+                var res = balloon.multiselect.filter(function(selectedNode) {
+                  return selectedNode.id === node.id;
+                });
+
+                if(res.length === 0) {
+                  $k_tree.select($());
+                }
+              }
+
+              balloon.updatePannel(true);
+            } else if(selected && selected.id !== node.id) {
+              balloon.deselectAll();
+              balloon.multiSelect(balloon.datasource._pristineData[node.index]);
+              balloon.multiSelect(balloon.datasource._pristineData[selected.index]);
+              $k_tree.select($());
+
+              balloon.updatePannel(true);
+            } else if(selected && selected.id === node.id) {
+              $k_tree.select($());
+              balloon.updatePannel(false);
+              balloon.resetDom('view-bar');
+              balloon.last = null;
+            } else if(!selected) {
+              $k_tree.select(dom_node);
+              $k_tree.trigger('select', {node: dom_node});
+              balloon.updatePannel(true);
+            }
+
+            balloon._updateCheckAllState();
+            balloon.pushState();
+          });
+
+          $node_el.append($checkbox);
           break;
         }
       }
@@ -1072,7 +1158,7 @@ var balloon = {
 
       if(selected !== null && typeof(selected) === 'object' && selected.indexOf(balloon.id(node)) > -1) {
         if(selected.length > 1) {
-          balloon.multiSelect(node);
+          balloon.multiSelect(balloon.datasource._pristineData[node.index]);
         }
 
         var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
@@ -1162,10 +1248,10 @@ var balloon = {
       }
     }
 
+    balloon.showView(views);
     balloon.switchView(view);
     $('#fs-properties-name').show();
 
-    balloon.showView(views);
 
     if(!balloon.isMobileViewPort()) {
       balloon.updatePannel(true);
@@ -1560,7 +1646,7 @@ var balloon = {
       'copyCollectionReference'
     ];
 
-    balloon.xmlHttpRequest({
+    return balloon.xmlHttpRequest({
       url: balloon.base+'/nodes/event-log',
       data: params,
       type: 'GET',
@@ -1650,7 +1736,7 @@ var balloon = {
           case 'renameCollectionShare':
           case 'renameCollectionReference':
             undo = true;
-            icon = 'italic';
+            icon = 'text-edit';
             break;
           case 'moveFile':
           case 'moveCollection':
@@ -1737,8 +1823,11 @@ var balloon = {
 
 
           if(undo === true) {
+            var that = this;
             $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="/assets/icons.svg#undo"></use></svg></div>').unbind('click').bind('click',
-              body.data[log], balloon._undoEvent);
+              body.data[log], function(e) {
+                balloon._undoEvent.apply(that, [e, node]);
+              });
             $node.append($undo);
           }
 
@@ -1773,19 +1862,19 @@ var balloon = {
    *
    * @return void
    */
-  displayEventsWindow: function() {
+  displayEventsWindow: function(node) {
     var $fs_event_win   = $('#fs-event-window'),
       $fs_event_list  = $fs_event_win.find('ul'),
       datastore     = [];
 
     if($fs_event_win.is(':visible')) {
-      balloon.displayEventsInfiniteScroll($fs_event_list);
-      balloon.displayEvents($fs_event_list);
+      balloon.displayEventsInfiniteScroll($fs_event_list, node);
+      balloon.displayEvents($fs_event_list, node);
     } else {
       balloon.resetDom('events-win');
       $fs_event_win   = $('#fs-event-window'),
       $fs_event_list  = $fs_event_win.find('ul'),
-      balloon.displayEventsInfiniteScroll($fs_event_list);
+      balloon.displayEventsInfiniteScroll($fs_event_list, node);
 
       $fs_event_win.kendoBalloonWindow({
         title: $fs_event_win.attr('title'),
@@ -1794,7 +1883,7 @@ var balloon = {
         height: '400px',
         width: '800px',
         open: function() {
-          balloon.displayEvents($fs_event_list);
+          balloon.displayEvents($fs_event_list, node);
         }
       }).data("kendoBalloonWindow").center().open();
     }
@@ -1805,12 +1894,16 @@ var balloon = {
    * Undo event
    *
    * @param  object e
+   * @param  object node
    * @return void
    */
-  _undoEvent: function(e) {
+  _undoEvent: function(e, node) {
     var successAction;
     if($('#fs-event-window.k-window-content').is(':visible')) {
-      successAction = {action: 'displayEventsWindow'};
+      successAction = {
+        action: 'displayEventsWindow',
+        params: [node]
+      };
     } else {
       successAction = {
         action: 'switchView',
@@ -1971,6 +2064,42 @@ var balloon = {
 
 
   /**
+   * Add menu
+   */
+  addNew: function(name, label, icon, callback) {
+    $('#fs-action-add-select').find('ul').append(
+      '<li data-type='+name+'>'+
+          '<svg class="gr-icon gr-i-'+icon+'">'+
+            '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+icon+'">'+
+          '</svg>'+
+          '<span>'+label+'</span>'+
+      '</li>');
+
+    this.add_file_handlers[name] = callback;
+  },
+
+
+  /**
+   * Add menu
+   */
+  addMenu: function(name, label, icon, callback) {
+    $('#fs-menu-left-top').append(
+      '<li id="fs-menu-'+name+'" title="'+label+'">'+
+        '<div class="fs-menu-left-icon">'+
+          '<svg class="gr-icon gr-i-'+icon+'">'+
+            '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+icon+'">'+
+          '</svg>'+
+        '</div>'+
+        '<div>'+
+          '<span>'+label+'</span>'+
+        '</div>'+
+      '</li>');
+
+    this.menu_handlers[name] = callback;
+  },
+
+
+  /**
    * Main menu
    *
    * @return void
@@ -2039,6 +2168,10 @@ var balloon = {
       balloon.tree.filter.deleted = 1;
       balloon.refreshTree('/nodes/trash', {}, {});
       break;
+    }
+
+    if(action in balloon.menu_handlers) {
+      balloon.menu_handlers[action]();
     }
   },
 
@@ -2785,7 +2918,11 @@ var balloon = {
 
 
   /**
-   * Check if node has a hidden name (begins with ".")
+   * Check if node has a hidden name
+   *
+   * Either unix style (. prefix), windows style (~) or windows system files like:
+   *  - desktop.ini
+   *  - Thumbs.db
    *
    * @param   string|object node
    * @return  bool
@@ -2794,8 +2931,8 @@ var balloon = {
     if(typeof(node) == 'object') {
       node = node.name;
     }
-    var regex = /^\..*/;
-    return regex.test(node);
+
+    return /^\./.test(node) || /^\~/.test(node) || node === 'Thumbs.db' || node === 'desktop.ini';
   },
 
 
@@ -3156,6 +3293,7 @@ var balloon = {
 
     balloon.multiselect = [];
     balloon.updatePannel(false);
+    balloon.resetDom(['view-bar', 'multiselect']);
     balloon.pushState(false, true);
   },
 
@@ -3663,7 +3801,10 @@ var balloon = {
    *
    * @return void
    */
-  showNewNode: function(type) {
+  showNewNode: function(type, callback) {
+    var $d = $.Deferred();
+
+    var mayCreate = false;
     var $fs_new_node_win = $('#fs-new-node-window');
 
     var $k_win = $fs_new_node_win.kendoBalloonWindow({
@@ -3678,53 +3819,40 @@ var balloon = {
         var $submit = $fs_new_node_win.find('input:submit');
 
         $input.val('');
+        $submit.attr('disabled', true);
+        var name;
 
         $input.off('keyup').on('keyup', function(e) {
-          var name = $(this).val();
-
-          if(e.keyCode === 13) {
-            $submit.click();
-            return;
-          }
+          name = $(this).val();
 
           if(type !== 'folder') {
             name = name+'.'+type;
           }
 
-          if(balloon.nodeExists(name)) {
+          if(e.keyCode === 13) {
+            if(mayCreate) $submit.click();
+            return;
+          }
+
+          if(balloon.nodeExists(name) || name === '') {
+            mayCreate = false;
             $(this).addClass('fs-node-exists');
+            $submit.attr('disabled', true);
           } else {
+            mayCreate = true;
             $(this).removeClass('fs-node-exists');
+            $submit.attr('disabled', false);
           }
         });
 
         $submit.unbind().click(function() {
-          if(balloon.add_file_handlers[type]) {
-            var name = $input.val();
+          var $d_add = callback(name, type);
 
-            if(type !== 'folder') {
-              name = name+'.'+type;
-            }
-
-            var $d = balloon.add_file_handlers[type](name, type);
-
-            $k_win.close();
-
-            if($d && $d.then) {
-              $d.done(function(node) {
-                balloon.added = node.id;
-
-                balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
-                  var $createdNode = $('li[fs-id="' + node.id + '"]');
-
-                  if(!$createdNode) return;
-
-                  $('#fs-layout-left').animate({
-                    scrollTop: ($createdNode.offset().top - 70)
-                  }, 1000);
-                });
-              });
-            }
+          if($d_add && $d_add.then) {
+            $d_add.done(function(node) {
+              $d.resolve(node);
+              $k_win.close();
+            }).fail($d.reject);
           }
         });
 
@@ -3733,6 +3861,8 @@ var balloon = {
         });
       }
     }).data('kendoBalloonWindow').center().open();
+
+    return $d;
   },
 
   /**
@@ -3750,9 +3880,6 @@ var balloon = {
     var $select = $('#fs-action-add-select');
     var $spike = $select.find('.fs-action-dropdown-spike');
 
-    /*$('#fs-action-add-select').find('span').show();
-    $('#fs-action-add-select').find('input').hide().val('');*/
-
     $select.show();
 
     var spikeLeft = ($(this).offset().left + $(this).width() / 2) - $select.offset().left - ($spike.outerWidth() / 2);
@@ -3760,8 +3887,23 @@ var balloon = {
 
     $select.off('click', 'li').on('click', 'li', function() {
       var type = $(this).attr('data-type');
+      var $d = balloon.add_file_handlers[type](type);
 
-      balloon.showNewNode(type);
+      if($d && $d.then) {
+        $d.done(function(node) {
+          balloon.added = node.id;
+
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
+            var $createdNode = $('li[fs-id="' + node.id + '"]');
+
+            if(!$createdNode) return;
+
+            $('#fs-layout-left').animate({
+              scrollTop: ($createdNode.offset().top - 70)
+            }, 1000);
+          });
+        });
+      }
     });
   },
 
@@ -3974,9 +4116,12 @@ var balloon = {
     var $fs_share_win_cancel = $fs_share_win.find('input[name=cancel]');
     var $fs_share_win_remove = $fs_share_win.find('#fs-share-window-remove');
     var $fs_share_win_remove_btn = $fs_share_win.find('input[name=unshare]');
+    var $fs_share_win_consumers = $fs_share_win.find('#fs-share-window-consumers');
     var $share_name = $fs_share_win.find('input[name=share_name]');
 
-    $fs_share_win.find('#fs-share-window-consumers').empty().hide();
+    $fs_share_win_consumers.hide();
+    $fs_share_win_consumers.find('ul').empty()
+    $fs_share_win.find('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
 
     if(node.shared === false) {
       $fs_share_win_create.show();
@@ -4100,7 +4245,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl);
+            acl = balloon._addShareConsumer(role, acl, true);
           }
         });
 
@@ -4122,7 +4267,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl);
+            acl = balloon._addShareConsumer(role, acl, true);
           }
         });
       }
@@ -4130,7 +4275,12 @@ var balloon = {
 
     balloon._userAndGroupAutocomplete($share_consumer_search, true, function(item) {
       selected = true;
-      balloon._addShareConsumer(item, acl);
+      balloon._addShareConsumer(item, acl, true);
+    });
+
+    $fs_share_win.find('#fs-share-window-toggle-consumers a').off('click').on('click', function() {
+      $fs_share_win.find('#fs-share-window-content').toggleClass('fs-share-window-consumers-expanded');
+      $fs_share_win.data('kendoBalloonWindow').center();
     });
   },
 
@@ -4256,8 +4406,9 @@ var balloon = {
    * @param  Array acl
    * @return object
    */
-  _addShareConsumer: function(item, acl) {
+  _addShareConsumer: function(item, acl, scrollToItem) {
     var $fs_share_win_consumers = $('#fs-share-window-consumers');
+    var $fs_share_win_consumers_ul = $fs_share_win_consumers.find('> ul');
 
     if(acl.filter(function(role) {
       return role.id === item.role.id;
@@ -4276,7 +4427,13 @@ var balloon = {
       privilege: privilege,
     });
 
-    var $consumer = $('<li id="fs-share-window-consumer-' + item.role.id + '">'+name+'</li>');
+    var icon = item.type === 'group' ? 'group' : 'person';
+    var $consumer = $(
+      '<li id="fs-share-window-consumer-' + item.role.id + '">'+
+        '<svg class="gr-icon gr-i-'+icon+'"><use xlink:href="/assets/icons.svg#'+icon+'"></use></svg>'+
+        '<span>'+name+'</span>'+
+      '</li>'
+    );
 
     var $consumer_privilege = $(
       '<div class="fs-share-window-privilege-selector">'+
@@ -4315,10 +4472,25 @@ var balloon = {
     $consumer_privilege_selector.append($consumer_privilege_selector_item_remove);
 
     $consumer_privilege.append($consumer_privilege_selector);
+
+    $consumer_privilege.on('mouseenter', function() {
+      $consumer_privilege_selector.css('top', ($consumer_privilege.position().top-1)+'px');
+    });
+
     $consumer.append($consumer_privilege);
 
-    $fs_share_win_consumers.append($consumer);
+    $fs_share_win_consumers_ul.append($consumer);
     $fs_share_win_consumers.show();
+
+    if(acl.length >= 4) {
+      $('#fs-share-window-toggle-consumers').addClass('visible');
+    }
+
+    if(scrollToItem) {
+      $fs_share_win_consumers_ul.animate({scrollTop: $fs_share_win_consumers_ul.prop('scrollHeight')}, 250);
+    }
+
+    $('#fs-share-window').data('kendoBalloonWindow').center();
 
     $('#fs-share-window .fs-window-secondary-actions input[type="submit"]').prop('disabled', ($('#fs-share-window input[name=share_name]').val() === ''));
 
@@ -4358,6 +4530,13 @@ var balloon = {
         break;
       }
     }
+
+    if(acl.length < 4) {
+      $('#fs-share-window-toggle-consumers').removeClass('visible');
+      $('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
+    }
+
+    $('#fs-share-window').data('kendoBalloonWindow').center();
 
     if(acl.length === 0) {
       $('#fs-share-window-consumers').hide();
@@ -5766,6 +5945,14 @@ var balloon = {
           }          else {
             return 'gr-i-folder-filter';
           }
+        } else if(node.mount) {
+          if(node.shared === true && node.reference === true) {
+            return 'gr-i-folder-storage-received';
+          } else if(node.shared === true) {
+            return 'gr-i-folder-storage-shared';
+          } else {
+            return 'gr-i-folder-storage';
+          }
         } else if(node.shared === true && node.reference === true) {
           return 'gr-i-folder-received';
         } else if(node.shared === true) {
@@ -6277,20 +6464,41 @@ var balloon = {
     }
   },
 
-
   /**
-   * Display file history
+   * Display file history in view bar
    *
-   * @param   object node
    * @return  void
    */
-  displayHistory: function(node) {
-    balloon.resetDom('history');
+  displayHistoryView: function() {
+    var limit = 3;
+    var node = balloon.getCurrentNode();
+    var $fs_history = $('#fs-history');
+    var $show_more = $fs_history.find('#fs-history-actions button');
+    $show_more.hide();
 
-    var $view = $("#fs-history"),
-      $fs_history = $view.find("> ul");
+    var req = balloon.displayHistory($fs_history, node, limit);
+    req.done(function(body) {
+      if(body && body.data && body.data.length > limit) {
+        $show_more.off('click').on('click', function() {
+          balloon.displayHistoryWindow(node);
+        }).show();
+      }
+    });
+  },
 
-    balloon.xmlHttpRequest({
+  /**
+   * Display file history in given $dom
+   *
+   * @param   object $dom
+   * @param   object node
+   * @param   int limit
+   * @return  void
+   */
+  displayHistory: function($dom, node, limit) {
+    var $fs_history = $dom.find("ul");
+    $fs_history.empty();
+
+    return balloon.xmlHttpRequest({
       dataType: "json",
       url: balloon.base+'/files/history',
       type: "GET",
@@ -6301,7 +6509,9 @@ var balloon = {
         var action, dom_node, ts, since, radio;
         data.data.reverse();
 
-        for(var i in data.data) {
+        limit = limit || data.data.length;
+
+        for(var i=0; i < limit && i < data.data.length; i++) {
           switch(data.data[i].type) {
           case 0:
             action = '<span class="fs-history-text-action">'+ i18next.t('view.history.added')+'</span>';
@@ -6354,7 +6564,7 @@ var balloon = {
           $fs_history.append(dom_node);
         }
 
-        var $submit = $view.find('input[type=submit]');
+        var $submit = $dom.find('input[type=submit]');
         if(data.data.length > 1) {
           $submit.show();
         }
@@ -6376,6 +6586,42 @@ var balloon = {
 
 
   /**
+   * Display file history in modal
+   *
+   * @param   object node
+   * @return  void
+   */
+  displayHistoryWindow: function(node) {
+    var $fs_history_win   = $('#fs-history-window');
+
+    if($fs_history_win.is(':visible')) {
+      balloon.displayHistory($fs_history_win, node);
+    } else {
+      $fs_history_win.kendoBalloonWindow({
+        title: i18next.t('view.history.history_for', node.name),
+        resizable: false,
+        modal: true,
+        height: '400px',
+        width: '800px',
+        open: function() {
+          balloon.displayHistory($fs_history_win, node);
+
+          $fs_history_win.find('input[name="apply"]').off('click').on('click', function(){
+            var version = $fs_history_win.find('input[name=version]:checked').val();
+            if(version !== undefined) {
+              balloon.restoreVersion(node, version);
+            }
+          });
+
+          $fs_history_win.find('input[name="cancel"]').off('click').on('click', function(){
+            $fs_history_win.data("kendoBalloonWindow").close();
+          });
+        }
+      }).data('kendoBalloonWindow').center().open();
+    }
+  },
+
+  /**
    * Restore file to a previous version
    *
    * @param   string|object node
@@ -6392,7 +6638,11 @@ var balloon = {
       },
       success: function(data) {
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        balloon.displayHistory(node);
+        balloon.displayHistoryView();
+
+        if($('#fs-history-window').is(':visible')) {
+          balloon.displayHistoryWindow(node);
+        }
       }
     });
   },
@@ -6881,8 +7131,14 @@ var balloon = {
 
     if(enabled === undefined) enabled = true;
 
+    var actions = [];
+
+    if(balloon.selected_action.command !== null) {
+      actions.push('paste');
+    }
+
     if(enabled === true) {
-      var actions = ['download'];
+      actions.push('download');
 
       if(!balloon.isSearch() && !balloon.isMultiSelect()) {
         actions.push('rename');
@@ -6900,13 +7156,9 @@ var balloon = {
         actions.push('restore');
       }
 
-      if(balloon.selected_action.command !== null) {
-        actions.push('paste');
-      }
-
       balloon.enableAction(actions, true);
     } else {
-      balloon.enableAction([], true);
+      balloon.enableAction(actions, true);
     }
   },
 
@@ -6961,6 +7213,10 @@ var balloon = {
       balloon.selected_action.command  = name;
       balloon.selected_action.nodes    = balloon.getSelected(balloon.getCurrentNode());
       balloon.selected_action.collection = balloon.getCurrentCollectionId();
+
+      var count = Array.isArray(balloon.selected_action.nodes) ? balloon.selected_action.nodes.length : 1;
+      $('#fs-action-paste-count').html(count);
+
       balloon.enableAction('paste');
       break;
 
@@ -7175,7 +7431,8 @@ var balloon = {
         break;
 
       case 'view-bar':
-        $('#fs-content-view').find('dt,dd').addClass('disabled');
+        $('#fs-content-view').find('dt,dd').addClass('disabled').removeClass('active');
+        $('#fs-properties-name span').html('');
         break;
 
       case 'action-bar':

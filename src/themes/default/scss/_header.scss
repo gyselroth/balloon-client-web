@@ -210,23 +210,28 @@
           color: $colorDarkGrey;
         }
 
-        #fs-settings-menu-wrap {
+        .fs-identity-dropdown {
           @include dropdown(220px, 23px, 29px);
 
           display: none;
-          right: -48px;
 
-          &.fs-settings-menu-open {
+          &.fs-identity-dropdown-open {
             display: block;
           }
 
+          .bln-dropdown-content {
+            @include shadow-default;
+          }
+        }
+
+        #fs-settings-dropdown-wrap {
+          right: -48px;
+
           .bln-dropdown-spike {
-            right: 53px;
+            right: 49px;
           }
 
-          #fs-settings-menu {
-            @include shadow-default;
-
+          #fs-settings-dropdown {
             #fs-quota {
               @include clearfix;
 

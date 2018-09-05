@@ -23,19 +23,19 @@ module.exports = {
   },
   module: {
     rules: [
-      {
+      /*{
         test: /\.json$/,
         loader: 'json-loader'
-      },
+      },*/
       {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
         loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
       },
-      {
+      /*{
         test: /(\.jsx|\.js)$/,
         loader: 'eslint-loader',
         exclude: /node_modules/
-      },
+      },*/
       {
         test: /\.scss$/,
         use: extractSass.extract({
@@ -83,11 +83,11 @@ module.exports = {
       "output": {
         "groupBy": [
           {
-            "pattern": "{./src/locale/en.json,./src/app/*/locale/en.json}",
+            "pattern": "{./locale/en.json,./app/*/locale/en.json}",
             "fileName": "locale/en.json"
           },
           {
-            "pattern": "{./src/locale/de.json,./src/app/*/locale/de.json}",
+            "pattern": "{./locale/de.json,./app/*/locale/de.json}",
             "fileName": "locale/de.json"
           }
         ]

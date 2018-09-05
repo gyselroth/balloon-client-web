@@ -1,7 +1,13 @@
 #fs-events {
+  @include clearfix;
+
   ul {
     margin-bottom: 20px;
 
     @include events-list;
+  }
+
+  button {
+    float: right;
   }
 }

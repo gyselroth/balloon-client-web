@@ -1,0 +1,29 @@
+@import './dropdown-header';
+@import './dropdown-messages';
+
+/**
+Styles for "message center"
+**/
+#fs-browser-top-bar {
+  #fs-identity {
+    & > ul {
+      & > li {
+        #fs-notifications-dropdown-wrap {
+          width: 640px;
+          right: -77px;
+
+          .bln-dropdown-spike {
+            right: 78px;
+          }
+
+          #fs-notifications-dropdown {
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            padding: 37px 56px 40px;
+          }
+        }
+      }
+    }
+  }
+}
