@@ -19,18 +19,11 @@ var app = {
   balloon: null,
 
   render: function() {
-    var $add_node = $('#fs-action-add-select').find('ul');
-
-    $add_node.append(
-      '<li data-type="burl">' +
-      '<svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg>' +
-      '<span data-i18n="tree.burl_file"></span>' +
-      '</li>'
-    );
   },
 
   preInit: function(core) {
     this.balloon = core;
+    this.balloon.addNew(app.BURL_EXTENSION, i18next.t('app.burl.tree.burl_file'), 'hyperlink', this.addBurl.bind(this));
     this.orig_treeDblclick = this.balloon._treeDblclick;
     this.origMapMimeToExtension = this.balloon.mapMimeToExtension;
     this.origGetSpriteClass = this.balloon.getSpriteClass;
@@ -38,7 +31,6 @@ var app = {
     this.balloon._treeDblclick = this._treeDblclick.bind(this);
     this.balloon.mapMimeToExtension = this.mapMimeToExtension.bind(this);
     this.balloon.getSpriteClass = this.getSpriteClass.bind(this);
-    this.balloon.add_file_handlers.burl = this.addBurl.bind(this);
   },
 
 
@@ -103,17 +95,39 @@ var app = {
    * @param string name
    * @return void
    */
-  addBurl: function(name) {
+  addBurl: function() {
+    this.balloon.showNewNode(app.BURL_EXTENSION, this._addBurl.bind(this));
+  },
+
+
+  /**
+   * Add new burl file with given name
+   *
+   * @param string name
+   * @return void
+   */
+  _addBurl: function(name) {
+    var $d = $.Deferred();
+
     name = encodeURI(name);
     this.balloon.xmlHttpRequest({
       url: this.balloon.base+'/files?name='+name+'&'+this.balloon.param('collection', this.balloon.getCurrentCollectionId()),
       type: 'PUT',
-      success: function(data) {
-        this.balloon.added = data.id;
-        this.balloon.refreshTree('/collections/children', {id: this.balloon.getCurrentCollectionId()});
-        this.balloon._editFile(data);
+      complete: function(data, textStatus) {
+        switch(textStatus) {
+        case 'success':
+          this.balloon.added = data.responseJSON.id;
+          this.balloon.refreshTree('/collections/children', {id: this.balloon.getCurrentCollectionId()});
+          this.balloon._editFile(data.responseJSON);
+          $d.resolve();
+          break;
+        default:
+          $d.reject();
+        }
       }.bind(this),
     });
+
+    return $d;
   },
 
 
@@ -134,7 +148,7 @@ var app = {
       success: function (data) {
         try {
           let url = new URL(data);
-          var msg  = i18next.t('prompt.open_burl', url.href);
+          var msg  = i18next.t('app.burl.prompt.open_burl', url.href);
           this.balloon.promptConfirm(msg, this._handleBurl, [url]);
         } catch (error) {
           this.balloon.displayError(error);

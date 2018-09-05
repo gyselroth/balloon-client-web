@@ -1,13 +1,13 @@
 {
   "app": {
-    "balloon_app_burl": {
+    "burl": {
+      "tree": {
+        "burl_file": "URL-Verknüpfung"
+      },
+      "prompt": {
+        "open_burl": "Willst du %s in einem neuen Tab öffnen?"
+      }
     }
-  },
-  "tree": {
-    "burl_file": "URL-Verknüpfung"
-  },
-  "prompt": {
-    "open_burl": "Willst du %s in einem neuen Tab öffnen?"
   },
   "new_node": {
     "title": {

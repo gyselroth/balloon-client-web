@@ -1,13 +1,13 @@
 {
   "app": {
-    "balloon_app_burl": {
+    "burl": {
+      "tree": {
+        "burl_file": "URL Shortcut"
+      },
+      "prompt": {
+        "open_burl": "Do you want to open %s in a new tab?"
+      }
     }
-  },
-  "tree": {
-    "burl_file": "URL Shortcut"
-  },
-  "prompt": {
-    "open_burl": "Do you want to open %s in a new tab?"
   },
   "new_node": {
     "title": {
