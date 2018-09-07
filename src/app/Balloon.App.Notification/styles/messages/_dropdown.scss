@@ -17,10 +17,18 @@ Styles for "message center"
           }
 
           #fs-notifications-dropdown {
+            overflow: hidden;
             box-sizing: border-box;
             width: 100%;
             height: auto;
             padding: 37px 56px 40px;
+
+            max-height: 156px;
+            transition: max-height 0.5s ease-in-out;
+
+            &.has-messages {
+              max-height: calc(60vh + 132px);
+            }
           }
         }
       }

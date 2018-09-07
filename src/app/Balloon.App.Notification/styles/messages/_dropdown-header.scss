@@ -19,12 +19,10 @@
 }
 
 #fs-notifications-header {
-  @include clearfix;
-
+  position: relative;
   margin-bottom: 26px;
 
   h3 {
-    float: left;
     font-size: 24px;
     line-height: 27px;
     font-weight: bold;
@@ -37,8 +35,8 @@
 
   .has-messages & #fs-notifications-delete-all {
     display: block;
-    position: relative;
+    position: absolute;
     top: -10px;
-    float: right;
+    right: 0;
   }
 }

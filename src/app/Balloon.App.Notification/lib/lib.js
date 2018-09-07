@@ -85,7 +85,7 @@ var app = {
       });
 
       app._displayMessages().done(function(body) {
-        //app._displayMessagesInfiniteScroll();
+        app._displayMessagesInfiniteScroll();
       });
     });
   },
@@ -121,10 +121,12 @@ var app = {
 
           var $message = $(
             '<li data-fs-message-id="' + message.id + '">'+
-              '<p class="fs-notifications-meta">' + i18next.t('app.balloon_app_notification.messages.message_meta', message.sender.username) + '</p>'+
-              '<h4>' + message.subject + '</h4>'+
-              '<p>' + message.message + '</p>'+
-              '<div class="fs-notifications-delete-message"><svg class="gr-icon gr-i-close" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#close"></use></svg></div>'+
+              '<div class="fs-notifications-message-inner">'+
+                '<p class="fs-notifications-meta">' + i18next.t('app.balloon_app_notification.messages.message_meta', message.sender.username) + '</p>'+
+                '<h4>' + message.subject + '</h4>'+
+                '<p>' + message.message + '</p>'+
+                '<div class="fs-notifications-delete-message"><svg class="gr-icon gr-i-close" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#close"></use></svg></div>'+
+              '</div>'+
             '</li>'
           );
 
@@ -244,6 +246,16 @@ var app = {
         total --;
         offset --;
 
+        $message.addClass('fs-notifications-message-hidden');
+        setTimeout(function() {
+          $message.remove();
+
+          if(total <= 0) {
+            app.$contentMessagesDropdown.removeClass('has-messages');
+            app.$contentMessagesCount.html(0).hide();
+          }
+        }, 700);
+
         $list.data('fsNotificationsTotalMessages', total);
         $list.data('fsNotificationsOffset', offset);
 
@@ -254,12 +266,8 @@ var app = {
             //load next message
             app._displayMessages(offset, 1);
           }
-        } else {
-          app.$contentMessagesDropdown.removeClass('has-messages');
-          app.$contentMessagesCount.html(0).hide();
         }
 
-        $message.remove();
         $d.resolve();
       },
       error: function() {
