@@ -266,7 +266,7 @@ var app = {
     });
   },
 
-  treeDblclick: function(e) {
+  treeDblclick: function() {
     var supported_office = [
       'csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'
     ];
@@ -280,7 +280,7 @@ var app = {
       app.edit(app.balloon.getCurrentNode());
       app.balloon.pushState();
     } else {
-      app.origDblClick();
+      app.origDblClick.apply(app.balloon, arguments);
     }
   },
 

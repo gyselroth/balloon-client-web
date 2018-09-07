@@ -38,14 +38,13 @@ var app = {
   /**
    * treeview dblclick
    *
-   * @param   object e
    * @return  void
    */
-  _treeDblclick: function(e) {
+  _treeDblclick: function() {
     if (this.isBurlFile(this.balloon.getCurrentNode())) {
       this.handleBurl(this.balloon.getCurrentNode());
     } else {
-      this.orig_treeDblclick(e);
+      this.orig_treeDblclick.apply(app.balloon, arguments);
     }
   },
 

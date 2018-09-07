@@ -745,7 +745,7 @@ var balloon = {
 
     var $fs_namespace_input = $("#fs-namespace").find("input");
     if(e.keyCode === 13 && !$fs_namespace_input.is(":focus") && !$("#fs-prompt-window").is(':visible') && !$('#fs-edit-live').is(':visible')) {
-      balloon._treeDblclick();
+      balloon._treeDblclick(undefined, true);
     }
 
     if($fs_namespace_input.is(":focus")) {
@@ -2685,8 +2685,8 @@ var balloon = {
    * @param   object e
    * @return  void
    */
-  _treeDblclick: function(e) {
-    if(balloon.previous_clicked_id !== balloon.last_clicked_id) {
+  _treeDblclick: function(e, force) {
+    if(!force && balloon.previous_clicked_id !== balloon.last_clicked_id) {
       //this was a "double click" on two different nodes
       return;
     }
@@ -2701,7 +2701,7 @@ var balloon = {
       var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
 
       if(balloon.last.id == '_FOLDERUP') {
-        if(balloon.isMobileViewPort()) balloon._folderUp();
+        balloon._folderUp();
       } else {
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
       }
