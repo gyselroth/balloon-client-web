@@ -19,12 +19,26 @@
 }
 
 #fs-notifications-header {
+  @include clearfix;
+
   margin-bottom: 26px;
 
   h3 {
+    float: left;
     font-size: 24px;
     line-height: 27px;
     font-weight: bold;
     color: $colorDarkGrey;
+  }
+
+  #fs-notifications-delete-all {
+    display: none;
+  }
+
+  .has-messages & #fs-notifications-delete-all {
+    display: block;
+    position: relative;
+    top: -10px;
+    float: right;
   }
 }
