@@ -26,11 +26,12 @@ var app = {
     this.balloon.addNew(app.BURL_EXTENSION, i18next.t('app.burl.tree.burl_file'), 'hyperlink', this.addBurl.bind(this));
     this.orig_treeDblclick = this.balloon._treeDblclick;
     this.origMapMimeToExtension = this.balloon.mapMimeToExtension;
-    this.origGetSpriteClass = this.balloon.getSpriteClass;
+
     //TODO pixtron - find a clean way for apps to hook into core. Just overriding core methods is quite a hack.
     this.balloon._treeDblclick = this._treeDblclick.bind(this);
     this.balloon.mapMimeToExtension = this.mapMimeToExtension.bind(this);
-    this.balloon.getSpriteClass = this.getSpriteClass.bind(this);
+
+    this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-language';
   },
 
 
@@ -57,26 +58,6 @@ var app = {
   mapMimeToExtension: function(mime) {
     return mime === 'application/vnd.balloon.burl' ? 'burl' : this.origMapMimeToExtension(mime);
   },
-
-
-  /**
-   * Extension => Sprite classname mapper
-   *
-   * @param  object|string node
-   * @return string
-   */
-  getSpriteClass: function(node) {
-    try {
-      if (this.isBurlFile(node)) {
-        return 'gr-i-hyperlink';
-      }
-    } catch (error) {
-      // do nothing
-    } finally {
-      return this.origGetSpriteClass(node);
-    }
-  },
-
 
   /**
    * Check if file is .burl

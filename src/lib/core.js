@@ -15,6 +15,8 @@ import balloonTimePicker from './widget-balloon-timepicker.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
+import fileExtIconMap from './file-ext-icon-map.js';
+
 window.$ = $;
 $.ajaxSetup({
   beforeSend:function(jqXHR,settings){
@@ -52,6 +54,12 @@ var balloon = {
    * Chunk upload size (4MB Chunk)
    */
   BYTES_PER_CHUNK: 4194304,
+
+
+  /**
+   * Map with [FILE EXTENSION]: [SPRITE ICON CLASS]
+   */
+  fileExtIconMap: fileExtIconMap,
 
   /**
    * API Base url
@@ -5968,69 +5976,9 @@ var balloon = {
       var extension = node;
     }
 
-    var map = {
-      pdf:  'gr-i-file-pdf',
-      dll:  'gr-i-file-archive',
-      rpm:  'gr-i-file-archive',
-      deb:  'gr-i-file-archive',
-      bundle: 'gr-i-file-archive',
-      jar:  'gr-i-file-archive',
-      dmg:  'gr-i-file-archive',
-      txt:  'gr-i-file-text',
-      log:  'gr-i-file-text',
-      css:  'gr-i-file-text',
-      xml:  'gr-i-file-text',
-      eml:  'gr-i-mail',
-      gpg:  'gr-i-lock',
-      pem:  'gr-i-lock',
-      p12:  'gr-i-lock',
-      cert: 'gr-i-lock',
-      rar:  'gr-i-file-archive',
-      zip:  'gr-i-file-archive',
-      xz:   'gr-i-file-archive',
-      gz:   'gr-i-file-archive',
-      tgz:  'gr-i-file-archive',
-      tar:  'gr-i-file-archive',
-      bz2:  'gr-i-file-archive',
-      swf:  'gr-i-file-movie',
-      flv:  'gr-i-file-movie',
-      jpeg:   'gr-i-file-image',
-      tiff:   'gr-i-file-image',
-      svg:  'gr-i-file-image',
-      ico:  'gr-i-file-image',
-      gif:  'gr-i-file-image',
-      psd:  'gr-i-file-image',
-      png:  'gr-i-file-image',
-      jpg:  'gr-i-file-image',
-      xls:  'gr-i-file-excel',
-      xlsx:   'gr-i-file-excel',
-      csv:  'gr-i-file-excel',
-      ods:  'gr-i-file-excel',
-      doc:  'gr-i-file-word',
-      docx:   'gr-i-file-word',
-      odt:  'gr-i-file-word',
-      iso:  'gr-i-file-archive',
-      ppt:  'gr-i-file-powerpoint',
-      pptx:   'gr-i-file-powerpoint',
-      odp:  'gr-i-file-powerpoint',
-      sql:  'gr-i-file-text',
-      html:   'gr-i-file-text',
-      rss:  'gr-i-rss-feed',
-      avi:  'gr-i-file-movie',
-      mkv:  'gr-i-file-movie',
-      mp4:  'gr-i-file-movie',
-      mpeg:   'gr-i-file-movie',
-      mov:  'gr-i-file-movie',
-      mp3:  'gr-i-file-music',
-      wav:  'gr-i-file-music',
-      flac:  'gr-i-file-music',
-      ogg:  'gr-i-file-music',
-      acc:  'gr-i-file-music'
-    };
-
-    if(extension in map) {
-      return map[extension];
-    }    else {
+    if(extension in balloon.fileExtIconMap) {
+      return balloon.fileExtIconMap[extension];
+    } else {
       return 'gr-i-file-text';
     }
   },
