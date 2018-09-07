@@ -33,6 +33,17 @@
     }
 
     &.active {
+      &:before {
+        content: "";
+        display: block;
+        height: 100%;
+        width: 2px;
+        background-color: $colorActiveBlue;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
       .gr-i-arrowhead-s {
         display: none;
       }
@@ -51,6 +62,7 @@
   }
 
   dd {
+    position: relative;
     display: none;
     padding-top: 2px;
     padding-bottom: 65px;
@@ -62,6 +74,17 @@
 
     &.active {
       display: block;
+
+      &:before {
+        content: "";
+        display: block;
+        height: 100%;
+        width: 2px;
+        background-color: $colorActiveBlue;
+        position: absolute;
+        left: -30px;
+        top: 0;
+      }
     }
 
     &.disabled {
