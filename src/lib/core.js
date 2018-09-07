@@ -6643,11 +6643,12 @@ var balloon = {
     var ext = balloon.getFileExtension(node);
     var name = node.name;
 
+    $fs_prop_name.find('.fs-ext').remove();
+
     if(ext != null && node.directory == false) {
-      $fs_prop_name.find('.fs-ext').html('('+ext+')');
+      $fs_prop_name.append('<span class="fs-ext">('+ext+')</span>');
       $field.html(name.substr(0, name.length-ext.length-1));
     } else {
-      $fs_prop_name.find('.fs-ext').html('');
       $field.html(name);
     }
   },
