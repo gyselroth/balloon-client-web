@@ -66,6 +66,19 @@ import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 
     options: {
       name: 'BalloonWindow',
+    },
+
+    _removeOverlay: function(suppressAnimation) {
+      var modals = this._modals();
+      var options = this.options;
+      var overlay = options.modal ? this._overlay(true) : $(undefined);
+      var hideOverlay = options.modal && !modals.length;
+
+      if (hideOverlay) {
+        this._overlay(false).remove();
+      } else if (modals.length) {
+        this._object(modals.last())._overlay(true);
+      }
     }
   });
 
