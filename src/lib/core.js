@@ -2041,6 +2041,16 @@ var balloon = {
 
 
   /**
+   * Get menu title
+   *
+   * @return string
+   */
+  getMenuTitle: function() {
+    return $('.fs-menu-left-active').attr('title');
+  },
+
+
+  /**
    * User menu
    *
    * @return void
@@ -2146,7 +2156,14 @@ var balloon = {
       $('#fs-crumb-home-list').hide();
       $('#fs-crumb-search-list').show();
       $('#fs-browser-header .fs-browser-column-icon').children().hide();
-      $('#fs-crumb-search').html(i18next.t('menu.' + action));
+
+      var title = balloon.getMenuTitle();
+
+      if(action === 'search') {
+        i18next.t('menu.' + action);
+      }
+
+      $('#fs-crumb-search').html(title);
     }
 
     if(exec === false) {
