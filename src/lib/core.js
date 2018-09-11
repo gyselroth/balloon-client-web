@@ -143,6 +143,11 @@ var balloon = {
   menu_handlers: {},
 
   /**
+   *
+   */
+  hints: [],
+
+  /**
    * Content views in side pannel
    *
    * Array of side pannel items.
@@ -452,7 +457,11 @@ var balloon = {
       balloon._updateCheckAllState();
     });
 
-    balloon.showHint();
+    for(let i=1; i<=25; i++) {
+      this.addHint(i18next.t("hint.hint_"+i));
+    }
+
+    balloon.showHint()
     balloon.initialized = true;
     app.postInit(this);
   },
@@ -492,7 +501,7 @@ var balloon = {
    */
   showHint: function() {
     var disabled = localStorage.noHint;
-    if(disabled == "true" || balloon.getURLParam('menu') !== null) {
+    if(disabled == "true") {
       return;
     }
 
@@ -527,6 +536,12 @@ var balloon = {
     });
   },
 
+  /**
+   * Push new hint to the store
+   */
+  addHint: function(message) {
+    this.hints.push(message);
+  },
 
   /**
    * show hint
@@ -534,11 +549,9 @@ var balloon = {
    * @return void
    */
   _showHint: function() {
-    var total = 25,
-      hint  = Math.floor(Math.random() * total) + 1,
+      var hint  = Math.floor(Math.random() * this.hints.length),
       $div  = $('#fs-hint-window-content');
-
-    $div.html(i18next.t("hint.hint_"+hint));
+    $div.html(this.hints[hint]);
   },
 
 

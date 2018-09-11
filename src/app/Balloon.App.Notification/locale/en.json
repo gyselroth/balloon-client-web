@@ -1,6 +1,6 @@
 {
   "app": {
-    "balloon_app_notification": {
+    "notification": {
       "settings": {
         "menu_title": "Subscribe",
         "subscribe": "Subscribe",
@@ -14,6 +14,10 @@
         "no_messages": "You don't have any new notifications",
         "message_meta": "From %s",
         "delete_all": "Delete all"
+      },
+      "hints": {
+        "hint_1": "You may create a subscription for files and folders. The server will notify you of any changes within your subscription. Just select a file/folder an go to Subscription. You will see those notifications in your inbox {icon-warning} and you will also receive a notifification by mail.",
+        "hint_2": "The server will notify you if somebody shares a folder with you. You will see those notifications in your inbox {icon-warning} and you will also receive a notifification by mail."
       }
     }
   }

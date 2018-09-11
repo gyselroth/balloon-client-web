@@ -23,6 +23,8 @@ var app = {
       app.balloon.tree.filter.deleted = 1;
       app.balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\ClamAv.quarantine": true}}, {});
     });
+
+    this.balloon.addHint(i18next.t('app.clamav.hint'));
   },
 
   resetView: function() {

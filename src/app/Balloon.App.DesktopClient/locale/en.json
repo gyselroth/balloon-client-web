@@ -1,6 +1,6 @@
 {
   "app": {
-    "balloon_app_desktopclient": {
+    "desktopclient": {
       "menu": "Download Desktop app",
       "description": "Get the balloon experience to your Desktop, choose your OS:",
       "windows": "Windows (.exe)",
@@ -8,7 +8,8 @@
       "linux": "Linux (.zip)",
       "debian": "DEB based (.deb)",
       "redhat": "RPM based (.rpm)",
-      "download": "Download"
+      "download": "Download",
+      "hint": "There is full featured desktop client app which brings your cloud to your desktop. The desktop client is available for Windows, Mac OS X and Linux. You can get if you hit the icon {icon-app-download} on the bottom left."
     }
   }
 }

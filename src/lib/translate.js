@@ -70,8 +70,28 @@ var translate = {
       .use(i18nextBrowserLanguageDetector)
       .use(i18nextLocalStorageCache)
       .use(i18nextSprintfPostProcessor)
+      .use({
+        type: 'postProcessor',
+        name: 'icon',
+        process: function(value, key, options, translator) {
+          var regex = /\{icon-([a-z\-]+)\}/g;
+          return value.replace(regex, function(match, name) {
+            return "<svg class='gr-icon gr-i-"+name+"' viewBox='0 0 24 24'><use xlink:href='/assets/icons.svg#"+name+"'></use></svg>";
+          });
+        }
+      })
+      .use({
+        type: 'postProcessor',
+        name: 'key',
+        process: function(value, key, options, translator) {
+          var regex = /\{key-([a-z\-]+)\}/g;
+          return value.replace(regex, function(match, name) {
+            return "<div>"+name+"</div>";
+          });
+        }
+      })
       .init({
-        postProcess: "sprintf",
+        postProcess: ["sprintf", "icon", "key"],
         overloadTranslationOptionHandler: i18nextSprintfPostProcessor.overloadTranslationOptionHandler,
         compatibilityJSON: 'v2',
         debug: false,

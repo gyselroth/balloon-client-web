@@ -25,6 +25,8 @@ var app = {
     this.balloon = core;
 
     this.initializeMessages();
+    this.balloon.addHint(i18next.t('app.notification.hints.hint_1'));
+    this.balloon.addHint(i18next.t('app.notification.hints.hint_2'));
   },
 
   /** Message Center **/
@@ -36,18 +38,18 @@ var app = {
    */
   injectMessages: function() {
     var $contentMessages = $(
-      '<li id="fs-notifications" title="'+ i18next.t('app.balloon_app_notification.messages.title') +'">'+
+      '<li id="fs-notifications" title="'+ i18next.t('app.notification.messages.title') +'">'+
         '<svg class="gr-icon gr-i-alert"><use xlink:href="/assets/icons.svg#alert"></use></svg>'+
         '<div id="fs-notifications-count">0</div>'+
         '<div id="fs-notifications-dropdown-wrap" class="bln-dropdown fs-identity-dropdown">'+
           '<span class="bln-dropdown-spike"></span>'+
           '<div id="fs-notifications-dropdown" class="bln-dropdown-content">'+
             '<div id="fs-notifications-header">'+
-              '<h3>'+ i18next.t('app.balloon_app_notification.messages.title') +'</h3>'+
-              '<button id="fs-notifications-delete-all" class="fs-button-primary">' + i18next.t('app.balloon_app_notification.messages.delete_all') + '</button>'+
+              '<h3>'+ i18next.t('app.notification.messages.title') +'</h3>'+
+              '<button id="fs-notifications-delete-all" class="fs-button-primary">' + i18next.t('app.notification.messages.delete_all') + '</button>'+
             '</div>'+
             '<div id="fs-notifications-messages-wrap">'+
-              '<div id="fs-notifications-no-messages">'+ i18next.t('app.balloon_app_notification.messages.no_messages') +'</div>'+
+              '<div id="fs-notifications-no-messages">'+ i18next.t('app.notification.messages.no_messages') +'</div>'+
               '<ul id="fs-notifications-messages"></ul>'+
             '</div>'+
           '</div>'+
@@ -122,7 +124,7 @@ var app = {
           var $message = $(
             '<li data-fs-message-id="' + message.id + '">'+
               '<div class="fs-notifications-message-inner">'+
-                '<p class="fs-notifications-meta">' + i18next.t('app.balloon_app_notification.messages.message_meta', message.sender.username) + '</p>'+
+                '<p class="fs-notifications-meta">' + i18next.t('app.notification.messages.message_meta', message.sender.username) + '</p>'+
                 '<h4>' + message.subject + '</h4>'+
                 '<p>' + message.message + '</p>'+
                 '<div class="fs-notifications-delete-message"><svg class="gr-icon gr-i-close" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#close"></use></svg></div>'+
@@ -300,18 +302,18 @@ var app = {
    */
   injectSettings: function() {
     var $contentSettings = $('<dd id="fs-notification">'+
-      '<div id="fs-notification-description">'+i18next.t('app.balloon_app_notification.settings.description')+'</div>'+
-      '<div><input type="checkbox" id="fs-notification-subscribe" name="subscribe" value="1" /><label for="fs-notification-subscribe">'+i18next.t('app.balloon_app_notification.settings.subscribe')+'</label></div>'+
-      '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1" disabled /><label for="fs-notification-exclude_me">'+i18next.t('app.balloon_app_notification.settings.exclude_me')+'</label></div>'+
-      '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-recursive" name="recursive" value="1" disabled /><label for="fs-notification-recursive">'+i18next.t('app.balloon_app_notification.settings.recursive')+'</label></div>'+
-      '<input type="submit" class="fs-button-primary" value="'+i18next.t('app.balloon_app_notification.settings.save')+'">'+
+      '<div id="fs-notification-description">'+i18next.t('app.notification.settings.description')+'</div>'+
+      '<div><input type="checkbox" id="fs-notification-subscribe" name="subscribe" value="1" /><label for="fs-notification-subscribe">'+i18next.t('app.notification.settings.subscribe')+'</label></div>'+
+      '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1" disabled /><label for="fs-notification-exclude_me">'+i18next.t('app.notification.settings.exclude_me')+'</label></div>'+
+      '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-recursive" name="recursive" value="1" disabled /><label for="fs-notification-recursive">'+i18next.t('app.notification.settings.recursive')+'</label></div>'+
+      '<input type="submit" class="fs-button-primary" value="'+i18next.t('app.notification.settings.save')+'">'+
     '</dd>');
 
     this.$contentSettings = $contentSettings;
 
     this.balloon.fs_content_views.push({
       id: 'notification',
-      title: 'app.balloon_app_notification.settings.menu_title',
+      title: 'app.notification.settings.menu_title',
       isEnabled: function() {
         return !app.balloon.last.deleted;
       },

@@ -16,11 +16,11 @@ var app = {
     this.balloon = core;
 
     var $content = $('<dd id="fs-shadow">'+
-      '<p id="fs-shadow-description">'+i18next.t('app.balloon_app_convert.description')+'</p>'+
-      '<p id="fs-shadow-not-supported">'+i18next.t('app.balloon_app_convert.not_supported')+'</p>'+
+      '<p id="fs-shadow-description">'+i18next.t('app.convert.description')+'</p>'+
+      '<p id="fs-shadow-not-supported">'+i18next.t('app.convert.not_supported')+'</p>'+
       '<div id="fs-shadow-formats">'+
         '<select name="formats">'+
-          '<option>'+i18next.t('app.balloon_app_convert.choose_format')+'</option>'+
+          '<option>'+i18next.t('app.convert.choose_format')+'</option>'+
           '</select>'+
           '<svg class="gr-icon gr-i-expand"><use xlink:href="/assets/icons.svg#expand"></use></svg>'+
           '<div id="fs-shadow-formats-add">'+
@@ -34,7 +34,7 @@ var app = {
 
     this.balloon.fs_content_views.push({
       id: 'shadow',
-      title: 'app.balloon_app_convert.menu_title',
+      title: 'app.convert.menu_title',
       isEnabled: function() {
         return !(app.balloon.last.directory || app.balloon.last.deleted);
       },
@@ -50,6 +50,8 @@ var app = {
       var id = $(this).parents().filter('li').attr('data-id');
       app.deleteSlave(app.balloon.last, id);
     });
+
+    this.balloon.addHint(i18next.t('app.convert.hint'))
   },
 
   resetView: function() {
@@ -63,7 +65,7 @@ var app = {
 
     if(app.balloon.last.master) {
       var $node = $('<div id="fs-slave-node">'
-          +'<span>'+i18next.t('app.balloon_app_convert.slave_node', {node: app.balloon.last})+'</span>'
+          +'<span>'+i18next.t('app.convert.slave_node', {node: app.balloon.last})+'</span>'
         +'</li>');
 
       $('#fs-properties').prepend($node);
