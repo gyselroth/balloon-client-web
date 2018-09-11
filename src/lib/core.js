@@ -799,14 +799,14 @@ var balloon = {
       //add folder (shift+n)
     case 78:
       if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-        balloon.doAction('folder');
+        balloon.handleAddNode('folder');
       }
       break;
 
       //add file (shift+a)
     case 65:
       if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-        balloon.doAction('file');
+        balloon.handleAddNode('txt');
       }
       break;
 
@@ -3916,24 +3916,31 @@ var balloon = {
 
     $select.off('click', 'li').on('click', 'li', function() {
       var type = $(this).attr('data-type');
-      var $d = balloon.add_file_handlers[type](type);
-
-      if($d && $d.then) {
-        $d.done(function(node) {
-          balloon.added = node.id;
-
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
-            var $createdNode = $('li[fs-id="' + node.id + '"]');
-
-            if(!$createdNode) return;
-
-            $('#fs-layout-left').animate({
-              scrollTop: ($createdNode.offset().top - 70)
-            }, 1000);
-          });
-        });
-      }
+      balloon.handleAddNode(type);
     });
+  },
+
+  /**
+   * Execute add file handler
+   */
+  handleAddNode: function(type) {
+    var $d = balloon.add_file_handlers[type](type);
+
+    if($d && $d.then) {
+      $d.done(function(node) {
+        balloon.added = node.id;
+
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
+          var $createdNode = $('li[fs-id="' + node.id + '"]');
+
+          if(!$createdNode) return;
+
+          $('#fs-layout-left').animate({
+            scrollTop: ($createdNode.offset().top - 70)
+          }, 1000);
+        });
+      });
+    }
   },
 
   /**
