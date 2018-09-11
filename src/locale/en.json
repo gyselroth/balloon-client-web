@@ -102,7 +102,7 @@
     "txt_file": "Text Document",
     "selected": "({{count}} item selected)",
     "selected_plural": "({{count}} items selected)",
-    "no_nodes": "<No files were found>",
+    "no_nodes": "No files were found.",
     "error": {
       "folder_exists": "A folder named %s does already exists."
     },
