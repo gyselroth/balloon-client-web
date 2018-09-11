@@ -53,8 +53,6 @@ var app = {
       title: i18next.t('app.externalstorage.external_storage'),
       modal: true,
       draggable: true,
-      width: 440,
-      height: 590,
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
           return;

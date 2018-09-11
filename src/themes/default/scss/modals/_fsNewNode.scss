@@ -1,10 +1,12 @@
+$sidePadding: 60px;
+
 .fs-new-node-window {
 
 }
 
 #fs-new-node-window {
   display: none;
-  width: 440px;
+  width: 440px + (2 * $sidePadding);
   padding-bottom: 40px;
   padding-top: 13px;
 

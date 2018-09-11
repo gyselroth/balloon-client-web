@@ -1,13 +1,28 @@
+$sidePadding: 50px;
+
 .fs-hint-window {
-  padding-left: 50px;
-  padding-right: 50px;
+
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
 }
 
 #fs-hint-window {
   display: none;
   overflow: auto;
 
-  width: 460px;
+  width: 460px + (2 * $sidePadding);
   padding-bottom: 40px;
 
   #fs-hint-window-content {

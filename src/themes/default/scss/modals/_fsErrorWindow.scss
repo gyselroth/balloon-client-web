@@ -1,15 +1,15 @@
 .fs-error-window {
-  padding: 72px 40px 40px;
+  $sidePadding: 40px;
 
   & > div.k-header {
-    .k-window-actions {
-      right: -16px;
-    }
+    padding: 0 $sidePadding;
 
     .k-window-title {
       position: relative;
+      left: 0;
       color: $colorErrorRed;
       padding-left: 48px;
+      width: calc(100% - #{2 * $sidePadding});
 
       .gr-icon {
         position: absolute;
@@ -19,6 +19,12 @@
         width: 33px;
       }
     }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
   }
 }
 

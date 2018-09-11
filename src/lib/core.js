@@ -1543,8 +1543,6 @@ var balloon = {
       title: $fs_profile_win.attr('title'),
       resizable: false,
       modal: true,
-      height: '60%',
-      width: '40%',
       open: function() {
         balloon.displayAvatar($('#fs-profile-avatar'));
 
@@ -1920,8 +1918,6 @@ var balloon = {
         title: $fs_event_win.attr('title'),
         resizable: false,
         modal: true,
-        height: '400px',
-        width: '800px',
         open: function() {
           balloon.displayEvents($fs_event_list, node);
         }
@@ -6095,8 +6091,6 @@ var balloon = {
 
         var $k_display = $div.kendoBalloonWindow({
           title: winTitle,
-          width: '70%',
-          height: '70%',
           resizable: false,
           modal: true,
           keydown: function(e) {
@@ -6614,8 +6608,6 @@ var balloon = {
         title: i18next.t('view.history.history_for', node.name),
         resizable: false,
         modal: true,
-        height: '400px',
-        width: '800px',
         open: function() {
           balloon.displayHistory($fs_history_win, node);
 

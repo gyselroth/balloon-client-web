@@ -1,22 +1,32 @@
+$sidePadding: 30px;
+
 .fs-share-window {
-  padding-left: 30px;
-  padding-right: 30px;
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
 
   overflow: visible;
 
   hr.full-width {
-    width: calc(100% + 60px);
-    margin: 29px -30px;
-  }
-
-  & > div.k-header .k-window-actions {
-    right: -6px;
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
   }
 }
 
 #fs-share-window {
   display: none;
-  width: 700px;
+  width: 700px + (2 * $sidePadding);
   padding-bottom: 30px;
 
   #fs-share-window-content {

@@ -1,21 +1,31 @@
-.fs-uploadmgr {
-  padding-left: 50px;
-  padding-right: 50px;
+$sidePadding: 50px;
 
-  hr.full-width {
-    width: calc(100% + 100px);
-    margin-left: -50px;
-    margin-right: -50px;
+.fs-uploadmgr {
+
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
   }
 
-  & > div.k-header .k-window-actions {
-    right: -26px;
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
   }
 }
 
 #fs-uploadmgr {
   display: none;
-  width: 660px;
+  width: 660px + (2 * $sidePadding);
   padding-bottom: 31px;
 
   h2 {
@@ -32,7 +42,7 @@
 
   .fs-uploadmgr-progress {
     position: relative;
-    width: 630px;
+    width: 100%;
     height: 42px;
     margin-bottom: 8px;
 
@@ -137,7 +147,7 @@
   }
 
   #fs-uploadmgr-files-progress {
-    width: 630px;
+    width: 100%;
     height: 6px;
     margin-top: -11px;
 
