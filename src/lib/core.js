@@ -5042,7 +5042,7 @@ var balloon = {
       if(typeof recipient === 'string') {
         if(recipient === '') return;
         type = 'email';
-        address = recipient.trim();
+        address = recipient.replace(/^\s+|[\s;,]+$/gm, '');
         label = address;
 
         var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -5089,8 +5089,10 @@ var balloon = {
       event.stopImmediatePropagation();
 
       switch(event.keyCode) {
-      case 13:
-      case 32:
+      case 13: // [Enter]
+      case 32: // [Space]
+      case 186: // [;]
+      case 188: // [,]
         addRecipient($input_recipient.val());
         break;
       };
