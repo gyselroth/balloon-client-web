@@ -963,6 +963,12 @@ var balloon = {
   _treeDataBound: function(e) {
     balloon.resetDom(['multiselect']);
 
+    if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
+      $('#fs-browser-action').show();
+    } else {
+      $('#fs-browser-action').hide();
+    }
+
     var selected = balloon.getURLParam('selected[]'),
       $fs_browser_tree = $("#fs-browser-tree"),
       $k_tree = $fs_browser_tree.data('kendoTreeView'),
@@ -2149,7 +2155,6 @@ var balloon = {
       balloon.resetDom('breadcrumb-home');
       $('#fs-crumb-search-list').hide();
       $('#fs-crumb-home-list').show();
-      $('#fs-browser-action').show();
       $('#fs-browser-header .fs-browser-column-icon').children().show();
     } else {
       balloon.resetDom('breadcrumb-search');
@@ -2750,7 +2755,6 @@ var balloon = {
   resetSearch: function(e) {
     balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-search-filter').data('initialized', false);
-    $('#fs-browser-action').show();
     $('#fs-search-filter').hide();
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list');
@@ -5218,7 +5222,6 @@ var balloon = {
   advancedSearch: function(e) {
     balloon.resetDom(['breadcrumb-search']);
     $('#fs-crumb-home-list').hide();
-    $('#fs-browser-action').hide();
     $('#fs-browser-header .fs-browser-column-icon').children().hide();
     $('#fs-crumb-search-list').show();
 
@@ -7424,7 +7427,6 @@ var balloon = {
 
         $fs_search.removeClass('fs-search-focused').removeClass('fs-search-filtered');
         $fs_search_input.val('');
-        $('#fs-browser-action').show();
         break;
 
       case 'history':
