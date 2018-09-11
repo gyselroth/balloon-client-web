@@ -6,7 +6,8 @@
 #fs-layout-left {
   background-color: $colorBrightGrey;
   padding: 0;
-  overflow-x: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
   height: 100%;
 
   #fs-layout-left-header {

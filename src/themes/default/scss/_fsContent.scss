@@ -16,7 +16,8 @@ $fsContentSidePadding: 30px;
 
   #fs-content-inner {
     height: 100%;
-    overflow-y: scroll;
+    overflow-x: hidden;
+    overflow-y: auto;
     border-bottom: 1px solid $colorBrightGrey;
     box-sizing: border-box;
     padding: 22px $fsContentSidePadding 0;
