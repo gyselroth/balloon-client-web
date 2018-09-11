@@ -5029,6 +5029,7 @@ var balloon = {
     var $input_recipient = $fs_share_link_message_form.find('#fs-share-link-window-recipient');
     var $input_comment = $fs_share_link_message_form.find('#fs-share-link-window-comment');
     var $btn_send = $fs_share_link_message_form.find('input[name="send"]');
+    var $input_recipient_autocomplete;
 
     $recipient_list.find('.tag').remove();
     $input_comment.val('');
@@ -5077,6 +5078,12 @@ var balloon = {
       }
     }
 
+    balloon._userAndGroupAutocomplete($input_recipient, false, function(item) {
+      addRecipient(item);
+    });
+
+    $input_recipient_autocomplete = $input_recipient.data('kendoAutoComplete');
+
     $input_recipient.off('blur').on('blur', function() {
       addRecipient($input_recipient.val());
     });
@@ -5090,6 +5097,12 @@ var balloon = {
 
       switch(event.keyCode) {
       case 13: // [Enter]
+        if($input_recipient_autocomplete.items().length > 0) {
+          addRecipient($input_recipient_autocomplete.dataItem(0));
+        } else {
+          addRecipient($input_recipient.val());
+        }
+        break;
       case 32: // [Space]
       case 186: // [;]
       case 188: // [,]
@@ -5109,10 +5122,6 @@ var balloon = {
         }
         break;
       };
-    });
-
-    balloon._userAndGroupAutocomplete($input_recipient, false, function(item) {
-      addRecipient(item);
     });
 
     $recipient_list.unbind('click').on('click', '.fs-delete', function(event) {
