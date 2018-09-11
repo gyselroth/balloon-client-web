@@ -6799,12 +6799,13 @@ var balloon = {
    *
    * @return void
    */
-  initMetaTagCompletion: function() {
+  initMetaTagCompletion: function(onSelect) {
     var $meta_tags = $('#fs-properties-meta-tags-tags'),
       $meta_tags_parent = $meta_tags.parent(),
       $input = $meta_tags_parent.find('input');
 
     $input.kendoAutoComplete({
+      select: onSelect,
       minLength: 0,
       dataTextField: "_id",
       noDataTemplate: i18next.t('error.autocomplete.no_tags_found'),
@@ -6949,12 +6950,15 @@ var balloon = {
    * @return  void
    */
   handleTags: function(node) {
-    var last_tag,
-      $fs_prop_tags = $('#fs-properties-meta-tags-tags'),
+    var $fs_prop_tags = $('#fs-properties-meta-tags-tags'),
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
     $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
-      balloon.initMetaTagCompletion();
+
+      balloon.initMetaTagCompletion(function(e) {
+        balloon._metaTagHandler(node, e);
+      });
+
       $('#fs-preview-add-tag').show();
       $fs_prop_tags_parent
         .find('input:text')
@@ -6985,15 +6989,10 @@ var balloon = {
       balloon.search(value);
     });
 
-    $fs_prop_tags_parent.find('input[name=add_tag]').unbind('keypress').keypress(function(e) {
+    $fs_prop_tags_parent.find('input[name=add_tag]').unbind('keyup').on('keyup', function(e) {
       balloon.resetDom('upload');
 
-      $(document).unbind('click').click(function(e) {
-        return balloon._metaTagHandler(node, e, last_tag);
-      });
-
-      last_tag = $(this);
-      return balloon._metaTagHandler(node, e, last_tag);
+      return balloon._metaTagHandler(node, e);
     }).unbind('focusout').bind('focusout', function() {
       $('#fs-preview-add-tag').hide();
     });
@@ -7006,46 +7005,49 @@ var balloon = {
    * @param   object node
    * @return  void
    */
-  _metaTagHandler: function(node, e, $last_tag) {
-    var code  = (!e.charCode ? e.which : e.charCode),
-      strcode = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+  _metaTagHandler: function(node, e) {
+    var tagValue = '',
+      $fs_prop_tags = $('#fs-properties-meta-tags-tags'),
+      $fs_prop_tags_parent = $fs_prop_tags.parent(),
+      $input = $fs_prop_tags_parent.find('input[name=add_tag]');
 
-    if(e.type == 'click' || code == 13 || code == 32 || code == 0) {
-      var value = $last_tag.val();
-
-      if(value == '') {
-        return;
+    if(e.type === undefined && e.item) {
+      //kendoAutocomplete select event
+      tagValue = e.item.text();
+    } else if(e.type === 'keyup') {
+      var code = (!e.charCode ? e.which : e.charCode);
+      if(code == 13 || code == 32 || code == 186 || code == 188 || code == 0) {
+        tagValue = $input.val().replace(/^\s+|[\s;,]+$/gm, '');
       }
-
-      if(node.meta.tags !== undefined && node.meta.tags.indexOf(value) != -1) {
-        return false;
-      }
-
-      var $fs_prop_tags = $('#fs-properties-meta-tags-tags');
-      if($last_tag.attr('name') == 'add_tag') {
-        $fs_prop_tags.find('ul').append('<li class="tag"><div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
-        $last_tag.val('').focus();
-      } else {
-        var $parent = $last_tag.parent();
-        $last_tag.remove();
-        $parent.html('<div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>');
-      }
-
-      var tags = $fs_prop_tags.find('li').map(function () {
-        return $(this).find('.tag-name').text();
-      }).get();
-
-      $(document).unbind('click');
-      $last_tag = undefined;
-
-      balloon.saveMetaAttributes(node, {tags: tags});
-
-      e.preventDefault();
+    } else {
+      return true;
     }
+
+    if(tagValue === '') {
+      //do not add empty tags
+      return true;
+    }
+
+    var tags = $fs_prop_tags.find('li').map(function () {
+      return $(this).find('.tag-name').text();
+    }).get();
+
+    if(tags.indexOf(tagValue) != -1) {
+      //do not add tags twice
+      return false;
+    }
+
+    e.preventDefault();
+
+    $fs_prop_tags.find('ul').append('<li class="tag"><div class="tag-name">'+tagValue+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
+    tags.push(tagValue);
+
+    balloon.saveMetaAttributes(node, {tags: tags});
+
+    $input.val('');
 
     return true;
   },
-
 
   /**
    * Save meta attributes
