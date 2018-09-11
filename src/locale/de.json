@@ -269,7 +269,11 @@
     "status": "Status:",
     "code": "Code:",
     "classification": "Klassifizierung:",
-    "message": "Meldung:"
+    "message": "Meldung:",
+    "autocomplete": {
+      "no_user_groups_found": "Es wurden keine Benutzer/Gruppen gefunden.",
+      "no_tags_found": "Es wurden keine Tags gefunden"
+    }
   },
   "uploadmgr": {
     "uploadmgr": "Upload Manager",

@@ -4321,6 +4321,7 @@ var balloon = {
       minLength: 3,
       dataTextField: "name",
       filter: "contains",
+      noDataTemplate: i18next.t('error.autocomplete.no_user_groups_found'),
       dataSource: new kendo.data.DataSource({
         serverFiltering: true,
         transport: {
@@ -6759,6 +6760,7 @@ var balloon = {
     $input.kendoAutoComplete({
       minLength: 0,
       dataTextField: "_id",
+      noDataTemplate: i18next.t('error.autocomplete.no_tags_found'),
       dataSource: new kendo.data.DataSource({
         transport: {
           read: function(operation) {
