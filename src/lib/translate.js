@@ -80,18 +80,8 @@ var translate = {
           });
         }
       })
-      .use({
-        type: 'postProcessor',
-        name: 'key',
-        process: function(value, key, options, translator) {
-          var regex = /\{key-([a-z\-]+)\}/g;
-          return value.replace(regex, function(match, name) {
-            return "<div>"+name+"</div>";
-          });
-        }
-      })
       .init({
-        postProcess: ["sprintf", "icon", "key"],
+        postProcess: ["sprintf", "icon"],
         overloadTranslationOptionHandler: i18nextSprintfPostProcessor.overloadTranslationOptionHandler,
         compatibilityJSON: 'v2',
         debug: false,
