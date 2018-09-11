@@ -402,6 +402,19 @@ var balloon = {
       }
 
       $('#fs-search-filter').toggle();
+
+      if($('#fs-search-filter').is(':visible') === false) {
+        $(window).off('keydown.search-filter');
+      } else {
+        $(window).on('keydown.search-filter', function(event) {
+          switch(event.keyCode) {
+          case 27:
+            $('#fs-search-filter').hide();
+            $(window).off('keydown.search-filter');
+            break;
+          }
+        });
+      }
     });
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
