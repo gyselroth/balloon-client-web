@@ -173,7 +173,8 @@ $sidePadding: 30px;
         display: block;
         width: 100%;
         max-height: $maxDisplayed * 31px + 1px;
-        overflow-y: scroll;
+        overflow-y: hidden;
+        overflow-x: hidden;
 
         & > li {
           color: $colorDarkGrey;
@@ -270,10 +271,11 @@ $sidePadding: 30px;
       }
 
       #fs-share-window-consumers {
-        & > ul {
-          $maxDisplayed: 20;
+        margin-top: 0;
 
-          max-height: $maxDisplayed * 31px + 1px;
+        & > ul {
+          overflow-y: scroll;
+          max-height: calc(100vh - 244px);
         }
       }
 
