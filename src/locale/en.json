@@ -179,7 +179,7 @@
       "privilege_rw": "Read/Write",
       "privilege_r": "Readonly",
       "privilege_w+": "Mailbox",
-      "remove_privilege": "Remove person",
+      "remove_privilege": "Remove",
       "create": "Share collection",
       "save": "Save changes",
       "edit": "Edit share",
