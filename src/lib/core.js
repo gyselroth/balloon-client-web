@@ -407,6 +407,19 @@ var balloon = {
       }
 
       $('#fs-search-filter').toggle();
+
+      if($('#fs-search-filter').is(':visible') === false) {
+        $(window).off('keydown.search-filter');
+      } else {
+        $(window).on('keydown.search-filter', function(event) {
+          switch(event.keyCode) {
+          case 27:
+            $('#fs-search-filter').hide();
+            $(window).off('keydown.search-filter');
+            break;
+          }
+        });
+      }
     });
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
@@ -812,14 +825,14 @@ var balloon = {
       //add folder (shift+n)
     case 78:
       if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-        balloon.doAction('folder');
+        balloon.handleAddNode('folder');
       }
       break;
 
       //add file (shift+a)
     case 65:
       if(e.shiftKey && !(balloon.isSearch() && balloon.getCurrentCollectionId() === null)) {
-        balloon.doAction('file');
+        balloon.handleAddNode('txt');
       }
       break;
 
@@ -975,6 +988,12 @@ var balloon = {
    */
   _treeDataBound: function(e) {
     balloon.resetDom(['multiselect']);
+
+    if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
+      $('#fs-browser-action').show();
+    } else {
+      $('#fs-browser-action').hide();
+    }
 
     var selected = balloon.getURLParam('selected[]'),
       $fs_browser_tree = $("#fs-browser-tree"),
@@ -2162,7 +2181,6 @@ var balloon = {
       balloon.resetDom('breadcrumb-home');
       $('#fs-crumb-search-list').hide();
       $('#fs-crumb-home-list').show();
-      $('#fs-browser-action').show();
       $('#fs-browser-header .fs-browser-column-icon').children().show();
     } else {
       balloon.resetDom('breadcrumb-search');
@@ -2763,7 +2781,6 @@ var balloon = {
   resetSearch: function(e) {
     balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-search-filter').data('initialized', false);
-    $('#fs-browser-action').show();
     $('#fs-search-filter').hide();
 
     var $fs_crumb_search_list = $('#fs-crumb-search-list');
@@ -3925,24 +3942,31 @@ var balloon = {
 
     $select.off('click', 'li').on('click', 'li', function() {
       var type = $(this).attr('data-type');
-      var $d = balloon.add_file_handlers[type](type);
-
-      if($d && $d.then) {
-        $d.done(function(node) {
-          balloon.added = node.id;
-
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
-            var $createdNode = $('li[fs-id="' + node.id + '"]');
-
-            if(!$createdNode) return;
-
-            $('#fs-layout-left').animate({
-              scrollTop: ($createdNode.offset().top - 70)
-            }, 1000);
-          });
-        });
-      }
+      balloon.handleAddNode(type);
     });
+  },
+
+  /**
+   * Execute add file handler
+   */
+  handleAddNode: function(type) {
+    var $d = balloon.add_file_handlers[type](type);
+
+    if($d && $d.then) {
+      $d.done(function(node) {
+        balloon.added = node.id;
+
+        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
+          var $createdNode = $('li[fs-id="' + node.id + '"]');
+
+          if(!$createdNode) return;
+
+          $('#fs-layout-left').animate({
+            scrollTop: ($createdNode.offset().top - 70)
+          }, 1000);
+        });
+      });
+    }
   },
 
   /**
@@ -5231,7 +5255,6 @@ var balloon = {
   advancedSearch: function(e) {
     balloon.resetDom(['breadcrumb-search']);
     $('#fs-crumb-home-list').hide();
-    $('#fs-browser-action').hide();
     $('#fs-browser-header .fs-browser-column-icon').children().hide();
     $('#fs-crumb-search-list').show();
 
@@ -7437,7 +7460,6 @@ var balloon = {
 
         $fs_search.removeClass('fs-search-focused').removeClass('fs-search-filtered');
         $fs_search_input.val('');
-        $('#fs-browser-action').show();
         break;
 
       case 'history':
