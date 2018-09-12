@@ -31,6 +31,12 @@ $sidePadding: 60px;
         margin-right: 0;
       }
 
+      &.fs-desktop-suggested-package {
+        $border-size: 3px;
+
+        border: $border-size solid $colorActiveBlue;
+      }
+
       .title,
       .download,
       .icon {
