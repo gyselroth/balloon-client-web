@@ -26,9 +26,16 @@ $sidePadding: 50px;
   padding-bottom: 40px;
 
   #fs-hint-window-content {
+    hyphens: auto;
     font-size: 15px;
     line-height: 20px;
     color: $colorDarkGrey;
+
+    a,
+    a:active,
+    a:hover {
+      color: $colorActiveBlue;
+    }
   }
 
   svg {
