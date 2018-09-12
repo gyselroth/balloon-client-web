@@ -52,12 +52,6 @@ var app = {
       resizable: false,
       title: i18next.t('app.externalstorage.external_storage'),
       modal: true,
-      draggable: true,
-      keydown: function(e) {
-        if(e.originalEvent.keyCode !== 27) {
-          return;
-        }
-      },
       open: function(e) {
         $($div).find('input[type=submit]').off('click').on('click', function() {
           if($(this).attr('name') === 'cancel') {
@@ -106,7 +100,7 @@ var app = {
           );
         })
       }
-    }).data("kendoBalloonWindow").center();
+    }).data("kendoBalloonWindow").center().open();
 
     return $d;
   },
