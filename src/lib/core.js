@@ -6805,6 +6805,7 @@ var balloon = {
       select: onSelect,
       minLength: 0,
       dataTextField: "_id",
+      highlightFirst: true,
       noDataTemplate: i18next.t('error.autocomplete.no_tags_found'),
       dataSource: new kendo.data.DataSource({
         transport: {
