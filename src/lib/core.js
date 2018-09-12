@@ -5088,6 +5088,14 @@ var balloon = {
         label = recipient.role.name;
       }
 
+      var recipients = $recipient_list.find('div.tag[data-recipient-type="' + type + '"][data-recipient-address="' + address + '"]');
+
+      //recipient with of same type and address is already in the list
+      if(recipients.length !== 0) {
+        $input_recipient.val('');
+        return;
+      }
+
       var $recipient = $(
         '<div class="tag" data-recipient-address="' + address + '" data-recipient-type="' + type + '">'+
           '<div class="tag-name">'+ label + '</div>'+
