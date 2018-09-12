@@ -6234,7 +6234,7 @@ var balloon = {
     $div_content_inner.append($element);
     $div_content_inner.append('<div id="fs-display-title">' + node.name + '</div>');
 
-    var $close = $('<svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg>');
+    var $close = $('<div id="fs-display-close"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg><div>');
     $div_content_inner.append($close);
     $div_content.show().html($div_content_inner);
 
