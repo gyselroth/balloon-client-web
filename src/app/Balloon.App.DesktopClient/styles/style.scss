@@ -49,8 +49,8 @@
       }
 
       .icon {
-        $width: 69px;
-        $height: 60px;
+        $width: 60px;
+        $height: $width;
 
         width: $width;
         height: $height;
@@ -59,14 +59,6 @@
         background-size: $width $height;
         background-repeat: no-repeat;
         background-position: center;
-
-        filter: grayscale(100%);
-        -webkit-filter: grayscale(100%);
-        -moz-filter: grayscale(100%);
-        -ms-filter: grayscale(100%);
-        -o-filter: grayscale(100%);
-        filter: gray;
-        -webkit-filter: grayscale(1);
       }
 
       &#fs-desktop-exe .icon {
@@ -82,7 +74,7 @@
       }
 
       &#fs-desktop-rpm .icon {
-        background-image: url(../img/fedora.svg);
+        background-image: url(../img/rpm.svg);
       }
 
       &#fs-desktop-deb .icon {
