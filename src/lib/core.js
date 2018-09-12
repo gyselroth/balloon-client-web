@@ -4354,6 +4354,7 @@ var balloon = {
       minLength: 3,
       dataTextField: "name",
       filter: "contains",
+      highlightFirst: true,
       noDataTemplate: i18next.t('error.autocomplete.no_user_groups_found'),
       dataSource: new kendo.data.DataSource({
         serverFiltering: true,
@@ -5118,38 +5119,34 @@ var balloon = {
     $input_recipient_autocomplete = $input_recipient.data('kendoAutoComplete');
 
     $input_recipient.off('blur').on('blur', function() {
-      addRecipient($input_recipient.val());
+      if($input_recipient_autocomplete.items().length ===0) {
+        addRecipient($input_recipient.val());
+      }
     });
 
     $input_comment.off('keyup').on('keyup', function() {
       mightSendForm();
     });
 
-    $input_recipient.off('keyup').on('keyup', function(event) {
-      event.stopImmediatePropagation();
-
+    $input_recipient.off('keyup.shareLinkMessageForm').on('keyup.shareLinkMessageForm', function(event) {
       switch(event.keyCode) {
       case 13: // [Enter]
-        if($input_recipient_autocomplete.items().length > 0) {
-          addRecipient($input_recipient_autocomplete.dataItem(0));
-        } else {
-          addRecipient($input_recipient.val());
-        }
-        break;
+        //if autocomplete has at least one item, keep default behaviour of autocomplete
+        if($input_recipient_autocomplete.items().length > 0) break;
       case 32: // [Space]
       case 186: // [;]
       case 188: // [,]
+        event.stopImmediatePropagation();
         addRecipient($input_recipient.val());
         break;
       };
     });
 
-    $input_recipient.off('keydown').on('keydown', function(event) {
-      event.stopImmediatePropagation();
-
+    $input_recipient.off('keydown.shareLinkMessageForm').on('keydown.shareLinkMessageForm', function(event) {
       switch(event.keyCode) {
       case 8:
         if($input_recipient.val().trim() === '') {
+          event.stopImmediatePropagation();
           $recipient_list.find('.tag').last().remove();
           mightSendForm();
         }
