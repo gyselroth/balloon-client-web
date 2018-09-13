@@ -61,6 +61,7 @@ $sidePadding: 30px;
 
       .fs-share-window-selected-privilege {
         color: $colorMediumGrey;
+        cursor: pointer;
 
         .fs-share-window-selected-privilege-label {
           font-size: 13px;
@@ -84,6 +85,10 @@ $sidePadding: 30px;
         background-color: $colorWhite;
         border: 1px solid $colorLightGrey;
         z-index: 1;
+
+        &.fs-share-window-privilege-visible {
+          display: block;
+        }
 
         li {
           position: relative;
@@ -131,12 +136,6 @@ $sidePadding: 30px;
               color: $colorErrorRed !important;
             }
           }
-        }
-      }
-
-      &:hover {
-        ul.fs-share-window-privileges {
-          display: block;
         }
       }
     }
@@ -188,7 +187,8 @@ $sidePadding: 30px;
             border-top: 1px solid $colorBrightGrey;
           }
 
-          .gr-icon {
+          .gr-i-person,
+          .gr-i-group {
             float: left;
             margin-top: 3px;
             margin-right: 3px;

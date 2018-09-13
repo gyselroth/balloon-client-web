@@ -4259,6 +4259,7 @@ var balloon = {
     var $fs_share_win = $('#fs-share-window');
     var $share_consumer_search = $fs_share_win.find('input[name=share_consumer_search]');
     var $share_name = $fs_share_win.find('input[name=share_name]');
+    var $privilegeSelectorTrigger = $fs_share_win.find('#fs-share-window-search-role .fs-share-window-selected-privilege');
 
     $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]').prop('disabled', ($share_name.val() === '' || acl.length === 0));
 
@@ -4339,6 +4340,29 @@ var balloon = {
     $fs_share_win.find('#fs-share-window-toggle-consumers a').off('click').on('click', function() {
       $fs_share_win.find('#fs-share-window-content').toggleClass('fs-share-window-consumers-expanded');
       $fs_share_win.data('kendoBalloonWindow').center();
+    });
+
+    $privilegeSelectorTrigger.off('click').on('click', balloon._showPrivilegeSelector);
+  },
+
+  /**
+   * show a privilege selector
+   *
+   * @param  object event
+   */
+  _showPrivilegeSelector: function(event) {
+    event.stopImmediatePropagation();
+
+    var $selector = $(event.target).parents('.fs-share-window-privilege-selector').find('.fs-share-window-privileges');
+
+    $selector.addClass('fs-share-window-privilege-visible');
+
+    $(document).off('click.privilege-selector').on('click.privilege-selector', function() {
+      $selector.removeClass('fs-share-window-privilege-visible');
+    });
+
+    $selector.off('click').on('click', function() {
+      $selector.removeClass('fs-share-window-privilege-visible');
     });
   },
 
@@ -4570,6 +4594,8 @@ var balloon = {
     $consumer_privilege_selector_item_remove.off('click').on('click', function() {
       balloon._removeShareConsumer(item.role.id, acl);
     });
+
+    $consumer_privilege.find('.fs-share-window-selected-privilege').off('click').on('click', balloon._showPrivilegeSelector);
 
     return acl;
   },
