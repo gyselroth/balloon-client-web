@@ -4355,17 +4355,82 @@ var balloon = {
   _showPrivilegeSelector: function(event) {
     event.stopImmediatePropagation();
 
-    var $selector = $(event.target).parents('.fs-share-window-privilege-selector').find('.fs-share-window-privileges');
+    var $fs_share_win = $('#fs-share-window');
+    var $parent = $(event.target).parents('.fs-share-window-privilege-selector');
+    var $trigger = $parent.find('.fs-share-window-selected-privilege');
+    var $selector = $parent.find('.fs-share-window-privileges');
+
+    $(document).trigger('privilege-selector-open');
+
+    function positionSelector() {
+      var selectorBounds = $selector[0].getBoundingClientRect();
+      var triggerBounds = $trigger[0].getBoundingClientRect();
+      var position = {};
+      var alternativeTop;
+
+      if($parent.attr('id') === 'fs-share-window-search-role') {
+        position.top = triggerBounds.y - 11;
+        position.right = $(window).width() - triggerBounds.x - triggerBounds.width - 10;
+      } else {
+        position.top = triggerBounds.y - 1;
+        position.right = $(window).width() - triggerBounds.x - triggerBounds.width + 4;
+      }
+
+      if(position.top + selectorBounds.height > $(window).height()) {
+        //would overlap viewport bottom, try to position towards top
+        if($parent.attr('id') === 'fs-share-window-search-role') {
+          alternativeTop = triggerBounds.y  + triggerBounds.height - selectorBounds.height + 10;
+        } else {
+          alternativeTop = triggerBounds.y  + triggerBounds.height - selectorBounds.height + 1;
+        }
+
+        if(alternativeTop > 0) {
+          //do not position towards top, if it would overlap viewport top
+          position.top = alternativeTop;
+        }
+      }
+
+      $selector.css(position);
+    }
 
     $selector.addClass('fs-share-window-privilege-visible');
+    $selector.appendTo('body');
+    positionSelector();
 
-    $(document).off('click.privilege-selector').on('click.privilege-selector', function() {
-      $selector.removeClass('fs-share-window-privilege-visible');
+    $fs_share_win.off('scroll.privilege-selector').on('scroll.privilege-selector', function() {
+      var triggerBounds = $trigger[0].getBoundingClientRect();
+
+      positionSelector();
     });
 
-    $selector.off('click').on('click', function() {
-      $selector.removeClass('fs-share-window-privilege-visible');
+    $fs_share_win.data('kendoBalloonWindow').one('close', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
     });
+
+    $(document).one('privilege-selector-open', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
+    });
+
+    $(document).one('click.privilege-selector', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
+    });
+
+    $selector.one('click', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
+    });
+  },
+
+  /**
+   * sets visibillity of consumers toggle
+   *
+   * @param  object $parent
+   * @param  object $selector
+   */
+  _hidePrivilegeSelector: function($parent, $selector) {
+    $selector.removeClass('fs-share-window-privilege-visible');
+    $selector.appendTo($parent);
+
+    $('#fs-share-window').off('scroll.privilege-selector');
   },
 
   /**
