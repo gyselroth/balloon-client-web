@@ -134,6 +134,12 @@ var balloon = {
    */
   add_file_handlers: {},
 
+  /**
+   * Handlers for file previews
+   *
+   * @var array[function]
+   */
+  preview_file_handlers: [],
 
   /**
    * Menu handlers
@@ -2124,6 +2130,33 @@ var balloon = {
     this.add_file_handlers[name] = callback;
   },
 
+  /**
+   * Add preview handler
+   *
+   * @param function
+   */
+  addPreviewHandler: function(handler) {
+    balloon.preview_file_handlers.push(handler);
+  },
+
+  /**
+   * Get preview handler
+   *
+   * @param object node
+   */
+  getPreviewHandler(node) {
+    var i;
+    var handlerFn;
+
+    for(i=0; i<balloon.preview_file_handlers.length; i++) {
+      var handler = balloon.preview_file_handlers[i];
+      handlerFn = handler(node);
+
+      if(handlerFn) break;
+    }
+
+    return handlerFn;
+  },
 
   /**
    * Add menu
@@ -2722,6 +2755,8 @@ var balloon = {
       balloon.resetDom('selected');
     }
 
+    var previewHandler = balloon.getPreviewHandler(balloon.last);
+
     if(balloon.last !== null && balloon.last.directory) {
       balloon.updatePannel(false);
 
@@ -2737,6 +2772,8 @@ var balloon = {
         ['selected','metadata','preview','multiselect','view-bar',
           'history','share','share-link']
       );
+    } else if(previewHandler) {
+      previewHandler(balloon.last);
     } else if(balloon.isEditable(balloon.last.mime)) {
       balloon.editFile(balloon.getCurrentNode());
     } else if(balloon.isViewable(balloon.last.mime)) {
@@ -7020,7 +7057,10 @@ var balloon = {
         $fs_preview.removeClass('fs-loader');
 
         $fs_preview.find('*').unbind('click').bind('click', function() {
-          if(balloon.isViewable(node.mime)) {
+          var previewHandler = balloon.getPreviewHandler(node);
+          if(previewHandler) {
+            previewHandler(node);
+          } else if(balloon.isViewable(node.mime)) {
             balloon.displayFile(node);
           } else {
             balloon.downloadNode(node);

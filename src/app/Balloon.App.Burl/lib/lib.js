@@ -26,27 +26,28 @@ var app = {
   preInit: function(core) {
     this.balloon = core;
     this.balloon.addNew(app.BURL_EXTENSION, i18next.t('app.burl.tree.burl_file'), 'hyperlink', this.addBurl.bind(this));
-    this.orig_treeDblclick = this.balloon._treeDblclick;
     this.origMapMimeToExtension = this.balloon.mapMimeToExtension;
 
     //TODO pixtron - find a clean way for apps to hook into core. Just overriding core methods is quite a hack.
-    this.balloon._treeDblclick = this._treeDblclick.bind(this);
     this.balloon.mapMimeToExtension = this.mapMimeToExtension.bind(this);
 
     this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-language';
+
+    this.balloon.addPreviewHandler(this._handlePreview);
   },
 
-
   /**
-   * treeview dblclick
+   * Checks if "preview" for a given node can be handled by this app.
+   * If it can handle it, return a handler to preview the file
    *
-   * @return  void
+   * @param   string mime
+   * @return  void|function
    */
-  _treeDblclick: function() {
-    if (this.isBurlFile(this.balloon.getCurrentNode())) {
-      this.handleBurl(this.balloon.getCurrentNode());
-    } else {
-      this.orig_treeDblclick.apply(app.balloon, arguments);
+  _handlePreview: function(node) {
+    if (app.isBurlFile(node)) {
+      return function(node) {
+        app.handleBurl(node);
+      }
     }
   },
 
