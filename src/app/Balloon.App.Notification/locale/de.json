@@ -12,7 +12,8 @@
       "messages": {
         "title": "Benachrichtigungen",
         "no_messages": "Du hast keine neuen Benachrichtigungen",
-        "message_meta": "Von %s",
+        "message_meta": "Am %s von %s",
+        "message_meta_no_sender": "Am %s",
         "delete_all": "Alle löschen"
       },
       "hints": {

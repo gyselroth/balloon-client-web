@@ -12,7 +12,8 @@
       "messages": {
         "title": "Notifications",
         "no_messages": "You don't have any new notifications",
-        "message_meta": "From %s",
+        "message_meta": "At %s from %s",
+        "message_meta_no_sender": "At %s",
         "delete_all": "Delete all"
       },
       "hints": {

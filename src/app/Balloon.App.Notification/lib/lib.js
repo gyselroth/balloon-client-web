@@ -120,12 +120,20 @@ var app = {
         var messages = body.data;
 
         for(var i=0; i<messages.length; i++) {
+          var meta;
           var message = messages[i];
+          var date = kendo.toString(new Date(message.created), kendo.culture().calendar.patterns.g)
+
+          if(message.sender && message.sender.username) {
+            meta = i18next.t('app.notification.messages.message_meta', date, message.sender.username);
+          } else {
+            meta = i18next.t('app.notification.messages.message_meta_no_sender', date);
+          }
 
           var $message = $(
             '<li data-fs-message-id="' + message.id + '">'+
               '<div class="fs-notifications-message-inner">'+
-                '<p class="fs-notifications-meta">' + i18next.t('app.notification.messages.message_meta', message.sender.username) + '</p>'+
+                '<p class="fs-notifications-meta">' + meta + '</p>'+
                 '<h4>' + message.subject + '</h4>'+
                 '<p>' + message.message + '</p>'+
                 '<div class="fs-notifications-delete-message"><svg class="gr-icon gr-i-close" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#close"></use></svg></div>'+
