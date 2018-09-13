@@ -621,7 +621,7 @@ var balloon = {
       balloon.hideSpinner();
 
       var valid = ['POST', 'PUT', 'DELETE', 'PATCH'],
-        show  = (valid.indexOf(options.type) > -1);
+        show  = options.suppressSnackbar !== true && (valid.indexOf(options.type) > -1);
 
       if(show && jqXHR.status.toString().substr(0, 1) === '2') {
         balloon.showSnackbar((options.snackbar || {}));
@@ -8046,6 +8046,7 @@ var balloon = {
       type: 'PUT',
       data: chunk,
       processData: false,
+      suppressSnackbar: true,
       complete: function() {
         if(file.transfered_bytes === 0)  {
           file.transfered_bytes += size;
