@@ -8,6 +8,7 @@
 import $ from "jquery";
 import i18next from 'i18next';
 import balloonWindow from '../../../lib/widget-balloon-window.js';
+import css from '../styles/style.scss';
 
 var app = {
   id: 'Balloon.App.Burl',
@@ -90,9 +91,6 @@ var app = {
       resizable: false,
       title: i18next.t('app.burl.title'),
       modal: true,
-      draggable: true,
-      width: 440,
-      height: 300,
       open: function(e) {
         $($div).find('input[type=submit]').off('click').on('click', function() {
           if($(this).attr('name') === 'cancel') {
