@@ -11,6 +11,51 @@
   max-width: 100%;
   overflow: hidden;
 
+  .error-message {
+    margin: 10px 0;
+    color: $colorErrorRed;
+    display: none;
+  }
+
+  input.error-input {
+    border-color: $colorErrorRed;
+  }
+
+  .fs-window-form {
+    $labelWidth: 100px;
+    $labelMarginRight: 15px;
+
+    @include clearfix;
+
+    padding-top: 30px;
+
+    label,
+    input {
+      float: left;
+    }
+
+    label {
+      padding: 0;
+      width: $labelWidth;
+      line-height: 45px;
+      margin-right: $labelMarginRight;
+      margin-bottom: 10px;
+    }
+
+    input[type=text],input[type=password] {
+      width: calc(100% - #{$labelWidth + $labelMarginRight});
+
+      font-size: 15px;
+      padding: 13px 15px 14px;
+      height: auto;
+      margin-bottom: 10px;
+
+      &:focus {
+        padding: 12px 14px 13px;
+      }
+    }
+  }
+
   & > div.k-header {
     position: relative;
     left: 0;

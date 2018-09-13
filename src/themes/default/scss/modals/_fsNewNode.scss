@@ -7,42 +7,4 @@
   width: 440px;
   padding-bottom: 40px;
   padding-top: 13px;
-
-  #fs-new-node-window-content {
-    $labelWidth: 100px;
-    $labelMarginRight: 15px;
-
-    @include clearfix;
-
-    padding-top: 30px;
-
-    label,
-    input {
-      float: left;
-    }
-
-    label {
-      padding: 0;
-      width: $labelWidth;
-      line-height: 45px;
-      margin-right: $labelMarginRight;
-    }
-
-
-    input[type=text] {
-      width: calc(100% - #{$labelWidth + $labelMarginRight});
-
-      font-size: 15px;
-      padding: 13px 15px 14px;
-      height: auto;
-
-      &.fs-node-exists {
-        border-color: $colorErrorRed;
-      }
-
-      &:focus {
-        padding: 12px 14px 13px;
-      }
-    }
-  }
 }

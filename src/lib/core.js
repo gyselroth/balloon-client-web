@@ -3891,11 +3891,11 @@ var balloon = {
 
           if(balloon.nodeExists(name) || name === '') {
             mayCreate = false;
-            $(this).addClass('fs-node-exists');
+            $(this).addClass('error-input');
             $submit.attr('disabled', true);
           } else {
             mayCreate = true;
-            $(this).removeClass('fs-node-exists');
+            $(this).removeClass('error-input');
             $submit.attr('disabled', false);
           }
         });

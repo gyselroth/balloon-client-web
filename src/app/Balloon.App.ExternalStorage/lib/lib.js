@@ -35,19 +35,22 @@ var app = {
 
     $div.html(
       '<div class="error-message"></div>'+
-      '<select>'+
-        '<option value="smb">'+i18next.t('app.externalstorage.smb_share')+'</option>'+
-      '</select>'+
-      '<label>'+i18next.t('app.externalstorage.folder')+'</label><input name="name" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="off" name="username" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
-      '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
-      '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
-      '<input class="fs-button-primary" name="add" value='+i18next.t('button.save')+' type="submit"/>'+
-      '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>');
-
+      '<div>'+
+        '<select>'+
+          '<option value="smb">'+i18next.t('app.externalstorage.smb_share')+'</option>'+
+        '</select>'+
+        '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
+        '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
+        '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
+        '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="off" name="username" type="text"/>'+
+        '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
+        '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
+        '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
+      '</div>'+
+      '<div class="fs-window-secondary-actions">'+
+        '<input class="fs-button-primary" name="add" value='+i18next.t('button.save')+' type="submit"/>'+
+        '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>'+
+      '</div>');
     var $k_display = $div.kendoBalloonWindow({
       resizable: false,
       title: i18next.t('app.externalstorage.external_storage'),
@@ -55,11 +58,6 @@ var app = {
       draggable: true,
       width: 440,
       height: 590,
-      keydown: function(e) {
-        if(e.originalEvent.keyCode !== 27) {
-          return;
-        }
-      },
       open: function(e) {
         $($div).find('input[type=submit]').off('click').on('click', function() {
           if($(this).attr('name') === 'cancel') {
@@ -71,27 +69,24 @@ var app = {
           var $input_name = $div.find('input[name=name]');
 
           if($input_host.val() === '') {
-            $input_host.addClass('fs-node-exists');
+            $input_host.addClass('error-input');
           } else {
-            $input_host.removeClass('fs-node-exists');
-
+            $input_host.removeClass('error-input');
           }
 
           if($input_share.val() === '') {
-            $input_share.addClass('fs-node-exists');
+            $input_share.addClass('error-input');
           } else {
-            $input_share.removeClass('fs-node-exists');
-
+            $input_share.removeClass('error-input');
           }
 
           if($input_name.val() === '') {
-            $input_name.addClass('fs-node-exists');
+            $input_name.addClass('error-input');
           } else {
-            $input_name.removeClass('fs-node-exists');
-
+            $input_name.removeClass('error-input');
           }
 
-          if($div.find('.fs-node-exists').length > 0) {
+          if($div.find('.error-input').length > 0) {
             return;
           }
 
@@ -108,7 +103,7 @@ var app = {
           );
         })
       }
-    }).data("kendoBalloonWindow").center();
+    }).data("kendoBalloonWindow").center().open();
 
     return $d;
   },

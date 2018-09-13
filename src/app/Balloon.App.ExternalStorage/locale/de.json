@@ -1,7 +1,6 @@
 {
   "app": {
     "externalstorage": {
-      "folder": "Folder (Name in balloon)",
       "external_storage": "Externer Speicher",
       "smb_share": "SMB/CIFS Freigabe",
       "hostname": "Hostame/IP",

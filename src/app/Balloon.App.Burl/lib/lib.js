@@ -7,6 +7,7 @@
 
 import $ from "jquery";
 import i18next from 'i18next';
+import balloonWindow from '../../../lib/widget-balloon-window.js';
 
 var app = {
   id: 'Balloon.App.Burl',
@@ -69,16 +70,65 @@ var app = {
   },
 
 
-  /**
-   * Add new burl file
-   *
-   * @param string name
-   * @return void
-   */
   addBurl: function() {
-    this.balloon.showNewNode(app.BURL_EXTENSION, this._addBurl.bind(this));
-  },
+    var $d = $.Deferred();
+    var $div = $('<div id="fs-burl-window"></div>');
+    $('body').append($div);
 
+    $div.html(
+      '<div class="error-message"></div>'+
+      '<div class="fs-window-form">'+
+        '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
+        '<label>'+i18next.t('app.burl.url')+'</label><input placeholder="http://www.example.org" name="url" type="text"/>'+
+      '</div>'+
+      '<div class="fs-window-secondary-actions">'+
+        '<input class="fs-button-primary" name="add" value='+i18next.t('button.save')+' type="submit"/>'+
+        '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>'+
+      '</div>');
+
+    var $k_display = $div.kendoBalloonWindow({
+      resizable: false,
+      title: i18next.t('app.burl.title'),
+      modal: true,
+      draggable: true,
+      width: 440,
+      height: 300,
+      open: function(e) {
+        $($div).find('input[type=submit]').off('click').on('click', function() {
+          if($(this).attr('name') === 'cancel') {
+            return $k_display.close();
+          }
+
+          var $input_name = $div.find('input[name=name]');
+          var $input_url = $div.find('input[name=url]');
+          $div.find('input').removeClass('error-input');
+          var name = $input_name.val()+'.'+app.BURL_EXTENSION;
+
+          if($input_name.val() === '') {
+            $input_name.addClass('error-input');
+          }
+
+          if($input_url.val() === '') {
+            $input_url.addClass('error-input');
+          }
+
+          try {
+            let url = new URL($input_url.val());
+          } catch (error) {
+            $input_url.addClass('error-input');
+          }
+
+          if($div.find('.error-input').length > 0) {
+            return;
+          }
+
+          app._addBurl($d, name, $input_url.val());
+        })
+      }
+    }).data("kendoBalloonWindow").center().open();
+
+    return $d;
+  },
 
   /**
    * Add new burl file with given name
@@ -86,30 +136,29 @@ var app = {
    * @param string name
    * @return void
    */
-  _addBurl: function(name) {
-    var $d = $.Deferred();
+  _addBurl: function($d, name, url) {
+    var $div = $('#fs-burl-window');
 
     name = encodeURI(name);
     this.balloon.xmlHttpRequest({
       url: this.balloon.base+'/files?name='+name+'&'+this.balloon.param('collection', this.balloon.getCurrentCollectionId()),
       type: 'PUT',
-      complete: function(data, textStatus) {
-        switch(textStatus) {
-        case 'success':
-          this.balloon.added = data.responseJSON.id;
-          this.balloon.refreshTree('/collections/children', {id: this.balloon.getCurrentCollectionId()});
-          this.balloon._editFile(data.responseJSON);
-          $d.resolve();
-          break;
-        default:
-          $d.reject();
-        }
+      data: url,
+      success: function(data) {
+        this.balloon.refreshTree('/collections/children', {id: this.balloon.getCurrentCollectionId()});
+        app.balloon.added_rename = data.id;
+        $div.data('kendoBalloonWindow').close();
+        $div.remove();
+        $d.resolve(data);
       }.bind(this),
+      error: function(error) {
+        app.balloon.displayError(error);
+        $d.reject();
+      }
     });
 
     return $d;
   },
-
 
   /**
    * Handle Burl file
