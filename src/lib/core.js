@@ -4261,6 +4261,8 @@ var balloon = {
     var $share_name = $fs_share_win.find('input[name=share_name]');
     var $privilegeSelectorTrigger = $fs_share_win.find('#fs-share-window-search-role .fs-share-window-selected-privilege');
 
+    balloon._setToggleConsumersVisibility(acl);
+
     $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]').prop('disabled', ($share_name.val() === '' || acl.length === 0));
 
     $share_name.off('change').on('change', function() {
@@ -4364,6 +4366,20 @@ var balloon = {
     $selector.off('click').on('click', function() {
       $selector.removeClass('fs-share-window-privilege-visible');
     });
+  },
+
+  /**
+   * sets visibillity of consumers toggle
+   *
+   * @param  array curAcl
+   */
+  _setToggleConsumersVisibility: function(curAcl) {
+    if(curAcl.length >= 4) {
+      $('#fs-share-window-toggle-consumers').addClass('visible');
+    } else {
+      $('#fs-share-window-toggle-consumers').removeClass('visible');
+      $('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
+    }
   },
 
   /**
@@ -4566,9 +4582,7 @@ var balloon = {
     $fs_share_win_consumers_ul.append($consumer);
     $fs_share_win_consumers.show();
 
-    if(acl.length >= 4) {
-      $('#fs-share-window-toggle-consumers').addClass('visible');
-    }
+    balloon._setToggleConsumersVisibility(acl);
 
     if(scrollToItem) {
       $fs_share_win_consumers_ul.animate({scrollTop: $fs_share_win_consumers_ul.prop('scrollHeight')}, 250);
@@ -4617,10 +4631,7 @@ var balloon = {
       }
     }
 
-    if(acl.length < 4) {
-      $('#fs-share-window-toggle-consumers').removeClass('visible');
-      $('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
-    }
+    balloon._setToggleConsumersVisibility(acl);
 
     $('#fs-share-window').data('kendoBalloonWindow').center();
 
