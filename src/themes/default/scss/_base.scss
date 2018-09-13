@@ -23,12 +23,18 @@ input,
 textarea,
 select {
   box-sizing: border-box;
-  outline: none;
+  outline-style: none;
   font-size: 13px;
   line-height: 16px;
   font-weight: 300;
   color: $colorDarkGrey;
   caret-color: $colorActiveBlue;
+}
+
+input[type="submit"]:focus,
+input[type="button"]:focus,
+input[type="reset"]:focus {
+  outline-style: auto;
 }
 
 input:not([type="radio"]),
