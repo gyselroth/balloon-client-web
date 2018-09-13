@@ -27,6 +27,7 @@ var app = {
     this.initializeMessages();
     this.balloon.addHint(i18next.t('app.notification.hints.hint_1'));
     this.balloon.addHint(i18next.t('app.notification.hints.hint_2'));
+    app._displayMessages();
   },
 
   /** Message Center **/
