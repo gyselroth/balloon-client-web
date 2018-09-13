@@ -1,20 +1,30 @@
-.fs-share-link-settings-window {
-  padding-left: 30px;
-  padding-right: 30px;
+$sidePadding: 30px;
 
-  hr.full-width {
-    width: calc(100% + 60px);
-    margin: 29px -30px;
+.fs-share-link-settings-window {
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
   }
 
-  & > div.k-header .k-window-actions {
-    right: -6px;
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
   }
 }
 
 #fs-share-link-settings-window {
   display: none;
-  width: 700px;
+  width: 700px + (2 * $sidePadding);
   padding-bottom: 31px;
 
 

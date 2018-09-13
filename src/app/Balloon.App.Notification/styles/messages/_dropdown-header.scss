@@ -23,7 +23,7 @@
   margin-bottom: 26px;
 
   h3 {
-    font-size: 24px;
+    font-size: 15px;
     line-height: 27px;
     font-weight: bold;
     color: $colorDarkGrey;
@@ -38,5 +38,12 @@
     position: absolute;
     top: -6px;
     right: 0;
+  }
+
+  @media screen and (min-width: $breakpointMenuVisible) {
+    h3 {
+      font-size: 24px;
+      line-height: 27px;
+    }
   }
 }

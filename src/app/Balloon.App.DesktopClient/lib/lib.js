@@ -52,6 +52,10 @@ var app = {
     $('body .fs-desktop').remove();
     $('body').append($div);
 
+    var suggestedBinary = app._getsuggestedBinary();
+    if(suggestedBinary) {
+      $div.find('#fs-desktop-' + suggestedBinary).addClass('fs-desktop-suggested-package');
+    }
 
     app.$k_popup = $div.kendoBalloonWindow({
       resizable: false,
@@ -81,6 +85,28 @@ var app = {
 
     $iframe.attr('src', url).load(url);
     app.$k_popup.close();
+  },
+
+  _getsuggestedBinary: function() {
+    var platform = navigator.platform;
+    var ua = navigator.userAgent;
+    var suggestedBinary = '';
+
+    if(/^Win/i.test(platform)) {
+      suggestedBinary = 'exe';
+    } else if(/^Mac/i.test(platform)) {
+      suggestedBinary = 'pkg';
+    } else if(/^Linux/i.test(platform)) {
+      if(/(Debian|Ubuntu)/i.test(ua)) {
+        suggestedBinary = 'deb';
+      } else if(/(Red Hat|Fedora|CentOS|SUSE)/i.test(ua)) {
+        suggestedBinary = 'rpm';
+      } else {
+        suggestedBinary = 'zip';
+      }
+    }
+
+    return suggestedBinary;
   }
 }
 

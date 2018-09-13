@@ -1,12 +1,17 @@
 @import '../../../themes/default/scss/includes/colors.scss';
 @import '../../../themes/default/scss/includes/mixins.scss';
 
-#fs-external-storage label {
-  margin: 10px 0 5px 0;
-  display: block;
-}
+#fs-external-storage {
+  display: none;
+  width: 560px;
 
-#fs-external-storage input[type=submit] {
-  float: right;
-  margin: 15px 0 0 5px;
+  label {
+    margin: 10px 0 5px 0;
+    display: block;
+  }
+
+  input[type=submit] {
+    float: right;
+    margin: 15px 0 0 5px;
+  }
 }

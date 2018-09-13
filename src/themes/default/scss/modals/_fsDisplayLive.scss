@@ -56,7 +56,7 @@
         line-height: 40px;
       }
 
-      .gr-i-close {
+      #fs-display-close {
         position: absolute;
         top: 21px;
         right: 21px;
@@ -92,10 +92,10 @@
   }
 
   #fs-display-left {
-    left: 0;
+    left: 40px;
   }
 
   #fs-display-right {
-    right: 0;
+    right: 40px;
   }
 }

@@ -1543,8 +1543,6 @@ var balloon = {
       title: $fs_profile_win.attr('title'),
       resizable: false,
       modal: true,
-      height: '60%',
-      width: '40%',
       open: function() {
         balloon.displayAvatar($('#fs-profile-avatar'));
 
@@ -1920,8 +1918,6 @@ var balloon = {
         title: $fs_event_win.attr('title'),
         resizable: false,
         modal: true,
-        height: '400px',
-        width: '800px',
         open: function() {
           balloon.displayEvents($fs_event_list, node);
         }
@@ -4263,6 +4259,9 @@ var balloon = {
     var $fs_share_win = $('#fs-share-window');
     var $share_consumer_search = $fs_share_win.find('input[name=share_consumer_search]');
     var $share_name = $fs_share_win.find('input[name=share_name]');
+    var $privilegeSelectorTrigger = $fs_share_win.find('#fs-share-window-search-role .fs-share-window-selected-privilege');
+
+    balloon._setToggleConsumersVisibility(acl);
 
     $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]').prop('disabled', ($share_name.val() === '' || acl.length === 0));
 
@@ -4344,6 +4343,108 @@ var balloon = {
       $fs_share_win.find('#fs-share-window-content').toggleClass('fs-share-window-consumers-expanded');
       $fs_share_win.data('kendoBalloonWindow').center();
     });
+
+    $privilegeSelectorTrigger.off('click').on('click', balloon._showPrivilegeSelector);
+  },
+
+  /**
+   * show a privilege selector
+   *
+   * @param  object event
+   */
+  _showPrivilegeSelector: function(event) {
+    event.stopImmediatePropagation();
+
+    var $fs_share_win = $('#fs-share-window');
+    var $parent = $(event.target).parents('.fs-share-window-privilege-selector');
+    var $trigger = $parent.find('.fs-share-window-selected-privilege');
+    var $selector = $parent.find('.fs-share-window-privileges');
+
+    $(document).trigger('privilege-selector-open');
+
+    function positionSelector() {
+      var selectorBounds = $selector[0].getBoundingClientRect();
+      var triggerBounds = $trigger[0].getBoundingClientRect();
+      var position = {};
+      var alternativeTop;
+
+      if($parent.attr('id') === 'fs-share-window-search-role') {
+        position.top = triggerBounds.y - 11;
+        position.right = $(window).width() - triggerBounds.x - triggerBounds.width - 10;
+      } else {
+        position.top = triggerBounds.y - 1;
+        position.right = $(window).width() - triggerBounds.x - triggerBounds.width + 4;
+      }
+
+      if(position.top + selectorBounds.height > $(window).height()) {
+        //would overlap viewport bottom, try to position towards top
+        if($parent.attr('id') === 'fs-share-window-search-role') {
+          alternativeTop = triggerBounds.y  + triggerBounds.height - selectorBounds.height + 10;
+        } else {
+          alternativeTop = triggerBounds.y  + triggerBounds.height - selectorBounds.height + 1;
+        }
+
+        if(alternativeTop > 0) {
+          //do not position towards top, if it would overlap viewport top
+          position.top = alternativeTop;
+        }
+      }
+
+      $selector.css(position);
+    }
+
+    $selector.addClass('fs-share-window-privilege-visible');
+    $selector.appendTo('body');
+    positionSelector();
+
+    $fs_share_win.off('scroll.privilege-selector').on('scroll.privilege-selector', function() {
+      var triggerBounds = $trigger[0].getBoundingClientRect();
+
+      positionSelector();
+    });
+
+    $fs_share_win.data('kendoBalloonWindow').one('close', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
+    });
+
+    $(document).one('privilege-selector-open', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
+    });
+
+    $(document).one('click.privilege-selector', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
+    });
+
+    $selector.one('click', function() {
+      balloon._hidePrivilegeSelector($parent, $selector);
+    });
+  },
+
+  /**
+   * sets visibillity of consumers toggle
+   *
+   * @param  object $parent
+   * @param  object $selector
+   */
+  _hidePrivilegeSelector: function($parent, $selector) {
+    $selector.removeClass('fs-share-window-privilege-visible');
+    $selector.appendTo($parent);
+
+    $('#fs-share-window').off('scroll.privilege-selector');
+  },
+
+  /**
+   * sets visibillity of consumers toggle
+   *
+   * @param  array curAcl
+   */
+  _setToggleConsumersVisibility: function(curAcl) {
+    if(curAcl.length >= 4) {
+      $('#fs-share-window-toggle-consumers').addClass('visible');
+    } else {
+      $('#fs-share-window-toggle-consumers').removeClass('visible');
+      $('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
+    }
   },
 
   /**
@@ -4358,6 +4459,7 @@ var balloon = {
       minLength: 3,
       dataTextField: "name",
       filter: "contains",
+      highlightFirst: true,
       noDataTemplate: i18next.t('error.autocomplete.no_user_groups_found'),
       dataSource: new kendo.data.DataSource({
         serverFiltering: true,
@@ -4545,9 +4647,7 @@ var balloon = {
     $fs_share_win_consumers_ul.append($consumer);
     $fs_share_win_consumers.show();
 
-    if(acl.length >= 4) {
-      $('#fs-share-window-toggle-consumers').addClass('visible');
-    }
+    balloon._setToggleConsumersVisibility(acl);
 
     if(scrollToItem) {
       $fs_share_win_consumers_ul.animate({scrollTop: $fs_share_win_consumers_ul.prop('scrollHeight')}, 250);
@@ -4574,6 +4674,8 @@ var balloon = {
       balloon._removeShareConsumer(item.role.id, acl);
     });
 
+    $consumer_privilege.find('.fs-share-window-selected-privilege').off('click').on('click', balloon._showPrivilegeSelector);
+
     return acl;
   },
 
@@ -4594,10 +4696,7 @@ var balloon = {
       }
     }
 
-    if(acl.length < 4) {
-      $('#fs-share-window-toggle-consumers').removeClass('visible');
-      $('#fs-share-window-content').removeClass('fs-share-window-consumers-expanded');
-    }
+    balloon._setToggleConsumersVisibility(acl);
 
     $('#fs-share-window').data('kendoBalloonWindow').center();
 
@@ -5091,6 +5190,14 @@ var balloon = {
         label = recipient.role.name;
       }
 
+      var recipients = $recipient_list.find('div.tag[data-recipient-type="' + type + '"][data-recipient-address="' + address + '"]');
+
+      //recipient with of same type and address is already in the list
+      if(recipients.length !== 0) {
+        $input_recipient.val('');
+        return;
+      }
+
       var $recipient = $(
         '<div class="tag" data-recipient-address="' + address + '" data-recipient-type="' + type + '">'+
           '<div class="tag-name">'+ label + '</div>'+
@@ -5122,38 +5229,34 @@ var balloon = {
     $input_recipient_autocomplete = $input_recipient.data('kendoAutoComplete');
 
     $input_recipient.off('blur').on('blur', function() {
-      addRecipient($input_recipient.val());
+      if($input_recipient_autocomplete.items().length ===0) {
+        addRecipient($input_recipient.val());
+      }
     });
 
     $input_comment.off('keyup').on('keyup', function() {
       mightSendForm();
     });
 
-    $input_recipient.off('keyup').on('keyup', function(event) {
-      event.stopImmediatePropagation();
-
+    $input_recipient.off('keyup.shareLinkMessageForm').on('keyup.shareLinkMessageForm', function(event) {
       switch(event.keyCode) {
       case 13: // [Enter]
-        if($input_recipient_autocomplete.items().length > 0) {
-          addRecipient($input_recipient_autocomplete.dataItem(0));
-        } else {
-          addRecipient($input_recipient.val());
-        }
-        break;
+        //if autocomplete has at least one item, keep default behaviour of autocomplete
+        if($input_recipient_autocomplete.items().length > 0) break;
       case 32: // [Space]
       case 186: // [;]
       case 188: // [,]
+        event.stopImmediatePropagation();
         addRecipient($input_recipient.val());
         break;
       };
     });
 
-    $input_recipient.off('keydown').on('keydown', function(event) {
-      event.stopImmediatePropagation();
-
+    $input_recipient.off('keydown.shareLinkMessageForm').on('keydown.shareLinkMessageForm', function(event) {
       switch(event.keyCode) {
       case 8:
         if($input_recipient.val().trim() === '') {
+          event.stopImmediatePropagation();
           $recipient_list.find('.tag').last().remove();
           mightSendForm();
         }
@@ -6095,8 +6198,6 @@ var balloon = {
 
         var $k_display = $div.kendoBalloonWindow({
           title: winTitle,
-          width: '70%',
-          height: '70%',
           resizable: false,
           modal: true,
           keydown: function(e) {
@@ -6240,7 +6341,7 @@ var balloon = {
     $div_content_inner.append($element);
     $div_content_inner.append('<div id="fs-display-title">' + node.name + '</div>');
 
-    var $close = $('<svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg>');
+    var $close = $('<div id="fs-display-close"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg><div>');
     $div_content_inner.append($close);
     $div_content.show().html($div_content_inner);
 
@@ -6614,8 +6715,6 @@ var balloon = {
         title: i18next.t('view.history.history_for', node.name),
         resizable: false,
         modal: true,
-        height: '400px',
-        width: '800px',
         open: function() {
           balloon.displayHistory($fs_history_win, node);
 
@@ -6799,14 +6898,16 @@ var balloon = {
    *
    * @return void
    */
-  initMetaTagCompletion: function() {
+  initMetaTagCompletion: function(onSelect) {
     var $meta_tags = $('#fs-properties-meta-tags-tags'),
       $meta_tags_parent = $meta_tags.parent(),
       $input = $meta_tags_parent.find('input');
 
     $input.kendoAutoComplete({
+      select: onSelect,
       minLength: 0,
       dataTextField: "_id",
+      highlightFirst: true,
       noDataTemplate: i18next.t('error.autocomplete.no_tags_found'),
       dataSource: new kendo.data.DataSource({
         transport: {
@@ -6949,12 +7050,15 @@ var balloon = {
    * @return  void
    */
   handleTags: function(node) {
-    var last_tag,
-      $fs_prop_tags = $('#fs-properties-meta-tags-tags'),
+    var $fs_prop_tags = $('#fs-properties-meta-tags-tags'),
       $fs_prop_tags_parent = $fs_prop_tags.parent();
 
     $fs_prop_tags_parent.find('.fs-add').unbind('click').bind('click', function(){
-      balloon.initMetaTagCompletion();
+
+      balloon.initMetaTagCompletion(function(e) {
+        balloon._metaTagHandler(node, e);
+      });
+
       $('#fs-preview-add-tag').show();
       $fs_prop_tags_parent
         .find('input:text')
@@ -6985,15 +7089,10 @@ var balloon = {
       balloon.search(value);
     });
 
-    $fs_prop_tags_parent.find('input[name=add_tag]').unbind('keypress').keypress(function(e) {
+    $fs_prop_tags_parent.find('input[name=add_tag]').unbind('keyup').on('keyup', function(e) {
       balloon.resetDom('upload');
 
-      $(document).unbind('click').click(function(e) {
-        return balloon._metaTagHandler(node, e, last_tag);
-      });
-
-      last_tag = $(this);
-      return balloon._metaTagHandler(node, e, last_tag);
+      return balloon._metaTagHandler(node, e);
     }).unbind('focusout').bind('focusout', function() {
       $('#fs-preview-add-tag').hide();
     });
@@ -7006,46 +7105,49 @@ var balloon = {
    * @param   object node
    * @return  void
    */
-  _metaTagHandler: function(node, e, $last_tag) {
-    var code  = (!e.charCode ? e.which : e.charCode),
-      strcode = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+  _metaTagHandler: function(node, e) {
+    var tagValue = '',
+      $fs_prop_tags = $('#fs-properties-meta-tags-tags'),
+      $fs_prop_tags_parent = $fs_prop_tags.parent(),
+      $input = $fs_prop_tags_parent.find('input[name=add_tag]');
 
-    if(e.type == 'click' || code == 13 || code == 32 || code == 0) {
-      var value = $last_tag.val();
-
-      if(value == '') {
-        return;
+    if(e.type === undefined && e.item) {
+      //kendoAutocomplete select event
+      tagValue = e.item.text();
+    } else if(e.type === 'keyup') {
+      var code = (!e.charCode ? e.which : e.charCode);
+      if(code == 13 || code == 32 || code == 186 || code == 188 || code == 0) {
+        tagValue = $input.val().replace(/^\s+|[\s;,]+$/gm, '');
       }
-
-      if(node.meta.tags !== undefined && node.meta.tags.indexOf(value) != -1) {
-        return false;
-      }
-
-      var $fs_prop_tags = $('#fs-properties-meta-tags-tags');
-      if($last_tag.attr('name') == 'add_tag') {
-        $fs_prop_tags.find('ul').append('<li class="tag"><div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
-        $last_tag.val('').focus();
-      } else {
-        var $parent = $last_tag.parent();
-        $last_tag.remove();
-        $parent.html('<div class="tag-name">'+value+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>');
-      }
-
-      var tags = $fs_prop_tags.find('li').map(function () {
-        return $(this).find('.tag-name').text();
-      }).get();
-
-      $(document).unbind('click');
-      $last_tag = undefined;
-
-      balloon.saveMetaAttributes(node, {tags: tags});
-
-      e.preventDefault();
+    } else {
+      return true;
     }
+
+    if(tagValue === '') {
+      //do not add empty tags
+      return true;
+    }
+
+    var tags = $fs_prop_tags.find('li').map(function () {
+      return $(this).find('.tag-name').text();
+    }).get();
+
+    if(tags.indexOf(tagValue) != -1) {
+      //do not add tags twice
+      return false;
+    }
+
+    e.preventDefault();
+
+    $fs_prop_tags.find('ul').append('<li class="tag"><div class="tag-name">'+tagValue+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
+    tags.push(tagValue);
+
+    balloon.saveMetaAttributes(node, {tags: tags});
+
+    $input.val('');
 
     return true;
   },
-
 
   /**
    * Save meta attributes

@@ -1,22 +1,32 @@
+$sidePadding: 30px;
+
 .fs-share-window {
-  padding-left: 30px;
-  padding-right: 30px;
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
 
   overflow: visible;
 
   hr.full-width {
-    width: calc(100% + 60px);
-    margin: 29px -30px;
-  }
-
-  & > div.k-header .k-window-actions {
-    right: -6px;
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
   }
 }
 
 #fs-share-window {
   display: none;
-  width: 700px;
+  width: 700px + (2 * $sidePadding);
   padding-bottom: 30px;
 
   #fs-share-window-content {
@@ -51,6 +61,7 @@
 
       .fs-share-window-selected-privilege {
         color: $colorMediumGrey;
+        cursor: pointer;
 
         .fs-share-window-selected-privilege-label {
           font-size: 13px;
@@ -61,72 +72,6 @@
 
         .gr-icon {
           vertical-align: middle;
-        }
-      }
-
-      ul.fs-share-window-privileges {
-        display: none;
-        position: absolute;
-        top: -11px;
-        right: -10px;
-        border-radius: 4px;
-        min-width: 275px;
-        background-color: $colorWhite;
-        border: 1px solid $colorLightGrey;
-        z-index: 1;
-
-        li {
-          position: relative;
-
-          label {
-            display: block;
-            color: $colorMediumGrey;
-            font-size: 13px;
-            line-height: 40px;
-            padding: 0 39px;
-            cursor: pointer;
-
-            .gr-icon {
-              display: none;
-              position: absolute;
-              top: calc(50% - 7px);
-              left: 14px;
-              width: 14px;
-              height: 14px;
-            }
-          }
-
-          input[type="radio"] {
-            display: none;
-          }
-
-          &:hover {
-            label {
-              color: $colorDarkGrey;
-            }
-
-            background-color: $colorBrightGrey;
-          }
-
-          input[type="radio"]:checked + label {
-            color: $colorDarkGrey;
-
-            .gr-icon {
-              display: block;
-            }
-          }
-
-          &.fs-share-window-privilege-remove {
-            label {
-              color: $colorErrorRed !important;
-            }
-          }
-        }
-      }
-
-      &:hover {
-        ul.fs-share-window-privileges {
-          display: block;
         }
       }
     }
@@ -163,7 +108,8 @@
         display: block;
         width: 100%;
         max-height: $maxDisplayed * 31px + 1px;
-        overflow-y: scroll;
+        overflow-y: hidden;
+        overflow-x: hidden;
 
         & > li {
           color: $colorDarkGrey;
@@ -177,7 +123,8 @@
             border-top: 1px solid $colorBrightGrey;
           }
 
-          .gr-icon {
+          .gr-i-person,
+          .gr-i-group {
             float: left;
             margin-top: 3px;
             margin-right: 3px;
@@ -187,11 +134,6 @@
           .fs-share-window-privilege-selector {
             float: right;
             margin-right: 24px;
-
-            ul.fs-share-window-privileges {
-              top: -1px;
-              right: 30px;
-            }
           }
         }
       }
@@ -260,10 +202,11 @@
       }
 
       #fs-share-window-consumers {
-        & > ul {
-          $maxDisplayed: 20;
+        margin-top: 0;
 
-          max-height: $maxDisplayed * 31px + 1px;
+        & > ul {
+          overflow-y: scroll;
+          max-height: calc(100vh - 244px);
         }
       }
 
@@ -278,6 +221,68 @@
             display: block;
           }
         }
+      }
+    }
+  }
+}
+
+ul.fs-share-window-privileges {
+  display: none;
+  position: absolute;
+  border-radius: 4px;
+  min-width: 275px;
+  background-color: $colorWhite;
+  border: 1px solid $colorLightGrey;
+  z-index: 10014;
+
+  &.fs-share-window-privilege-visible {
+    display: block;
+  }
+
+  li {
+    position: relative;
+
+    label {
+      display: block;
+      color: $colorMediumGrey;
+      font-size: 13px;
+      line-height: 40px;
+      padding: 0 39px;
+      cursor: pointer;
+
+      .gr-icon {
+        display: none;
+        position: absolute;
+        top: calc(50% - 7px);
+        left: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    input[type="radio"] {
+      display: none;
+    }
+
+    &:hover {
+      label {
+        color: $colorDarkGrey;
+      }
+
+      background-color: $colorBrightGrey;
+    }
+
+    input[type="radio"]:checked + label {
+      color: $colorDarkGrey;
+
+      .gr-icon {
+        display: block;
+      }
+    }
+
+    &.fs-share-window-privilege-remove {
+      label {
+        color: $colorErrorRed !important;
       }
     }
   }

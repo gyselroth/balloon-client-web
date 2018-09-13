@@ -1,19 +1,29 @@
+$sidePadding: 50px;
+
 #fs-prompt-window {
   display: none;
 }
 
 .fs-prompt-window {
-  padding-left: 50px;
-  padding-right: 50px;
 
-  hr.full-width {
-    width: calc(100% + 100px);
-    margin-left: -50px;
-    margin-right: -50px;
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
   }
 
-  & > div.k-header .k-window-actions {
-    right: -26px;
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
   }
 }
 
@@ -21,7 +31,7 @@
 .k-window >div.fs-prompt-window-inner {
   display: none;
   padding-bottom: 40px;
-  max-width: 500px;
+  max-width: 500px + (2 * $sidePadding);
 
   ul {
       margin: 8px 0;

@@ -22,9 +22,9 @@
   &:after {
     content: "";
     position: absolute;
-    bottom: 40px;
-    left: 56px;
-    width: calc(100% - #{2 * 56px});
+    bottom: 20px;
+    left: 20px;
+    width: calc(100% - #{2 * 20px});
     height: 40px;
     background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
   }
@@ -104,5 +104,13 @@
       }
     }
 
+  }
+
+  @media screen and (min-width: $breakpointIncreasePadding) {
+    &:after {
+      bottom: 40px;
+      left: 56px;
+      width: calc(100% - #{2 * 56px});
+    }
   }
 }

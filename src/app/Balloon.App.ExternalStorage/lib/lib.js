@@ -55,9 +55,6 @@ var app = {
       resizable: false,
       title: i18next.t('app.externalstorage.external_storage'),
       modal: true,
-      draggable: true,
-      width: 440,
-      height: 590,
       open: function(e) {
         $($div).find('input[type=submit]').off('click').on('click', function() {
           if($(this).attr('name') === 'cancel') {
@@ -67,23 +64,18 @@ var app = {
           var $input_host = $div.find('input[name=host]');
           var $input_share = $div.find('input[name=share]');
           var $input_name = $div.find('input[name=name]');
+          $div.find('input').removeClass('error-input');
 
           if($input_host.val() === '') {
             $input_host.addClass('error-input');
-          } else {
-            $input_host.removeClass('error-input');
           }
 
           if($input_share.val() === '') {
             $input_share.addClass('error-input');
-          } else {
-            $input_share.removeClass('error-input');
           }
 
           if($input_name.val() === '') {
             $input_name.addClass('error-input');
-          } else {
-            $input_name.removeClass('error-input');
           }
 
           if($div.find('.error-input').length > 0) {
