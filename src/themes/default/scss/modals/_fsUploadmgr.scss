@@ -54,6 +54,11 @@ $sidePadding: 50px;
       font-size: 15px;
       font-weight: 300;
       line-height: 20px;
+
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      max-width: calc(100% - 60px);
     }
 
     .fs-progress-icon {
