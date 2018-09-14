@@ -4,13 +4,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 var gitRevisionPlugin = new GitRevisionPlugin();
 
-const extractSass = new ExtractTextPlugin({
-  filename: "[name].[contenthash].css",
-  disable: false
-});
+var isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -21,6 +19,8 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     filename: 'balloon.bundle.js',
   },
+  mode: isDev ? 'development' : 'production',
+  devtool: isDev ? 'source-map' : false,
   module: {
     rules: [
       /*{
@@ -38,20 +38,25 @@ module.exports = {
       },*/
       {
         test: /\.scss$/,
-        use: extractSass.extract({
-          use: [{
+        use: [
+          {
+            loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+          },
+          {
             loader: "css-loader",
             options: {
-              minimize: true
+              minimize: true,
+              sourceMap: isDev
             }
-          }, {
+          },
+          {
             loader: "sass-loader",
             options: {
-              outputStyle: "compressed"
+              outputStyle: "compressed",
+              sourceMap: isDev
             }
-          }],
-          fallback: "style-loader"
-        })
+          }
+        ]
       }
     ]
   },
@@ -60,15 +65,15 @@ module.exports = {
       $: "jquery",
       jQuery: "jquery",
     }),
-    new ExtractTextPlugin({
-      filename: "balloon.css",
-      allChunks: true
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css"
     }),
-    extractSass,
     new HtmlWebpackPlugin({
       hash: true,
       filename: 'index.html',
       template: 'index.html',
+      inject: false,
       minify: {
         collapseWhitespace: true,
         preserveLineBreaks: false,

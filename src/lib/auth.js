@@ -115,7 +115,12 @@ var login = {
       type:'GET',
       url: '/api/auth',
       complete: function(response) {
-        $('#login-loader').hide();
+        $('#login-loader').addClass('ready-for-take-off');
+
+        setTimeout(function(){
+          $('#login-loader').remove();
+        }, 350);
+
         switch(response.status) {
         case 401:
         case 403:
