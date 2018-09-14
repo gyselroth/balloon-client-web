@@ -171,7 +171,7 @@
       "role": "Rolle"
     },
     "share": {
-      "hint_add": "Ein freigegebener Ordner wird automatisch bei allen Freigabemitgliedern hinterlegt<br />(Dies kann einige Minuten in Anspruch nehmen)",
+      "hint_add": "Ein freigegebener Ordner wird automatisch bei allen Freigabemitgliedern hinterlegt. Teilnehmer müssen die Freigabe nicht akzeptieren oder einbinden.",
       "name": "Name für die Freigabe",
       "search_user": "Benutzer/Gruppe suchen",
       "resource": "Ressource",

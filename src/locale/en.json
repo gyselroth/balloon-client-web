@@ -171,7 +171,7 @@
       "role": "Role"
     },
     "share": {
-      "hint_add": "A shared folder will be automatically placed into the share members root folder<br />(This will take some minutes).",
+      "hint_add": "A shared folder will be automatically placed into the share members root folder.",
       "name": "Enter a name for this share",
       "search_user": "Search User/Groups",
       "resource": "Resource",

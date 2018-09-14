@@ -142,6 +142,7 @@ input[type="submit"] {
   min-width: 120px;
   cursor: pointer;
   background-color: transparent;
+  -webkit-appearance: none;
 
   &.fs-button-primary {
     border-color: $colorActiveBlue;

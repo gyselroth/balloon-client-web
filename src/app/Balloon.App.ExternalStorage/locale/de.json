@@ -13,7 +13,8 @@
         "invalid_host": "Der Server kann nicht gefunden werden. Bitte kontrolliere deine Eingabe.",
         "invalid_share": "Die Freigabe auf dem Server kann nicht gefunden werden. Bitte kontrolliere deine Eingabe.",
         "invalid_credentials": "Die Authentifzierung ist fehlgeschlagen. Bitte kontrolliere deine Eingabe."
-      }
+      },
+      "hint": "Es ist möglich externer Speicher in balloon zu verbinden. So kannst du Daten auf diesem Speicher direkt oder via balloon bearbeiten. Bis jetzt ist nur SMB/CIFS unterstützt. Ein externer Speicher ist als {icon-folder-storage} sichtbar. Ein externer Speicher kann auch via balloon geteilt werden."
     }
   }
 }

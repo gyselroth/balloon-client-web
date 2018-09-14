@@ -23,6 +23,8 @@ var app = {
     app.balloon.addMenu('external_storage', i18next.t('app.externalstorage.external_storage'), 'folder-storage', function() {
       app.balloon.refreshTree('/nodes', {query: {"mount": {$exists: 1}}}, {});
     });
+
+    this.balloon.addHint(i18next.t('app.externalstorage.hint'));
   },
 
   resetView: function() {

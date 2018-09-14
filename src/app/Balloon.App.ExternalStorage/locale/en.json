@@ -13,7 +13,8 @@
         "invalid_host": "The share can not be found, please verify your input.",
         "invalid_share": "The share can not be found, please verify your input.",
         "invalid_credentials": "Authentication failed, please verify your credentials."
-      }
+      },
+      "hint": "It is possible to mount external storage into balloon. Therefore you can manage files on the external storage itself or via balloon. Currently only SMB/CIFS is supported. An external storage mount  is visible as {icon-folder-storage}. You may also share a mount via balloon itself."
     }
   }
 }
