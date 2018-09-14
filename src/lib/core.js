@@ -16,6 +16,7 @@ import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
 import fileExtIconMap from './file-ext-icon-map.js';
+import mimeFileExtMap from './mime-file-ext-map.js';
 
 window.$ = $;
 $.ajaxSetup({
@@ -60,6 +61,11 @@ var balloon = {
    * Map with [FILE EXTENSION]: [SPRITE ICON CLASS]
    */
   fileExtIconMap: fileExtIconMap,
+
+  /**
+   * Map with [MIME TYPE] : [FILE EXTENSION]
+   */
+  mimeFileExtMap: mimeFileExtMap,
 
   /**
    * API Base url
@@ -134,6 +140,12 @@ var balloon = {
    */
   add_file_handlers: {},
 
+  /**
+   * Handlers for file previews
+   *
+   * @var array[function]
+   */
+  preview_file_handlers: [],
 
   /**
    * Menu handlers
@@ -2124,6 +2136,33 @@ var balloon = {
     this.add_file_handlers[name] = callback;
   },
 
+  /**
+   * Add preview handler
+   *
+   * @param function
+   */
+  addPreviewHandler: function(handler) {
+    balloon.preview_file_handlers.push(handler);
+  },
+
+  /**
+   * Get preview handler
+   *
+   * @param object node
+   */
+  getPreviewHandler(node) {
+    var i;
+    var handlerFn;
+
+    for(i=0; i<balloon.preview_file_handlers.length; i++) {
+      var handler = balloon.preview_file_handlers[i];
+      handlerFn = handler(node);
+
+      if(handlerFn) break;
+    }
+
+    return handlerFn;
+  },
 
   /**
    * Add menu
@@ -2722,6 +2761,8 @@ var balloon = {
       balloon.resetDom('selected');
     }
 
+    var previewHandler = balloon.getPreviewHandler(balloon.last);
+
     if(balloon.last !== null && balloon.last.directory) {
       balloon.updatePannel(false);
 
@@ -2737,6 +2778,8 @@ var balloon = {
         ['selected','metadata','preview','multiselect','view-bar',
           'history','share','share-link']
       );
+    } else if(previewHandler) {
+      previewHandler(balloon.last);
     } else if(balloon.isEditable(balloon.last.mime)) {
       balloon.editFile(balloon.getCurrentNode());
     } else if(balloon.isViewable(balloon.last.mime)) {
@@ -5407,7 +5450,6 @@ var balloon = {
         var $mime_list = $('#fs-search-filter-mime').find('div:first'),
           mimes = body['mime'],
           children = [];
-
         for(var i in mimes) {
           var ext = balloon.mapMimeToExtension(mimes[i]._id);
 
@@ -6043,61 +6085,8 @@ var balloon = {
    * @return  string|bool
    */
   mapMimeToExtension: function(mime) {
-    var map = {
-      "application/pdf": "pdf",
-      "application/msaccesscab": "accdc",
-      "application/x-csh": "csh",
-      "application/x-msdownload": "dll",
-      "application/xml": "xml",
-      "audio/x-pn-realaudio-plugin": "rpm",
-      "application/octet-stream": "bin",
-      "text/plain": "txt",
-      "text/css": "css",
-      "text/x-perl": "pl",
-      "text/x-php": "php",
-      "text/x-ruby": "rb",
-      "message/rfc822": "eml",
-      "application/x-pkcs12": "p12",
-      "application/x-zip-compressed": "zip",
-      "application/x-gzip": "gz",
-      "application/x-compressed": "tgz",
-      "application/x-gtar": "gtar",
-      "application/x-shockwave-flash": "swf",
-      "video/x-flv": "flv",
-      "image/png": "png",
-      "image/jpeg": "jpg",
-      "image/tiff": "tiff",
-      "image/x-icon": "ico",
-      "image/gif": "gif",
-      "application/vndms-excel": "xls",
-      "application/vndopenxmlformats-officedocumentspreadsheetmlsheet": "xlsx",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
-      "application/vnd.oasis.opendocument.presentation": "pptx",
-      "text/csv": "csv",
-      "application/vndoasisopendocumentspreadsheet": "ods",
-      "application/msword": "doc",
-      "application/vnd.ms-word": "doc",
-      "application/vnd.ms-excel": "xls",
-      "application/msexcel": "xls",
-      "application/vndopenxmlformats-officedocumentwordprocessingmldocument": "docx",
-      "application/vndoasisopendocumenttext": "odt",
-      "text/vbscript": "vbs",
-      "application/vndms-powerpoint": "ppt",
-      "application/vndopenxmlformats-officedocumentpresentationmlpresentation": "pptx",
-      "application/vndoasisopendocumentpresentation": "odp",
-      "image/svg+xml": "svg",
-      "text/html": "html",
-      "text/xml": "xml",
-      "video/x-msvideo": "avi",
-      "video/mp4": "mp4",
-      "video/quicktime": "mov",
-      "video/mpeg": "mpeg",
-      "audio/wav": "wav"
-    };
-
-    if(mime in map) {
-      return map[mime];
+    if(mime in balloon.mimeFileExtMap) {
+      return balloon.mimeFileExtMap[mime];
     } else {
       return false;
     }
@@ -7020,7 +7009,10 @@ var balloon = {
         $fs_preview.removeClass('fs-loader');
 
         $fs_preview.find('*').unbind('click').bind('click', function() {
-          if(balloon.isViewable(node.mime)) {
+          var previewHandler = balloon.getPreviewHandler(node);
+          if(previewHandler) {
+            previewHandler(node);
+          } else if(balloon.isViewable(node.mime)) {
             balloon.displayFile(node);
           } else {
             balloon.downloadNode(node);
