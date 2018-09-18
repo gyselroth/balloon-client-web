@@ -50,8 +50,8 @@ var app = {
         '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
       '</div>'+
       '<div class="fs-window-secondary-actions">'+
-        '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit"/>'+
-        '<input class="fs-button-primary" name="add" value='+i18next.t('button.save')+' type="submit"/>'+
+        '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit" tabindex="2" />'+
+        '<input class="fs-button-primary" name="add" value='+i18next.t('button.save')+' type="submit" tabindex="1"/>'+
       '</div>');
     var $k_display = $div.kendoBalloonWindow({
       resizable: false,
