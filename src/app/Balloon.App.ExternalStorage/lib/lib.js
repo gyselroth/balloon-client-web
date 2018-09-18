@@ -61,14 +61,91 @@ var app = {
         $div.find('input[name="name"]').focus();
       },
       open: function(e) {
+        var mayCreate = false;
+        var fieldsValid = {
+          name: false,
+          share: false,
+          host: false,
+        };
+
+        var $input_host = $div.find('input[name=host]');
+        var $input_share = $div.find('input[name=share]');
+        var $input_name = $div.find('input[name=name]');
+        var $submit = $div.find('input[name=add]');
+
+        $div.find('input').removeClass('error-input');
+        $submit.attr('disabled', true);
+
+        function canCreate() {
+          mayCreate = Object.keys(fieldsValid).every(function(key) {
+            return fieldsValid[key] === true;
+          });
+
+          $submit.attr('disabled', !mayCreate);
+        }
+
+        $input_name.off('keyup').on('keyup', function(e) {
+          let name = $input_name.val();
+
+          if(e.keyCode === 13) {
+            if(mayCreate) $submit.click();
+            return;
+          }
+
+          if(app.balloon.nodeExists(name) || name === '') {
+            $input_name.addClass('error-input');
+            fieldsValid.name = false;
+          } else {
+            $input_name.removeClass('error-input');
+            fieldsValid.name = true;
+          }
+
+          canCreate();
+        });
+
+        $input_share.off('keyup').on('keyup', function(e) {
+          let share = $input_share.val();
+
+          if(e.keyCode === 13) {
+            if(mayCreate) $submit.click();
+            return;
+          }
+
+          if(share === '') {
+            $input_share.addClass('error-input');
+            fieldsValid.share = false;
+          } else {
+            $input_share.removeClass('error-input');
+            fieldsValid.share = true;
+          }
+
+          canCreate();
+        });
+
+        $input_host.off('keyup').on('keyup', function(e) {
+          let host = $input_host.val();
+
+          if(e.keyCode === 13) {
+            if(mayCreate) $submit.click();
+            return;
+          }
+
+          if(host === '') {
+            $input_host.addClass('error-input');
+            fieldsValid.host = false;
+          } else {
+            $input_host.removeClass('error-input');
+            fieldsValid.host = true;
+          }
+
+          canCreate();
+        });
+
         $($div).find('input[type=submit]').off('click').on('click', function() {
           if($(this).attr('name') === 'cancel') {
             return $k_display.close();
           }
 
-          var $input_host = $div.find('input[name=host]');
-          var $input_share = $div.find('input[name=share]');
-          var $input_name = $div.find('input[name=name]');
           $div.find('input').removeClass('error-input');
 
           if($input_host.val() === '') {
@@ -77,14 +154,6 @@ var app = {
 
           if($input_share.val() === '') {
             $input_share.addClass('error-input');
-          }
-
-          if($input_name.val() === '') {
-            $input_name.addClass('error-input');
-          }
-
-          if($div.find('.error-input').length > 0) {
-            return;
           }
 
           app.addExternalFolder(

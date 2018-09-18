@@ -84,6 +84,11 @@ var app = {
       },
       open: function(e) {
         var mayCreate = false;
+        var fieldsValid = {
+          name: false,
+          url: false,
+        };
+
         var nameValid = false;
         var urlValid = false;
 
@@ -94,9 +99,16 @@ var app = {
         $div.find('input').removeClass('error-input');
         $submit.attr('disabled', true);
 
+        function canCreate() {
+          mayCreate = Object.keys(fieldsValid).every(function(key) {
+            return fieldsValid[key] === true;
+          });
+
+          $submit.attr('disabled', !mayCreate);
+        }
+
         $input_name.off('keyup').on('keyup', function(e) {
           let name = $input_name.val();
-          let url = $input_url.val();
 
           if(e.keyCode === 13) {
             if(mayCreate) $submit.click();
@@ -105,14 +117,13 @@ var app = {
 
           if(app.balloon.nodeExists(name+'.'+app.BURL_EXTENSION) || name === '') {
             $input_name.addClass('error-input');
-            nameValid = false;
+            fieldsValid.name = false;
           } else {
             $input_name.removeClass('error-input');
-            nameValid = true;
+            fieldsValid.name = true;
           }
 
-          mayCreate = nameValid && urlValid;
-          $submit.attr('disabled', !mayCreate);
+          canCreate();
         });
 
         $input_url.off('keyup').on('keyup', function(e) {
@@ -124,24 +135,23 @@ var app = {
           }
 
           if(url === '') {
-            urlValid = false;
+            fieldsValid.url = false;
           } else {
             try {
               let urlObj = new URL(url);
-              urlValid = true;
+              fieldsValid.url = true;
             } catch (error) {
-              urlValid = false;
+              fieldsValid.url = false;
             }
           }
 
-          if(urlValid === false) {
+          if(fieldsValid.url === false) {
             $input_url.addClass('error-input');
           } else {
             $input_url.removeClass('error-input');
           }
 
-          mayCreate = nameValid && urlValid;
-          $submit.attr('disabled', !mayCreate);
+          canCreate();
         });
 
         $($div).find('input[type=submit]').off('click').on('click', function() {
