@@ -57,6 +57,9 @@ var app = {
       resizable: false,
       title: i18next.t('app.externalstorage.external_storage'),
       modal: true,
+      activate: function(){
+        $div.find('input[name="name"]').focus();
+      },
       open: function(e) {
         $($div).find('input[type=submit]').off('click').on('click', function() {
           if($(this).attr('name') === 'cancel') {
