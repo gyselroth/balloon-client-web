@@ -80,36 +80,76 @@ var app = {
       title: i18next.t('app.burl.title'),
       modal: true,
       activate: function(){
-        $div.find('input[name="name"]').focus();
+        $div.find('input[name=name]').focus();
       },
       open: function(e) {
+        var mayCreate = false;
+        var nameValid = false;
+        var urlValid = false;
+
+        var $input_name = $div.find('input[name=name]');
+        var $input_url = $div.find('input[name=url]');
+        var $submit = $div.find('input[name=add]');
+
+        $div.find('input').removeClass('error-input');
+        $submit.attr('disabled', true);
+
+        $input_name.off('keyup').on('keyup', function(e) {
+          let name = $input_name.val();
+          let url = $input_url.val();
+
+          if(e.keyCode === 13) {
+            if(mayCreate) $submit.click();
+            return;
+          }
+
+          if(app.balloon.nodeExists(name+'.'+app.BURL_EXTENSION) || name === '') {
+            $input_name.addClass('error-input');
+            nameValid = false;
+          } else {
+            $input_name.removeClass('error-input');
+            nameValid = true;
+          }
+
+          mayCreate = nameValid && urlValid;
+          $submit.attr('disabled', !mayCreate);
+        });
+
+        $input_url.off('keyup').on('keyup', function(e) {
+          let url = $input_url.val();
+
+          if(e.keyCode === 13) {
+            if(mayCreate) $submit.click();
+            return;
+          }
+
+          if(url === '') {
+            urlValid = false;
+          } else {
+            try {
+              let urlObj = new URL(url);
+              urlValid = true;
+            } catch (error) {
+              urlValid = false;
+            }
+          }
+
+          if(urlValid === false) {
+            $input_url.addClass('error-input');
+          } else {
+            $input_url.removeClass('error-input');
+          }
+
+          mayCreate = nameValid && urlValid;
+          $submit.attr('disabled', !mayCreate);
+        });
+
         $($div).find('input[type=submit]').off('click').on('click', function() {
           if($(this).attr('name') === 'cancel') {
             return $k_display.close();
           }
 
-          var $input_name = $div.find('input[name=name]');
-          var $input_url = $div.find('input[name=url]');
-          $div.find('input').removeClass('error-input');
           var name = $input_name.val()+'.'+app.BURL_EXTENSION;
-
-          if($input_name.val() === '') {
-            $input_name.addClass('error-input');
-          }
-
-          if($input_url.val() === '') {
-            $input_url.addClass('error-input');
-          }
-
-          try {
-            let url = new URL($input_url.val());
-          } catch (error) {
-            $input_url.addClass('error-input');
-          }
-
-          if($div.find('.error-input').length > 0) {
-            return;
-          }
 
           app._addBurl($d, name, $input_url.val());
         })
