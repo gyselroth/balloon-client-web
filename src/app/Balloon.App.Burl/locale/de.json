@@ -1,7 +1,7 @@
 {
   "app": {
     "burl": {
-      "burl": "Neue URL-Verknüpfung",
+      "title": "Neue URL-Verknüpfung",
       "url": "URL",
       "tree": {
         "burl_file": "URL-Verknüpfung"
