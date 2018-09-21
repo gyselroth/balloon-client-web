@@ -47,7 +47,6 @@ var app = {
         '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="off" name="username" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
         '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
-        '<label>'+i18next.t('app.externalstorage.path')+'</label><input name="path" type="text"/>'+
       '</div>'+
       '<div class="fs-window-secondary-actions">'+
         '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit" tabindex="2" />'+
@@ -164,8 +163,7 @@ var app = {
             $div.find('input[name=workgroup]').val(),
             $input_share.val(),
             $div.find('input[name=username]').val(),
-            $div.find('input[name=password]').val(),
-            $div.find('input[name=path]').val()
+            $div.find('input[name=password]').val()
           );
         })
       }
@@ -174,7 +172,7 @@ var app = {
     return $d;
   },
 
-  addExternalFolder: function(promise, name, adapter, host, workgroup, share, username, password, path) {
+  addExternalFolder: function(promise, name, adapter, host, workgroup, share, username, password) {
     var $div = $('#fs-external-storage');
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/collections',
@@ -189,8 +187,7 @@ var app = {
             workgroup: workgroup,
             share: share,
             username: username,
-            password: password,
-            path: path
+            password: password
           }
         }
       },

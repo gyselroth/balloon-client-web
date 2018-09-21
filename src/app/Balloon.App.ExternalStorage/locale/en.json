@@ -5,7 +5,6 @@
       "smb_share": "SMB/CIFS Share",
       "hostname": "Hostame/IP",
       "share_name": "Share name",
-      "path": "Path to a sub directory (Optional)",
       "workgroup": "Workgroup/Domain (Optional)",
       "username": "Username (Optional)",
       "password": "Password (Optional)",

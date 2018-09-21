@@ -6,9 +6,9 @@ This is the web based user interface for the [balloon](https://github.com/gyselr
 [![GitHub release](https://img.shields.io/github/release/gyselroth/balloon-client-web.svg)](https://github.com/gyselroth/balloon-client-web/releases)
 [![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)](https://raw.githubusercontent.com/gyselroth/balloon-client-web/master/LICENSE)
 
-balloon is a cloud server and document management system.
-
-## Features
+<p align="center">
+  <img src="https://raw.githubusercontent.com/gyselroth/balloon-screenshots/master/src/tree.png"/>
+</p>
 
 * Modern html5/css, well designed web user interface
 * Various dms features like tagging, meta data, file history, event log
