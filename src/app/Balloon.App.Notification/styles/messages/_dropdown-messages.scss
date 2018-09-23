@@ -17,7 +17,7 @@
   box-sizing: border-box;
   max-height: 60vh;
   padding-bottom: 40px;
-  overflow-x: scroll;
+  overflow-x: auto;
 
   &:after {
     content: "";

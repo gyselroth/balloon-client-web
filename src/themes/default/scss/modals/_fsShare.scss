@@ -205,7 +205,7 @@ $sidePadding: 30px;
         margin-top: 0;
 
         & > ul {
-          overflow-y: scroll;
+          overflow-y: auto;
           max-height: calc(100vh - 244px);
         }
       }
