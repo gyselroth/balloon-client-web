@@ -87,6 +87,11 @@ var app = {
         app._deleteAllDisplayedMessages();
       });
 
+      app.$contentMessagesContainer.off('click').on('click', function(event) {
+        //allow clicks on messages.
+        event.stopPropagation();
+      });
+
       app._displayMessages().done(function(body) {
         app._displayMessagesInfiniteScroll();
       });
@@ -132,9 +137,20 @@ var app = {
 
           var $messageContent = $('<div class="fs-notifications-message-inner"></div>');
 
+          var $messageBody = $('<p></p>').text(message.message);
+          $messageBody.html($messageBody.html().replace(/(https?:\/\/[^\s]+)/g, function(uri) {
+            var cleanUri;
+            try  {
+              cleanUri = new URL(uri);
+            } catch(e) {}
+
+            if(!cleanUri) return '';
+            return '<a href="' + cleanUri.href + '" target="_blank">' + cleanUri.href + '</a>';
+          }));
+
           $messageContent.append($('<p class="fs-notifications-meta"></p>').text(meta));
           $messageContent.append($('<h4></h4>').text(message.subject));
-          $messageContent.append($('<p></p>').text(message.message));
+          $messageContent.append($messageBody);
           $messageContent.append(
             '<div class="fs-notifications-delete-message">'+
               '<svg class="gr-icon gr-i-close" viewBox="0 0 24 24">'+
