@@ -30,7 +30,7 @@ $sidePadding: 30px;
 
   #fs-share-link-settings-window-content {
     .fs-share-link-settings-window-row {
-      $checkboxWidth: 20px;
+      $checkboxSize: 20px;
       $labelWidth: 250px;
 
       @include clearfix;
@@ -51,17 +51,21 @@ $sidePadding: 30px;
       }
 
       .fs-share-link-settings-window-checkbox {
-        width: $checkboxWidth;
-        height: 45px;
+        $height: 45px;
+        width: $checkboxSize;
+        height: $height;
+        line-height: $height;
+        font-size: $checkboxSize;
 
         input[type="checkbox"] + label {
-          margin-top: -4px;
+          margin-top: 1px;
+          padding-left: 0;
         }
 
         & + label {
           padding-left: 10px;
           width: $labelWidth;
-          line-height: 45px;
+          line-height: $height;
 
           span {
             color: $colorMediumGrey;
@@ -80,7 +84,7 @@ $sidePadding: 30px;
       & > .k-datepicker,
       & > .k-timepicker,
       & > input[type="password"] {
-        width: calc(100% - #{$checkboxWidth + $labelWidth}) !important;
+        width: calc(100% - #{$checkboxSize + $labelWidth}) !important;
 
         .k-select {
           top: 9px;
