@@ -339,6 +339,8 @@ var login = {
   },
 
   doBasicAuth: function(username, password) {
+    var $spinner = $('#fs-spinner').show();
+
     $.ajax({
       type: 'GET',
       username: username,
@@ -346,6 +348,8 @@ var login = {
       dataType: 'json',
       url: '/api/basic-auth',
       complete: login.verifyIdentity
+    }).always(function() {
+      $spinner.hide();
     });
   },
 
