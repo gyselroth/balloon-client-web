@@ -5081,7 +5081,7 @@ var balloon = {
       resizable: false,
       modal: true,
       open: function() {
-        balloon.initShareLinkMessageForm();
+        balloon.initShareLinkMessageForm(node);
 
         $fs_share_link.val(window.location.origin+'/share/'+node.sharelink_token);
         $fs_share_link.unbind('click').bind('click', function() {
@@ -5132,12 +5132,18 @@ var balloon = {
   /**
    * Send a share link as mail or notification
    *
+   * @param object node
    * @return void
    */
-  sendShareLinkMessage: function() {
+  sendShareLinkMessage: function(node) {
     var subject = i18next.t('view.share_link.message.subject')
     var $recipient_list = $('#fs-share-link-window-recipient-list');
     var comment = $('#fs-share-link-window-comment').val();
+    var shareLink = window.location.origin+'/share/'+node.sharelink_token;
+
+    if(comment.indexOf(shareLink) ===   -1) {
+      comment = comment + "\n" + shareLink;
+    }
 
     var emails = [], users = [], groups = [];
 
@@ -5167,7 +5173,7 @@ var balloon = {
         dataType: 'json',
         data: {
           subject: i18next.t('view.share_link.message.subject'),
-          body: $('#fs-share-link-window-comment').val(),
+          body: comment,
           receiver: recipients
         },
         converters: {
@@ -5194,9 +5200,10 @@ var balloon = {
   /**
    * Initializes the share link message form
    *
+   * @param object node
    * @return void
    */
-  initShareLinkMessageForm: function() {
+  initShareLinkMessageForm: function(node) {
     if(app.isInstalled('Balloon.App.Notification') === false) {
       // require the Notification app to be installed in order to send messages
       $fs_share_link_message_form.hide();
@@ -5209,9 +5216,10 @@ var balloon = {
     var $input_comment = $fs_share_link_message_form.find('#fs-share-link-window-comment');
     var $btn_send = $fs_share_link_message_form.find('input[name="send"]');
     var $input_recipient_autocomplete;
+    var shareLink = window.location.origin+'/share/'+node.sharelink_token;
 
     $recipient_list.find('.tag').remove();
-    $input_comment.val('');
+    $input_comment.val(shareLink);
     $btn_send.prop('disabled', true);
 
     function addRecipient(recipient) {
@@ -5317,12 +5325,12 @@ var balloon = {
 
       $btn_send.prop('disabled', true);
 
-      var requests = balloon.sendShareLinkMessage();
+      var requests = balloon.sendShareLinkMessage(node);
 
       requests.done(function() {
         $btn_send.prop('disabled', true);
         $recipient_list.find('.tag').remove();
-        $input_comment.val('');
+        $input_comment.val(shareLink);
       });
 
       requests.fail(function() {
