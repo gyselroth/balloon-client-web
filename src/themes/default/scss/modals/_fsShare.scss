@@ -233,7 +233,7 @@ ul.fs-share-window-privileges {
   min-width: 275px;
   background-color: $colorWhite;
   border: 1px solid $colorLightGrey;
-  z-index: 10014;
+  z-index: 99999;
 
   &.fs-share-window-privilege-visible {
     display: block;
