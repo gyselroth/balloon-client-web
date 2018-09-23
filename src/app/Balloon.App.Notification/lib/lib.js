@@ -130,18 +130,24 @@ var app = {
             meta = i18next.t('app.notification.messages.message_meta_no_sender', date);
           }
 
-          var $message = $(
-            '<li data-fs-message-id="' + message.id + '">'+
-              '<div class="fs-notifications-message-inner">'+
-                '<p class="fs-notifications-meta">' + meta + '</p>'+
-                '<h4>' + message.subject + '</h4>'+
-                '<p>' + message.message + '</p>'+
-                '<div class="fs-notifications-delete-message"><svg class="gr-icon gr-i-close" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#close"></use></svg></div>'+
-              '</div>'+
-            '</li>'
+          var $messageContent = $('<div class="fs-notifications-message-inner"></div>');
+
+          $messageContent.append('<p class="fs-notifications-meta"></p>').text(meta);
+          $messageContent.append('<h4></h4>').text(message.subject);
+          $messageContent.append('<p></p>').text(message.message);
+          $messageContent.append(
+            '<div class="fs-notifications-delete-message">'+
+              '<svg class="gr-icon gr-i-close" viewBox="0 0 24 24">'+
+                '<use xlink:href="/assets/icons.svg#close"></use>'+
+              '</svg>'+
+            '</div>'
           );
 
-          $message.find('.fs-notifications-delete-message').click(app._onDeleteMessage);
+          $messageContent.find('.fs-notifications-delete-message').click(app._onDeleteMessage);
+
+          var $message = $('<li data-fs-message-id="' + message.id + '"></li>');
+
+          $message.append($messageContent);
           $list.append($message);
         }
       } else {
