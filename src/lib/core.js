@@ -5710,7 +5710,7 @@ var balloon = {
 
     if(balloon.isMultiSelect()) {
       for(var n in node) {
-        if(node[n].deleted !== false || ignore_flag === true) {
+        if(node[n].deleted || ignore_flag === true) {
           todelete++;
           delete_msg += '<li>'+node[n].name+'</li>';
         } else {
