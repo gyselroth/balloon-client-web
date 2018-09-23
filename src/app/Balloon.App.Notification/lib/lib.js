@@ -132,9 +132,9 @@ var app = {
 
           var $messageContent = $('<div class="fs-notifications-message-inner"></div>');
 
-          $messageContent.append('<p class="fs-notifications-meta"></p>').text(meta);
-          $messageContent.append('<h4></h4>').text(message.subject);
-          $messageContent.append('<p></p>').text(message.message);
+          $messageContent.append($('<p class="fs-notifications-meta"></p>').text(meta));
+          $messageContent.append($('<h4></h4>').text(message.subject));
+          $messageContent.append($('<p></p>').text(message.message));
           $messageContent.append(
             '<div class="fs-notifications-delete-message">'+
               '<svg class="gr-icon gr-i-close" viewBox="0 0 24 24">'+
