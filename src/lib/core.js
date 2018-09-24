@@ -729,6 +729,17 @@ var balloon = {
     clue += '<div class="clue-item-count">' + $itemCount + '</span>';
 
     $('.k-drag-clue').html(clue);
+
+    // Fix for safari, which does not register :hover while dragging
+    // See: https://stackoverflow.com/questions/52133842/safari-only-css-hover-event-not-triggered-on-drag
+    // Kendo ads a class, but unfortunately a bit deeper then needed
+    $('.fs-file-dropable').off('mouseenter.fs-drag').on('mouseenter.fs-drag', function(event) {
+      $(this).addClass('fs-file-dropable-hover');
+    });
+
+    $('.fs-file-dropable').off('mouseleave.fs-drag').on('mouseleave.fs-drag', function(event) {
+      $(this).removeClass('fs-file-dropable-hover');
+    });
   },
 
 
@@ -926,6 +937,8 @@ var balloon = {
    * @return  void
    */
   _treeDragend: function(e) {
+    $('.fs-file-dropable').off('mouseenter.fs-drag mouseleave.fs-drag');
+    $('.fs-file-dropable-hover').removeClass('fs-file-dropable-hover');
     $('#fs-browser-tree').find('.k-item').removeClass('fs-file-dropable').removeClass('fs-file-disabled');
     $('#fs-browser-top').find('li').removeClass('fs-file-dropable');
     $('#fs-upload').removeClass('fs-file-dropable');
