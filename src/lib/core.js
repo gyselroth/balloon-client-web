@@ -1178,7 +1178,7 @@ var balloon = {
               balloon.multiSelect(balloon.datasource._pristineData[node.index]);
               balloon.multiSelect(balloon.datasource._pristineData[selected.index]);
               $k_tree.select($());
-
+              balloon.last = selected;
               balloon.updatePannel(true);
             } else if(selected && selected.id === node.id) {
               $k_tree.select($());
