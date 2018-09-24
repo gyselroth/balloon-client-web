@@ -332,6 +332,12 @@ var balloon = {
       }
     });
 
+    $('#fs-identity-avatar').off('click').on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $('#fs-settings').trigger('click');
+    });
+
     balloon.createDatasource();
     balloon.initCrumb();
 
