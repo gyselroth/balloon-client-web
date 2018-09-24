@@ -193,10 +193,6 @@
       margin-bottom: 5px;
       cursor: pointer;
 
-      &:hover {
-        background-color: rgba(57, 165, 255, 0.1);
-      }
-
       &:last-child {
         margin-bottom: 0;
       }
@@ -292,6 +288,17 @@
               color: $colorMediumGrey;
             }
           }
+        }
+      }
+
+      &:hover {
+        $borderSize: 1px;
+
+        background-color: rgba(57, 165, 255, 0.1);
+        border: $borderSize solid $colorActiveBlue;
+
+        .k-in {
+          padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
         }
       }
 
