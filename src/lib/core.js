@@ -1130,7 +1130,7 @@ var balloon = {
           }
 
           if(balloon.isSearch() && balloon.id(node) !== '_FOLDERUP') {
-            var path = node.path.split('/').slice(1);
+            var path = node.path.split('/').slice(1, -1);
             var $path_el = $('<p></p>');
 
             path.forEach(function(item) {
