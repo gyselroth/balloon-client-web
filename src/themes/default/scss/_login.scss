@@ -10,6 +10,7 @@
   left: 0;
   bottom: 0;
   display: none;
+  overflow: auto;
 
   .error-message {
     text-align: center;
@@ -19,10 +20,9 @@
   }
 
   #login-box {
-    width: 200px;
     position: absolute;
     background-color: #eaeaea;
-    margin: -225px auto 0 auto;
+    margin: 0 auto;
     padding: 15px;
     z-index: 20;
     border-radius: 3px;
@@ -30,7 +30,7 @@
     overflow: hidden;
     position: absolute;
     right: 0;
-    top: 50%;
+    top: 20px;
     width: 250px;
 
     input,
@@ -75,11 +75,26 @@
   }
 
   #login-footer {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
+    display: none;
   }
 
+
+  @media screen and (min-height: 502px) {
+    #login-box {
+      top: 50%;
+      margin-top: -225px;
+    }
+  }
+
+  @media screen and (min-height: 502px), (min-width: 1110px) {
+    //avoid footer overlapping with login box
+    #login-footer {
+      display: block;
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+  }
 }
 
 #login-logo {
