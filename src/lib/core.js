@@ -1145,7 +1145,7 @@ var balloon = {
         case 'checkbox':
           var $checkbox = $('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
 
-          $checkbox.on('click', function() {
+          $checkbox.on('click', function(event) {
             event.stopPropagation();
 
             var $k_tree = $('#fs-browser-tree').data('kendoTreeView');
