@@ -715,7 +715,7 @@ var balloon = {
       return;
     }
 
-    $('#fs-browser-tree').find('li[fs-type=folder]').addClass('fs-file-dropable');
+    $('#fs-browser-tree').find('li[fs-type=folder]').not('[aria-selected="true"]').not('.fs-multiselected').addClass('fs-file-dropable');
     $('#fs-browser-top').find('li').addClass('fs-file-dropable');
     $('#fs-upload').addClass('fs-file-dropable');
     $('#fs-browser-tree').find('li[fs-type=file]').addClass('fs-file-disabled');
