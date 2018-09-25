@@ -6228,7 +6228,7 @@ var balloon = {
           count: Array.isArray(source) ? source.length : 1,
           dest: destName
         },
-        icon: 'undo'
+        //icon: 'undo'
       },
       data: {
         id: balloon.id(source),
