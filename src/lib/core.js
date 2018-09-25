@@ -2518,7 +2518,7 @@ var balloon = {
     var $fs_destroy_date_set = $fs_properties.find('#fs-properties-destroy-date-set');
     var $fs_destroy_date_edit = $fs_properties.find('#fs-properties-destroy-date-edit');
 
-    $('#fs-properties').off('focusout').on('focusout', 'textarea,input,select', balloon._saveMetaAttributes);
+    $('#fs-properties').off('focusout').on('focusout', 'textarea,input[type="text"],select', balloon._saveMetaAttributes);
 
     if(node.destroy !== undefined) {
       var formatedDate = kendo.toString(new Date(node.destroy), kendo.culture().calendar.patterns.g);
@@ -6962,9 +6962,17 @@ var balloon = {
       name  = $that.attr('id').substr(14),
       attrs = {};
 
-    attrs[name] = value;
+    var curValue = balloon.getCurrentNode().meta[name];
 
-    if(balloon.getCurrentNode().meta[name] != value) {
+    var valueChanged =
+      //value was not set before
+      !(curValue === undefined && value === '')
+      &&
+      //changed value
+      curValue !== value;
+
+    if(valueChanged) {
+      attrs[name] = value;
       balloon.saveMetaAttributes(balloon.getCurrentNode(), attrs);
     }
   },
