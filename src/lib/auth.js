@@ -357,10 +357,6 @@ var login = {
     $('#login').hide();
     $('#fs-namespace').show();
 
-    $('#fs-menu-user-logout').unbind('click').bind('click', function() {
-      login.logout();
-    });
-
     balloon.init();
   },
 

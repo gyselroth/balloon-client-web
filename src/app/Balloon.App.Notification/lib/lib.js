@@ -38,32 +38,18 @@ var app = {
    * @return void
    */
   injectMessages: function() {
-    var $contentMessages = $(
-      '<li id="fs-notifications" title="'+ i18next.t('app.notification.messages.title') +'">'+
-        '<svg class="gr-icon gr-i-alert"><use xlink:href="/assets/icons.svg#alert"></use></svg>'+
-        '<div id="fs-notifications-count">0</div>'+
-        '<div id="fs-notifications-dropdown-wrap" class="bln-dropdown fs-identity-dropdown">'+
-          '<span class="bln-dropdown-spike"></span>'+
-          '<div id="fs-notifications-dropdown" class="bln-dropdown-content">'+
-            '<div id="fs-notifications-header">'+
-              '<h3>'+ i18next.t('app.notification.messages.title') +'</h3>'+
-              '<button id="fs-notifications-delete-all" class="fs-button-primary">' + i18next.t('app.notification.messages.delete_all') + '</button>'+
-            '</div>'+
-            '<div id="fs-notifications-messages-wrap">'+
-              '<div id="fs-notifications-no-messages">'+ i18next.t('app.notification.messages.no_messages') +'</div>'+
-              '<ul id="fs-notifications-messages"></ul>'+
-            '</div>'+
-          '</div>'+
-        '</div>'+
-      '</li>');
+    var content =
+      '<div id="fs-notifications-header">'+
+        '<h3>'+ i18next.t('app.notification.messages.title') +'</h3>'+
+        '<button id="fs-notifications-delete-all" class="fs-button-primary">' + i18next.t('app.notification.messages.delete_all') + '</button>'+
+      '</div>'+
+      '<div id="fs-notifications-messages-wrap">'+
+        '<div id="fs-notifications-no-messages">'+ i18next.t('app.notification.messages.no_messages') +'</div>'+
+        '<ul id="fs-notifications-messages"></ul>'+
+      '</div>';
 
-    $('#fs-identity-menu').prepend($contentMessages);
+    app.balloon.addIdentityMenu('notifications', 'app.notification.messages.title', 'alert', content, true);
 
-    this.$contentMessages = $contentMessages;
-    this.$contentMessagesDropdown = this.$contentMessages.find('#fs-notifications-dropdown');
-    this.$contentMessagesContainer = this.$contentMessages.find('#fs-notifications-messages');
-    this.$contentMessagesCount = this.$contentMessages.find('#fs-notifications-count');
-    this.$contentMessagesDeleteAll = this.$contentMessages.find('#fs-notifications-delete-all');
   },
 
   /**
@@ -72,6 +58,13 @@ var app = {
    * @return void
    */
   initializeMessages: function() {
+
+    this.$contentMessages = $('#fs-notifications');
+    this.$contentMessagesDropdown = this.$contentMessages.find('#fs-notifications-dropdown');
+    this.$contentMessagesContainer = this.$contentMessages.find('#fs-notifications-messages');
+    this.$contentMessagesCount = this.$contentMessages.find('#fs-notifications-count');
+    this.$contentMessagesDeleteAll = this.$contentMessages.find('#fs-notifications-delete-all');
+
     this.$contentMessages.off('click.balloon.app.notifications').on('click.balloon.app.notifications', function() {
       var $list = app.$contentMessagesContainer;
       $list.empty();

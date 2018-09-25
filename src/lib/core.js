@@ -195,6 +195,29 @@ var balloon = {
     },
   },
 
+  /**
+   * Menu handlers
+   *
+   * @var object
+   */
+  identity_menu_items: {
+    settings: {
+      name: 'settings',
+      label: 'login.settings',
+      icon: 'cog',
+      content:
+        '<div id="fs-quota" data-i18n="[title]user.disk_space">'+
+            '<div id="fs-quota-usage"></div>'+
+            '<div id="fs-quota-percent"></div>'+
+            '<div id="fs-quota-total"></div>'+
+        '</div>'+
+        '<ul>'+
+            '<li id="fs-menu-user-profile" data-i18n="login.profile;[title]login.profile"></li>'+
+            '<li id="fs-menu-user-events" data-i18n="login.events;[title]login.events"></li>'+
+            '<li id="fs-menu-user-logout" data-i18n="login.logout;[title]login.logout"></li>'+
+        '</ul>',
+    },
+  },
 
   /**
    *
@@ -327,38 +350,7 @@ var balloon = {
 
     balloon.initFsContentView();
     balloon.initFsMenu();
-
-    $("#fs-identity").off('click').on('click', 'li', balloon._menuRightAction);
-
-    $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
-      event.preventDefault();
-
-      var $parent = $(event.target);
-      var parentId = $parent.attr('id');
-      var $dropdown = $parent.find('.fs-identity-dropdown');
-
-      if($dropdown.hasClass('fs-identity-dropdown-open')) {
-        $dropdown.removeClass('fs-identity-dropdown-open');
-
-        $(document).off('click.fs-identity-dropdown');
-      } else {
-        $('.fs-identity-dropdown-open').removeClass('fs-identity-dropdown-open');
-
-        $dropdown.addClass('fs-identity-dropdown-open');
-
-        $dropdown.find('li').off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function() {
-          $dropdown.removeClass('fs-identity-dropdown-open');
-        });
-
-        $(document).off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function(event){
-          var $target = $(event.target);
-
-          if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
-
-          $dropdown.removeClass('fs-identity-dropdown-open');
-        });
-      }
-    });
+    balloon.initIdentityMenu();
 
     $('#fs-identity-avatar').off('click').on('click', function(event) {
       event.preventDefault();
@@ -593,6 +585,66 @@ var balloon = {
       } else {
         $menu.addClass('fs-menu-left-open');
         $toggl.addClass('fs-menu-left-open');
+      }
+    });
+  },
+
+  initIdentityMenu: function() {
+    var i;
+    var $menu = $('#fs-identity-menu');
+    var keys = Object.keys(balloon.identity_menu_items);
+
+    $menu.empty();
+
+    for(i=0; i<keys.length; i++) {
+      var item = balloon.identity_menu_items[keys[i]];
+      var label = i18next.t(item.label);
+
+      var $item = $(
+        '<li id="fs-' + item.name + '" title="' + label + '">'+
+            '<svg class="gr-icon gr-i-' + item.icon + '"><use xlink:href="/assets/icons.svg#' + item.icon + '"></use></svg>'+
+            (item.hasCount ? '<div id="fs-' + item.name + '-count" class="fs-identity-count">0</div>' : '')+
+            '<div id="fs-' + item.name + '-dropdown-wrap" class="bln-dropdown fs-identity-dropdown">'+
+                '<span  class="bln-dropdown-spike"></span>'+
+                '<div id="fs-' + item.name + '-dropdown" class="bln-dropdown-content">' + item.content + '</div>'+
+            '</div>'+
+        '</li>'
+      );
+
+      $item.find('[data-i18n]').localize();
+
+      $menu.append($item);
+    }
+
+    $('#fs-identity').off('click').on('click', 'li', balloon._menuRightAction);
+
+    $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
+      event.preventDefault();
+
+      var $parent = $(event.target);
+      var parentId = $parent.attr('id');
+      var $dropdown = $parent.find('.fs-identity-dropdown');
+
+      if($dropdown.hasClass('fs-identity-dropdown-open')) {
+        $dropdown.removeClass('fs-identity-dropdown-open');
+
+        $(document).off('click.fs-identity-dropdown');
+      } else {
+        $('.fs-identity-dropdown-open').removeClass('fs-identity-dropdown-open');
+
+        $dropdown.addClass('fs-identity-dropdown-open');
+
+        $dropdown.find('li').off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function() {
+          $dropdown.removeClass('fs-identity-dropdown-open');
+        });
+
+        $(document).off('click.fs-identity-dropdown').on('click.fs-identity-dropdown', function(event){
+          var $target = $(event.target);
+
+          if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
+
+          $dropdown.removeClass('fs-identity-dropdown-open');
+        });
       }
     });
   },
@@ -2250,6 +2302,10 @@ var balloon = {
     case 'profile':
       balloon.displayUserProfile();
       break;
+
+    case 'logout':
+      login.logout();
+      break;
     }
   },
 
@@ -2316,6 +2372,19 @@ var balloon = {
       label: label,
       icon: icon,
       callback: callback
+    };
+  },
+
+  /**
+   * Add identity menu
+   */
+  addIdentityMenu: function(name, label, icon, content, hasCount) {
+    this.identity_menu_items[name] = {
+      name: name,
+      label: label,
+      icon: icon,
+      content: content,
+      hasCount: hasCount,
     };
   },
 
