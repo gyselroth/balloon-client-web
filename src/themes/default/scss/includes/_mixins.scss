@@ -70,11 +70,43 @@
   display: inline-block;
   color: $colorActiveBlue;
   border: 1px solid $colorLightGrey;
+  background-color: $colorWhite;
   margin-right: 13px;
 
+  .fs-tiny-button-count {
+    $size: 16px;
+
+    position: absolute;
+    top: -1 * $size / 2;
+    right: -1 * $size / 2;
+    width: $size;
+    height: $size;
+    background-color: $colorActiveBlue;
+    border-radius: 50%;
+    color: $colorWhite;
+    font-size: 10px;
+    line-height: $size;
+    text-align: center;
+    font-weight: bold;
+  }
+
   &:hover {
-    color: $colorHoverBlue;
-    border-color: $colorHoverBlue;
+    color: $colorWhite;
+    border-color: $colorActiveBlue;
+    background-color: $colorActiveBlue;
+  }
+
+
+  &.fs-action-disabled,
+  &.fs-action-disabled:hover {
+    color: $colorLightGrey !important;
+    border-color: $colorLightGrey !important;
+    background-color: $colorWhite !important;
+    cursor: default;
+
+    .fs-tiny-button-count {
+      display: none;
+    }
   }
 }
 
