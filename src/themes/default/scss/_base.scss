@@ -31,12 +31,6 @@ select {
   caret-color: $colorActiveBlue;
 }
 
-input[type="submit"]:focus,
-input[type="button"]:focus,
-input[type="reset"]:focus {
-  outline-style: auto;
-}
-
 input:not([type="radio"]),
 textarea,
 select {
@@ -143,6 +137,8 @@ input[type="submit"] {
   cursor: pointer;
   background-color: transparent;
   -webkit-appearance: none;
+  outline-style: none;
+  transition: color .2s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out;
 
   &.fs-button-primary {
     border-color: $colorActiveBlue;
@@ -157,16 +153,53 @@ input[type="submit"] {
     font-weight: 300;
   }
 
-  &:disabled {
-    border-color: $colorLightGrey !important;
-    color: $colorLightGrey !important;
-    cursor: default;
+  &:hover {
+    border-color: $colorActiveBlue;
+    color: $colorActiveBlue;
 
     &.fs-button-primary {
-      background-color: $colorLightGrey !important;
+      border-color: $colorHoverBlue;
+      background-color: $colorHoverBlue;
+      color: $colorWhite;
+    }
+
+    &.fs-button-small {
+      border-color: $colorActiveBlue;
+      background-color: $colorActiveBlue;
+      color: $colorWhite;
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 10px 0 $colorMediumGrey;
+
+    &.fs-button-primary {
+      box-shadow: 0 0 10px 0 $colorActiveBlue;
+    }
+
+    &.fs-button-small {
+      box-shadow: 0 0 10px 0 $colorLightGrey;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+    border-color: $colorMediumGrey !important;
+    color: $colorMediumGrey !important;
+
+    &.fs-button-primary {
+      border-color: $colorMediumGrey !important;
+      background-color: $colorMediumGrey !important;
       color: $colorWhite !important;
     }
 
+    &.fs-button-small {
+      opacity: 1;
+      border-color: $colorLightGrey !important;
+      background-color: $colorWhite !important;
+      color: $colorLightGrey !important;
+    }
   }
 }
 
