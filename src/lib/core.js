@@ -1144,10 +1144,23 @@ var balloon = {
 
           if(balloon.isSearch() && balloon.id(node) !== '_FOLDERUP') {
             var path = node.path.split('/').slice(1, -1);
+            if(path.length === 0) path = [''];
+
+            if(path.length > 4) {
+              path = path.slice(path.length - 5);
+              path.unshift('..');
+            }
+
             var $path_el = $('<p></p>');
 
             path.forEach(function(item) {
-              $path_el.append('<span> / </span><span>' + item + '</span>');
+              var el = '<span>' + item + '</span>';
+
+              if(item !== '..') {
+                el = '<span> / </span>' + el;
+              }
+
+              $path_el.append(el);
             });
 
             $name_el.append($path_el);
