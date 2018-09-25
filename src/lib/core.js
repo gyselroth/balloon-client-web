@@ -1370,6 +1370,45 @@ var balloon = {
     }
   },
 
+  navigateTo: function(menu, collection, selected, view) {
+    balloon.resetDom('multiselect');
+    balloon.resetDom('breadcrumb');
+
+    balloon.menuLeftAction(menu, false);
+
+    var $d = balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
+    var $dCrumb = balloon.buildCrumb(collection);
+
+    $.when($d, $dCrumb).done(function() {
+      if(selected) {
+        balloon.last = selected;
+        balloon.scrollToNode(selected);
+
+        var $k_tree = $('#fs-browser-tree').data('kendoTreeView');
+        var dom_node = $('#fs-browser-tree').find('.k-item[fs-id='+balloon.id(selected)+']');
+
+        $k_tree.select(dom_node);
+        $k_tree.trigger('select', {node: dom_node});
+        balloon.updatePannel(true);
+
+      }
+
+      balloon.pushState(false, false);
+    });
+
+    return $d;
+  },
+
+  scrollToNode: function(node) {
+    var $node = $('li[fs-id="' + balloon.id(node) + '"]');
+
+    if(!$node) return;
+
+    $('#fs-layout-left').animate({
+      scrollTop: ($node.offset().top - 70)
+    }, 1000);
+  },
+
 
   /**
    * Build breadcrumb with parents
@@ -1382,7 +1421,7 @@ var balloon = {
       return;
     }
 
-    balloon.xmlHttpRequest({
+    return balloon.xmlHttpRequest({
       url: balloon.base+'/nodes/parents',
       type: 'GET',
       dataType: 'json',
@@ -2209,6 +2248,7 @@ var balloon = {
    * @return void
    */
   menuLeftAction: function(menu, exec) {
+    var $d;
     if(menu === null) {
       menu = 'cloud';
     }
@@ -2252,37 +2292,39 @@ var balloon = {
     }
 
     if(exec === false) {
-      return;
+      return $.Deferred().resolve().promise();
     }
 
     balloon.pushState(false, true);
 
     switch(action) {
     case 'cloud':
-      balloon.refreshTree('/collections/children', {}, {});
+      $d = balloon.refreshTree('/collections/children', {}, {});
       break;
 
     case 'shared_for_me':
-      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 1}}}, {});
+      $d = balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 1}}}, {});
       break;
 
     case 'shared_from_me':
-      balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 0}}}, {});
+      $d = balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 0}}}, {});
       break;
 
     case 'shared_link':
-      balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
+      $d = balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
       break;
 
     case 'trash':
       balloon.tree.filter.deleted = 1;
-      balloon.refreshTree('/nodes/trash', {}, {});
+      $d = balloon.refreshTree('/nodes/trash', {}, {});
       break;
     }
 
     if(action in balloon.menu_handlers) {
-      balloon.menu_handlers[action]();
+      $d = balloon.menu_handlers[action]();
     }
+
+    return $d;
   },
 
 
@@ -4015,13 +4057,7 @@ var balloon = {
         balloon.added = node.id;
 
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
-          var $createdNode = $('li[fs-id="' + node.id + '"]');
-
-          if(!$createdNode) return;
-
-          $('#fs-layout-left').animate({
-            scrollTop: ($createdNode.offset().top - 70)
-          }, 1000);
+          balloon.scrollToNode(node);
         });
       });
     }

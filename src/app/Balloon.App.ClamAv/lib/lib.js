@@ -21,7 +21,7 @@ var app = {
 
     app.balloon.addMenu('quarantine', i18next.t('app.clamav.quarantine'), 'warning', function() {
       app.balloon.tree.filter.deleted = 1;
-      app.balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\ClamAv.quarantine": true}}, {});
+      return app.balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\ClamAv.quarantine": true}}, {});
     });
 
     this.balloon.addHint(i18next.t('app.clamav.hint'));

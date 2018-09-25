@@ -87,6 +87,11 @@ var app = {
         app._deleteAllDisplayedMessages();
       });
 
+      app.$contentMessagesContainer.off('click').on('click', function(event) {
+        //allow clicks on messages.
+        event.stopPropagation();
+      });
+
       app._displayMessages().done(function(body) {
         app._displayMessagesInfiniteScroll();
       });
@@ -131,6 +136,25 @@ var app = {
           }
 
           var $messageContent = $('<div class="fs-notifications-message-inner"></div>');
+
+          if(message.node && message.node.id) {
+            $messageContent.data('fs-node-id', message.node.id);
+            $messageContent.off('click').on('click', function(event) {
+              var nodeId = $(this).data('fs-node-id');
+
+              app.balloon.xmlHttpRequest({
+                url: app.balloon.base+'/nodes',
+                data: {
+                  id: nodeId
+                },
+                success: function(data) {
+                  $(document).trigger('click');
+                  var collection = (data.parent && data.parent.id) ? data.parent.id : null;
+                  app.balloon.navigateTo('cloud', collection, data, 'preview');
+                }
+              });
+            });
+          }
 
           $messageContent.append($('<p class="fs-notifications-meta"></p>').text(meta));
           $messageContent.append($('<h4></h4>').text(message.subject));
