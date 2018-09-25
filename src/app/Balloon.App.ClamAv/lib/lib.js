@@ -15,14 +15,18 @@ var app = {
   render: function() {
   },
 
-  postInit: function(core)  {
+  preInit: function(core) {
     this.balloon = core;
-    $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
 
-    app.balloon.addMenu('quarantine', i18next.t('app.clamav.quarantine'), 'warning', function() {
+    app.balloon.addMenu('quarantine', 'app.clamav.quarantine', 'warning', function() {
       app.balloon.tree.filter.deleted = 1;
       return app.balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\ClamAv.quarantine": true}}, {});
     });
+  },
+
+  postInit: function(core)  {
+    this.balloon = core;
+    $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
 
     this.balloon.addHint(i18next.t('app.clamav.hint'));
   },

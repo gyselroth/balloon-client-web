@@ -152,7 +152,49 @@ var balloon = {
    *
    * @var object
    */
-  menu_handlers: {},
+  menu_left_items: {
+    'cloud': {
+      name: 'cloud',
+      label: 'menu.cloud',
+      icon: 'cloud',
+      callback: function() {
+        return balloon.refreshTree('/collections/children', {}, {});
+      }
+    },
+    'shared_for_me': {
+      name: 'shared_for_me',
+      label: 'menu.shared_for_me',
+      icon: 'folder-received',
+      callback: function() {
+        return balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 1}}}, {});
+      }
+    },
+    'shared_from_me': {
+      name: 'shared_from_me',
+      label: 'menu.shared_from_me',
+      icon: 'folder-shared',
+      callback: function() {
+        return balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 0}}}, {});
+      }
+    },
+    'shared_link': {
+      name: 'shared_link',
+      label: 'menu.shared_link',
+      icon: 'hyperlink',
+      callback: function() {
+        return balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
+      }
+    },
+    'trash': {
+      name: 'trash',
+      label: 'menu.trash',
+      icon: 'trash',
+      callback: function() {
+        return balloon.refreshTree('/nodes/trash', {}, {});
+      }
+    },
+  },
+
 
   /**
    *
@@ -284,23 +326,9 @@ var balloon = {
     balloon.kendoFixes();
 
     balloon.initFsContentView();
+    balloon.initFsMenu();
 
-    $("#fs-menu-left").off('click').on('click', 'li', balloon.menuLeftAction);
     $("#fs-identity").off('click').on('click', 'li', balloon._menuRightAction);
-
-    $('#fs-menu-left-toggl').off('click').on('click', function(event) {
-      event.preventDefault();
-      var $menu = $('#fs-menu-left');
-      var $toggl = $('#fs-menu-left-toggl');
-
-      if($menu.hasClass('fs-menu-left-open')) {
-        $menu.removeClass('fs-menu-left-open');
-        $toggl.removeClass('fs-menu-left-open');
-      } else {
-        $menu.addClass('fs-menu-left-open');
-        $toggl.addClass('fs-menu-left-open');
-      }
-    });
 
     $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
       event.preventDefault();
@@ -523,6 +551,50 @@ var balloon = {
     }
 
     $fs_content_view_template.replaceWith($fs_content_view);
+  },
+
+  initFsMenu: function() {
+    var i;
+    var $menu = $('#fs-menu-left-top');
+    var keys = Object.keys(balloon.menu_left_items);
+    $menu.empty();
+
+    for(i=0; i<keys.length; i++) {
+      var item = balloon.menu_left_items[keys[i]];
+      var label = i18next.t(item.label);
+
+      var $item = $(
+        '<li id="fs-menu-'+item.name+'" title="'+label+'">'+
+          '<div class="fs-menu-left-icon">'+
+            '<svg class="gr-icon gr-i-'+item.icon+'">'+
+              '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+item.icon+'">'+
+            '</svg>'+
+          '</div>'+
+          '<div>'+
+            '<span>'+label+'</span>'+
+          '</div>'+
+        '</li>'
+      );
+
+      if(i === 0)  $item.addClass('fs-menu-left-active');
+
+      $menu.append($item);
+    }
+
+    $menu.off('click').on('click', 'li', balloon.menuLeftAction);
+    $('#fs-menu-left-toggl').off('click').on('click', function(event) {
+      event.preventDefault();
+      var $menu = $('#fs-menu-left');
+      var $toggl = $('#fs-menu-left-toggl');
+
+      if($menu.hasClass('fs-menu-left-open')) {
+        $menu.removeClass('fs-menu-left-open');
+        $toggl.removeClass('fs-menu-left-open');
+      } else {
+        $menu.addClass('fs-menu-left-open');
+        $toggl.addClass('fs-menu-left-open');
+      }
+    });
   },
 
   /**
@@ -2239,19 +2311,12 @@ var balloon = {
    * Add menu
    */
   addMenu: function(name, label, icon, callback) {
-    $('#fs-menu-left-top').append(
-      '<li id="fs-menu-'+name+'" title="'+label+'">'+
-        '<div class="fs-menu-left-icon">'+
-          '<svg class="gr-icon gr-i-'+icon+'">'+
-            '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+icon+'">'+
-          '</svg>'+
-        '</div>'+
-        '<div>'+
-          '<span>'+label+'</span>'+
-        '</div>'+
-      '</li>');
-
-    this.menu_handlers[name] = callback;
+    this.menu_left_items[name] = {
+      name: name,
+      label: label,
+      icon: icon,
+      callback: callback
+    };
   },
 
 
@@ -2310,31 +2375,10 @@ var balloon = {
 
     balloon.pushState(false, true);
 
-    switch(action) {
-    case 'cloud':
-      $d = balloon.refreshTree('/collections/children', {}, {});
-      break;
-
-    case 'shared_for_me':
-      $d = balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 1}}}, {});
-      break;
-
-    case 'shared_from_me':
-      $d = balloon.refreshTree('/nodes', {query: {shared: true, reference: {$exists: 0}}}, {});
-      break;
-
-    case 'shared_link':
-      $d = balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
-      break;
-
-    case 'trash':
-      balloon.tree.filter.deleted = 1;
-      $d = balloon.refreshTree('/nodes/trash', {}, {});
-      break;
-    }
-
-    if(action in balloon.menu_handlers) {
-      $d = balloon.menu_handlers[action]();
+    if(action in balloon.menu_left_items) {
+      $d = balloon.menu_left_items[action].callback();
+    } else {
+      $d = $.Deferred().reject().promise();
     }
 
     return $d;
