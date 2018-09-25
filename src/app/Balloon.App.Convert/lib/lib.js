@@ -32,15 +32,15 @@ var app = {
 
     this.$content = $content;
 
-    this.balloon.fs_content_views.push({
-      id: 'shadow',
-      title: 'app.convert.menu_title',
-      isEnabled: function() {
+    this.balloon.addContentView(
+      'shadow',
+      'app.convert.menu_title',
+      function() {
         return !(app.balloon.last.directory || app.balloon.last.deleted);
       },
-      onActivate: app.onActivate,
-      $content: $content
-    });
+      app.onActivate,
+      $content
+    );
   },
 
   postInit: function(core)  {

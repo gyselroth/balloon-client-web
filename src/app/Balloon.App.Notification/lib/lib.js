@@ -343,15 +343,15 @@ var app = {
 
     this.$contentSettings = $contentSettings;
 
-    this.balloon.fs_content_views.push({
-      id: 'notification',
-      title: 'app.notification.settings.menu_title',
-      isEnabled: function() {
+    this.balloon.addContentView(
+      'notification',
+      'app.notification.settings.menu_title',
+      function() {
         return !app.balloon.last.deleted;
       },
-      onActivate: app.onActivateSettings,
-      $content: $contentSettings
-    });
+      app.onActivateSettings,
+      $contentSettings
+    );
   },
 
   /**

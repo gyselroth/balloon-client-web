@@ -236,8 +236,8 @@ var balloon = {
    *
    * @var array
    */
-  fs_content_views: [
-    {
+  fs_content_views: {
+    'preview': {
       id: 'preview',
       title: 'nav.view.preview',
       isEnabled: function() {
@@ -247,7 +247,7 @@ var balloon = {
         balloon.displayPreview(balloon.getCurrentNode());
       },
     },
-    {
+    'share-link': {
       id: 'share-link',
       title: 'nav.view.share_link',
       isEnabled: function() {
@@ -257,7 +257,7 @@ var balloon = {
         balloon.shareLink(balloon.getCurrentNode());
       },
     },
-    {
+    'share': {
       id: 'share',
       title: 'nav.view.share_folder',
       isEnabled: function() {
@@ -267,7 +267,7 @@ var balloon = {
         balloon.shareCollection(balloon.getCurrentNode());
       },
     },
-    {
+    'metadata': {
       id: 'metadata',
       title: 'nav.view.metadata',
       isEnabled: function() {
@@ -277,7 +277,7 @@ var balloon = {
         balloon.displayMetadata(balloon.getCurrentNode());
       },
     },
-    {
+    'history': {
       id: 'history',
       title: 'nav.view.history',
       isEnabled: function() {
@@ -287,7 +287,7 @@ var balloon = {
         balloon.displayHistoryView();
       },
     },
-    {
+    'events': {
       id: 'events',
       title: 'nav.view.events',
       isEnabled: function() {
@@ -312,7 +312,7 @@ var balloon = {
         });
       },
     },
-    {
+    'properties': {
       id: 'properties',
       title: 'nav.view.properties',
       isEnabled: function() {
@@ -322,7 +322,7 @@ var balloon = {
         balloon.displayProperties(balloon.getCurrentNode());
       },
     },
-  ],
+  },
 
   /**
    * Init file browsing
@@ -523,11 +523,13 @@ var balloon = {
    * @return void
    */
   initFsContentView: function() {
+    var i;
     var $fs_content_view_template = $('#fs-content-view');
     var $fs_content_view = $('<dl id="fs-content-view"></dl>');
+    var keys = Object.keys(balloon.fs_content_views);
 
-    for(var i=0; i<balloon.fs_content_views.length; i++) {
-      var viewConfig = balloon.fs_content_views[i];
+    for(i=0; i<keys.length; i++) {
+      var viewConfig = balloon.fs_content_views[keys[i]];
       var view = viewConfig.id;
 
       $fs_content_view.append(
@@ -1448,9 +1450,11 @@ var balloon = {
     }
 
     var views = [];
+    var i;
+    var keys = Object.keys(balloon.fs_content_views);
 
-    for(var i=0; i<balloon.fs_content_views.length; i++) {
-      var viewConfig = balloon.fs_content_views[i];
+    for(i=0; i<keys.length; i++) {
+      var viewConfig = balloon.fs_content_views[keys[i]];
       if(viewConfig.isEnabled && viewConfig.isEnabled()) {
         views.push(viewConfig.id);
       }
@@ -2388,6 +2392,19 @@ var balloon = {
     };
   },
 
+  /**
+   * Add content view
+   */
+  addContentView: function(id, title, isEnabled, onActivate, $content) {
+    this.fs_content_views[id] = {
+      id: id,
+      title: title,
+      isEnabled: isEnabled,
+      onActivate: onActivate,
+      $content: $content
+    };
+  },
+
 
   /**
    * Main menu
@@ -2480,11 +2497,7 @@ var balloon = {
    * @return  object
    */
   _getViewConfig: function(view) {
-    for(var i=0; i<balloon.fs_content_views.length; i++) {
-      if(balloon.fs_content_views[i].id === view) return balloon.fs_content_views[i];
-    }
-
-    return null;
+    return balloon.fs_content_views[view] || null;
   },
 
 
