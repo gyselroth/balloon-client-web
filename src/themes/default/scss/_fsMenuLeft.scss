@@ -91,9 +91,7 @@
   }
 
   #fs-menu-left-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    position: relative;
 
     li {
       &.fs-menu-left-active {
@@ -111,10 +109,29 @@
           }
         }
       }
+
+      &:before {
+        display: none;
+      }
     }
   }
 
   @media screen and (min-width: $breakpointMenuVisible) {
     width: 60px;
   }
+
+  @media screen and (min-height:547px) {
+    #fs-menu-left-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      li {
+        &:before {
+          display: block;
+        }
+      }
+    }
+  }
+
 }
