@@ -429,7 +429,9 @@ var balloon = {
     });
 
     $fs_search_input.off('blur').on('blur', function() {
-      $fs_search.removeClass('fs-search-focused');
+      window.setTimeout(function() {
+        $fs_search.removeClass('fs-search-focused');
+      }, 50);
     });
 
     $fs_search_input.unbind('keyup').bind('keyup', balloon.buildExtendedSearchQuery);
