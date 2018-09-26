@@ -3365,8 +3365,10 @@ var balloon = {
 
       if(balloon.isSystemNode(a) && !balloon.isSystemNode(b)) {
         return -1;
-      } else if(balloon.isSystemNode(a) && balloon.isSystemNode(b)) {
+      } else if(!balloon.isSystemNode(a) && balloon.isSystemNode(b)) {
         return 1;
+      } else if(balloon.isSystemNode(a) && balloon.isSystemNode(b)) {
+        return 0;
       } else if(a.directory && !b.directory) {
         return -1;
       } else if(!a.directory && b.directory) {
