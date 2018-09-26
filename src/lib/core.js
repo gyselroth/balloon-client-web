@@ -5167,7 +5167,7 @@ var balloon = {
         var $submit = $fs_share_link_settings_win.find('input:submit');
 
         var label = token ? 'view.share_link.settings.save' : 'view.share_link.settings.save_continue';
-console.log(label);
+
         $submit.val(i18next.t(label));
 
         $submit.unbind().click(function() {
