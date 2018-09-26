@@ -3059,7 +3059,6 @@ var balloon = {
    * @return  void
    */
   resetSearch: function(e) {
-    balloon.menuLeftAction(balloon.getCurrentMenu());
     $('#fs-search-filter').data('initialized', false);
     $('#fs-search-filter').hide();
 
@@ -3069,6 +3068,7 @@ var balloon = {
 
     balloon.resetDom(['selected', 'metadata', 'preview', 'multiselect',
       'view-bar', 'history', 'share', 'share-link', 'search']);
+    balloon.menuLeftAction(balloon.getCurrentMenu());
   },
 
 
