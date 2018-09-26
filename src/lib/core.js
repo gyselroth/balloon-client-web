@@ -1547,7 +1547,7 @@ var balloon = {
     var node = balloon.getCurrentNode();
 
     if(!collection) {
-      balloon.menuLeftAction(menu, true).then(function() {
+      return balloon.menuLeftAction(menu, true).then(function() {
         if(node) {
           balloon.last = node;
           balloon.scrollToNode(node);
@@ -1561,7 +1561,7 @@ var balloon = {
         }
       });
     } else {
-      balloon.navigateTo(menu, collection, node);
+      return balloon.navigateTo(menu, collection, node);
     }
   },
 
@@ -5258,7 +5258,7 @@ var balloon = {
           });
 
           $.when(shareLinkRequest, destroyRequest).done(function() {
-            balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
+            balloon.reloadTree().then(function() {
               balloon.switchView('share-link');
               $k_win.close();
               balloon.showShareLink();
@@ -5361,7 +5361,7 @@ var balloon = {
       type: 'DELETE',
       success: function(body) {
         delete balloon.last.sharelink_token;
-        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.reloadTree();
 
         $('#fs-share-link-edit').hide();
         $('#fs-share-link-delete').hide();
