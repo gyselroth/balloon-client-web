@@ -1611,6 +1611,12 @@ var balloon = {
    */
   _repopulateCrumb: function(nodes) {
     balloon.resetDom(['breadcrumb-home','breadcrumb-search']);
+
+    var menu = balloon.getCurrentMenu();
+    if(menu !== 'cloud') {
+      balloon.setSearchCrumbTitle(menu);
+    }
+
     for(var node in nodes) {
       balloon.addCrumbRegister(nodes[node]);
     }
@@ -2471,13 +2477,7 @@ var balloon = {
       $('#fs-crumb-search-list').show();
       $('#fs-browser-header .fs-browser-column-icon').children().hide();
 
-      var title = balloon.getMenuTitle();
-
-      if(action === 'search') {
-        i18next.t('menu.' + action);
-      }
-
-      $('#fs-crumb-search').html(title);
+      balloon.setSearchCrumbTitle(action);
     }
 
     if(exec === false) {
@@ -2493,6 +2493,22 @@ var balloon = {
     }
 
     return $d;
+  },
+
+  /**
+   * Sets the title in the search crumb
+   *
+   * @return void
+   */
+  setSearchCrumbTitle: function(menu) {
+    var title = balloon.getMenuTitle();
+
+    if(menu === 'search') {
+      title = i18next.t('menu.' + menu);
+    }
+
+
+    $('#fs-crumb-search').html(title);
   },
 
 
