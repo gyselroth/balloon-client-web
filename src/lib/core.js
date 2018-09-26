@@ -7798,6 +7798,7 @@ var balloon = {
 
       case 'view-bar':
         $('#fs-content-view').find('dt,dd').addClass('disabled').removeClass('active');
+        $('#fs-content-view dt').unbind('click');
         $('#fs-properties-name span').html('');
         break;
 
