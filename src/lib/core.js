@@ -5164,7 +5164,13 @@ var balloon = {
           $fs_share_pw_check.prop('checked', $fs_share_pw.val() !== '');
         });
 
-        $fs_share_link_settings_win.find('input:submit').unbind().click(function() {
+        var $submit = $fs_share_link_settings_win.find('input:submit');
+
+        var label = token ? 'view.share_link.settings.save' : 'view.share_link.settings.save_continue';
+console.log(label);
+        $submit.val(i18next.t(label));
+
+        $submit.unbind().click(function() {
           var date = $k_fs_share_expr_date.value();
           var time = $k_fs_share_expr_time.value();
 

@@ -218,6 +218,7 @@
         "title": "Linksettings for „%s“",
         "cancel": "Cancel",
         "save": "Save settings",
+        "save_continue": "Save and continue",
         "expiration_date": "Expiration",
         "expiration_time": "Time",
         "password": "Password",
