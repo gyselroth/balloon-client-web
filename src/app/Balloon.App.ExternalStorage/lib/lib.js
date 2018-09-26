@@ -18,7 +18,7 @@ var app = {
 
   preInit: function(core)  {
     this.balloon = core;
-    app.balloon.addNew('external_storage', i18next.t('app.externalstorage.external_storage'), 'folder-storage', app.storageWizard);
+    app.balloon.addNew('external_storage', 'app.externalstorage.external_storage', 'folder-storage', app.storageWizard);
 
     app.balloon.addMenu('external_storage', 'app.externalstorage.external_storage', 'folder-storage', function() {
       return app.balloon.refreshTree('/nodes', {query: {"mount": {$exists: 1}}}, {});

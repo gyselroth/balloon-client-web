@@ -22,9 +22,9 @@ var app = {
       return core.showNewNode(type, app.addOfficeFile);
     };
 
-    app.balloon.addNew('docx', i18next.t('app.office.word_document'), 'file-word', callback);
-    app.balloon.addNew('xlsx', i18next.t('app.office.excel_document'), 'file-excel', callback);
-    app.balloon.addNew('pptx', i18next.t('app.office.powerpoint_document'), 'file-powerpoint', callback);
+    app.balloon.addNew('docx', 'app.office.word_document', 'file-word', callback);
+    app.balloon.addNew('xlsx', 'app.office.excel_document', 'file-excel', callback);
+    app.balloon.addNew('pptx', 'app.office.powerpoint_document', 'file-powerpoint', callback);
     app.origDblClick = app.balloon._treeDblclick;
     //TODO pixtron - find a clean way for apps to hook into core. Just overriding core methods is quite a hack.
     app.balloon._treeDblclick = app.treeDblclick;

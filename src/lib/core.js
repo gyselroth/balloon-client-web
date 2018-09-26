@@ -134,11 +134,28 @@ var balloon = {
   },
 
   /**
-   * Add file handlers
+   * Add file menu
    *
    * @var object
    */
-  add_file_handlers: {},
+  add_file_menu_items: {
+    'folder': {
+      name: 'folder',
+      label: 'tree.folder',
+      icon: 'folder',
+      callback: function(type) {
+        return balloon.showNewNode(type, balloon.addFolder);
+      }
+    },
+    'txt': {
+      name: 'txt',
+      label: 'tree.txt_file',
+      icon: 'file-text',
+      callback: function(type) {
+        return balloon.showNewNode(type, balloon.addFile);
+      }
+    }
+  },
 
   /**
    * Handlers for file previews
@@ -330,15 +347,6 @@ var balloon = {
    * @return void
    */
   init: function() {
-    balloon.add_file_handlers = {
-      txt: function(type) {
-        return balloon.showNewNode(type, balloon.addFile)
-      },
-      folder: function(type) {
-        return balloon.showNewNode(type, balloon.addFolder)
-      }
-    };
-
     if(balloon.isInitialized()) {
       balloon.resetDom();
     } else {
@@ -351,6 +359,7 @@ var balloon = {
     balloon.initFsContentView();
     balloon.initFsMenu();
     balloon.initIdentityMenu();
+    balloon.initAddFileMenu();
 
     $('#fs-identity-avatar').off('click').on('click', function(event) {
       event.preventDefault();
@@ -652,6 +661,31 @@ var balloon = {
       }
     });
   },
+
+  initAddFileMenu() {
+    var i;
+    var $menu = $('#fs-action-add-select ul');
+    var keys = Object.keys(balloon.add_file_menu_items);
+
+    $menu.empty();
+
+    for(i=0; i<keys.length; i++) {
+      var item = balloon.add_file_menu_items[keys[i]];
+      var label = i18next.t(item.label);
+
+      var $item = $(
+        '<li data-type=' + item.name + ' title="' + label + '">'+
+            '<svg class="gr-icon gr-i-' + item.icon + '">'+
+              '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#' + item.icon + '">'+
+            '</svg>'+
+            '<span> ' + label + '</span>'+
+        '</li>'
+      );
+
+      $menu.append($item);
+    }
+  },
+
 
   /**
    * show hint
@@ -2359,15 +2393,12 @@ var balloon = {
    * Add menu
    */
   addNew: function(name, label, icon, callback) {
-    $('#fs-action-add-select').find('ul').append(
-      '<li data-type='+name+'>'+
-          '<svg class="gr-icon gr-i-'+icon+'">'+
-            '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+icon+'">'+
-          '</svg>'+
-          '<span>'+label+'</span>'+
-      '</li>');
-
-    this.add_file_handlers[name] = callback;
+    this.add_file_menu_items[name] = {
+      name: name,
+      label: label,
+      icon: icon,
+      callback: callback
+    };
   },
 
   /**
@@ -4230,7 +4261,11 @@ var balloon = {
    * Execute add file handler
    */
   handleAddNode: function(type) {
-    var $d = balloon.add_file_handlers[type](type);
+    if(!balloon.add_file_menu_items[type] && ! balloon.add_file_menu_items[type].callback) {
+      return $.Deferred().reject().prmosie();
+    }
+
+    var $d = balloon.add_file_menu_items[type].callback(type);
 
     if($d && $d.then) {
       $d.done(function(node) {
