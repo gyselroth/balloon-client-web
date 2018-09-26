@@ -2790,6 +2790,16 @@ var balloon = {
    * @return  void
    */
   _treeTouch: function(e) {
+    var id = $(e.target).attr('fs-id');
+
+    if(!id) {
+      id = $(e.target).parents('[role="treeitem"]').attr('fs-id');
+    }
+
+    if(id === '_FOLDERUP') {
+      return balloon._folderUp();
+    }
+
     balloon.touch_move = false;
     balloon.long_touch = false;
 
