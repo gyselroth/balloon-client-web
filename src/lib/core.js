@@ -1533,13 +1533,36 @@ var balloon = {
         $k_tree.select(dom_node);
         $k_tree.trigger('select', {node: dom_node});
         balloon.updatePannel(true);
-
       }
 
       balloon.pushState(false, false);
     });
 
     return $d;
+  },
+
+  reloadTree: function() {
+    var menu = balloon.getCurrentMenu();
+    var collection =  balloon.getCurrentCollectionId();
+    var node = balloon.getCurrentNode();
+
+    if(!collection) {
+      balloon.menuLeftAction(menu, true).then(function() {
+        if(node) {
+          balloon.last = node;
+          balloon.scrollToNode(node);
+
+          var $k_tree = $('#fs-browser-tree').data('kendoTreeView');
+          var dom_node = $('#fs-browser-tree').find('.k-item[fs-id='+balloon.id(node)+']');
+
+          $k_tree.select(dom_node);
+          $k_tree.trigger('select', {node: dom_node});
+          balloon.updatePannel(true);
+        }
+      });
+    } else {
+      balloon.navigateTo(menu, collection, node);
+    }
   },
 
   scrollToNode: function(node) {

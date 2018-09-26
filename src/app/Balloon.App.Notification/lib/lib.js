@@ -387,7 +387,7 @@ var app = {
       app._toggleCheckboxDisabled($subscribe.prop('checked'));
     });
 
-    $submit.on('click', function(){
+    $submit.off('click').on('click', function(){
       var id = $(this).parent().attr('data-id');
       app.subscribe(app.balloon.last,
         $subscribe.is(':checked'),
@@ -432,8 +432,8 @@ var app = {
         recursive: recursive
       },
       success: function(node) {
-        //TODO pixtron - this does not update the node in the datasource
         app.balloon.last = node;
+        app.balloon.reloadTree();
       }
     });
   }
