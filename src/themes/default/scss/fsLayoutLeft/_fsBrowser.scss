@@ -103,6 +103,8 @@
 
       &.fs-browser-header-checkbox-checked {
         @include checkboxChecked;
+
+        background-size: 20px;
       }
 
       &.fs-browser-header-checkbox-undetermined {
@@ -167,6 +169,8 @@
 
             &:before {
               @include checkboxChecked;
+
+              background-size: 19px;
             }
           }
         }
@@ -314,6 +318,8 @@
 
           .fs-browser-column-checkbox {
             @include checkboxChecked;
+
+            background-size: 20px;
           }
         }
       }
