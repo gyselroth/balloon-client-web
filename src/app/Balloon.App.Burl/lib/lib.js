@@ -30,7 +30,7 @@ var app = {
     this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-language';
     this.balloon.mimeFileExtMap['application/vnd.balloon.burl'] = app.BURL_EXTENSION;
 
-    this.balloon.addPreviewHandler(this._handlePreview);
+    this.balloon.addPreviewHandler('burl', this._handlePreview);
   },
 
   /**

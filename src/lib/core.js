@@ -160,9 +160,9 @@ var balloon = {
   /**
    * Handlers for file previews
    *
-   * @var array[function]
+   * @var object
    */
-  preview_file_handlers: [],
+  preview_file_handlers: {},
 
   /**
    * Menu handlers
@@ -2406,8 +2406,8 @@ var balloon = {
    *
    * @param function
    */
-  addPreviewHandler: function(handler) {
-    balloon.preview_file_handlers.push(handler);
+  addPreviewHandler: function(name, handler) {
+    balloon.preview_file_handlers[name] = handler;
   },
 
   /**
@@ -2418,9 +2418,10 @@ var balloon = {
   getPreviewHandler(node) {
     var i;
     var handlerFn;
+    var keys = Object.keys(balloon.preview_file_handlers);
 
-    for(i=0; i<balloon.preview_file_handlers.length; i++) {
-      var handler = balloon.preview_file_handlers[i];
+    for(i=0; i<keys.length; i++) {
+      var handler = balloon.preview_file_handlers[keys[i]];
       handlerFn = handler(node);
 
       if(handlerFn) break;
