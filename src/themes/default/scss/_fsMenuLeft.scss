@@ -4,7 +4,8 @@
   bottom: 0;
   left: 0;
   width: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: $colorWhite;
   border-right: 1px solid $colorBrightGrey;
 
@@ -118,6 +119,7 @@
 
   @media screen and (min-width: $breakpointMenuVisible) {
     width: 60px;
+    overflow-y: hidden;
   }
 
   @media screen and (min-height:547px) {
