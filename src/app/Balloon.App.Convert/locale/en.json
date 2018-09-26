@@ -6,7 +6,8 @@
       "choose_format": "Choose format",
       "description": "Automatically convert file to other formats after file contents changed.",
       "not_supported": "This file type can not be converted into other file formats.",
-      "hint": "You can automatically keep a shadow copy of a file. A shadow copy gets changed automatically with the same content as the original file. You may also specify another format for a shadow file. For example you may want a PDF copy of a docx file. Everytime you change the docx the pdf file gets also updated. This is possible! You just need to select a file, go to Shadows and create a shadow clone. You can also move a shadow to another folder and it will get updated anyway."
+      "hint": "You can automatically keep a shadow copy of a file. A shadow copy gets changed automatically with the same content as the original file. You may also specify another format for a shadow file. For example you may want a PDF copy of a docx file. Everytime you change the docx the pdf file gets also updated. This is possible! You just need to select a file, go to Shadows and create a shadow clone. You can also move a shadow to another folder and it will get updated anyway.",
+      "being_created": "is being created"
     }
   }
 }

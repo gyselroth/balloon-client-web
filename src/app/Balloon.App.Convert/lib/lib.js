@@ -97,10 +97,34 @@ var app = {
       success: function(data) {
         var $slaves = app.$content.find('#fs-shadow-slaves');
 
-        for(var slave in data.data) {
-          var $slave = app._renderSlave(node, data.data[slave].format, data.data[slave].id);
-          $slaves.append($slave);
-        }
+        var $slaveDs = data.data.map(function(slaveEntry) {
+          if(!slaveEntry.slave) {
+            var $slave = app._renderSlave(node, slaveEntry.format, slaveEntry.id);
+            return $.Deferred().resolve($slave).promise();
+          } else {
+            var $d = $.Deferred();
+            app.balloon.xmlHttpRequest({
+              url: app.balloon.base+'/nodes',
+              type: 'GET',
+              data: {
+                id: slaveEntry.slave.id
+              },
+              success: function(slaveData) {
+                var $slave = app._renderSlave(node, slaveEntry.format, slaveEntry.id, slaveData.path);
+                $d.resolve($slave)
+              },
+              error: function() {
+                $d.reject();
+              }
+            });
+
+            return $d;
+          }
+        });
+
+        $.when.apply(this, $slaveDs).then(function() {
+          $slaves.append(Array.prototype.slice.call(arguments).join(''));
+        });
       }
     })
   },
@@ -161,14 +185,17 @@ var app = {
     });
   },
 
-  _renderSlave: function(origNode, format, id) {
+  _renderSlave: function(origNode, format, id, path) {
     var sprite = app.balloon.getSpriteClass(format);
     var icon = sprite.replace('gr-i-', '');
     var origExt = app.balloon.getFileExtension(origNode.name) || '';
     var name = origNode.name.substr(0, origNode.name.length-origExt.length-1);
-    var path = origNode.path.substr(0, origNode.name.length-origExt.length+1) + format;
 
-    return $('<li ' + (id ? 'data-id="'+id+'"' : '') + '>'+
+    if(!path) {
+      path = i18next.t('app.convert.being_created');
+    }
+
+    return '<li ' + (id ? 'data-id="'+id+'"' : '') + '>'+
         '<div class="fs-shadow-slave-icon">'+
           '<svg class="gr-icon '+sprite+'"><use xlink:href="/assets/icons.svg#'+icon+'"></use></svg>'+
         '</div>'+
@@ -179,8 +206,7 @@ var app = {
         '<div class="fs-shadow-slave-remove">'+
           '<svg class="gr-icon gr-i-minus"><use xlink:href="/assets/icons.svg#minus"></use></svg>'+
         '</div>'+
-      '</li>'
-    );
+      '</li>';
   },
 
   deleteSlave: function(node, slave) {
