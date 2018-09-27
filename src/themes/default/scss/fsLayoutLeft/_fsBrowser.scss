@@ -134,7 +134,7 @@
     }
 
     #fs-action-filter-select {
-      @include dropdown(140px, 24px, 10px);
+      @include dropdown(140px, 34px);
 
       left: -1px;
       display: none;

@@ -234,7 +234,7 @@
     }
 
     .fs-identity-dropdown {
-      @include dropdown(220px, 23px, 29px);
+      @include dropdown(220px, 52px);
 
       display: none;
 
@@ -248,7 +248,7 @@
     }
 
     #fs-settings-dropdown-wrap {
-      right: 10px;
+      right: -4px;
 
       .bln-dropdown-spike {
         right: 12px;
@@ -344,6 +344,7 @@
     #fs-identity-avatar {
       @include avatar;
 
+      position: relative;
       margin-left: 10px;
       margin-right: 15px;
 

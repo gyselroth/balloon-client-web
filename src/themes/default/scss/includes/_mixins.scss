@@ -122,17 +122,17 @@
   box-shadow: 0 2px 25px 0 rgba(77, 75, 89, 0.24);
 }
 
-@mixin dropdown($dropdownWidth:220px, $top:0, $paddingTop:0) {
+@mixin dropdown($dropdownWidth:220px, $top:0) {
   display: block;
   position: absolute;
-  top: $top;
+  top: $top + 9px;
   width: $dropdownWidth;
   z-index: 15;
-  padding-top: 9px + $paddingTop;
+  padding-top: 0;
 
   .bln-dropdown-spike {
     position: absolute;
-    top: 1px + $paddingTop;
+    top: -8px;
     right: 50%;
     display: block;
 
