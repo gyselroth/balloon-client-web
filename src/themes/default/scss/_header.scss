@@ -230,99 +230,98 @@
           line-height: $size;
           text-align: center;
         }
+      }
+    }
 
-        .fs-identity-dropdown {
-          @include dropdown(220px, 23px, 29px);
+    .fs-identity-dropdown {
+      @include dropdown(220px, 23px, 29px);
 
-          display: none;
+      display: none;
 
-          &.fs-identity-dropdown-open {
+      &.fs-identity-dropdown-open {
+        display: block;
+      }
+
+      .bln-dropdown-content {
+        @include shadow-default;
+      }
+    }
+
+    #fs-settings-dropdown-wrap {
+      right: 10px;
+
+      .bln-dropdown-spike {
+        right: 12px;
+      }
+
+      #fs-settings-dropdown {
+        #fs-quota {
+          @include clearfix;
+
+          width: 190px;
+          margin: 25px 15px 0;
+
+          #fs-quota-usage {
             display: block;
+            border-radius: 4px;
+            background-color: $colorBrightGrey;
+            border: none;
+            height: 6px;
+            width: 100%;
+
+            .k-state-selected {
+              background-color: $colorActiveBlue;
+              border-radius: 4px;
+              border: none;
+            }
+
+            .k-progress-status-wrap {
+              width: auto !important;
+              margin: 0;
+
+              .k-progress-status {
+                background-image: none;
+                margin: 14px 0 0 0;
+                padding: 0;
+                color: $colorActiveBlue;
+                font-weight: 500;
+              }
+            }
           }
 
-          .bln-dropdown-content {
-            @include shadow-default;
+          #fs-quota-total,
+          #fs-quota-percent,
+          .k-progress-status {
+            margin: 8px 0 0 0;
+            font-size: 13px;
+            line-height: 15px;
+            color: $colorMediumGrey;
+          }
+
+          #fs-quota-percent {
+            float: left;
+            font-weight: bold;
+            color: $colorActiveBlue;
+          }
+
+          #fs-quota-total {
+            float: right;
           }
         }
 
-        #fs-settings-dropdown-wrap {
-          right: -48px;
+        ul {
+          margin-top: 10px;
+          padding: 0 17px;
+          border-top: 1px solid $colorLightGrey;
 
-          .bln-dropdown-spike {
-            right: 49px;
-          }
+          li {
+            font-size: 15px;
+            line-height: 2.67;
+            text-align: left;
+            color: $colorMediumGrey;
 
-          #fs-settings-dropdown {
-            #fs-quota {
-              @include clearfix;
-
-              width: 190px;
-              margin: 25px 15px 0;
-
-              #fs-quota-usage {
-                display: block;
-                border-radius: 4px;
-                background-color: $colorBrightGrey;
-                border: none;
-                height: 6px;
-                width: 100%;
-
-                .k-state-selected {
-                  background-color: $colorActiveBlue;
-                  border-radius: 4px;
-                  border: none;
-                }
-
-                .k-progress-status-wrap {
-                  width: auto !important;
-                  margin: 0;
-
-                  .k-progress-status {
-                    background-image: none;
-                    margin: 14px 0 0 0;
-                    padding: 0;
-                    color: $colorActiveBlue;
-                    font-weight: 500;
-                  }
-                }
-              }
-
-              #fs-quota-total,
-              #fs-quota-percent,
-              .k-progress-status {
-                margin: 8px 0 0 0;
-                font-size: 13px;
-                line-height: 15px;
-                color: $colorMediumGrey;
-              }
-
-              #fs-quota-percent {
-                float: left;
-                font-weight: bold;
-                color: $colorActiveBlue;
-              }
-
-              #fs-quota-total {
-                float: right;
-              }
-            }
-
-
-            ul {
-              margin-top: 10px;
-              padding: 0 17px;
-              border-top: 1px solid $colorLightGrey;
-
-              li {
-                font-size: 15px;
-                line-height: 2.67;
-                text-align: left;
-                color: $colorMediumGrey;
-
-                &:hover {
-                  color: $colorDarkGrey;
-                }
-              }
+            &:hover {
+              color: $colorDarkGrey;
             }
           }
         }

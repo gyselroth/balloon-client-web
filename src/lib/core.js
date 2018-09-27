@@ -217,24 +217,7 @@ var balloon = {
    *
    * @var object
    */
-  identity_menu_items: {
-    settings: {
-      name: 'settings',
-      label: 'login.settings',
-      icon: 'cog',
-      content:
-        '<div id="fs-quota" data-i18n="[title]user.disk_space">'+
-            '<div id="fs-quota-usage"></div>'+
-            '<div id="fs-quota-percent"></div>'+
-            '<div id="fs-quota-total"></div>'+
-        '</div>'+
-        '<ul>'+
-            '<li id="fs-menu-user-profile" data-i18n="login.profile;[title]login.profile"></li>'+
-            '<li id="fs-menu-user-events" data-i18n="login.events;[title]login.events"></li>'+
-            '<li id="fs-menu-user-logout" data-i18n="login.logout;[title]login.logout"></li>'+
-        '</ul>',
-    },
-  },
+  identity_menu_items: {},
 
   /**
    *
@@ -360,12 +343,6 @@ var balloon = {
     balloon.initFsMenu();
     balloon.initIdentityMenu();
     balloon.initAddFileMenu();
-
-    $('#fs-identity-avatar').off('click').on('click', function(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      $('#fs-settings').trigger('click');
-    });
 
     balloon.createDatasource();
     balloon.initCrumb();
@@ -633,6 +610,7 @@ var balloon = {
 
     $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
       event.preventDefault();
+      event.stopPropagation();
 
       var $parent = $(event.target);
       var parentId = $parent.attr('id');
