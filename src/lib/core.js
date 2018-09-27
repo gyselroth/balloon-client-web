@@ -1286,21 +1286,15 @@ var balloon = {
             var path = node.path.split('/').slice(1, -1);
             if(path.length === 0) path = [''];
 
-            if(path.length > 4) {
+            if(path.length > 5) {
               path = path.slice(path.length - 5);
-              path.unshift('..');
+              path.unshift('...');
             }
 
             var $path_el = $('<p></p>');
 
             path.forEach(function(item) {
-              var el = '<span>' + item + '</span>';
-
-              if(item !== '..') {
-                el = '<span> / </span>' + el;
-              }
-
-              $path_el.append(el);
+              $path_el.append('<span> / </span><span>' + item + '</span>');
             });
 
             $name_el.append($path_el);
