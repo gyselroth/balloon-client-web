@@ -8,6 +8,8 @@
   }
 
   table {
+    $thWidth: 68px;
+
     border-collapse: collapse;
     width: 100%;
 
@@ -35,23 +37,38 @@
       text-align: left;
     }
 
+    th {
+      width: $thWidth;
+    }
+
     td {
-      padding-left: 30px;
+      $paddingLeft: 30px;
+      padding-left: $paddingLeft;
+      max-width: 340px - $thWidth - $paddingLeft;
+
+      .fs-value {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
       &#fs-metadata-share {
-        .gr-icon,
+        @include clearfix;
+
         .fs-value {
-          display: inline-block;
+          width: calc(100% - 23px);
         }
 
         .gr-icon {
           $iconSize: 20px;
 
-          position: relative;
-          top: 5px;
-          left: -3px;
+          float: left;
+          display: block;
           width: $iconSize;
           height: $iconSize;
+          margin-right: 3px;
         }
       }
     }
