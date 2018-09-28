@@ -630,9 +630,15 @@ var balloon = {
     $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
       event.preventDefault();
 
-      var $parent = $(event.target);
-      var parentId = $parent.attr('id');
-      var $dropdown = $parent.find('.fs-identity-dropdown');
+      var $clicked = $(event.target);
+      var parentId = $clicked.attr('id');
+      var $dropdown;
+
+      if($clicked.hasClass('fs-identity-count')) {
+        $dropdown = $clicked.siblings('.fs-identity-dropdown');
+      } else {
+        $dropdown = $clicked.find('.fs-identity-dropdown');
+      }
 
       if($dropdown.hasClass('fs-identity-dropdown-open')) {
         $dropdown.removeClass('fs-identity-dropdown-open');
@@ -2570,7 +2576,7 @@ var balloon = {
     $ul.empty();
 
     for(i=0; i<this.hints.length; i++) {
-      $ul.append('<li><span>#'+i+'</span><div>' + i18next.t(this.hints[i]) + '<div></li>');
+      $ul.append('<li>' + i18next.t(this.hints[i]) + '</li>');
     }
 
     $fs_help_win.kendoBalloonWindow({
