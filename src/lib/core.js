@@ -610,7 +610,6 @@ var balloon = {
 
     $('.fs-identity-dropdown').parent().off('click').on('click', function(event) {
       event.preventDefault();
-      event.stopPropagation();
 
       var $parent = $(event.target);
       var parentId = $parent.attr('id');
