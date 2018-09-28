@@ -7083,6 +7083,7 @@ var balloon = {
     //TODO pixtron - rename prop to attribute
     for(var prop in node) {
       var $parent = $('#fs-metadata-'+prop);
+      var value;
       if($parent.length === 0) continue;
 
       $field = $parent.find('.fs-value');
@@ -7097,16 +7098,17 @@ var balloon = {
             format = kendo.toString(date, kendo.culture().calendar.patterns.g),
             since  = balloon.timeSince(date);
 
-          $field.html(i18next.t('view.history.changed_since', since, format));
+          value = i18next.t('view.history.changed_since', since, format);
         }
         break;
 
       case 'size':
         if(node.directory === true) {
-          $field.html(i18next.t('view.prop.data.childcount', {count: node[prop]}));
+          value = i18next.t('view.prop.data.childcount', {count: node[prop]});
         } else {
-          $field.html(i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(node[prop]), node[prop]));
+          value = i18next.t('view.prop.data.size', balloon.getReadableFileSizeString(node[prop]), node[prop]);
         }
+
         break;
 
       case 'share':
@@ -7115,9 +7117,9 @@ var balloon = {
           var access = i18next.t('view.share.privilege_'+node.access);
 
           if(node.shared === true) {
-            var msg = i18next.t('view.prop.head.share_value', node.sharename, node.shareowner.name, access);
+            value = i18next.t('view.prop.head.share_value', node.sharename, node.shareowner.name, access);
           } else if(node.share) {
-            var msg = i18next.t('view.prop.head.share_value', node.share.name, node.shareowner.name, access);
+            value = i18next.t('view.prop.head.share_value', node.share.name, node.shareowner.name, access);
           } else {
             continue;
           }
@@ -7126,18 +7128,38 @@ var balloon = {
           $field = $('#fs-metadata-share').find('.fs-value');
           $('#fs-metadata-share').parent().show();
 
-          $field.html(msg);
-
           var iconId = node.shareowner.name == login.username ? 'folder-shared' : 'folder-received';
           $icon.replaceWith('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#' + iconId + '"></use></svg>');
         }
         break;
       default:
         if($field.length != 0 && prop !== 'access' && prop != 'shareowner') {
-          $field.html(node[prop]);
+          value = node[prop];
         }
         break;
       }
+
+      $field.html(value);
+      $field.prop('title', value);
+      $field.off('click').on('click', function(event) {
+console.log(balloon.isTouchDevice());
+        if(!balloon.isTouchDevice()) return;
+
+        event.stopPropagation();
+
+        var $this = $(this);
+
+        var $title = $this.find('.tooltip');
+
+        $('#fs-metadata .tooltip').remove();
+
+        if(!$title.length) {
+          $this.parent().append('<span class="tooltip">' + $this.attr('title') + '</span>');
+          $(document).off('click.meta-tooltip').on('click.meta-tooltip', function() {
+            $('#fs-metadata .tooltip').remove();
+          });
+        }
+      });
     }
   },
 

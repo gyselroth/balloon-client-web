@@ -43,6 +43,7 @@
 
     td {
       $paddingLeft: 30px;
+      position: relative;
       padding-left: $paddingLeft;
       max-width: 340px - $thWidth - $paddingLeft;
 
@@ -52,6 +53,18 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+
+      .tooltip {
+        position: absolute;
+        top: 20px;
+        left: -1 * $thWidth;
+        max-width: 340px;
+        padding: 2px 4px;
+        border-radius: 4px;
+        background-color: $colorBrightGrey;
+        border: 1px solid $colorLightGrey;
+        z-index: 1;
       }
 
       &#fs-metadata-share {
