@@ -2570,7 +2570,7 @@ var balloon = {
     $ul.empty();
 
     for(i=0; i<this.hints.length; i++) {
-      $ul.append('<li>' + i18next.t(this.hints[i]) + '</li>');
+      $ul.append('<li><span>#'+i+'</span><div>' + i18next.t(this.hints[i]) + '<div></li>');
     }
 
     $fs_help_win.kendoBalloonWindow({
