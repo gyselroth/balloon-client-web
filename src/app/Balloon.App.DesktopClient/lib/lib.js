@@ -31,7 +31,7 @@ var app = {
       app.openPopup();
     });
 
-    this.balloon.addHint(i18next.t('app.desktopclient.hint'));
+    this.balloon.addHint('app.desktopclient.hint');
   },
 
   openPopup: function() {

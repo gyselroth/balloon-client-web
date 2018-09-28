@@ -51,7 +51,7 @@ var app = {
       app.deleteSlave(app.balloon.last, id);
     });
 
-    this.balloon.addHint(i18next.t('app.convert.hint'))
+    this.balloon.addHint('app.convert.hint')
   },
 
   resetView: function() {

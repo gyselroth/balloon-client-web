@@ -28,7 +28,7 @@ var app = {
     this.balloon = core;
     $('#fs-browser-tree').data('kendoTreeView').bind("select", this.selectNode);
 
-    this.balloon.addHint(i18next.t('app.clamav.hint'));
+    this.balloon.addHint('app.clamav.hint');
   },
 
   resetView: function() {

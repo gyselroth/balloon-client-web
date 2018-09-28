@@ -8,6 +8,7 @@
     "events": "Events",
     "profile": "Profil",
     "settings": "Einstellungen",
+    "help": "Hilfe",
     "error": {
       "server": "Der balloon Server meldet aktuell eine Störung, bitte versuche es später erneut.",
       "basic": "Der Benutzername oder das Passwort ist falsch.",

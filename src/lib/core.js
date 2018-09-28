@@ -216,8 +216,21 @@ var balloon = {
    * Menu handlers
    *
    * @var object
+   *
+   * if hasDropDown is true, dropDownContent has to be set, otherwise a click callback is required
    */
-  identity_menu_items: {},
+  identity_menu_items: {
+    'help': {
+      name: 'help',
+      label: 'login.help',
+      icon: 'help',
+      hasDropDown: false,
+      hasCount: false,
+      callback: function() {
+        balloon.displayHelpWindow();
+      }
+    }
+  },
 
   /**
    *
@@ -497,7 +510,7 @@ var balloon = {
     });
 
     for(let i=1; i<=25; i++) {
-      this.addHint(i18next.t("hint.hint_"+i));
+      this.addHint("hint.hint_"+i);
     }
 
     balloon.showHint()
@@ -594,12 +607,18 @@ var balloon = {
         '<li id="fs-' + item.name + '" title="' + label + '">'+
             '<svg class="gr-icon gr-i-' + item.icon + '"><use xlink:href="/assets/icons.svg#' + item.icon + '"></use></svg>'+
             (item.hasCount ? '<div id="fs-' + item.name + '-count" class="fs-identity-count">0</div>' : '')+
-            '<div id="fs-' + item.name + '-dropdown-wrap" class="bln-dropdown fs-identity-dropdown">'+
-                '<span  class="bln-dropdown-spike"></span>'+
-                '<div id="fs-' + item.name + '-dropdown" class="bln-dropdown-content">' + item.content + '</div>'+
-            '</div>'+
         '</li>'
       );
+      if(item.hasDropDown) {
+        $item.append(
+          '<div id="fs-' + item.name + '-dropdown-wrap" class="bln-dropdown fs-identity-dropdown">'+
+              '<span  class="bln-dropdown-spike"></span>'+
+              '<div id="fs-' + item.name + '-dropdown" class="bln-dropdown-content">' + item.dropDownContent + '</div>'+
+          '</div>'
+        );
+      } else {
+        $item.off('click').on('click', item.callback);
+      }
 
       $item.find('[data-i18n]').localize();
 
@@ -709,8 +728,8 @@ var balloon = {
   /**
    * Push new hint to the store
    */
-  addHint: function(message) {
-    this.hints.push(message);
+  addHint: function(key) {
+    if(this.hints.indexOf(key) === -1) this.hints.push(key);
   },
 
   /**
@@ -719,9 +738,9 @@ var balloon = {
    * @return void
    */
   _showHint: function() {
-      var hint  = Math.floor(Math.random() * this.hints.length),
-      $div  = $('#fs-hint-window-content');
-    $div.html(this.hints[hint]);
+    var hint  = Math.floor(Math.random() * this.hints.length);
+
+    $('#fs-hint-window-content').html(i18next.t(this.hints[hint]));
   },
 
 
@@ -2416,14 +2435,8 @@ var balloon = {
   /**
    * Add identity menu
    */
-  addIdentityMenu: function(name, label, icon, content, hasCount) {
-    this.identity_menu_items[name] = {
-      name: name,
-      label: label,
-      icon: icon,
-      content: content,
-      hasCount: hasCount,
-    };
+  addIdentityMenu: function(name, menu) {
+    this.identity_menu_items[name] = Object.assign({name: name}, menu);
   },
 
   /**
@@ -2542,6 +2555,29 @@ var balloon = {
    */
   _getViewConfig: function(view) {
     return balloon.fs_content_views[view] || null;
+  },
+
+  /**
+   * Display help
+   *
+   * @return void
+   */
+  displayHelpWindow: function() {
+    var i,
+      $fs_help_win = $('#fs-help-window'),
+      $ul = $fs_help_win.find('ul');
+
+    $ul.empty();
+
+    for(i=0; i<this.hints.length; i++) {
+      $ul.append('<li>' + i18next.t(this.hints[i]) + '</li>');
+    }
+
+    $fs_help_win.kendoBalloonWindow({
+      title: $fs_help_win.attr('title'),
+      resizable: false,
+      modal: true,
+    }).data("kendoBalloonWindow").center().open();
   },
 
 

@@ -25,8 +25,8 @@ var app = {
     this.balloon = core;
 
     this.initializeMessages();
-    this.balloon.addHint(i18next.t('app.notification.hints.hint_1'));
-    this.balloon.addHint(i18next.t('app.notification.hints.hint_2'));
+    this.balloon.addHint('app.notification.hints.hint_1');
+    this.balloon.addHint('app.notification.hints.hint_2');
     app._displayMessages();
   },
 
@@ -38,7 +38,7 @@ var app = {
    * @return void
    */
   injectMessages: function() {
-    var content =
+    var dropDownContent =
       '<div id="fs-notifications-header">'+
         '<h3>'+ i18next.t('app.notification.messages.title') +'</h3>'+
         '<button id="fs-notifications-delete-all" class="fs-button-primary">' + i18next.t('app.notification.messages.delete_all') + '</button>'+
@@ -48,7 +48,13 @@ var app = {
         '<ul id="fs-notifications-messages"></ul>'+
       '</div>';
 
-    app.balloon.addIdentityMenu('notifications', 'app.notification.messages.title', 'alert', content, true);
+    app.balloon.addIdentityMenu('notifications', {
+      label: 'app.notification.messages.title',
+      icon: 'alert',
+      hasDropDown: true,
+      dropDownContent: dropDownContent,
+      hasCount: true,
+    });
 
   },
 

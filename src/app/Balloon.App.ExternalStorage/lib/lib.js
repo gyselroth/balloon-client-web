@@ -24,7 +24,7 @@ var app = {
       return app.balloon.refreshTree('/nodes', {query: {"mount": {$exists: 1}}}, {});
     });
 
-    this.balloon.addHint(i18next.t('app.externalstorage.hint'));
+    this.balloon.addHint('app.externalstorage.hint');
   },
 
   resetView: function() {

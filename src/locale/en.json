@@ -8,6 +8,7 @@
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
+    "help": "Hilfe",
     "error": {
       "server": "The balloon server reports an ongoing incident, please try it again later.",
       "basic": "Wrong username or password given.",
