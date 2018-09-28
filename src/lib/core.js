@@ -7142,7 +7142,6 @@ var balloon = {
       $field.html(value);
       $field.prop('title', value);
       $field.off('click').on('click', function(event) {
-console.log(balloon.isTouchDevice());
         if(!balloon.isTouchDevice()) return;
 
         event.stopPropagation();
