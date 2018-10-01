@@ -13,11 +13,11 @@ var isDev = process.env.NODE_ENV !== 'production';
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
-    app: './main.js',
+    balloon: './main.js',
   },
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'balloon.bundle.js',
+    filename: '[name].[contenthash].js',
   },
   mode: isDev ? 'development' : 'production',
   devtool: isDev ? 'source-map' : false,
@@ -66,8 +66,8 @@ module.exports = {
       jQuery: "jquery",
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
+      filename: "[name].[contenthash].css",
+      chunkFilename: "[name].[id].css"
     }),
     new HtmlWebpackPlugin({
       hash: true,
