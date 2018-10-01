@@ -5,6 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title data-i18n="title"></title>
     <style>
+        #fs-spinner,
+        #fs-snackbar {
+            display: none;
+        }
+
         #login-loader {
             position: absolute;
             background-color: #fff;
@@ -100,7 +105,7 @@
             <div id="login-loader-spinner"></div>
         </div>
     </div>
-    <div id="login">
+    <div style="display: none;" id="login">
         <div id="login-box">
             <div id="login-header">
                 <span id="login-logo"></span>
