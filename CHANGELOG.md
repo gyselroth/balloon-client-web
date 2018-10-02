@@ -1,3 +1,10 @@
+## 3.0.0
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Oct 02 09:03:20 CEST 2018
+
+Web UI v3. Complete redesign.
+
+
 ## 3.0.0-rc1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Sept 28 16:36:20 CEST 2018
