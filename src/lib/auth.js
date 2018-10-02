@@ -115,7 +115,12 @@ var login = {
       type:'GET',
       url: '/api/auth',
       complete: function(response) {
-        $('#login-loader').hide();
+        $('#login-loader').addClass('ready-for-take-off');
+
+        setTimeout(function(){
+          $('#login-loader').remove();
+        }, 350);
+
         switch(response.status) {
         case 401:
         case 403:
@@ -134,7 +139,7 @@ var login = {
         case 200:
         case 404:
           login.verifyIdentity();
-        break;
+          break;
 
         default:
           $('#login').show();
@@ -194,7 +199,8 @@ var login = {
         case 200:
           login.user = response.responseJSON;
           localStorage.username = login.user.username;
-          $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
+
+          login.updateFsIdentity();
 
           login.initBrowser();
           break;
@@ -218,9 +224,15 @@ var login = {
         window.location.hash = '';
         login.user = body;
         localStorage.username = login.user.username;
-        $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
+        login.updateFsIdentity();
       }
     });
+  },
+
+  updateFsIdentity: function() {
+    $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
+
+    return balloon.displayAvatar($('#fs-identity-avatar'));
   },
 
   getAccessToken: function() {
@@ -301,32 +313,34 @@ var login = {
       url: '/api/auth',
       complete: function(response) {
         switch(response.status) {
-          case 401:
-          case 403:
-            $('#fs-namespace').hide();
-            $('#login-basic-error').show();
-            $username_input.addClass('error');
-            $password_input.addClass('error');
-            break;
+        case 401:
+        case 403:
+          $('#fs-namespace').hide();
+          $('#login-basic-error').show();
+          $username_input.addClass('error');
+          $password_input.addClass('error');
+          break;
 
-          case 200:
-          case 404:
-            login.adapter = 'basic';
-            login.fetchIdentity();
-            login.initBrowser();
-            break;
+        case 200:
+        case 404:
+          login.adapter = 'basic';
+          login.fetchIdentity();
+          login.initBrowser();
+          break;
 
-          default:
-            $('#login').show();
-            $('#login-server-error').show();
-            $('#login-body').hide();
-            break;
+        default:
+          $('#login').show();
+          $('#login-server-error').show();
+          $('#login-body').hide();
+          break;
         }
       }
     });
   },
 
   doBasicAuth: function(username, password) {
+    var $spinner = $('#fs-spinner').show();
+
     $.ajax({
       type: 'GET',
       username: username,
@@ -334,16 +348,14 @@ var login = {
       dataType: 'json',
       url: '/api/basic-auth',
       complete: login.verifyIdentity
+    }).always(function() {
+      $spinner.hide();
     });
   },
 
   initBrowser: function() {
     $('#login').hide();
     $('#fs-namespace').show();
-
-    $('#fs-menu-user-logout').unbind('click').bind('click', function() {
-      login.logout();
-    });
 
     balloon.init();
   },

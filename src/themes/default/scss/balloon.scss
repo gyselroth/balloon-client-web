@@ -1,0 +1,81 @@
+@import '../../../../node_modules/ubuntu-fontface/ubuntu.css';
+
+@import 'includes/breakpoints';
+@import 'includes/colors';
+@import 'includes/mixins';
+@import 'includes/grIcons';
+@import 'includes/sk-circle';
+
+@import 'login';
+
+@import 'includes/reset';
+@import '../css/kendo.css';
+@import '../css/kendo_theme.css';
+
+@import 'base';
+
+@import 'kendo-ui-override';
+
+// header top bar
+@import 'header';
+
+// search  filter
+@import 'fsSearchFilter';
+
+// menu on the left hand side
+@import 'fsMenuLeft';
+
+@import 'fsBrowserLayout';
+
+// nodes list
+@import 'fsLayoutLeft';
+
+// meta data view on the right side
+@import 'fsContent';
+
+// upload progress
+@import 'fsUploadProgress';
+
+// "loading" spinner
+@import 'fsSpinner';
+
+// snackbar
+@import 'fsSnackbar';
+
+@import 'modals/base';
+
+body {
+  font-family: Ubuntu, arial, verdana, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 16px;
+  color: $colorDarkGrey;
+  overflow: hidden;
+}
+
+
+//TODO pixtron - review these
+#fs-browser-layout {
+  border-top: none;
+}
+
+#fs-status-message {
+    right: 0;
+    position: absolute;
+    bottom: 160px;
+    z-index: 25;
+}
+
+#fs-files {
+    display: none;
+}
+
+.fs-button-wrap {
+  text-align: left;
+  margin: 0;
+
+  input,
+  button {
+    display: inline-block;
+  }
+}

@@ -1,0 +1,51 @@
+//scrollable list popups
+.k-list-container.k-popup {
+  background-color: $colorWhite;
+  border: 1px solid $colorLightGrey;
+  border-radius: 4px;
+  padding: 0;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  overflow: hidden;
+
+  ul.k-list {
+    li {
+      background-color: $colorWhite;
+      font-size: 15px;
+      line-height: 30px;
+      color: $colorDarkGrey;
+      cursor: pointer;
+      padding: 0 14px;
+      background-image: none !important;
+
+      &:hover,
+      &.k-state-focused {
+        background: $colorBrightGrey !important;
+      }
+    }
+  }
+
+  .k-nodata {
+    padding: 0 14px;
+    font-size: 15px;
+    line-height: 30px;
+    color: $colorDarkGrey;
+  }
+}
+
+.k-autocomplete.k-state-focused {
+  box-shadow: none !important;
+}
+
+.k-input {
+  border-color: $colorLightGrey;
+}
+
+.k-overlay {
+  opacity: 1 !important;
+  filter: none !important;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+@import './kendoUiOverride/date-and-time-picker';
+@import './kendoUiOverride/k-calendar';

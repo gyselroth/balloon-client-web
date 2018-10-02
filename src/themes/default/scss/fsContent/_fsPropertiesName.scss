@@ -1,0 +1,40 @@
+#fs-browser-summary,
+#fs-properties-name {
+  @include clearfix;
+  line-height: 18px;
+
+  font-size: 15px;
+  font-weight: bold;
+
+
+  span {
+    $extWidth: 53px;
+    $extMargin: 3px;
+
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    float: left;
+
+    &.fs-value {
+      max-width: calc(100% - #{$extWidth + $extMargin});
+
+      &:last-child {
+        max-width: 100%;
+      }
+    }
+
+    &.fs-ext {
+      margin-left: $extMargin;
+      text-transform: uppercase;
+      max-width: $extWidth;
+    }
+  }
+}
+
+#fs-browser-summary {
+  color: $colorMediumGrey;
+  font-weight: 400;
+  display: none;
+}

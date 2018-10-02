@@ -18,10 +18,17 @@
         "dont_show_again": "Nicht mehr anzeigen",
         "close": "Schliessen"
       },
-      "text_document": "Text Dokument",
-      "word_document": "Word Dokument",
-      "excel_document": "Excel Dokument",
-      "powerpoint_document": "Powerpoint Dokument"
+      "word_document": "Word-Dokument",
+      "excel_document": "Excel-Dokument",
+      "powerpoint_document": "Powerpoint-sDokument"
+    }
+  },
+
+  "new_node": {
+    "title": {
+      "docx": "Neues Word-Dokument",
+      "xlsx": "Neues Excel-Dokument",
+      "pptx": "Neues Powerpoint-Dokument"
     }
   }
 }

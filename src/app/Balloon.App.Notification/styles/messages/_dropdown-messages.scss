@@ -1,0 +1,116 @@
+#fs-notifications-no-messages {
+  display: block;
+
+  font-size: 15px;
+  font-weight: normal;
+  line-height: 1.33;
+  padding-bottom: 7px;
+  color: $colorDarkGrey;
+
+  .has-messages & {
+    display: none;
+  }
+}
+
+#fs-notifications-messages {
+  display: none;
+  box-sizing: border-box;
+  max-height: 60vh;
+  padding-bottom: 40px;
+  overflow-x: auto;
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: calc(100% - #{2 * 20px});
+    height: 40px;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+  }
+
+  .has-messages & {
+    display: block;
+  }
+
+  li {
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid $colorLightGrey;
+    border-radius: 4px;
+    padding: 0;
+    margin-bottom: 9px;
+
+    opacity: 1;
+    transform: scale(1);
+    height: auto;
+    max-height: 600px;
+    overflow: hidden;
+    transition: transform 0.5s ease-in-out, max-height 0.5s ease-out, margin-bottom 0.5s ease-in-out, opacity 0.4s ease-in-out, border-width 0.1s 0.4s;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &.fs-notifications-message-hidden {
+      transform: scale(0);
+      opacity: 0;
+      max-height: 0;
+      margin-bottom: 0;
+      border-width: 0;
+    }
+
+    .fs-notifications-message-inner {
+      padding: 6px 34px 10px 16px;
+
+      h4,
+      p {
+        font-size: 15px;
+        line-height: 20px;
+        font-weight: normal;
+        color: $colorMediumGrey;
+
+        &.fs-notifications-meta {
+          font-size: 13px;
+          line-height: 17px;
+          margin-bottom: 2px;
+        }
+      }
+
+      h4 {
+        color: $colorDarkGrey;
+      }
+
+      .fs-notifications-delete-message {
+        $size: 24px;
+
+        position: absolute;
+        right: 2px;
+        top: 2px;
+        width: $size;
+        height: $size;
+        color: $colorMediumGrey;
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+          color: $colorDarkGrey;
+        }
+
+        .gr-icon {
+          $size: 13px;
+          width: $size;
+          height: $size;
+        }
+      }
+    }
+
+  }
+
+  @media screen and (min-width: $breakpointIncreasePadding) {
+    &:after {
+      bottom: 40px;
+      left: 56px;
+      width: calc(100% - #{2 * 56px});
+    }
+  }
+}

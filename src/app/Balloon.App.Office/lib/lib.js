@@ -6,24 +6,28 @@
  */
 
 import $ from "jquery";
-import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
 import i18next from 'i18next';
-import css from '../styles/style.css';
+import css from '../styles/style.scss';
 
 var app = {
+  id: 'Balloon.App.Office',
+
   render: function() {
-    var $add_node = $('#fs-action-add-select').find('ul');
-    $add_node.append('<li data-type="docx"><span class="gr-i-file-word gr-icon"></span><span>'+i18next.t('app.office.word_document')+'</span><input type="text" placeholder=""/></li>');
-    $add_node.append('<li data-type="xlsx"><span class="gr-i-file-excel gr-icon"></span><span>'+i18next.t('app.office.excel_document')+'</span><input type="text" placeholder=""/></li>');
-    $add_node.append('<li data-type="pptx"><span class="gr-i-file-powerpoint gr-icon"></span><span>'+i18next.t('app.office.powerpoint_document')+'</span><input type="text" placeholder=""/></li>');
   },
 
   preInit: function(core)  {
     this.balloon = core;
+
+    var callback = function(type) {
+      return core.showNewNode(type, app.addOfficeFile);
+    };
+
+    app.balloon.addNew('docx', 'app.office.word_document', 'file-word', callback);
+    app.balloon.addNew('xlsx', 'app.office.excel_document', 'file-excel', callback);
+    app.balloon.addNew('pptx', 'app.office.powerpoint_document', 'file-powerpoint', callback);
+    app.origDblClick = app.balloon._treeDblclick;
+    //TODO pixtron - find a clean way for apps to hook into core. Just overriding core methods is quite a hack.
     app.balloon._treeDblclick = app.treeDblclick;
-    this.balloon.add_file_handlers.docx = this.addOfficeFile;
-    this.balloon.add_file_handlers.xlsx = this.addOfficeFile;
-    this.balloon.add_file_handlers.pptx = this.addOfficeFile;
   },
 
   edit: function(node) {
@@ -56,19 +60,20 @@ var app = {
     }
     msg += '</ul>';
 
-    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window" title="'+i18next.t('app.office.session.prompt.title')+'">'
-            +'<div id="fs-prompt-window-content">'+msg+'</div>'
-            +'<div id="fs-prompt-window-button-wrapper">'
+    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.session.prompt.title')+'">'
+            +'<div id="fs-office-join-prompt-content" class="fs-prompt-window-content">'+msg+'</div>'
+            +'<div class="fs-window-secondary-actions">'
             +'    <input type="button" tabindex="2" name="new" value="'+i18next.t('app.office.session.prompt.new')+'"/>'
-            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'"/>'
+            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'" class="fs-button-primary" />'
             +'</div>'
         +'</div>');
+
     $("#fs-namespace").append($div);
     $div.find('input[name=session]:first').attr('checked', true);
 
     $div.find('input[name=join]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $div.data('kendoWindow').close();
+      $div.data('kendoBalloonWindow').close();
       app.joinSession(node, doc, $div.find('input[name=session]:checked').val());
     });
 
@@ -76,7 +81,7 @@ var app = {
   },
 
   sessionPrompt: function($div, node, doc)    {
-    var $k_prompt = $div.kendoWindow({
+    var $k_prompt = $div.kendoBalloonWindow({
       title: $div.attr('title'),
       resizable: false,
       modal: true,
@@ -85,7 +90,7 @@ var app = {
           $div.find('input[name=join]').focus()
         },200);
       }
-    }).data("kendoWindow").center().open();
+    }).data("kendoBalloonWindow").center().open();
 
     $div.unbind('keydown').keydown(function(e) {
       if(e.keyCode === 27) {
@@ -103,18 +108,18 @@ var app = {
 
   promptSingleSessionJoin: function(node, doc, session) {
     $("#fs-office-join-prompt").remove();
-    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window" title="'+i18next.t('app.office.session.prompt.title')+'">'
-            +'<div id="fs-prompt-window-content">'+i18next.t('app.office.session.prompt.message_one', node.name, session.user.name, app.balloon.timeSince(new Date((session.created*1000))))+'</div>'
-            +'<div id="fs-prompt-window-button-wrapper">'
+    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.session.prompt.title')+'">'
+            +'<div id="fs-office-join-prompt" fs-prompt-window-content>'+i18next.t('app.office.session.prompt.message_one', node.name, session.user.name, app.balloon.timeSince(new Date((session.created*1000))))+'</div>'
+            +'<div class="fs-window-secondary-actions">'
             +'    <input type="button" tabindex="2" name="new" value="'+i18next.t('app.office.session.prompt.new')+'"/>'
-            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'"/>'
+            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'" class="fs-button-primary"/>'
             +'</div>'
         +'</div>');
     $("#fs-namespace").append($div);
 
     $div.find('input[name=join]').unbind('click').click(function(e) {
       e.stopImmediatePropagation();
-      $div.data('kendoWindow').close();
+      $div.data('kendoBalloonWindow').close();
       app.joinSession(node, doc, session.id);
     });
 
@@ -146,7 +151,7 @@ var app = {
     var $div = $('<div id="fs-edit-office"></div>');
     $('body').append($div);
 
-    var $k_display = $div.kendoWindow({
+    var $k_display = $div.kendoBalloonWindow({
       resizable: false,
       title: node.name,
       modal: true,
@@ -207,7 +212,7 @@ var app = {
           });
         });
       }
-    }).data("kendoWindow").center().maximize();
+    }).data("kendoBalloonWindow").center().maximize();
   },
 
   showStartupPrompt: function(e) {
@@ -217,16 +222,17 @@ var app = {
 
     $("#fs-libreoffice-prompt").remove();
 
-    var $div = $('<div id="fs-libreoffice-prompt" class="fs-prompt-window" title="'+i18next.t('app.office.startup_prompt.title')+'">'
-            +'<div id="fs-prompt-window-content">'+i18next.t('app.office.startup_prompt.message')+'</div>'
-            +'<div id="fs-prompt-window-button-wrapper">'
-            +'    <input type="button" tabindex="2" name="hide" value="'+i18next.t('app.office.startup_prompt.dont_show_again')+'"/>'
-            +'    <input type="button" tabindex="1" name="close" value="'+i18next.t('app.office.startup_prompt.close')+'"/>'
+    var $div = $('<div id="fs-libreoffice-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.startup_prompt.title')+'">'
+            +'<div id="fs-libreoffice-prompt-content" class="fs-prompt-window-content">'+i18next.t('app.office.startup_prompt.message')+'</div>'
+            +'<div class="fs-window-secondary-actions">'
+            +'    <input type="button" tabindex="2" name="hide" value="'+i18next.t('app.office.startup_prompt.dont_show_again')+'" />'
+            +'    <input type="button" tabindex="1" name="close" value="'+i18next.t('app.office.startup_prompt.close')+'" class="fs-button-primary" />'
             +'</div>'
         +'</div>');
+
     $("#fs-namespace").append($div);
 
-    var $k_prompt = $div.kendoWindow({
+    var $k_prompt = $div.kendoBalloonWindow({
       title: $div.attr('title'),
       resizable: false,
       modal: true,
@@ -235,7 +241,7 @@ var app = {
           $div.find('input[name=close]').focus()
         },200);
       }
-    }).data("kendoWindow");
+    }).data("kendoBalloonWindow");
 
     setTimeout(function(){
       $k_prompt.center().open();
@@ -260,65 +266,46 @@ var app = {
     });
   },
 
-  treeDblclick: function(e) {
-    if(app.balloon.last.directory === true) {
-      app.balloon.resetDom('selected');
-    }
-
+  treeDblclick: function() {
     var supported_office = [
       'csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'
     ];
 
-    if(app.balloon.last !== null && app.balloon.last.directory) {
-      app.balloon.togglePannel('content', true);
-
-      var $k_tree = $("#fs-browser-tree").data("kendoTreeView");
-
-      if(app.balloon.last.id == '_FOLDERUP') {
-        var params = {},
-          id     = app.balloon.getPreviousCollectionId();
-
-        if(id !== null) {
-          params.id = id;
-          app.balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
-        } else {
-          app.balloon.menuLeftAction(app.balloon.getCurrentMenu());
-        }
-      } else {
-        app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentNode().id}, null, {action: '_FOLDERDOWN'});
-      }
-
-      app.balloon.resetDom(
-        ['selected','properties','preview','action-bar','multiselect','view-bar',
-          'history','share-collection','share-link']
-      );
-    } else if(supported_office.indexOf(app.balloon.getFileExtension(app.balloon.last.name)) > -1 && !app.balloon.isMobileViewPort()) {
+    if(
+      app.balloon.last !== null
+      && app.balloon.last.directory === false
+      && supported_office.indexOf(app.balloon.getFileExtension(app.balloon.last.name)) > -1
+      && !app.balloon.isMobileViewPort()
+    ) {
       app.edit(app.balloon.getCurrentNode());
-    } else if(app.balloon.isEditable(app.balloon.last.mime)) {
-      app.balloon.editFile(app.balloon.getCurrentNode());
-    } else if(app.balloon.isViewable(app.balloon.last.mime)) {
-      app.balloon.displayFile(app.balloon.getCurrentNode());
+      app.balloon.pushState();
     } else {
-      app.balloon.downloadNode(app.balloon.getCurrentNode());
+      app.origDblClick.apply(app.balloon, arguments);
     }
-
-    app.balloon.pushState();
   },
 
   addOfficeFile: function(name, type) {
+    var $d = $.Deferred();
+
     name = encodeURI(name);
 
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/office/documents?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
       type: 'POST',
-      complete: function() {
+      complete: function(jqXHR, textStatus) {
         $('#fs-new-file').remove();
+
+        switch(textStatus) {
+        case 'success':
+          $d.resolve(jqXHR.responseJSON);
+          break;
+        default:
+          $d.reject();
+        }
       },
-      success: function(data) {
-        app.balloon.added = data.id;
-        app.balloon.refreshTree('/collections/children', {id: app.balloon.getCurrentCollectionId()});
-      }
     });
+
+    return $d;
   }
 }
 

@@ -1,0 +1,14 @@
+{
+  "app": {
+    "burl": {
+      "title": "New URL Shortcut",
+      "url": "URL",
+      "tree": {
+        "burl_file": "URL Shortcut"
+      },
+      "prompt": {
+        "open_burl": "Do you want to open %s in a new tab?"
+      }
+    }
+  }
+}

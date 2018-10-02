@@ -1,0 +1,12 @@
+@import '../../../themes/default/scss/includes/colors.scss';
+@import '../../../themes/default/scss/includes/mixins.scss';
+
+#fs-external-storage {
+  display: none;
+  width: 560px;
+
+  label {
+    margin: 10px 0 5px 0;
+    display: block;
+  }
+}

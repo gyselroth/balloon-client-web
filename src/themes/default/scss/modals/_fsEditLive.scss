@@ -1,0 +1,17 @@
+$sidePadding: 60px;
+
+.fs-edit-live {
+  width: 70%;
+  min-height: 70%;
+  max-height: 100vh;
+}
+
+#fs-edit-live {
+  display: none;
+
+  textarea {
+    height: calc(100%  - 100px);
+    min-height: 300px;
+  }
+
+}

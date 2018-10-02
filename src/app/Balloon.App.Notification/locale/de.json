@@ -1,12 +1,25 @@
 {
   "app": {
-    "balloon_app_notification": {
-      "menu_title": "Abonnieren",
-      "subscribe": "Abonnieren",
-      "save": "Speichern",
-      "exclude_me": "Meine eigenen Änderungen ausschliessen",
-      "recursive": "Verschachtelte Elemente einschliessen",
-      "description": "Erhalte eine Benachrichtung, falls diese Datei/dieser Ordner aktualisiert wird."
+    "notification": {
+      "settings": {
+        "menu_title": "Abonnieren",
+        "subscribe": "Abonnieren",
+        "save": "Speichern",
+        "exclude_me": "Meine eigenen Änderungen ausschliessen",
+        "recursive": "Verschachtelte Elemente einschliessen",
+        "description": "Erhalte eine Mitteilung, falls diese Datei/dieser Ordner aktualisiert wird."
+      },
+      "messages": {
+        "title": "Mitteilungen",
+        "no_messages": "Du hast keine neuen Mitteilungen",
+        "message_meta": "Am %s von %s",
+        "message_meta_no_sender": "Am %s",
+        "delete_all": "Alle löschen"
+      },
+      "hints": {
+        "hint_1": "Du kannst Dateien und Ordner für Änderungen abonieren. Der Server wird dich automatisch benachrichtigen bei einer Änderung. Wähle dazu eine eine Datei/Ordner an und navigiere zu Abonnieren. Du siehst diese Nachrichten in deinem Posteingang {icon-alert} und bekommst zusätzliche eine Meldung per E-Mail. Eine abonnierte Datei/Ordner ist als {icon-volume-up} markiert.",
+        "hint_2": "Der Server benachrichtig dich wenn jemand einen Ordner mit dir geteilt hat. Du siehst diese Nachrichten in deinem Posteingang {icon-alert} und bekommst zusätzliche eine Meldung per E-Mail."
+      }
     }
   }
 }
