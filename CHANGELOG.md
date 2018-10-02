@@ -1,3 +1,10 @@
+## 3.0.1
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Oct 02 10:32:20 CEST 2018
+
+* [FIX] Metadata contains a share property with a date on non shared collections #66
+
+
 ## 3.0.0
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Oct 02 09:03:20 CEST 2018
