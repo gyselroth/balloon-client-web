@@ -1,0 +1,188 @@
+$sidePadding: 30px;
+
+.fs-share-link-window {
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
+  }
+}
+
+#fs-share-link-window {
+  $deleteButtonSize: 30px;
+
+  display: none;
+  width: 700px  + (2 * $sidePadding);
+  padding-bottom: 30px;
+
+  #fs-share-link-window-content {
+    .fs-share-link-window-row {
+      @include clearfix;
+
+      p.fs-hint {
+        display:  block;
+        float: left;
+        width: 510px;
+
+        & + input {
+          display: block;
+          float:  right;
+        }
+      }
+
+      input[name="file_url"] {
+        color: $colorActiveBlue;
+        font-size: 15px;
+        width: calc(100% - #{$deleteButtonSize + 10px});
+        float: left;
+      }
+
+      #fs-share-link-window-delete {
+        @include icon-button-small($deleteButtonSize);
+
+        display: block;
+        margin: 0;
+        float: right;
+      }
+    }
+
+    .fs-hint {
+      color: $colorMediumGrey;
+      line-height: 18px;
+      font-size: 13px;
+    }
+
+    h2 {
+      margin: 20px 0 7px;
+
+      span {
+        font-size: 15px;
+        font-weight: 700;
+
+        &.fs-hint {
+          margin-left: 4px;
+          font-size: 15px;
+          font-weight: 300;
+        }
+      }
+    }
+
+    #fs-share-link-window-hint-delete {
+      position: relative;
+      color: $colorMediumGrey;
+      margin-top: 19px;
+
+      svg {
+        position: absolute;
+        top: -3px;
+        left: 0;
+      }
+
+      p {
+        padding-left: 30px;
+      }
+    }
+
+    #fs-share-link-window-message-form {
+      @include tag-list;
+
+      label {
+        display: block;
+        font-size: 15px;
+        line-height: 17px;
+        font-weight: 700;
+        margin: 20px 0 8px;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+
+      textarea {
+        font-size: 15px;
+        padding: 13px 15px 14px;
+        height: auto;
+
+        &:focus {
+          padding: 12px 14px 13px;
+        }
+      }
+
+      textarea {
+        height: 100px;
+      }
+
+      #fs-share-link-window-recipient-list {
+        @include clearfix;
+        @include tag-list;
+
+        border: 1px solid $colorLightGrey;
+        border-radius: 4px;
+        padding: 1px 15px 7px;
+        font-weight: 400;
+        margin: 0;
+
+        &:focus-within {
+          border-color: $colorActiveBlue;
+          border-width: 2px;
+          padding: 0 14px 6px;
+        }
+
+        .tag {
+          &.is-invalid {
+            border-color: $colorErrorRed;
+            background-color: lighten($colorErrorRed, 50);
+          }
+
+          .tag-name {
+            cursor: default;
+          }
+        }
+
+        .k-autocomplete {
+          margin: 0;
+          padding: 0;
+          border: none;
+          background-color: transparent;
+          background-image: none;
+          width: auto;
+
+          input {
+            float: left;
+            border: 1px solid transparent !important;
+            font-size: 15px;
+            line-height: 28px;
+            padding: 0;
+            height: auto;
+            width: auto;
+            min-width: 250px;
+            margin-top: 5px;
+            background-color: transparent;
+          }
+
+          .k-icon {
+            display: none !important;
+          }
+        }
+      }
+
+      .fs-window-secondary-actions {
+        margin-top: 30px;
+      }
+    }
+  }
+}

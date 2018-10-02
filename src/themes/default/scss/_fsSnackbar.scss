@@ -1,0 +1,90 @@
+$snackbarTop: 80px;
+$snackbarInDuration: 0.5s;
+$snackbarOutDuration:  0.5s;
+$snackBarVisibleDuration: 2s;
+
+#fs-snackbar {
+  @include clearfix;
+  @include shadow-default;
+
+  display: none;
+  position: absolute;
+  box-sizing: border-box;
+  top: $snackbarTop;
+  opacity: 1;
+  left: 50%;
+  transform: translate(-50%,0);
+  width: auto;
+  min-width: 300px;
+  height: auto;
+  background-color: $colorWhite;
+  border-radius: 4px;
+  padding: 8px 11px 8px 15px;
+  margin: 0 auto;
+  z-index: 12001;
+
+  &.show {
+    display: inline-block;
+    animation: fs-snackbar-in $snackbarInDuration, fs-snackbar-out $snackbarOutDuration ($snackBarVisibleDuration + $snackbarInDuration);
+  }
+
+  #fs-snackbar-message,
+  #fs-snackbar-icon {
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+    vertical-align: middle;
+    font-size: 13px;
+  }
+
+  #fs-snackbar-message {
+    float: left;
+  }
+
+  #fs-snackbar-icon {
+    float: right;
+    height: 24px;
+    width: 24px;
+    margin-left: 10px;
+
+    &.has-action {
+      cursor: pointer;
+    }
+
+    .gr-icon {
+      display: none;
+    }
+
+    .gr-i-check {
+      color: $colorSuccessGreen;
+    }
+    .gr-i-undo {
+      color: $colorActiveBlue;
+    }
+  }
+}
+
+
+@keyframes fs-snackbar-in {
+  0%   {
+    top: 0;
+    opacity: 0;
+  }
+
+  100% {
+    top: $snackbarTop;
+    opacity: 1;
+  }
+}
+
+@keyframes fs-snackbar-out {
+  0%   {
+    top: $snackbarTop;
+    opacity: 1;
+  }
+
+  100% {
+    top: 0;
+    opacity: 0;
+  }
+}

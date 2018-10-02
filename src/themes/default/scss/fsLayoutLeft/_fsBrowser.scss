@@ -1,0 +1,602 @@
+#fs-browser {
+  $headerHeight: 28px; //height of the header
+  $headerBorderColor: $colorLightGrey;
+  $nodeHeight: 50px; //height of a single node
+
+  $lineHeight: 30px;
+
+  $iconWidth: 26px;
+  $metaWidth: 120px;
+  $sizeWidth: 110px;
+  $changedWidth: 150px;
+  $checkboxWidth: 18px;
+
+  $columnPaddingLeftRight: 25px;
+
+  $border-radius: 4px;
+
+  $breakpointMetaVisible: 659px;
+  $breakpointSizeVisible: 720px;
+  $breakpointChangedVisible: 875px;
+
+  position: relative;
+  padding-bottom: 90px;
+
+  .fs-browser-column {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 $columnPaddingLeftRight;
+    line-height: $lineHeight;
+    vertical-align: middle;
+    color: $colorMediumGrey;
+
+    &.fs-browser-column-sortable {
+      cursor: pointer;
+
+      .gr-icon {
+        $iconSize: 20px;
+
+        position: relative;
+        top: 5px;
+        left: 0;
+        width: $iconSize;
+        height: $iconSize;
+      }
+    }
+  }
+
+  .fs-browser-column-icon {
+    width: $iconWidth;
+    height: $lineHeight;
+    margin: 0;
+    padding: 3px 0;
+  }
+
+  .fs-browser-column-changed {
+    width: $changedWidth;
+  }
+
+  .fs-browser-column-size {
+    width: $sizeWidth;
+  }
+
+  .fs-browser-column-checkbox {
+    @include checkbox($checkboxWidth);
+  }
+
+  #fs-browser-header {
+    border: 1px solid $headerBorderColor;
+    border-radius: $border-radius;
+    padding: 0 17px 0 12px;
+    margin-bottom: 20px;
+    position: relative;
+
+    .fs-browser-column {
+      $paddingTopBottom: ($headerHeight - $lineHeight) / 2;
+
+      position: relative;
+      padding-top: $paddingTopBottom;
+      padding-bottom: $paddingTopBottom;
+      div {
+        display: inline-block;
+        width: auto;
+      }
+    }
+
+    .fs-browser-column-name {
+      width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
+    }
+
+    .fs-browser-column-size,
+    .fs-browser-column-changed {
+      border-left: 1px dotted $headerBorderColor;
+      padding-left: $columnPaddingLeftRight - 1px;
+      display: none;
+    }
+
+    #fs-browser-header-checkbox {
+      width: $checkboxWidth;
+      height: $checkboxWidth;
+      border: 1px solid $colorMediumGrey;
+      border-radius: 2px;
+      cursor: pointer;
+
+      &.fs-browser-header-checkbox-checked {
+        @include checkboxChecked;
+
+        background-size: 20px;
+      }
+
+      &.fs-browser-header-checkbox-undetermined {
+        @include checkboxUndetermined;
+      }
+    }
+
+    .fs-browser-column-icon {
+      .gr-icon {
+        $iconSize: 13px;
+
+        position: relative;
+        top: 0;
+        left: 3px;
+        width: $iconSize;
+        height: $iconSize;
+      }
+    }
+
+    #fs-action-filter {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    #fs-action-filter-select {
+      @include dropdown(140px, 34px);
+
+      left: -1px;
+      display: none;
+
+      .bln-dropdown-spike {
+        right: 108px;
+      }
+
+      .bln-dropdown-content {
+        padding: 8px 0;
+
+        input[type="checkbox"] {
+          & + label {
+            padding-left: 36px;
+            vertical-align: text-top;
+            min-height: 30px;
+            margin-top: 0;
+            color: $colorMediumGrey;
+            font-size: 15px;
+            line-height: 30px;
+            width: 100%;
+            box-sizing: border-box;
+
+            &:before {
+              @include checkbox(15px);
+
+              margin: 6px 0 0 10px;
+            }
+          }
+          &:checked + label {
+            color: $colorDarkGrey;
+
+            &:before {
+              @include checkboxChecked;
+
+              background-size: 19px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #fs-browser-tree {
+
+    width: 100%;
+
+    // single node
+    .k-item {
+      $paddingTopBottom: ($nodeHeight - $lineHeight) / 2;
+      $paddingLeft: 13px;
+      $paddingRight: 19px;
+
+      padding: 0;
+      margin: 0;
+
+      background-color: $colorWhite;
+      border: none;
+      border-radius: $border-radius;
+      margin-bottom: 5px;
+      cursor: pointer;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .k-in {
+        display: block;
+        box-sizing: border-box;
+        width: 100%;
+        border-radius: 0;
+        margin: 0;
+        padding: $paddingTopBottom $paddingRight $paddingTopBottom $paddingLeft;
+        cursor: pointer;
+
+        .fs-browser-column-name {
+          width: calc(100% - #{$iconWidth + $checkboxWidth});
+          height: $lineHeight;
+          color: $colorDarkGrey;
+          font-size: 15px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+
+          .fs-ext {
+            text-transform: uppercase;
+          }
+
+          .fs-filename-rename {
+            font-size: 15px;
+            line-height: 17px;
+            padding: 5px 6px 6px 6px;
+            margin-top: 0;
+            margin-left: -7px;
+            border: 1px solid $colorLightGrey;
+          }
+        }
+
+        .fs-browser-column-meta,
+        .fs-browser-column-changed,
+        .fs-browser-column-size {
+          display: none;
+        }
+
+        .fs-browser-column-meta {
+          color: $colorMediumGrey;
+
+          @include clearfix;
+
+          & > span,
+          & > div {
+            float: right;
+            display: inline-block;
+          }
+
+          .fs-node-state {
+            height: 24px;
+          }
+
+          .fs-color-tag {
+            margin: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: $border-radius;
+
+            &.fs-color-tag-magenta {
+              background-color: $colorMagenta;
+            }
+            &.fs-color-tag-purple {
+              background-color: $colorPurple;
+            }
+            &.fs-color-tag-blue {
+              background-color: $colorBlue;
+            }
+            &.fs-color-tag-green {
+              background-color: $colorGreen;
+            }
+            &.fs-color-tag-yellow {
+              background-color: $colorYellow;
+            }
+          }
+        }
+
+        &.fs-browser-search-item {
+          .fs-browser-column-name {
+            height: 33px;
+            margin-top: -2px;
+            margin-bottom: -1px;
+            line-height: 17px;
+
+            & > p {
+              font-size: 13px;
+              line-height: 14px;
+              margin-top: 2px;
+              color: $colorMediumGrey;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        $borderSize: 1px;
+
+        background-color: rgba(57, 165, 255, 0.1);
+        border: $borderSize solid $colorActiveBlue;
+
+        .k-in {
+          padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
+        }
+      }
+
+      &[aria-selected="true"],
+      &.fs-multiselected {
+        @include shadow-selected;
+
+        $borderSize: 2px;
+        border: $borderSize solid $colorActiveBlue;
+
+        .k-in {
+          padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
+
+          .fs-browser-column-checkbox {
+            @include checkboxChecked;
+
+            background-size: 20px;
+          }
+        }
+      }
+
+      &.fs-file-dropable {
+        &.fs-file-dropable-hover {
+          background-color: rgba(126, 211, 33, 0.1);
+        }
+
+        $borderSize: 2px;
+        border: $borderSize solid $colorSuccessGreen;
+
+        .k-in {
+          padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
+        }
+      }
+
+      &.fs-file-disabled {
+        opacity: 0.3;
+
+        &[aria-selected="true"],
+        &.fs-multiselected {
+          opacity: 1;
+        }
+
+        &:hover {
+          background-color: $colorWhite;
+        }
+      }
+
+      &.fs-folderup {
+        margin-bottom: 20px;
+
+        .k-in {
+          .fs-browser-column-icon {
+            color: $colorActiveBlue;
+          }
+
+          .fs-browser-column-name {
+            color: $colorMediumGrey;
+          }
+        }
+      }
+    }
+  }
+
+  #fs-action-refresh {
+    @include icon-button(30px, 30px);
+
+    position: absolute;
+    background-color: $colorWhite;
+    color: $colorActiveBlue;
+    border-radius: 4px;
+    bottom: 30px;
+    right: 0;
+
+    &:hover {
+      color: $colorHoverBlue;
+    }
+  }
+
+  @media screen and (min-width: $breakpointMetaVisible) {
+    #fs-browser-tree {
+      $metaPaddingSmallScreen: 25px;
+
+      .k-item {
+        .k-in {
+          .fs-browser-column-meta {
+            display: inline-block;
+            width: $metaWidth + $metaPaddingSmallScreen;
+            padding: 0 $metaPaddingSmallScreen 0 0;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointSizeVisible) {
+    #fs-browser-header {
+      .fs-browser-column-size {
+        display: inline-block;
+      }
+
+      .fs-browser-column-name {
+        width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
+      }
+    }
+
+    #fs-browser-tree {
+      .k-item {
+        .k-in {
+          .fs-browser-column-meta {
+            padding-right: 0;
+            width: $metaWidth;
+          }
+
+          .fs-browser-column-size {
+            display: inline-block;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointChangedVisible) {
+    #fs-browser-header {
+      .fs-browser-column-changed {
+        display: inline-block;
+      }
+
+      .fs-browser-column-name {
+        width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+      }
+    }
+
+    #fs-browser-tree {
+      .k-item {
+        .k-in {
+          .fs-browser-column-changed {
+            display: inline-block;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    #fs-browser-header {
+      .fs-browser-column-changed,
+      .fs-browser-column-size {
+        display: none;
+      }
+
+      .fs-browser-column-name {
+        width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
+      }
+    }
+
+    #fs-browser-tree {
+      .k-item {
+        .k-in {
+          .fs-browser-column-changed,
+          .fs-browser-column-size,
+          .fs-browser-column-meta {
+            display: none;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: #{$breakpointMetaVisible + 400px}) {
+    #fs-browser-tree {
+      $metaPaddingSmallScreen: 25px;
+
+      .k-item {
+        .k-in {
+          .fs-browser-column-meta {
+            display: inline-block;
+            width: $metaWidth + $metaPaddingSmallScreen;
+            padding: 0 $metaPaddingSmallScreen 0 0;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: #{$breakpointSizeVisible + 400px}) {
+    #fs-browser-header {
+      .fs-browser-column-size {
+        display: inline-block;
+      }
+
+      .fs-browser-column-name {
+        width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
+      }
+    }
+
+    #fs-browser-tree {
+      .k-item {
+        .k-in {
+          .fs-browser-column-meta {
+            padding-right: 0;
+            width: $metaWidth;
+          }
+
+          .fs-browser-column-size {
+            display: inline-block;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: #{$breakpointChangedVisible + 400px}) {
+    #fs-browser-header {
+      .fs-browser-column-changed {
+        display: inline-block;
+      }
+
+      .fs-browser-column-name {
+        width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+      }
+    }
+
+    #fs-browser-tree {
+      .k-item {
+        .k-in {
+          .fs-browser-column-changed {
+            display: inline-block;
+          }
+
+          .fs-browser-column-name {
+            width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
+          }
+        }
+      }
+    }
+  }
+}
+
+.k-drag-clue {
+  position: absolute;
+  border: 2px solid $colorActiveBlue;
+  border-radius: 4px;
+  background-color: $colorWhite;
+  opacity: 1;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+
+  .gr-icon {
+    color: $colorMediumGrey;
+    position: absolute;
+    top: 13px;
+    left: 13px;
+  }
+
+  .clue-item-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    border-radius: 50%;
+    background-color: $colorActiveBlue;
+    color: $colorWhite;
+    font-size: 11px;
+    line-height: 20px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .k-icon {
+    display: none;
+  }
+}

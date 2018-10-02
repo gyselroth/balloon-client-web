@@ -1,0 +1,45 @@
+@import './fsLayoutLeft/fsActionFilterSelect';
+@import './fsLayoutLeft/fsCrumb';
+@import './fsLayoutLeft/fsBrowserAction';
+@import './fsLayoutLeft/fsBrowser';
+
+#fs-layout-left {
+  background-color: $colorBrightGrey;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+
+  #fs-layout-left-header {
+    @include clearfix;
+    margin: 30px 0 20px 0;
+  }
+
+  #fs-layout-left-container {
+    padding: 0 10px;
+    width: 100%;
+    box-sizing: border-box;
+
+    @media screen and (min-width: $breakpointMenuVisible) {
+      padding: 0 30px 0 90px;
+    }
+  }
+
+  #fs-layout-left-inner {
+    @include clearfix;
+
+    margin: auto;
+
+    width: 100%;
+    max-width: 960px;
+
+    #fs-browser-fresh {
+      display: none;
+
+      font-size: 17px;
+      line-height: 19px;
+      color: $colorDarkGrey;
+      margin-top: 36px;
+    }
+  }
+}

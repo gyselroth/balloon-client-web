@@ -1,0 +1,73 @@
+.fs-error-window {
+  $sidePadding: 40px;
+
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      position: relative;
+      left: 0;
+      color: $colorErrorRed;
+      padding-left: 48px;
+      width: calc(100% - #{2 * $sidePadding});
+
+      .gr-icon {
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        height: 33px;
+        width: 33px;
+      }
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+}
+
+#fs-error-window {
+  display: none;
+  overflow: auto;
+
+  #fs-error-single,
+  #fs-error-multi {
+    table {
+      border-collapse: collapse;
+      margin-top: 25px;
+
+      th,
+      td {
+        text-align: left;
+        font-size: 15px;
+        line-height: 20px;
+        font-style: bold;
+        width: 149px;
+      }
+
+      td {
+        font-style: normal;
+        width: 371px;
+        padding-left: 11px;
+      }
+    }
+  }
+
+  #fs-error-multi {
+    max-height: 300px;
+    overflow-y: auto;
+    overflox-x: hidden;
+  }
+
+  #fs-error-window-button-wrapper {
+    margin: 36px 0 0;
+
+    input {
+      width: 120px;
+    }
+  }
+
+
+}

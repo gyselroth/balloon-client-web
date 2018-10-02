@@ -18,11 +18,12 @@ var translate = {
   config: {},
   load: function(url, options, callback, data) {
     $.ajax({
+      cache: false,
       url: '/locale/'+url+'.json',
       success: function(body, responseText, response) {
         callback(response.responseText, {status: '200'});
       },
-      error: function() {
+      error: function(e) {
         callback(null, {status: '404'});
       }
     });
@@ -69,8 +70,18 @@ var translate = {
       .use(i18nextBrowserLanguageDetector)
       .use(i18nextLocalStorageCache)
       .use(i18nextSprintfPostProcessor)
+      .use({
+        type: 'postProcessor',
+        name: 'icon',
+        process: function(value, key, options, translator) {
+          var regex = /\{icon-([a-z\-]+)\}/g;
+          return value.replace(regex, function(match, name) {
+            return "<svg class='gr-icon gr-i-"+name+"' viewBox='0 0 24 24'><use xlink:href='/assets/icons.svg#"+name+"'></use></svg>";
+          });
+        }
+      })
       .init({
-        postProcess: "sprintf",
+        postProcess: ["sprintf", "icon"],
         overloadTranslationOptionHandler: i18nextSprintfPostProcessor.overloadTranslationOptionHandler,
         compatibilityJSON: 'v2',
         debug: false,

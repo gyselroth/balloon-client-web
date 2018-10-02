@@ -1,0 +1,10 @@
+#fs-browser-select-action {
+  $buttonHeight: 30px;
+
+  margin-top: 16px;
+  height: $buttonHeight;
+
+  li {
+    @include icon-button-small($buttonHeight, $buttonHeight);
+  }
+}

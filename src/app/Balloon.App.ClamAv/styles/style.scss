@@ -1,0 +1,35 @@
+@import '../../../themes/default/scss/includes/colors';
+@import '../../../themes/default/scss/includes/mixins';
+
+#fs-clamav {
+    $iconMargin: 10px;
+    $iconSize: 24px;
+
+    @include clearfix;
+
+    margin: 5px 0 16px 0;
+    padding: 0;
+
+    font-size: 13px;
+    line-height: $iconSize;
+
+    svg {
+      float: left;
+      margin-right: $iconMargin;
+      width: $iconSize;
+      height: $iconSize;
+    }
+
+    span {
+      float: left;
+      width: calc(100% - #{$iconSize + $iconMargin});
+    }
+
+    &.fs-clamav-positive {
+      color: $colorErrorRed;
+    }
+
+    &.fs-clamav-negative {
+      color: $colorSuccessGreen;
+    }
+}

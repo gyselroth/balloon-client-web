@@ -1,0 +1,239 @@
+$availableColor: $colorLightGrey;
+$usedColor: $colorActiveBlue;
+$sidePadding: 50px;
+
+@import "../includes/percentage-circle";
+
+.fs-profile-window {
+
+  width: 800px  ;
+
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
+  }
+}
+
+#fs-profile-window {
+  display: none;
+
+  #fs-profile-window-quota {
+    position: relative;
+    margin-bottom: 50px;
+
+    #fs-quota-circle {
+      margin-left: 25px;
+    }
+
+    #fs-profile-quota {
+      position: absolute;
+      right: 0;
+      top: calc(50% - #{3 * 30px / 2});
+
+      table {
+        border-collapse: collapse;
+
+        th,
+        td {
+          width: 170px;
+          font-size: 15px;
+          line-height: 30px;
+          font-weight: normal;
+          text-align: left;
+          color: $colorDarkGrey;
+          text-align: left;
+        }
+
+        td {
+          width: 148px;
+          text-align: right;
+          font-weight: bold;
+        }
+      }
+
+      #fs-profile-quota-used,
+      #fs-profile-quota-left {
+        th {
+          position: relative;
+          padding-left: 30px;
+
+          &:before {
+            display: block;
+            position: absolute;
+            top: 12.5px;
+            left: 0;
+            content: "";
+            background-color: $usedColor;
+            width: 20px;
+            height: 5px;
+            border-radius: 4px;
+          }
+        }
+      }
+
+      #fs-profile-quota-left {
+        th {
+          &:before {
+            background-color: $availableColor;
+          }
+        }
+      }
+    }
+  }
+
+  #fs-profile-window-user {
+    $avatarSize: 120px;
+
+    position: relative;
+    margin-top: 30px;
+
+    #fs-profile-avatar {
+      @include avatar;
+
+      width: $avatarSize;
+      height: $avatarSize;
+    }
+
+    #fs-profile-user {
+      position: absolute;
+      left: $avatarSize + 40px;
+      top: calc(50% - 45px);
+
+      th,
+      td {
+        color: $colorMediumGrey;
+        width: 110px;
+        font-size: 15px;
+        font-weight: normal;
+        line-height: 30px;
+        text-align: left;
+      }
+
+      td {
+        padding-left: 80px;
+        color: $colorDarkGrey;
+        width: 346px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $breakpointWindowFullscreen) {
+  .fs-profile-window {
+    width: 100% !important;
+  }
+
+  #fs-profile-window {
+    #fs-profile-window-quota {
+      #fs-quota-circle {
+        display: none;
+      }
+
+      #fs-profile-quota {
+        position: relative;
+        left: 0;
+        top: 0;
+
+        table {
+          width: 100%;
+
+          td {
+            text-align: right;
+            padding-left: 20px;
+          }
+        }
+      }
+    }
+
+    #fs-profile-window-user {
+      #fs-profile-avatar {
+        display: none;
+      }
+
+      #fs-profile-user {
+        position: relative;
+        left: 0;
+        top: 0;
+
+        table {
+          width: 100%;
+
+          td {
+            text-align: right;
+            padding-left: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 799px) and (min-width: $breakpointWindowFullscreen+1px) {
+  .fs-profile-window {
+    width: $breakpointWindowFullscreen !important;
+    height: 405px !important;
+  }
+
+  #fs-profile-window {
+    $chartSize: 80px;
+
+    #fs-profile-window-quota {
+      #fs-quota-circle {
+        margin-left: 0;
+      }
+
+      .percent-circle,
+      .percent-circle .chart {
+        width: $chartSize;
+        height: $chartSize;
+
+        figcaption {
+          display: none;
+        }
+
+        .css-fallback {
+          font-size: $chartSize;
+          display: block !important;
+
+          .percent-text {
+            font-size: 18px;
+            line-height: 46px;
+          }
+        }
+        figure {
+          display: none !important;
+        }
+      }
+    }
+
+    #fs-profile-window-user {
+      #fs-profile-avatar {
+        width: 80px;
+        height: 80px;
+      }
+
+      #fs-profile-user {
+        left: 100px;
+
+        td {
+          padding-left: 63px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,111 @@
+#fs-upload-progress {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 6px;
+  z-index: 15;
+
+  #fs-upload-progress-info {
+    @include shadow-default;
+
+    $width: 260px;
+
+    position: absolute;
+    bottom: 16px;
+    left: calc(50% - #{$width / 2});
+    width: $width;
+    height: 40px;
+    padding-left: 15px;
+    border-radius: 4px;
+    background-color: $colorWhite;
+    line-height: 40px;
+    vertical-align: middle;
+    cursor: pointer;
+
+    & > div {
+      display: inline-block;
+      font-size: 13px;
+      color: $colorDarkGrey;
+      margin-right: 8px;
+
+      &:after {
+        content: "|";
+        display: inline-block;
+        color: $colorLightGrey;
+        height: auto;
+        width: 0;
+        margin-left: 7px;
+      }
+
+      &:last-child {
+        color: $colorActiveBlue;
+
+        &:after {
+          display: none;
+        }
+      }
+
+      &#fs-upload-details {
+        cursor: pointer;
+      }
+
+      &#fs-upload-progress-info-icon {
+        $size: 18px;
+        display: block;
+        position: absolute;
+        right: 11px;
+        top: calc(50% - #{$size  / 2});
+        width: $size;
+        height: $size;
+        margin-right: 0;
+
+        #fs-upload-progress-info-icon-complete {
+          @include icon-button($size, $size);
+
+          display: none;
+          color: $colorSuccessGreen;
+
+          .gr-icon {
+            margin-left: -3px;
+          }
+
+        }
+      }
+
+      #fs-upload-progree-info-status-uploaded {
+        margin-right: 0;
+
+        &:after {
+          content: "/";
+          display: inline-block;
+          margin-left: 2px;
+        }
+      }
+    }
+  }
+
+  #fs-upload-progress-bar {
+    height: 100%;
+
+    .k-progressbar-horizontal {
+      width: 100%;
+      border: 0;
+    }
+
+    .k-state-selected {
+      background-color: $colorActiveBlue;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      border: 1px solid $colorActiveBlue;
+      opacity: 1;
+      height: 6px;
+    }
+
+    .k-progress-status-wrap {
+      display: none;
+    }
+  }
+}

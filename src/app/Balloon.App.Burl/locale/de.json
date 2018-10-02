@@ -1,0 +1,14 @@
+{
+  "app": {
+    "burl": {
+      "title": "Neue URL-Verknüpfung",
+      "url": "URL",
+      "tree": {
+        "burl_file": "URL-Verknüpfung"
+      },
+      "prompt": {
+        "open_burl": "Willst du %s in einem neuen Tab öffnen?"
+      }
+    }
+  }
+}

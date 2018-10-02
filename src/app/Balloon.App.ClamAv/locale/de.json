@@ -1,8 +1,10 @@
 {
   "app": {
-    "balloon_app_clamav": {
+    "clamav": {
+      "quarantine": "Quarantäne",
       "malware_found": "Diese Datei wurde mit einer Malware identifziert [%s] und ist in Qurantäne.",
-      "clean": "Diese Datei wurde auf Malware geprüft."
+      "clean": "Diese Datei wurde erfolgreich auf Malware geprüft.",
+      "hint": "Deine hochgeladenen Dateien werden im Hintergrund automatisch auf Viren/Malware und andere Schädlinge überprüft. Du siehst das Scan Resultat in den Metadaten der Datei. Dateien mit erkanntem Schädling sind in der Qurantäne {icon-warning} zu finden."
     }
   }
 }

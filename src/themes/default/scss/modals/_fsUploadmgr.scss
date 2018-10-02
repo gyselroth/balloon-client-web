@@ -1,0 +1,258 @@
+$sidePadding: 50px;
+
+.fs-uploadmgr {
+
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
+  }
+}
+
+#fs-uploadmgr {
+  display: none;
+  width: 660px + (2 * $sidePadding);
+  padding-bottom: 31px;
+
+  h2 {
+    font-size: 15px;
+    line-height: 30px;
+    font-weight: 700;
+
+    .hint {
+      color: $colorMediumGrey;
+      font-size: 13px;
+      font-weight: 300;
+    }
+  }
+
+  .fs-uploadmgr-progress {
+    position: relative;
+    width: 100%;
+    height: 42px;
+    margin-bottom: 8px;
+
+    .fs-progress-filename {
+      position: absolute;
+      top: 6px;
+      left: 0;
+      color: $colorMediumGrey;
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 20px;
+
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      max-width: calc(100% - 60px);
+    }
+
+    .fs-progress-icon {
+      $size: 14px;
+
+      @include icon-button($size, $size);
+
+      position: absolute;
+      right: -28px;
+      bottom: -3px;
+      display: block;
+
+      color: $colorMediumGrey;
+
+      &.fs-progress-complete {
+        cursor: default;
+        color: $colorSuccessGreen;
+      }
+
+      &.fs-progress-error {
+        cursor: default;
+        color: $colorErrorRed;
+      }
+
+      .gr-icon {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .k-progressbar-horizontal {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border: none;
+      width: 100%;
+      height: 6px;
+      background-color: $colorBrightGrey;
+
+      .k-progress-status-wrap {
+        display: block;
+        position: absolute;
+        top: -35px;
+        right: -10px;
+        width: auto;
+        border: none;
+        color: $colorMediumGrey;
+        font-size: 24px;
+        line-height: 30px;
+
+        .k-progress-status {
+          background-image: none;
+        }
+      }
+
+      .k-state-selected,
+      .k-state-default {
+        border: none;
+        background-color: $colorActiveBlue;
+        border-radius: 3px;
+        height: 6px;
+
+        &.k-complete {
+          background-color: $colorSuccessGreen;
+        }
+
+        &.fs-progress-error {
+          opacity: 0.3;
+          background-color: $colorErrorRed !important;
+        }
+
+        .k-progress-status-wrap {
+          display: none;
+        }
+      }
+    }
+  }
+
+  #fs-uploadmgr-total-progress {
+    margin-top: -30px;
+  }
+
+  #fs-uploadmgr-files {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 30px;
+    color: $colorMediumGrey;
+    margin-top: 11px;
+    margin-bottom: 3px;
+    height: auto;
+  }
+
+  #fs-uploadmgr-files-progress {
+    width: 100%;
+    height: 6px;
+    margin-top: -11px;
+
+    &.fs-uploadmgr-progress {
+      .k-progressbar-horizontal {
+        position: relative;
+        top: 0;
+        left: 0;
+        background-color: transparent;
+
+        ul {
+          height: 6px;
+          border-radius: 0;
+          position: relative;
+          width: calc(100% + 10px);
+          left: -4px;
+
+          .k-state-selected,
+          .k-state-default {
+            padding: 0 3px;
+            background-color: transparent !important;
+            box-sizing: border-box;
+
+            &:after {
+              display: block;
+              content: "";
+              background-color: $colorActiveBlue;
+              border-radius: 3px;
+              width: 100%;
+              height: 100%;
+            }
+
+            &.k-complete:after {
+              background-color: $colorSuccessGreen;
+            }
+
+            &.fs-progress-error {
+              opacity: 1;
+              &:after {
+                opacity: 0.3;
+                background-color: $colorErrorRed !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #fs-uploadmgr-transfer {
+    position: relative;
+    width: 630px;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 30px;
+    color: $colorMediumGrey;
+
+    #fs-uploadmgr-bytes,
+    #fs-uploadmgr-bandwidth {
+      display: inline-block;
+    }
+
+    #fs-uploadmgr-bandwidth {
+      margin-left: 5px;
+    }
+
+    #fs-uploadmgr-time {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: auto;
+    }
+
+    #fs-uploadmgr-transfer-icon {
+      $size: 18px;
+      display: block;
+      position: absolute;
+      right: -28px;
+      top: calc(50% - #{$size  / 2});
+      width: $size;
+      height: $size;
+      margin-right: 0;
+
+      #fs-uploadmgr-transfer-icon-loading {
+        display: block;
+      }
+
+      #fs-uploadmgr-transfer-icon-complete {
+        @include icon-button($size, $size);
+
+        display: none;
+        color: $colorSuccessGreen;
+        cursor: default;
+
+        .gr-icon {
+          margin-left: -3px;
+        }
+
+      }
+    }
+
+  }
+}

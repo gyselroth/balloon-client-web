@@ -1,0 +1,129 @@
+@import '../../../themes/default/scss/includes/colors.scss';
+@import '../../../themes/default/scss/includes/mixins.scss';
+
+#fs-shadow {
+
+  p {
+    font-size: 13px;
+    line-height: 18px;
+    color: $colorMediumGrey;
+    margin-bottom: 15px;
+
+    &#fs-shadow-not-supported {
+      display: none;
+    }
+  }
+
+  #fs-shadow-formats {
+    $buttonSize: 30px;
+    $buttonMarginLeft: 10px;
+
+    @include clearfix;
+    position: relative;
+
+    select {
+      float: left;
+      width: calc(100% - #{$buttonSize + $buttonMarginLeft});
+
+      height: $buttonSize;
+      box-sizing: border-box;
+      border: 1px solid $colorLightGrey;
+      border-radius: 4px;
+      background-color: $colorWhite;
+      padding: 0 10px;
+      font-size: 15px;
+      line-height: 30px;
+      color: $colorMediumGrey;
+
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+
+      &::-ms-extend {
+        display: none;
+      }
+    }
+
+    .gr-i-expand {
+      position: absolute;
+      color: $colorMediumGrey;
+      top: 3px;
+      right: $buttonSize + $buttonMarginLeft;
+    }
+
+    #fs-shadow-formats-add {
+      @include icon-button-small($buttonSize, $buttonSize);
+
+      float: left;
+      margin-left: $buttonMarginLeft;
+      margin-right: 0;
+    }
+  }
+
+  #fs-shadow-slaves {
+    $buttonSize: 30px;
+
+    margin-top: 19px;
+
+    li {
+      @include clearfix;
+
+      border-top: 1px solid $colorBrightGrey;
+      padding: 10px 0;
+
+      .fs-shadow-slave-icon {
+        float: left;
+        position: relative;
+        width: $buttonSize;
+        height: $buttonSize;
+        margin-top: -4px;
+
+        .gr-icon {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          margin: auto;
+
+        }
+      }
+
+      .fs-shadow-slave-name {
+        display: block;
+        float: left;
+        margin-top: -2px;
+        width: calc(100% - #{2 * $buttonSize});
+        padding: 0 10px;
+        box-sizing: border-box;
+
+        div {
+          height: 17px;
+          overflow: hidden;
+        }
+
+        span {
+          font-size: 13px;
+          line-height: 17px;
+          color: $colorDarkGrey;
+
+          &.fs-ext {
+            margin-left: 5px;
+          }
+
+          &.fs-path {
+            color: $colorActiveBlue;
+          }
+        }
+      }
+
+      .fs-shadow-slave-remove {
+        @include icon-button-small($buttonSize, $buttonSize);
+
+        float: right;
+        margin-right: 0;
+      }
+    }
+
+  }
+}

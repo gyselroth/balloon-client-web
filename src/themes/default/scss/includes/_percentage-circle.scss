@@ -1,0 +1,140 @@
+/*
+Copyright (c) 2018 by Kunal Kamble (https://codepen.io/kunalkamble/pen/XXbWwN)
+
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+$backgroundColor: $availableColor;
+$foregroundColor: $usedColor;
+$chartWidth: 230px;
+
+@import "./percentage-circle-css-fallback";
+
+.percent-circle {
+  $svgSize: $chartWidth;
+  $strokeWidth: 4px;
+  $labelColor: $foregroundColor;
+  $labelFontSize: 48px;
+  $duration: 3s;
+  $animationDelay: 0s;
+
+  $pi: 3.14;
+  $c: ($svgSize - 2*$strokeWidth) * $pi;
+  $labelData: '';
+
+  @for $i from 0 to 101 {
+    $labelData: $labelData + $i + '%' + '\a';
+  }
+
+  width: $chartWidth;
+  height: $chartWidth;
+
+  .chart {
+    display: none;
+    width: $svgSize;
+    height: $svgSize;
+    margin: 0;
+    position: relative;
+
+    &.animate {
+      svg .circle-foreground {
+        animation: offset $duration ease-in-out forwards;
+        animation-delay: $animationDelay;
+      }
+      svg .circle-background {
+        animation: offset $duration ease-in-out forwards;
+        animation-delay: $animationDelay;
+      }
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      .circle-background {
+        r: ($svgSize - 2*$strokeWidth)/2;
+        fill: none;
+        stroke: $backgroundColor;
+        stroke-width: $strokeWidth;
+      }
+      .circle-foreground {
+        @extend .circle-background;
+        stroke: $foregroundColor;
+        stroke-linecap: round;
+        transform-origin: 50% 50%;
+        transform: rotate(-90deg);
+      }
+    }
+
+    figcaption {
+      display: inline-block;
+      width: 100%;
+      height: $labelFontSize;
+      overflow: hidden;
+      text-align: center;
+      color: $labelColor;
+      position: absolute;
+      top: calc(50% - #{$labelFontSize/2});
+      left: 0;
+      font-size: 0;
+
+      &:after {
+        display: inline-block;
+        content: $labelData;
+        white-space: pre;
+        font-size: $labelFontSize;
+        line-height: $labelFontSize;
+      }
+    }
+  }
+
+  @for $percentage from 0 to 101 {
+    $cOffSet: $percentage/100*$c;
+
+    .chart-#{$percentage} {
+
+      &.animate {
+        figcaption:after {
+          animation: chart-label-#{$percentage} $duration steps($percentage) forwards;
+          animation-delay: $animationDelay;
+        }
+      }
+
+      svg {
+        .circle-foreground {
+          stroke-dasharray: $cOffSet $c;
+          stroke-dashoffset: $cOffSet;
+        }
+      }
+    }
+
+    @keyframes chart-label-#{$percentage} {
+      100% {
+        transform: translateY($labelFontSize * (-($percentage)));
+      }
+    }
+  }
+
+  @keyframes offset {
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+.k-ff,
+.k-safari,
+.k-webkit {
+  .percent-circle {
+    .css-fallback {
+      display: none;
+    }
+    .chart {
+      display: block;
+    }
+  }
+
+}

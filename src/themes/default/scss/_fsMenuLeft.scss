@@ -1,0 +1,139 @@
+#fs-menu-left {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: $colorWhite;
+  border-right: 1px solid $colorBrightGrey;
+
+  transition: width 0.3s ease-in-out;
+
+  z-index: 15;
+
+  &.fs-menu-left-open {
+    width: 240px;
+  }
+
+  #fs-menu-left-top,
+  #fs-menu-left-bottom {
+    width: 100%;
+
+    li {
+
+      color: $colorMediumGrey;
+      width: 100%;
+      position: relative;
+      cursor: pointer;
+
+      &:before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: $colorBrightGrey;
+      }
+
+      &:last-child:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        display: block;
+        width: 100%;
+        height: 1px;
+        background-color: $colorBrightGrey;
+      }
+
+      &:hover {
+        color: $colorDarkGrey;
+      }
+
+      .fs-menu-left-icon {
+        @include icon-button(60px, 60px);
+
+        & + div {
+          position: absolute;
+          top: 0;
+          left: 60px;
+          width: 140px;
+          height: 60px;
+          line-height: 60px;
+
+          span {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 13px;
+            line-height: 17px;
+            text-transform: uppercase;
+          }
+        }
+      }
+
+      &.fs-menu-left-active {
+        border-left: 4px solid $colorActiveBlue;
+        color: $colorDarkGrey;
+
+        .fs-menu-left-icon {
+          width: 56px;
+
+          .gr-icon {
+            left: -4px;
+          }
+
+          & + div {
+            left: 56px;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+  }
+
+  #fs-menu-left-bottom {
+    position: relative;
+
+    li {
+      &.fs-menu-left-active {
+        border-left: 0;
+        background-color: $colorDarkGrey;
+        color: $colorWhite;
+
+        .fs-menu-left-icon {
+          width: 60px;
+          left: 0;
+
+          & + div {
+            left: 60px;
+            font-weight: 700;
+          }
+        }
+      }
+
+      &:before {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointMenuVisible) {
+    width: 60px;
+    overflow-y: hidden;
+  }
+
+  @media screen and (min-height:547px) {
+    #fs-menu-left-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      li {
+        &:before {
+          display: block;
+        }
+      }
+    }
+  }
+
+}

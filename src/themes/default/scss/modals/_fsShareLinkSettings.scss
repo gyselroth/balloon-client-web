@@ -1,0 +1,114 @@
+$sidePadding: 30px;
+
+.fs-share-link-settings-window {
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
+  }
+}
+
+#fs-share-link-settings-window {
+  display: none;
+  width: 700px + (2 * $sidePadding);
+  padding-bottom: 31px;
+
+
+  #fs-share-link-settings-window-content {
+    .fs-share-link-settings-window-row {
+      $checkboxSize: 20px;
+      $labelWidth: 250px;
+
+      @include clearfix;
+
+      margin-bottom: 25px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .fs-share-link-settings-window-checkbox,
+      & > label,
+      & > input[type="text"],
+      & > input[type="password"] {
+        display: block;
+        box-sizing: border-box;
+        float: left;
+      }
+
+      .fs-share-link-settings-window-checkbox {
+        $height: 45px;
+        width: $checkboxSize;
+        height: $height;
+        line-height: $height;
+        font-size: $checkboxSize;
+
+        input[type="checkbox"] + label {
+          margin-top: 1px;
+          padding-left: 0;
+        }
+
+        & + label {
+          padding-left: 10px;
+          width: $labelWidth;
+          line-height: $height;
+
+          span {
+            color: $colorMediumGrey;
+          }
+        }
+      }
+
+      #fs-share-link-destroy {
+        & + label {
+          padding-top: 1px;
+          font-size: 15px;
+        }
+      }
+
+
+      & > .k-datepicker,
+      & > .k-timepicker,
+      & > input[type="password"] {
+        width: calc(100% - #{$checkboxSize + $labelWidth}) !important;
+
+        .k-select {
+          top: 9px;
+          right: 10px;
+        }
+      }
+
+      & > .k-datepicker input[type="text"],
+      & > .k-timepicker input[type="text"],
+      & > input[type="password"] {
+        font-size: 15px;
+        padding: 13px 15px 14px;
+        height: auto;
+      }
+
+      & > .k-datepicker .k-state-focused input[type="text"],
+      & > .k-timepicker .k-state-focused input[type="text"],
+      & > input[type="password"]:focus {
+        padding: 12px 14px 13px;
+      }
+    }
+  }
+
+  .fs-window-secondary-actions {
+    margin-top: 30px;
+  }
+}

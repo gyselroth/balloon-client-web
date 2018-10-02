@@ -1,0 +1,29 @@
+#fs-notifications-header {
+  position: relative;
+  margin-bottom: 26px;
+
+  h3 {
+    font-size: 15px;
+    line-height: 27px;
+    font-weight: bold;
+    color: $colorDarkGrey;
+  }
+
+  #fs-notifications-delete-all {
+    display: none;
+  }
+
+  .has-messages & #fs-notifications-delete-all {
+    display: block;
+    position: absolute;
+    top: -6px;
+    right: 0;
+  }
+
+  @media screen and (min-width: $breakpointMenuVisible) {
+    h3 {
+      font-size: 24px;
+      line-height: 27px;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+$sidePadding: 60px;
+
+.fs-history-window {
+  height: 500px;
+  max-height: 100vh;
+}
+
+#fs-history-window {
+  display: none;
+
+  $buttonWrapHeight: 100px;
+
+  width: 680px + (2 * $sidePadding);
+
+  #fs-history-window-content {
+    position: relative;
+    height: calc(100% - 75px);
+    width: 100%;
+    padding-right: $sidePadding;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    ul {
+      padding-bottom: 40px;
+
+      @include history-list;
+    }
+
+    #fs-history-window-footer {
+      position: fixed;
+      bottom: $buttonWrapHeight;
+      left: 0;
+
+      display: block;
+      height: 40px;
+      width: 100%;
+      background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
+    }
+  }
+
+  #fs-history-window-button-wrapper {
+    position: fixed;
+    width: 100%;
+    bottom: 30px;
+    left: 0;
+
+    input:last-child {
+      margin-right: 60px;
+    }
+  }
+}

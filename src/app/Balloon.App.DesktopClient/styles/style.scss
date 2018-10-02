@@ -1,0 +1,100 @@
+@import '../../../themes/default/scss/includes/colors';
+
+$sidePadding: 60px;
+
+#fs-desktop {
+  width: 520px + (2 * $sidePadding);
+  max-width: 100vw;
+  padding-bottom: 19px;
+
+  p {
+    width: 100%;
+    font-size: 15px;
+    line-height: 20px;
+    color: $colorMediumGrey;
+    margin: 0 0 27px;
+  }
+
+  ul {
+    li {
+      display: inline-block;
+      box-sizing: border-box;
+      width: 160px;
+      height: 170px;
+      border: 1px solid $colorLightGrey;
+      border-radius: 4px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+
+      &:nth-child(3) {
+        margin-right: 0;
+      }
+
+      &.fs-desktop-suggested-package {
+        $border-size: 3px;
+
+        border: $border-size solid $colorActiveBlue;
+      }
+
+      .title,
+      .download,
+      .icon {
+        display: block;
+        text-align: center;
+        width: 100%;
+      }
+
+      .title {
+        font-size: 15px;
+        line-height: 20px;
+        color: $colorDarkGrey;
+      }
+
+      .download {
+        font-size: 13px;
+        line-height: 17px;
+        color: $colorActiveBlue;
+      }
+
+      .icon {
+        $width: 60px;
+        $height: $width;
+
+        width: $width;
+        height: $height;
+        margin: 17px auto 23px;
+
+        background-size: $width $height;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      &#fs-desktop-exe .icon {
+        background-image: url(../img/windows.svg);
+      }
+
+      &#fs-desktop-zip .icon {
+        background-image: url(../img/tux.svg);
+      }
+
+      &#fs-desktop-pkg .icon {
+        background-image: url(../img/osx.svg);
+      }
+
+      &#fs-desktop-rpm .icon {
+        background-image: url(../img/rpm.svg);
+      }
+
+      &#fs-desktop-deb .icon {
+        background-image: url(../img/debian.svg);
+      }
+    }
+  }
+}
+
+@media only screen and (max-width:800px) {
+  #fs-menu-user-desktop {
+    display: none !important;
+  }
+}

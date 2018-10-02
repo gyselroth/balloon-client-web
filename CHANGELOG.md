@@ -1,3 +1,23 @@
+## 3.0.0-rc1
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Sept 28 16:36:20 CEST 2018
+
+Web UI v3. Complete redesign.
+
+
+## 3.0.0-beta2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Sept 26 14:21:34 CEST 2018
+
+Web UI v3. Complete redesign.
+
+## 3.0.0-beta1
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Sept 14 14:53:33 CEST 2018
+
+Web UI v3. Complete redesign.
+
+
 ## 2.0.2
 **Maintainer**: Raffael Sahli <sahli@gyselroth.com>\
 **Date**: Mon Jul 16 09:59:58 CEST 2018

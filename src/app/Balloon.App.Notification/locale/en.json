@@ -1,12 +1,25 @@
 {
   "app": {
-    "balloon_app_notification": {
-      "menu_title": "Subscribe",
-      "subscribe": "Subscribe",
-      "save": "Save",
-      "exclude_me": "Exclude my own changes",
-      "recursive": "Subscribe to sub folders",
-      "description": "Get notified if something gets changed in this node."
+    "notification": {
+      "settings": {
+        "menu_title": "Subscribe",
+        "subscribe": "Subscribe",
+        "save": "Save",
+        "exclude_me": "Exclude my own changes",
+        "recursive": "Subscribe to sub folders",
+        "description": "Get notified if something gets changed in this node."
+      },
+      "messages": {
+        "title": "Notifications",
+        "no_messages": "You don't have any new notifications",
+        "message_meta": "At %s from %s",
+        "message_meta_no_sender": "At %s",
+        "delete_all": "Delete all"
+      },
+      "hints": {
+        "hint_1": "You may create a subscription for files and folders. The server will notify you of any changes within your subscription. Just select a file/folder an go to Subscription. You will see those notifications in your inbox {icon-warning} and you will also receive a notification by mail. A subscribed file/folder is marked with a flag {icon-volume-up}",
+        "hint_2": "The server will notify you if somebody shares a folder with you. You will see those notifications in your inbox {icon-warning} and you will also receive a notifification by mail."
+      }
     }
   }
 }

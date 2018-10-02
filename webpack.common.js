@@ -4,34 +4,59 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 var gitRevisionPlugin = new GitRevisionPlugin();
+
+var isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
-    app: './main.js',
+    balloon: './main.js',
   },
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'balloon.bundle.js',
+    filename: '[name].[contenthash].js',
   },
+  mode: isDev ? 'development' : 'production',
+  devtool: isDev ? 'source-map' : false,
   module: {
     rules: [
-      {
+      /*{
         test: /\.json$/,
         loader: 'json-loader'
-      },
-      {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: "css-loader"
-        })
-      },
+      },*/
       {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
         loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
+      },
+      /*{
+        test: /(\.jsx|\.js)$/,
+        loader: 'eslint-loader',
+        exclude: /node_modules/
+      },*/
+      {
+        test: /\.scss$/,
+        use: [
+          {
+            loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+          },
+          {
+            loader: "css-loader",
+            options: {
+              minimize: true,
+              sourceMap: isDev
+            }
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              outputStyle: "compressed",
+              sourceMap: isDev
+            }
+          }
+        ]
       }
     ]
   },
@@ -40,14 +65,19 @@ module.exports = {
       $: "jquery",
       jQuery: "jquery",
     }),
-    new ExtractTextPlugin({
-      filename: "balloon.css",
-      allChunks: true
+    new MiniCssExtractPlugin({
+      filename: "[name].[contenthash].css",
+      chunkFilename: "[name].[id].css"
     }),
     new HtmlWebpackPlugin({
       hash: true,
       filename: 'index.html',
       template: 'index.html',
+      inject: false,
+      minify: {
+        collapseWhitespace: true,
+        preserveLineBreaks: false,
+      }
     }),
     new webpack.DefinePlugin({
       'process.env.VERSION': JSON.stringify(process.env.VERSION || gitRevisionPlugin.version()),
@@ -56,19 +86,19 @@ module.exports = {
     }),
     new MergeJsonWebpackPlugin({
       "output": {
-          "groupBy": [
-              {
-                 "pattern": "{./src/locale/en.json,./src/app/*/locale/en.json}",
-                 "fileName": "locale/en.json"
-              },
-              {
-                 "pattern": "{./src/locale/de.json,./src/app/*/locale/de.json}",
-                 "fileName": "locale/de.json"
-              }
-          ]
+        "groupBy": [
+          {
+            "pattern": "{./locale/en.json,./app/*/locale/en.json}",
+            "fileName": "locale/en.json"
+          },
+          {
+            "pattern": "{./locale/de.json,./app/*/locale/de.json}",
+            "fileName": "locale/de.json"
+          }
+        ]
       },
       "globOptions": {
-          "nosort": true
+        "nosort": true
       }
     })
   ]

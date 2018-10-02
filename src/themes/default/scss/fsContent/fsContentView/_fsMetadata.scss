@@ -1,0 +1,89 @@
+#fs-metadata {
+  .fs-metadata-group {
+    border-top: 1px solid $colorBrightGrey;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  table {
+    $thWidth: 68px;
+
+    border-collapse: collapse;
+    width: 100%;
+
+    tbody {
+      display: block;
+      border-bottom: 1px solid $colorBrightGrey;
+      margin-top: 17px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    &:first-child {
+      tbody:first-child {
+        margin-top: 0;
+      }
+    }
+
+    th,
+    td {
+      line-height: 20px;
+      font-weight: 300;
+      padding: 0 0 17px 0;
+      text-align: left;
+    }
+
+    th {
+      width: $thWidth;
+    }
+
+    td {
+      $paddingLeft: 30px;
+      position: relative;
+      padding-left: $paddingLeft;
+      max-width: 340px - $thWidth - $paddingLeft;
+
+      .fs-value {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .tooltip {
+        position: absolute;
+        top: 20px;
+        left: -1 * $thWidth;
+        max-width: 340px;
+        padding: 2px 4px;
+        border-radius: 4px;
+        background-color: $colorBrightGrey;
+        border: 1px solid $colorLightGrey;
+        z-index: 1;
+      }
+
+      &#fs-metadata-share {
+        @include clearfix;
+
+        .fs-value {
+          width: calc(100% - 23px);
+        }
+
+        .gr-icon {
+          $iconSize: 20px;
+
+          float: left;
+          display: block;
+          width: $iconSize;
+          height: $iconSize;
+          margin-right: 3px;
+        }
+      }
+    }
+  }
+}

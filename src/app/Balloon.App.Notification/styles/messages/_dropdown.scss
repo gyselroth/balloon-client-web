@@ -1,0 +1,54 @@
+$breakpointIncreasePadding: $breakpointSearchVisible;
+
+@import './dropdown-header';
+@import './dropdown-messages';
+
+/**
+Styles for "message center"
+**/
+#fs-browser-top-bar {
+  #fs-identity {
+    & > ul {
+      & > li {
+        #fs-notifications-dropdown-wrap {
+          width: 640px;
+          max-width: calc(100vw - 17px);
+          right: -52px;
+
+          .bln-dropdown-spike {
+            right: 54px;
+          }
+
+          #fs-notifications-dropdown {
+            overflow: hidden;
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+            padding: 27px 20px 20px;
+
+            max-height: 156px;
+            transition: max-height 0.5s ease-in-out;
+
+            &.has-messages {
+              max-height: calc(60vh + 132px);
+            }
+          }
+        }
+
+        @media screen and (min-width: $breakpointMenuVisible) {
+          #fs-notifications-dropdown-wrap {
+            max-width: calc(100vw - 87px);
+          }
+        }
+
+        @media screen and (min-width: $breakpointIncreasePadding) {
+          #fs-notifications-dropdown-wrap {
+            #fs-notifications-dropdown {
+              padding: 37px 56px 40px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

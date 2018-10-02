@@ -10,6 +10,8 @@ import convert from '../app/Balloon.App.Convert/lib/lib.js';
 import notification from '../app/Balloon.App.Notification/lib/lib.js';
 import clamav from '../app/Balloon.App.ClamAv/lib/lib.js';
 import desktop from '../app/Balloon.App.DesktopClient/lib/lib.js';
+import burl from '../app/Balloon.App.Burl/lib/lib.js';
+import external from '../app/Balloon.App.ExternalStorage/lib/lib.js';
 
 var apps = [
   office,
@@ -17,9 +19,19 @@ var apps = [
   notification,
   clamav,
   desktop,
+  burl,
+  external
 ]
 
 var app = {
+  isInstalled: function(appId) {
+    var foundApp = apps.find(function(app) {
+      return app.id !== undefined && app.id === appId;
+    });
+
+    return foundApp !== undefined;
+  },
+
   render: function() {
     for(let app in apps) {
       if(apps[app]['render']) {
