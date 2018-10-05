@@ -7124,9 +7124,8 @@ var balloon = {
 
     //TODO pixtron - rename prop to attribute
     for(var prop in node) {
-      var $parent = $('#fs-metadata-' + (prop === 'shared' ? 'share' : prop));
+      var $parent = $('#fs-metadata-'+prop);
       var value;
-      if($parent.length === 0) continue;
 
       $field = $parent.find('.fs-value');
       $parent.parent().show();

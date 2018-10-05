@@ -1,11 +1,15 @@
+#### Description
+**Is**:
 <!-- Please provide a description here. -->
 
-<!-- Please provide information about your environement, you can leave this out if you are opening a feature request.-->
+**Should**:
+<!-- Please provide a description here. -->
 
-#### balloon server version
-<!-- your version goes here, example: 1.0.8-rc3 -->
 
 #### balloon web client version
+<!-- your version goes here, example: 1.0.8-rc3 -->
+
+#### balloon server version
 <!-- your version goes here, example: 1.0.8-rc3 -->
 
 #### Your client operating system
