@@ -66,7 +66,6 @@ var login = {
   checkOidcAuth: function() {
     this.notifier = new AuthorizationNotifier();
     this.handler = new RedirectRequestHandler();
-
     this.notifier.setAuthorizationListener(function (request, response, error) {
       var hash = login.parseAuthorizationResponse();
       if (response && hash.access_token) {
@@ -236,7 +235,7 @@ var login = {
   },
 
   getAccessToken: function() {
-    return this.token;
+    return login.token;
   },
 
   xmlHttpRequest: function(options) {
