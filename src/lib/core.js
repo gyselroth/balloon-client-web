@@ -6610,6 +6610,7 @@ var balloon = {
     }
 
     var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
+
     if(typeof(login) === 'object' && login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
