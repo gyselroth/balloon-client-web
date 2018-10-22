@@ -5689,7 +5689,7 @@ var balloon = {
 
     var url = balloon.base+'/nodes/content?'+balloon.param('id', id)+''+name;
 
-    if(typeof(login) === 'object' && !login.getAccessToken()) {
+    if(typeof(login) === 'object' && login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
 
@@ -6610,7 +6610,7 @@ var balloon = {
     }
 
     var url = balloon.base+'/files/content?id='+node.id+'&hash='+node.hash;
-    if(typeof(login) === 'object' && !login.getAccessToken()) {
+    if(typeof(login) === 'object' && login.getAccessToken()) {
       url += '&access_token='+login.getAccessToken();
     }
 
