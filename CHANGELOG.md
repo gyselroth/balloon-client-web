@@ -1,3 +1,10 @@
+## 3.0.2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Mon Oct 22 10:32:34 CEST 2018
+
+* [FIX] Fixed get access token for node download/preview if authenticated via oidc #87
+
+
 ## 3.0.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Oct 02 10:32:20 CEST 2018
