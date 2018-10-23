@@ -5,6 +5,7 @@
 * [FIX] login background image not stretched on ie11 #94
 * [FIX] Object method assign does not exists on ie11 #95
 * [FIX] syntax error in translate.js on ie11 #93
+* [FIX] Promise is undefined on IE11 #92
 
 
 ## 3.0.2

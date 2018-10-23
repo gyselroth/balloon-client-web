@@ -6,13 +6,11 @@
  */
 
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
-
 import $ from "jquery";
 import translate from './lib/translate.js';
 import svgxuse from 'svgxuse';
-
 import balloonCss from './themes/default/scss/balloon.scss';
-
+import { polyfill } from 'es6-promise'; polyfill();
 
 window.jquery = $;
 
