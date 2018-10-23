@@ -1,8 +1,0 @@
-dist
-build
-pack
-node_modules
-npm-debug.log
-config.json
-.git
-Dockerfile
