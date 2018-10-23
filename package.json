@@ -1,6 +1,6 @@
 {
   "name": "balloon-client-web",
-  "description": "Balloon Web UI",
+  "description": "balloon web UI",
   "title": "balloon",
   "scripts": {
     "start": "webpack-dev-server --open --config webpack.dev.js",
@@ -54,17 +54,15 @@
     "url": "git+https://github.com/gyselroth/balloon-client-web.git"
   },
   "keywords": [
-    "Balloon",
     "JavaScript",
     "HTML5",
     "CSS3",
     "SPA",
-    "Fast",
     "Super-fast",
     "Web",
-    "UI",
-    "Balloon",
-    "client"
+    "ui",
+    "balloon",
+    "web-client"
   ],
   "author": "Raffael Sahli <sahli@gyselroth.com>",
   "license": "GPL-3.0",
