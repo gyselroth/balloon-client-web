@@ -3,6 +3,7 @@
 **Date**: Tue Oct 23 10:32:55 CEST 2018
 
 * [FIX] login background image not stretched on ie11 #94
+* [FIX] Object method assign does not exists on ie11 #95
 
 
 ## 3.0.2
