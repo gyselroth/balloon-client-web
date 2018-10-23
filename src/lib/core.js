@@ -857,7 +857,7 @@ var balloon = {
       if(iconAction) iconAction();
     });
 
-    var i18nextOptions = Object.assign(values, {'interpolation': {'escapeValue': false}});
+    var i18nextOptions = $.extend(values, {'interpolation': {'escapeValue': false}});
     $snackbar.find('#fs-snackbar-message').html(i18next.t(message, i18nextOptions));
     $snackbar.addClass('show');
 
@@ -2442,7 +2442,7 @@ var balloon = {
    * Add identity menu
    */
   addIdentityMenu: function(name, menu) {
-    this.identity_menu_items[name] = Object.assign({name: name}, menu);
+    this.identity_menu_items[name] = $.extend({name: name}, menu);
   },
 
   /**

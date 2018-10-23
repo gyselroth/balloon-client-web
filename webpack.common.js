@@ -23,13 +23,19 @@ module.exports = {
   devtool: isDev ? 'source-map' : false,
   module: {
     rules: [
-      /*{
-        test: /\.json$/,
-        loader: 'json-loader'
-      },*/
       {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
         loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
+      },
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"]
+          }
+        }
       },
       /*{
         test: /(\.jsx|\.js)$/,
