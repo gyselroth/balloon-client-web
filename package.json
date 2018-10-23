@@ -24,9 +24,9 @@
     "ubuntu-fontface": "^0.1.13"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
     "css-loader": "^1.0.0",
     "eslint": "^4.19.1",
     "eslint-loader": "1.7.1",
@@ -45,7 +45,7 @@
     "url-loader": "^1.1.2",
     "webpack": "^4.22.0",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.9",
+    "webpack-dev-server": "^3.1.10",
     "webpack-merge": "^4.1.4"
   },
   "main": "index.html",
