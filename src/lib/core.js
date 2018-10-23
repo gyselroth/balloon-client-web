@@ -1441,7 +1441,7 @@ var balloon = {
     }
 
     balloon.resetDom(
-      ['metadata','preview','view-bar',
+      ['metadata','preview','view-bar','properties',
         'history','share','share-link'
       ]);
 
@@ -2663,12 +2663,12 @@ var balloon = {
       resizable: false,
       modal: true,
       open: function() {
-        var $k_fs_destroy_date = $fs_destroy_date_win.find('input[name=destroy_date]').kendoBalloonDatePicker({
+        var $k_fs_destroy_date = $fs_destroy_date_win.find('input[name=destroy_date]').val('').kendoBalloonDatePicker({
           format: kendo.culture().calendar.patterns.d,
           min: new Date(),
         }).data('kendoBalloonDatePicker');
 
-        var $k_fs_destroy_time = $fs_destroy_date_win.find('input[name=destroy_time]').kendoBalloonTimePicker({
+        var $k_fs_destroy_time = $fs_destroy_date_win.find('input[name=destroy_time]').val('').kendoBalloonTimePicker({
           format: kendo.culture().calendar.patterns.t
         }).data('kendoBalloonTimePicker');
 
@@ -2731,7 +2731,7 @@ var balloon = {
       if(ts === null) {
         balloon.selfDestroyNode(node, ts, $k_win, $d);
       } else {
-        var dateHr = kendo.toString(new Date(ts), kendo.culture().calendar.patterns.g)
+        var dateHr = kendo.toString(new Date(ts * 1000), kendo.culture().calendar.patterns.g)
         var msg  = i18next.t('view.properties.prompt_destroy', dateHr, node.name);
         balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win]).then(function() {
           $d.resolve();
@@ -7825,7 +7825,7 @@ var balloon = {
         break;
 
       case 'properties':
-        var $parent = $('#fs-metadata');
+        var $parent = $('#fs-properties');
         $parent.find('textarea').val('');
         $parent.find('input').val('');
         $parent.find('select').val('');
