@@ -1,3 +1,12 @@
+## 3.0.5
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Oct 23 13:25:51 CEST 2018
+
+* [FIX] Popup destroy shared links shows date 1970-01-01 instead the choosen one #98
+* [FIX] Metadata inputs are not cleared if a new node gets openened #99
+* [FIX] Fixed de_CH and en_US hint locale typos
+
+
 ## 3.0.3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Oct 23 10:32:55 CEST 2018
