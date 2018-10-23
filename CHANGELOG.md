@@ -1,3 +1,10 @@
+## 3.0.3
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Oct 23 10:32:55 CEST 2018
+
+* [FIX] login background image not stretched on ie11 #94
+
+
 ## 3.0.2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Mon Oct 22 10:32:34 CEST 2018
