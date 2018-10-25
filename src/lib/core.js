@@ -2108,10 +2108,13 @@ var balloon = {
             undo = false;
           }
 
-          var app = body.data[log].client.type;
+          var app = null;
+          if(body.data[log].client) {
+            app = body.data[log].client.type;
 
-          if(body.data[log].client.app !== null) {
-            app = body.data[log].client.app;
+            if(body.data[log].client.app !== null) {
+              app = body.data[log].client.app;
+            }
           }
 
           if(app === null) {
