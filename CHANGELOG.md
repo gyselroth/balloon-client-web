@@ -1,3 +1,10 @@
+## 3.0.5
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Thu Oct 25 11:07:51 CEST 2018
+
+* [CHANGE] Add user namespace to localStorage #101
+
+
 ## 3.0.4
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Oct 23 13:25:51 CEST 2018
