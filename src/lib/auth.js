@@ -199,6 +199,12 @@ var login = {
           login.user = response.responseJSON;
           localStorage.username = login.user.username;
 
+          if(login.user.namespace) {
+            localStorage.namespace = login.user.namespace;
+          } else {
+            localStorage.removeItem('namespace');
+          }
+
           login.updateFsIdentity();
 
           login.initBrowser();
@@ -223,6 +229,13 @@ var login = {
         window.location.hash = '';
         login.user = body;
         localStorage.username = login.user.username;
+
+        if(login.user.namespace) {
+          localStorage.namespace = login.user.namespace;
+        } else {
+          localStorage.removeItem('namespace');
+        }
+
         login.updateFsIdentity();
       }
     });
