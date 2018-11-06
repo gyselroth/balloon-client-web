@@ -12,6 +12,8 @@ import css from '../styles/style.scss';
 var app = {
   id: 'Balloon.App.Office',
 
+  OFFICE_EXTENSIONS: ['csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'],
+
   render: function() {
   },
 
@@ -25,9 +27,8 @@ var app = {
     app.balloon.addNew('docx', 'app.office.word_document', 'file-word', callback);
     app.balloon.addNew('xlsx', 'app.office.excel_document', 'file-excel', callback);
     app.balloon.addNew('pptx', 'app.office.powerpoint_document', 'file-powerpoint', callback);
-    app.origDblClick = app.balloon._treeDblclick;
-    //TODO pixtron - find a clean way for apps to hook into core. Just overriding core methods is quite a hack.
-    app.balloon._treeDblclick = app.treeDblclick;
+
+    app.balloon.addPreviewHandler('office', this._handlePreview);
   },
 
   edit: function(node) {
@@ -266,21 +267,22 @@ var app = {
     });
   },
 
-  treeDblclick: function() {
-    var supported_office = [
-      'csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'
-    ];
+  /**
+   * Check if file is a supported office file
+   *
+   * @param   object node
+   * @return  bool
+   */
+  isOfficeFile: function(node) {
+    return this.OFFICE_EXTENSIONS.indexOf(this.balloon.getFileExtension(node)) > -1;
+  },
 
-    if(
-      app.balloon.last !== null
-      && app.balloon.last.directory === false
-      && supported_office.indexOf(app.balloon.getFileExtension(app.balloon.last.name)) > -1
-      && !app.balloon.isMobileViewPort()
-    ) {
-      app.edit(app.balloon.getCurrentNode());
-      app.balloon.pushState();
-    } else {
-      app.origDblClick.apply(app.balloon, arguments);
+  _handlePreview: function(node) {
+    if(app.isOfficeFile(node) && !app.balloon.isMobileViewPort()) {
+      return function(node) {
+        app.edit(node);
+        app.balloon.pushState();
+      }
     }
   },
 
