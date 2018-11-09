@@ -180,6 +180,7 @@
       "privilege_rw": "Read/Write",
       "privilege_r": "Readonly",
       "privilege_w+": "Mailbox",
+      "privilege_d": "Deny",
       "remove_privilege": "Remove",
       "create": "Share collection",
       "save": "Save changes",

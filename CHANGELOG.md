@@ -1,3 +1,11 @@
+## 3.0.6
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Nov 09 09:28:22 CET 2018
+
+* [FIX] doublecklick on folder too much recursion, folder does not open #91
+* [FIX] Missing share "privilege" "deny" (d) #86
+
+
 ## 3.0.5
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Thu Oct 25 11:07:51 CEST 2018
