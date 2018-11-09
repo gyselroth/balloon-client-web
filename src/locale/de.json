@@ -181,6 +181,7 @@
       "privilege_rw": "Lesen/Schreiben",
       "privilege_r": "Nur Lesen",
       "privilege_w+": "Briefkasten",
+      "privilege_d": "Kein Zugriff",
       "remove_privilege": "Entfernen",
       "create": "Ordner freigeben",
       "save": "Anpassungen bestätigen",

@@ -4953,7 +4953,7 @@ var balloon = {
 
     var $consumer_privilege_selector = $('<ul class="fs-share-window-privileges"></ul>');
 
-    var privileges = ['m', 'r', 'rw', 'w+'];
+    var privileges = ['m', 'r', 'rw', 'w+', 'd'];
     for(var i in privileges) {
       var itemPrivilege = privileges[i];
       var itemId = item.role.id;
