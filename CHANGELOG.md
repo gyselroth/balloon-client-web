@@ -1,3 +1,10 @@
+## 3.0.7
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Nov 13 09:39:22 CET 2018
+
+* [FIX] File uploads are sent with wrong Content-Type header #106 
+
+
 ## 3.0.6
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Nov 09 09:28:22 CET 2018
