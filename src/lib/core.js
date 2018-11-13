@@ -8378,6 +8378,7 @@ var balloon = {
         return xhr;
       },
       url: url,
+      contentType: 'application/octet-stream',
       type: 'PUT',
       data: chunk,
       processData: false,
