@@ -14,7 +14,7 @@
       "close_edit_file": "Wurde das Dokument bereits gespeichert oder soll das Fenster ohne Speichern des Dokuments geschlossen werden?",
       "startup_prompt": {
         "title": "Information",
-        "message": "Diese App ist eine Integration von Libre Office Online mit Kollaboration Features. Du kannst Texte, Tabellen und Präsentationen öffnen und bearbeiten. Das gleichzeitige Betrachten und Bearbeiten eines geteilten Dokument durch mehrere Nutzende ist ebenfalls möglich.<br/>Diese App ist aktuell in einem Beta-Test; sollten Probleme auftreten, versuche es bitte zu einem späteren Zeitpunkt erneut oder lade das Dokument auf den Desktop, um es lokal zu öffnen.",
+        "message": "Diese App ist eine Integration von Libre Office Online mit Kollaboration Features. Du kannst Texte, Tabellen und Präsentationen öffnen und bearbeiten. Das gleichzeitige Betrachten und Bearbeiten eines geteilten Dokuments durch mehrere Nutzende ist ebenfalls möglich.<br/>Diese App ist aktuell in einem Beta-Test; sollten Probleme auftreten, versuche es bitte zu einem späteren Zeitpunkt erneut oder lade das Dokument auf den Desktop, um es lokal zu öffnen.",
         "dont_show_again": "Nicht mehr anzeigen",
         "close": "Schliessen"
       },
