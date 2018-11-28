@@ -17,8 +17,8 @@
         "delete_all": "Alle löschen"
       },
       "hints": {
-        "hint_1": "Du kannst Dateien und Ordner für Änderungen abonieren. Der Server wird dich automatisch benachrichtigen bei einer Änderung. Wähle dazu eine eine Datei/Ordner an und navigiere zu Abonnieren. Du siehst diese Nachrichten in deinem Posteingang {icon-alert} und bekommst zusätzliche eine Meldung per E-Mail. Eine abonnierte Datei/Ordner ist als {icon-volume-up} markiert.",
-        "hint_2": "Der Server benachrichtig dich wenn jemand einen Ordner mit dir geteilt hat. Du siehst diese Nachrichten in deinem Posteingang {icon-alert} und bekommst zusätzliche eine Meldung per E-Mail."
+        "hint_1": "Du kannst Dateien und Ordner für Änderungen abonnieren. Der Server wird dich automatisch benachrichtigen bei einer Änderung. Wähle dazu eine/einen Datei/Ordner aus und navigiere zu Abonnieren. Du siehst diese Benachrichtungen bei deinen Mitteilungen {icon-alert} und bekommst zusätzliche eine Meldung per E-Mail. Eine abonnierte Datei/ein abonnierter Ordner ist als {icon-volume-up} markiert.",
+        "hint_2": "Der Server benachrichtigt dich, wenn jemand einen Ordner mit dir geteilt hat. Du siehst die entsprechende Benachrichtung bei deinen Mitteilungen {icon-alert} und bekommst zusätzlich eine Meldung per E-Mail."
       }
     }
   }
