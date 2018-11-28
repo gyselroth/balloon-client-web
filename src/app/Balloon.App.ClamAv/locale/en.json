@@ -2,9 +2,9 @@
   "app": {
     "clamav": {
       "quarantine": "Quarantine",
-      "malware_found": "This file has been identified with a malware [%s] and is currently in qurantine.",
+      "malware_found": "This file has been identified with a malware [%s] and is currently in quarantine.",
       "clean": "This file has been scanned for malware.",
-      "hint": "Your uploaded files get scanned for virus/malware in the background automatically. You can see the scan result in the files metadata. Detected files can be found in the qurantine {icon-warning}."
+      "hint": "Your uploaded files get scanned for virus/malware in the background automatically. You can see the scan result in the files metadata. Detected files can be found in the quarantine {icon-warning}."
     }
   }
 }
