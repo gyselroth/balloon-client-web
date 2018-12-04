@@ -207,7 +207,7 @@
       "create": "Link teilen",
       "edit": "Link anzeigen",
       "delete": "Link löschen",
-      "link_settings": "Linkeinstellungen",
+      "link_settings": "Link-Einstellungen",
       "link_copied": "Der Link wurde in die Zwischenablage kopiert",
       "global_link": "Globaler Link",
       "global_link_hint": "(zum Kopieren auf den Link klicken)",
@@ -215,10 +215,10 @@
       "comment": "Kommentar",
       "send": "Link versenden",
       "message": {
-        "subject": "Ein Balloon Link wurde geteilt"
+        "subject": "Ein balloon-Link wurde geteilt"
       },
       "settings": {
-        "title": "Linkeinstellungen für „%s“",
+        "title": "Link-Einstellungen für „%s“",
         "cancel": "Abbrechen",
         "save": "Einstellungen speichern",
         "save_continue": "Speichern und weiter",
@@ -253,7 +253,7 @@
       "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)",
       "destroy_date_window": {
         "title": "Löschdatum festlegen",
-        "destroyable": "Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
+        "destroyable": "Die Datei/der Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
         "cancel": "Abbrechen",
         "save": "Speichern",
         "destroy_date": "Löschdatum",
@@ -297,13 +297,13 @@
     "ok": "Ok",
     "force_delete": "Willst du diese Dateien/Ordner wirklich löschen (nicht wiederherstellbar)?",
     "trash_delete": "Willst du diese Dateien/Ordner in den Papierkorb verschieben (wiederherstellbar)?",
-    "restore": "Willst du diese Datei/Order wiederherstellen?",
+    "restore": "Willst du diese Datei/diesen Ordner wiederherstellen?",
     "untouched": "Die folgenden ausgewählten Dateien/Ordner werden ignoriert (werden nicht gelöscht):",
     "merge": "Die folgenden Dateien/Ordner existieren im Zielordner bereits, willst du diese überschreiben bzw. zusammenführen?",
     "restore_to_root": "Der ursprüngliche Ordner existiert nicht mehr oder ist gelöscht, willst du die Dateien/Ordner in deinen obersten Ordner wiederherstellen?",
-    "open_big_file": "Die Datei %s ist sehr gross und das öffnen kann einige Zeit in Anspruch nehmen, willst du dennoch fortfahren?",
+    "open_big_file": "Die Datei %s ist sehr gross und das Öffnen kann einige Zeit in Anspruch nehmen, willst du dennoch fortfahren?",
     "close_save_file": "Willst du deine Änderungen speichern?",
-    "auto_rename_node": "Eine Datei/Ordner existiert bereits mit dem Name %s, möchtest du deine umbenenen in %s?"
+    "auto_rename_node": "Eine Datei/ein Ordner mit dem Name %s existiert bereits, möchtest du umbenennen in %s?"
   },
   "events": {
     "unknown": "Unbekannt",
@@ -318,7 +318,7 @@
     "delete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> löschte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
     "delete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
     "delete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
-    "delete_file": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Datei <span class='fs-event-name'><span></span>{{name}}</span> (In den Papierkorb verschoben)",
+    "delete_file": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Datei <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
     "force_delete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> löschte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> (kann nicht rückgängig gemacht werden)",
     "force_delete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> (kann nicht rückgängig gemacht werden)",
     "force_delete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> (kann nicht rückgängig gemacht werden)",
@@ -327,10 +327,10 @@
     "add_file": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Datei <span class='fs-event-name'><span></span>{{name}}</span> hinzu",
     "add_collection": "<span class='fs-event-user'><span></span>{{user}}</span> fügte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> hinzu",
     "restore_file": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Datei <span class='fs-event-name'><span></span>{{name}}</span> aus dem Verlauf wieder her",
-    "undelete_file": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Datei <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
-    "undelete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> fügte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
-    "undelete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
-    "undelete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_file": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Datei <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> stellte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
     "move_collection": "<span class='fs-event-user'><span></span>{{user}}</span> verschob den Ordner <span class='fs-event-name'><span></span>{{name}}</span> von <span class='fs-event-name'><span></span>{{previous.parent.name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "move_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> verschob die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> von <span class='fs-event-name'><span></span>{{previous.parent.name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "move_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> verschob die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> von <span class='fs-event-name'><span></span>{{previous.parent.name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
@@ -345,11 +345,11 @@
     "copy_collection": "<span class='fs-event-user'><span></span>{{user}}</span> kopierte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "copy_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> kopierte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "prompt": {
-      "trash_delete": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird in den Papierkorb verschoben (Wiederherstellbar).",
+      "trash_delete": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird in den Papierkorb verschoben (wiederherstellbar).",
       "trash_restore": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird wiederhergestellt.",
       "rename": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird in %s umbenannt.",
       "move": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird nach %s verschoben.",
-      "restore": "Willst du diesen Vorgang wirklich rückgängig machen? Die Datei %s wird nach Version %s wiederhergestellt.",
+      "restore": "Willst du diesen Vorgang wirklich rückgängig machen? Die Datei %s wird zur Version %s zurückgesetzt.",
       "unshare": "Willst du diesen Vorgang wirklich rückgängig machen? Die Freigabe %s wird entfernt."
     }
   },
