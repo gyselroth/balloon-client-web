@@ -23,9 +23,9 @@
     "quota_unlimited": "Unlimitiert",
     "user": "Benutzer",
     "attribute": {
-      "id": "User Id",
-      "created": "Created",
-      "username": "Username",
+      "id": "Benutzer-ID",
+      "created": "Erstellt",
+      "username": "Benutzername",
       "name": "Name",
       "mail": "E-Mail"
     }
