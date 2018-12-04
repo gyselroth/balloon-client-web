@@ -6,7 +6,7 @@
       "choose_format": "Format auswählen",
       "description": "Erstelle Dateiklone dieser Datei, welche sich automatisch aktualisieren. Es ist auch möglich den Inhalt in ein anderes Dateiformat konvertieren zu lassen.",
       "not_supported": "Dieser Dateityp wird nicht unterstützt.",
-      "hint": "Du kannst einen automatischen Klon einer Datei anlegen lassen. Jedesmal wenn das Original sich ändert, passt sich der Klon dem Inhalt des Originals an. Es ist auch möglich ein anderes Format für den Klon zu wählen. Du hast zum Beispiel ein .docx-Dokument (Word) und möchtest ein PDF dieser Datei haben. Das PDF wird sich durch die Funktionsweise dieses Befehls automatisch dem Inhalt des docx-Dokumentes anpassen. Du musst nur eine Datei auswählen, zu Schatten gehen und einen solchen Klon erstellen. Ein Klon kann auch verschoben werden und wird immer noch vom Original aktualisiert.",
+      "hint": "Du kannst einen automatischen Klon einer Datei anlegen lassen. Du musst nur eine Datei auswählen, zu Schatten gehen und einen solchen Klon erstellen. Jedesmal wenn das Original sich ändert, passt sich der Klon dem Inhalt des Originals an. Es ist auch möglich ein anderes Format für den Klon zu wählen. Du hast zum Beispiel ein .docx-Dokument (Word) und möchtest ein PDF dieser Datei haben. Auch das PDF wird sich durch die Funktionsweise dieses Befehls automatisch dem Inhalt des docx-Dokumentes anpassen. Ein Klon kann auch verschoben werden und wird immer noch vom Original aktualisiert.",
       "being_created": "wird erstellt"
     }
   }
