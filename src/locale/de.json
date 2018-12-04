@@ -1,5 +1,5 @@
 {
-  "title": "Balloon",
+  "title": "balloon",
   "login": {
     "username": "Benutzername",
     "password": "Passwort",
@@ -10,14 +10,14 @@
     "settings": "Einstellungen",
     "help": "Hilfe",
     "error": {
-      "server": "Der balloon Server meldet aktuell eine Störung, bitte versuche es später erneut.",
+      "server": "Der balloon-Server meldet aktuell eine Störung, bitte versuche es später erneut.",
       "basic": "Der Benutzername oder das Passwort ist falsch.",
       "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider."
     }
   },
   "profile": {
     "quota": "Quota",
-    "quota_max": "Total Speicherplatz",
+    "quota_max": "Gesamter Speicherplatz",
     "quota_left": "Freier Speicherplatz",
     "quota_used": "Benutzter Speicherplatz",
     "quota_unlimited": "Unlimitiert",
@@ -27,7 +27,7 @@
       "created": "Created",
       "username": "Username",
       "name": "Name",
-      "mail": "E-mail"
+      "mail": "E-Mail"
     }
   },
   "nav": {
@@ -52,7 +52,7 @@
       "properties": "Eigenschaften",
       "history": "Verlauf",
       "share_folder": "Ordner freigeben",
-      "share_link": "Link Teilen",
+      "share_link": "Link teilen",
       "events": "Events"
     }
   },
@@ -84,7 +84,7 @@
       "size": "Grösse"
     },
     "node_states": {
-      "sharelink": "Als link geteilt",
+      "sharelink": "Als Link geteilt",
       "deleted": "Gelöscht",
       "readonly": "Nur lesen",
       "destroy": "Löschdatum gesetzt",
@@ -117,9 +117,9 @@
   },
   "time": {
     "year": "{{count}} Jahr",
-    "year_plural": "{{count}} Jahren",
+    "year_plural": "{{count}} Jahre",
     "month": "{{count}} Monat",
-    "month_plural": "{{count}} Monaten",
+    "month_plural": "{{count}} Monate",
     "day": "{{count}} Tag",
     "day_plural": "{{count}} Tage",
     "hour": "{{count}} Stunde",
@@ -164,10 +164,10 @@
       }
     },
     "preview": {
-      "failed": "Die Vorschau konnte nicht erstellt werden"
+      "failed": "Die Vorschau konnte nicht erstellt werden."
     },
     "share_read": {
-      "hint": "Dieser order wurde unter folgenden Bedingungen freigegeben:",
+      "hint": "Dieser Ordner wurde unter folgenden Bedingungen freigegeben:",
       "resource": "Ressource",
       "role": "Rolle"
     },
