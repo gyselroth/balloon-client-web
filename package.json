@@ -21,7 +21,8 @@
     "js-base64": "^2.4.9",
     "kendo-ui-core": "^2018.3.1107",
     "merge-jsons-webpack-plugin": "^1.0.18",
-    "ubuntu-fontface": "^0.1.13"
+    "ubuntu-fontface": "^0.1.13",
+    "uglifyjs-webpack-plugin": "^2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",
