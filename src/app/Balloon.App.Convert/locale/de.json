@@ -1,13 +1,13 @@
 {
   "app": {
     "convert": {
-      "slave_node": "Diese Datei ist eine Kopie von {{node.master.master.name}} und wird automatisch aktuallisiert wenn {{node.master.master.name}} angepasst wird.",
+      "slave_node": "Diese Datei ist eine Kopie von {{node.master.master.name}} und wird automatisch aktualisiert, wenn {{node.master.master.name}} angepasst wird.",
       "menu_title": "Schatten",
       "choose_format": "Format auswählen",
-      "description": "Erstelle Dateiklone dieser Datei, welche sich automatisch aktualisieren. Es ist auch möglich den Inhalt in ein anderes Dateiformat konventieren zu lassen.",
-      "not_supported": "Dieser Dateityp ist nicht unterstützt.",
-      "hint": "Du kannst einen automatischen Klon einer Datei anlegen lassen. Jedesmal wenn das Original ändert, passt sich der Klon mit dem Inhalt des Originals an. Es is auch Möglich ein anderes Format für den Klon zu wählen, zum Beispiel: Du hast ein docx (Word) und möchtest ein PDF dieser Datei haben. Das PDF wird sich durch diese Funktionalität automatisch dem Inhalt des docx Dokumentes anpassen. Das ist möglich! Du must nur eine Datei auswählen, zu Schatten gehen und ein solcher Klon erstellen. Ein Klon kann auch verschoben werden und wird immer noch vom Original aktuallisiert.",
-      "being_created": "wird erstelllt"
+      "description": "Erstelle Dateiklone dieser Datei, welche sich automatisch aktualisieren. Es ist auch möglich den Inhalt in ein anderes Dateiformat konvertieren zu lassen.",
+      "not_supported": "Dieser Dateityp wird nicht unterstützt.",
+      "hint": "Du kannst einen automatischen Klon einer Datei anlegen lassen. Du musst nur eine Datei auswählen, zu 'Schatten' gehen und einen solchen Klon erstellen. Jedesmal wenn das Original sich ändert, passt sich der Klon dem Inhalt des Originals an. Es ist auch möglich ein anderes Format für den Klon zu wählen. Du hast zum Beispiel ein .docx-Dokument (Word) und möchtest ein PDF dieser Datei haben. Auch das PDF wird sich durch die Funktionsweise dieses Befehls automatisch dem Inhalt des docx-Dokumentes anpassen. Ein Klon kann auch verschoben werden und wird immer noch vom Original aktualisiert.",
+      "being_created": "wird erstellt"
     }
   }
 }

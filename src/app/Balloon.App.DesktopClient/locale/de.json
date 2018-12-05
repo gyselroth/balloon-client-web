@@ -1,7 +1,7 @@
 {
   "app": {
     "desktopclient": {
-      "menu": "Download Desktop app",
+      "menu": "Download Desktop App",
       "description": "Bring balloon auf deinen Desktop, wähle dein Betriebsystem:",
       "windows": "Windows (.exe)",
       "osx": "OS X (.pkg)",
@@ -9,7 +9,7 @@
       "debian": "DEB based (.deb)",
       "redhat": "RPM based (.rpm)",
       "download": "Download",
-      "hint": "Es gibt eine App welche deine ganze Cloud auf deinen Desktop bringt. Die App gibt es für Windows, Mac OS X und Linux. Du kannst diese herunterladen indem du auf {icon-app-download} klickst unten links."
+      "hint": "Es gibt eine App, welche deine ganze Cloud auf deinen Desktop bringt. Die App gibt es für Windows, Mac OS X und Linux. Du kannst diese herunterladen, indem du auf {icon-app-download} klickst unten links."
     }
   }
 }
