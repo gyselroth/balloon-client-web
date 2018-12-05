@@ -1,3 +1,13 @@
+## 3.0.8
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Dez 05 08:55:22 CET 2018
+
+* [FIX] Various german locale fixes
+* [FIX] Delete button must be active for readonly files #110
+* [FIX] Infinite scroll for events does not work #74
+* [FIX] If a scrollbar is at the bottom in the balloon events window the scrollbar can not be moved anymore #75
+
+
 ## 3.0.7
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Nov 13 09:39:22 CET 2018

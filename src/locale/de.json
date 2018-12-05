@@ -1,5 +1,5 @@
 {
-  "title": "Balloon",
+  "title": "balloon",
   "login": {
     "username": "Benutzername",
     "password": "Passwort",
@@ -10,24 +10,24 @@
     "settings": "Einstellungen",
     "help": "Hilfe",
     "error": {
-      "server": "Der balloon Server meldet aktuell eine Störung, bitte versuche es später erneut.",
+      "server": "Der balloon-Server meldet aktuell eine Störung, bitte versuche es später erneut.",
       "basic": "Der Benutzername oder das Passwort ist falsch.",
       "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider."
     }
   },
   "profile": {
     "quota": "Quota",
-    "quota_max": "Total Speicherplatz",
+    "quota_max": "Gesamter Speicherplatz",
     "quota_left": "Freier Speicherplatz",
     "quota_used": "Benutzter Speicherplatz",
     "quota_unlimited": "Unlimitiert",
     "user": "Benutzer",
     "attribute": {
-      "id": "User Id",
-      "created": "Created",
-      "username": "Username",
+      "id": "Benutzer-ID",
+      "created": "Erstellt",
+      "username": "Benutzername",
       "name": "Name",
-      "mail": "E-mail"
+      "mail": "E-Mail"
     }
   },
   "nav": {
@@ -52,7 +52,7 @@
       "properties": "Eigenschaften",
       "history": "Verlauf",
       "share_folder": "Ordner freigeben",
-      "share_link": "Link Teilen",
+      "share_link": "Link teilen",
       "events": "Events"
     }
   },
@@ -84,7 +84,7 @@
       "size": "Grösse"
     },
     "node_states": {
-      "sharelink": "Als link geteilt",
+      "sharelink": "Als Link geteilt",
       "deleted": "Gelöscht",
       "readonly": "Nur lesen",
       "destroy": "Löschdatum gesetzt",
@@ -121,7 +121,7 @@
     "month": "{{count}} Monat",
     "month_plural": "{{count}} Monaten",
     "day": "{{count}} Tag",
-    "day_plural": "{{count}} Tage",
+    "day_plural": "{{count}} Tagen",
     "hour": "{{count}} Stunde",
     "hour_plural": "{{count}} Stunden",
     "minute": "{{count}} Minute",
@@ -164,10 +164,10 @@
       }
     },
     "preview": {
-      "failed": "Die Vorschau konnte nicht erstellt werden"
+      "failed": "Die Vorschau konnte nicht erstellt werden."
     },
     "share_read": {
-      "hint": "Dieser order wurde unter folgenden Bedingungen freigegeben:",
+      "hint": "Dieser Ordner wurde unter folgenden Bedingungen freigegeben:",
       "resource": "Ressource",
       "role": "Rolle"
     },
@@ -207,7 +207,7 @@
       "create": "Link teilen",
       "edit": "Link anzeigen",
       "delete": "Link löschen",
-      "link_settings": "Linkeinstellungen",
+      "link_settings": "Link-Einstellungen",
       "link_copied": "Der Link wurde in die Zwischenablage kopiert",
       "global_link": "Globaler Link",
       "global_link_hint": "(zum Kopieren auf den Link klicken)",
@@ -215,10 +215,10 @@
       "comment": "Kommentar",
       "send": "Link versenden",
       "message": {
-        "subject": "Ein Balloon Link wurde geteilt"
+        "subject": "Ein balloon-Link wurde geteilt"
       },
       "settings": {
-        "title": "Linkeinstellungen für „%s“",
+        "title": "Link-Einstellungen für „%s“",
         "cancel": "Abbrechen",
         "save": "Einstellungen speichern",
         "save_continue": "Speichern und weiter",
@@ -237,7 +237,7 @@
       "deleted": "(Entfernt)",
       "undeleted": "(Vom Papierkorb wiederhergestellt)",
       "restored_from": "(Wiederhergestellt von v%s)",
-      "restored_to": "Datei auf Version %s wiederhergestellt",
+      "restored_to": "Datei auf Version %s zurückgestellt",
       "changed_by": "Geändert von %s vor %s (%s)",
       "changed_since": "Vor %s (%s)",
       "user_deleted": "[gelöschter User]",
@@ -249,11 +249,11 @@
       "destroy_date": "Löschdatum",
       "set_destroy_date": "Festlegen",
       "edit_destroy_date": "Editieren",
-      "prompt_destroy": "Möchtest du wirklich, dass am %s die Datei / der Ordner %s gelöscht wird?",
+      "prompt_destroy": "Möchtest du wirklich, dass am %s die Datei/der Ordner %s gelöscht wird?",
       "readonly": "Nur lesen (Der Inhalt kann nicht geändert werden, aber Metadaten können weiterhin gesetzt werden)",
       "destroy_date_window": {
         "title": "Löschdatum festlegen",
-        "destroyable": "Die Datei/Ordner wird am gesetzten Datum unwiderruflich gelöscht.",
+        "destroyable": "Die Datei/der Ordner wird am festgelegten Datum unwiderruflich gelöscht.",
         "cancel": "Abbrechen",
         "save": "Speichern",
         "destroy_date": "Löschdatum",
@@ -265,7 +265,7 @@
     }
   },
   "error": {
-    "node": "Item",
+    "node": "Element",
     "error": "Fehler",
     "hint_single": "Die Anfrage endete mit einem Fehler. Bitte versuche es erneut.",
     "hint_multi": "Mehrere Fehler sind aufgetreten. Es war nicht möglich, die Anfrage für jede/jeden Datei/Ordner erfolgreich zu verarbeiten.",
@@ -294,16 +294,16 @@
     "confirm": "Bestätigen",
     "cancel": "Nein",
     "continue": "Ja",
-    "ok": "Ok",
+    "ok": "OK",
     "force_delete": "Willst du diese Dateien/Ordner wirklich löschen (nicht wiederherstellbar)?",
     "trash_delete": "Willst du diese Dateien/Ordner in den Papierkorb verschieben (wiederherstellbar)?",
-    "restore": "Willst du diese Datei/Order wiederherstellen?",
+    "restore": "Willst du diese Datei/diesen Ordner wiederherstellen?",
     "untouched": "Die folgenden ausgewählten Dateien/Ordner werden ignoriert (werden nicht gelöscht):",
     "merge": "Die folgenden Dateien/Ordner existieren im Zielordner bereits, willst du diese überschreiben bzw. zusammenführen?",
     "restore_to_root": "Der ursprüngliche Ordner existiert nicht mehr oder ist gelöscht, willst du die Dateien/Ordner in deinen obersten Ordner wiederherstellen?",
-    "open_big_file": "Die Datei %s ist sehr gross und das öffnen kann einige Zeit in Anspruch nehmen, willst du dennoch fortfahren?",
+    "open_big_file": "Die Datei %s ist sehr gross und das Öffnen kann einige Zeit in Anspruch nehmen, willst du dennoch fortfahren?",
     "close_save_file": "Willst du deine Änderungen speichern?",
-    "auto_rename_node": "Eine Datei/Ordner existiert bereits mit dem Name %s, möchtest du deine umbenenen in %s?"
+    "auto_rename_node": "Eine Datei/ein Ordner mit dem Name %s existiert bereits, möchtest du sie/ihn umbenennen in %s?"
   },
   "events": {
     "unknown": "Unbekannt",
@@ -318,7 +318,7 @@
     "delete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> löschte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
     "delete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
     "delete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
-    "delete_file": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Datei <span class='fs-event-name'><span></span>{{name}}</span> (In den Papierkorb verschoben)",
+    "delete_file": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Datei <span class='fs-event-name'><span></span>{{name}}</span> (in den Papierkorb verschoben)",
     "force_delete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> löschte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> (kann nicht rückgängig gemacht werden)",
     "force_delete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> (kann nicht rückgängig gemacht werden)",
     "force_delete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> löschte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> (kann nicht rückgängig gemacht werden)",
@@ -327,10 +327,10 @@
     "add_file": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Datei <span class='fs-event-name'><span></span>{{name}}</span> hinzu",
     "add_collection": "<span class='fs-event-user'><span></span>{{user}}</span> fügte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> hinzu",
     "restore_file": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Datei <span class='fs-event-name'><span></span>{{name}}</span> aus dem Verlauf wieder her",
-    "undelete_file": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Datei <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
-    "undelete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> fügte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
-    "undelete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
-    "undelete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> fügte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_file": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Datei <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_collection": "<span class='fs-event-user'><span></span>{{user}}</span> stellte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
+    "undelete_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> stellte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> aus dem Papierkorb wieder her",
     "move_collection": "<span class='fs-event-user'><span></span>{{user}}</span> verschob den Ordner <span class='fs-event-name'><span></span>{{name}}</span> von <span class='fs-event-name'><span></span>{{previous.parent.name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "move_collection_share": "<span class='fs-event-user'><span></span>{{user}}</span> verschob die Freigabe <span class='fs-event-name'><span></span>{{name}}</span> von <span class='fs-event-name'><span></span>{{previous.parent.name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "move_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> verschob die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> von <span class='fs-event-name'><span></span>{{previous.parent.name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
@@ -345,11 +345,11 @@
     "copy_collection": "<span class='fs-event-user'><span></span>{{user}}</span> kopierte den Ordner <span class='fs-event-name'><span></span>{{name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "copy_collection_reference": "<span class='fs-event-user'><span></span>{{user}}</span> kopierte die Freigabe (Verknüpfung) <span class='fs-event-name'><span></span>{{name}}</span> nach <span class='fs-event-name'><span></span>{{parent.name}}</span>",
     "prompt": {
-      "trash_delete": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird in den Papierkorb verschoben (Wiederherstellbar).",
+      "trash_delete": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird in den Papierkorb verschoben (wiederherstellbar).",
       "trash_restore": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird wiederhergestellt.",
       "rename": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird in %s umbenannt.",
       "move": "Willst du diesen Vorgang wirklich rückgängig machen? Die/der Datei/Ordner %s wird nach %s verschoben.",
-      "restore": "Willst du diesen Vorgang wirklich rückgängig machen? Die Datei %s wird nach Version %s wiederhergestellt.",
+      "restore": "Willst du diesen Vorgang wirklich rückgängig machen? Die Datei %s wird zur Version %s zurückgesetzt.",
       "unshare": "Willst du diesen Vorgang wirklich rückgängig machen? Die Freigabe %s wird entfernt."
     }
   },
@@ -358,13 +358,13 @@
     "dont_show_anymore": "Nicht mehr anzeigen",
     "next_hint": "Nächster Hinweis",
     "hint_1": "Du kannst mit deiner Tastatur durch den ganzen Baum navigieren mit <kdb>UP</kdb>, <kdb>DOWN</kdb> und <kdb>ENTER</kdb>, um eine Datei zu öffnen oder das Verzeichnis zu wechseln.</br> Du kannst auch Ordner/Dateien löschen mit <kdb>DEL</kdb> oder diese gleich ohne den Weg über den Papierkorb komplett löschen mit <kdb>CTRL</kdb>+<kdb>DEL</kdb>.",
-    "hint_2": "Die Benutzeroberfläche ist Drag&Drop-fähig. Du kannst Ordner/Dateien von einem Ordner in einen anderen ziehen.</br>Du kannst auch Dateien von deinem lokalen Desktop per Drag&Drop in einen Ordner oder das aktuelle Verzeichnis hochladen. Natürlich kannst du auch einfach Dateien hochladen, indem du auf die Aktion {icon-cloud-upload} klickst.",
-    "hint_3": "Du kannst mehrere Ordner/Dateien selektieren, halte einfach <kdb>CTRL</kdb> gedrückt und wähle die gewünschten Elemente mit der Maus aus. Du kannst auch eine ganze Reihe selektieren, indem du <kdb>SHIFT</kdb> gedrückt hältst und mit der Maus einen anderen anwählst. Mit den ausgewählten Knoten kannst du Aktionen wie Löschen, Kopieren oder Herunterladen ausführen. Das funktioniert auch mit Touch-Geräten. Bleibe einfach mit dem Finger einen Moment länger auf deinem/deiner Ordner/Datei um diesen zu selektieren.",
-    "hint_4": "Du kannst das WebDAV Protokoll nutzen um deine Cloud in dein Betriebsystem zu integrieren. Verbinde mit <a href='/webdav'>/webdav</a> als Windows Netzlaufwerk oder benutze <a href='/webdav'>/webdav</a> zum verbinden auf einem Unix System wie Linux oder Mac OS X",
-    "hint_5": "Du kannst einen/eine Ordner/Datei global freigeben, über diesen Link kann jede beliebige Person die Freigabe aufrufen. Du kannst einen Freigabelink zusätzlich mit einem Passwort schützen oder eine Gültigkeitsdauer fest    legen. Wähle dazu einfach den gewünschten/die gewünschte Ordner/Datei aus und öffne Freigeben.",
-    "hint_6": "Du kannst im ganzen Verzeichnis-Baum nach Dateien und Ordnern filtern, indem du die Aktion {icon-funnel} ausführst. Du kannst nach Dateien und Ordner filtern oder dir die gelöschten anzeigen lassen. Du kannst dir auch versteckte Dateien anzeigen lassen (Dateien, die mit einem Punkt anfangen).",
+    "hint_2": "Die Benutzeroberfläche ist Drag&Drop-fähig. Du kannst Ordner/Dateien von einem Ordner in einen anderen ziehen.</br>Du kannst auch Dateien von deinem lokalen Desktop per Drag&Drop in einen Ordner ziehen oder das aktuelle Verzeichnis hochladen. Natürlich kannst du auch einfach Dateien hochladen, indem du auf die Aktion {icon-cloud-upload} klickst.",
+    "hint_3": "Du kannst mehrere Ordner/Dateien selektieren, halte einfach <kdb>CTRL</kdb> gedrückt und wähle die gewünschten Elemente mit der Maus aus. Du kannst auch eine ganze Reihe selektieren, indem du das erste Element auswählst, <kdb>SHIFT</kdb> gedrückt hältst und mit der Maus das letzte Element der Reihe anklickst. Mit ausgewählten Dateien und Ordnern kannst du Aktionen wie Löschen, Kopieren oder Herunterladen ausführen. Das funktioniert auch mit Touch-Geräten. Bleibe einfach mit dem Finger einen Moment länger auf deinem/deiner Ordner/Datei, um diesen zu selektieren.",
+    "hint_4": "Du kannst das WebDAV-Protokoll nutzen um deine Cloud in dein Betriebsystem zu integrieren. Verbinde mit <a href='/webdav'>/webdav</a> als Windows-Netzlaufwerk oder benutze <a href='/webdav'>/webdav</a> zum Verbinden auf einem Unix System wie Linux oder Mac OS X",
+    "hint_5": "Du kannst einen/eine Ordner/Datei global freigeben, über den Link kann jede beliebige Person die Freigabe aufrufen. Du kannst einen Freigabelink zusätzlich mit einem Passwort schützen oder eine Gültigkeitsdauer festlegen. Wähle dazu einfach den gewünschten Ordner/die gewünschte Datei aus und öffne 'Freigeben'.",
+    "hint_6": "Du kannst im ganzen Verzeichnis-Baum nach Dateien und Ordnern filtern, indem du die Aktion {icon-funnel} ausführst. Du kannst nach Dateien und Ordnern filtern oder dir die gelöschten anzeigen lassen. Du kannst dir auch versteckte Dateien anzeigen lassen (Dateien, die mit einem Punkt anfangen).",
     "hint_7": "Du kannst alle deine Ordner/Dateien taggen und du entscheidest selber, wie die Tags heissen. Wenn du ein Element taggst, kannst du auf den Tag klicken und gelangst dabei automatisch in den Suchmodus und es werden dir alle Ordner/Dateien angezeigt, die den selben Tag hinterlegt haben.",
-    "hint_8": "Du kannst zusätzliche Eigenschaften wie Autor, Lizenz, Copyright oder Beschreibung für eine Datei/Ordner definieren. Wähle einfach einen/eine Ordner/Datei aus und öffne die Eigenschaften.",
+    "hint_8": "Du kannst zusätzliche Eigenschaften wie Autor, Lizenz, Copyright oder Beschreibung für eine Datei/einen Ordner definieren. Wähle einfach einen/eine Ordner/Datei aus und öffne die Eigenschaften.",
     "hint_9": "Du kannst alle Ordner/Dateien mit bestimmten Attributen suchen, gebe dazu einfach attribut:wert in das Suchfeld ein. Zum Beispiel: 'name:test' zeigt dir alle Ordner/Dateien mit dem Namen test an oder 'mime:application/pdf' zeigt dir alle PDF-Dateien an.",
     "hint_10": "Deine ganze Cloud wird in Echtzeit indexiert, du kannst deine ganze Cloud mit einem einzigen Suchfeld durchsuchen.",
     "hint_11": "Wenn du einen älteren Browser hast, der nicht die neusten Features unterstützt, oder einfach einen langsamen Rechner, kannst du den Alternativ-Client unter <a href='/webdav'>/webdav</a> nutzen.",
@@ -372,14 +372,14 @@
     "hint_13": "Du kannst Ordner/Dateien duplizieren. Betätige dazu einfach die Aktion {icon-copy} und {icon-paste}. Du kannst Ordner/Dateien auch in ein anderes Verzeichnis kopieren. Das funktioniert auf die gleiche Weise wie auf deinem lokalen Gerät. Selektiere einfach die gewünschten Ordner/Dateien und betätige die Aktion {icon-copy}, wechsle danach in das gewünschte Zielverzeichnis und betätige {icon-paste}. Selbiges funktioniert mit Ausschneiden mit der Aktion {icon-cut}.",
     "hint_14": "Wenn du eine Datei anpasst, wird diese nicht überschrieben, sondern es wird eine neue Version angelegt. Du kannst jederzeit den Verlauf prüfen und eine ältere Version wiederherstellen. Wähle einfach die gewünschte Datei aus und öffne sie.",
     "hint_15": "Du kannst Details über die Speicherplatzbelegung in deinem Profil ansehen. Fahre einfach über das Benutzer-Symbol {icon-cog} und wähle 'Profil' aus.",
-    "hint_16": "Die Benutzeroberfläche ist mehrsprachig. Du kannst die Sprache in der Login Maske auswählen. Deine Standard-Sprache wird automatisch erkannt und eingestellt.",
-    "hint_17": "Wenn du einen/eine gelöschten/gelöschte Ordner/Datei wiederherstellst, wird dieser/diese automatisch am ursprünglichen Ort wiederhergestellt. Du kannst dir gelöschte Ordner/Dateien im Papierkorb anzeigen lassen oder sie über den Filter suchen {icon-funnel}.",
+    "hint_16": "Die Benutzeroberfläche ist mehrsprachig. Du kannst die Sprache in der Login-Maske auswählen. Deine Standard-Sprache wird automatisch erkannt und eingestellt.",
+    "hint_17": "Wenn du einen gelöschten Ordner/eine gelöschte Datei wiederherstellst, wird dieser/diese automatisch am ursprünglichen Ort gespeichert. Du kannst dir gelöschte Ordner/Dateien im Papierkorb anzeigen lassen oder sie über den Filter suchen {icon-funnel}.",
     "hint_18": "Die Benutzeroberfläche wird von allen Geräten unterstützt und passt sich entsprechend automatisch an. Uneingeschränkte Features hast du nur mit einem Desktop-Rechner. Du kannst die Benutzeroberfläche aber auch mit einem Smartphone oder einem Tablet bedienen.",
     "hint_19": "Die Benutzeroberfläche ist touchfähig und hat explizite Unterstützung für solche Geräte.",
     "hint_20": "Du kannst mehrere Ordner/Dateien auf einmal herunterladen. Du musst dazu nur mehrere auswählen (halte dazu <kdb>CTRL</kdb> oder <kdb>SHIFT</kdb> gedrückt und wähle die gewünschten Elemente mit der Maus aus) und betätige anschliessend die Aktion {icon-download}. Aus deiner Auswahl wird automatisch eine ZIP-Datei erstellt.",
-    "hint_21": "Jedes Mal, wenn du eine Datei hochlädst bzw. anpasst, wird im Hintergrund eine Vorschau der Datei erstellt. Du kannst die Vorschau betrachten, wenn du die Datei anwählst und 'Vorschau' öffnest. Allerdings kann die Vorschau nicht für alle möglichen Dateitypen erstellt werden.",
-    "hint_22": "Die Benutzeroberfläche hat einen eingebauten Editor für Textdateien. Du kannst entweder eine neue Datei erstellen mittels der Aktion {icon-add} oder eine existierende Textdatei öffnen (Doppelklick oder <kdb>Enter</kdb>).",
-    "hint_23": "Die ganze Benutzeroberfläche arbeitet alle Anfragen asynchron ab. Wenn das Interface aktuell Daten mit dem Server am Austauschen ist, siehst Du anhand eines blauen Balkens oben. Wenn du eine Schreibaktion ausgelöst hast, erschreint als Feedback eine Meldung am oberen Bildschirmrand, wenn die Anfrage erfolgreich war.",
+    "hint_21": "Jedes Mal, wenn du eine Datei hochlädst bzw. anpasst, wird im Hintergrund eine Vorschau der Datei erstellt. Du kannst die Vorschau betrachten, wenn du die Datei anwählst und 'Vorschau' öffnest. Allerdings kann die Vorschau nicht für alle Dateitypen erstellt werden.",
+    "hint_22": "Die Benutzeroberfläche hat einen eingebauten Editor für Textdateien. Du kannst entweder eine neue Datei  mittels der Aktion {icon-add} erstellen oder eine existierende Textdatei öffnen (Doppelklick oder <kdb>Enter</kdb>).",
+    "hint_23": "Die ganze Benutzeroberfläche arbeitet alle Anfragen asynchron ab. Wenn das Interface aktuell Daten mit dem Server am Austauschen ist, siehst Du dies anhand eines blauen Balkens am oberen Bildschirmrand. Wenn du eine Schreibaktion ausgelöst hast, erscheint als Feedback eine Meldung, wenn die Anfrage erfolgreich war.",
     "hint_24": "Du kannst diverse Aktionen mit deiner Tastatur auslösen. <kdb>SHIFT</kdb>+<kdb>N</kdb> (Ordner hinzufügen), <kdb>SHIFT</kdb>+<kdb>X</kdb> (Ausschneiden), <kdb>SHIFT</kdb>+<kdb>C</kdb> (Kopieren), <kdb>SHIFT</kdb>+<kdb>V</kdb> (Einfügen), <kdb>SHIFT</kdb>+<kdb>U</kdb> (Hochladen), <kdb>SHIFT</kdb>+<kdb>D</kdb> (Download), <kdb>SHIFT</kdb>+<kdb>A</kdb> (Datei hinzufügen), <kdb>SHIFT</kdb>+<kdb>R</kdb> (Wiederherstellen).",
     "hint_25": "Deine Cloud ist auch über WebDAV erreichbar. Du kannst mit jedem beliebigen WebDAV-Client via URL <a href='/webdav'>/webdav</a> zugreifen."
   },

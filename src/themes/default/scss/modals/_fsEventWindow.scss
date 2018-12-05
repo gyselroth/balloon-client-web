@@ -28,7 +28,7 @@ $sidePadding: 60px;
 
       display: block;
       height: 100px;
-      width: 100%;
+      width: calc(100% - 20px);
       background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
     }
   }
