@@ -1,3 +1,10 @@
+## 3.0.8
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Dez 05 08:55:22 CET 2018
+
+* [FIX] Various german locale fixes
+
+
 ## 3.0.7
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Nov 13 09:39:22 CET 2018
