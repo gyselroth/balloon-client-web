@@ -3,6 +3,8 @@
 **Date**: Wed Dez 05 08:55:22 CET 2018
 
 * [FIX] Various german locale fixes
+* [FIX] Delete button must be active for readonly files #110
+* [FIX] Infinite scroll for events does not work #74
 
 
 ## 3.0.7

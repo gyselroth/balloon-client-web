@@ -2154,17 +2154,17 @@ var balloon = {
   /**
    * Infinite scroll events
    *
-   * @param  object $list
+   * @param  object $window
    * @param  object node
    * @return void
    */
-  displayEventsInfiniteScroll: function($list, node) {
+  displayEventsInfiniteScroll: function($window, node) {
     balloon._event_limit = false;
     var skip = 0;
-    $list.unbind('scroll').bind('scroll', function() {
-      if(($list.scrollTop() + 700) >= $list[0].scrollHeight) {
+    $window.unbind('scroll').bind('scroll', function() {
+      if(($window.scrollTop() + 700) >= $window[0].scrollHeight) {
         skip = skip + 50;
-        balloon.displayEvents($list, node, {skip: skip, limit: 50});
+        balloon.displayEvents($window.find('ul'), node, {skip: skip, limit: 50});
       }
     });
   },
@@ -2181,13 +2181,13 @@ var balloon = {
       datastore     = [];
 
     if($fs_event_win.is(':visible')) {
-      balloon.displayEventsInfiniteScroll($fs_event_list, node);
+      balloon.displayEventsInfiniteScroll($fs_event_win, node);
       balloon.displayEvents($fs_event_list, node);
     } else {
       balloon.resetDom('events-win');
       $fs_event_win   = $('#fs-event-window'),
       $fs_event_list  = $fs_event_win.find('ul'),
-      balloon.displayEventsInfiniteScroll($fs_event_list, node);
+      balloon.displayEventsInfiniteScroll($fs_event_win, node);
 
       $fs_event_win.kendoBalloonWindow({
         title: $fs_event_win.attr('title'),
@@ -2633,11 +2633,6 @@ var balloon = {
         },
         success: function(data) {
           node.readonly = data.readonly;
-          if(node.readonly) {
-            balloon.disableAction('delete');
-          } else {
-            balloon.enableAction('delete');
-          }
         }
       });
     });
@@ -7599,7 +7594,7 @@ var balloon = {
         actions.push('cut', 'copy');
       }
 
-      if(balloon.last && balloon.last.readonly === false) {
+      if(balloon.last) {
         actions.push('delete');
       }
 
