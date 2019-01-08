@@ -2634,6 +2634,7 @@ var balloon = {
         },
         success: function(data) {
           node.readonly = data.readonly;
+          balloon.reloadTree();
         }
       });
     });
