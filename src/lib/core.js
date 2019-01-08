@@ -4792,6 +4792,9 @@ var balloon = {
    * @return object
    */
   _userAndGroupAutocomplete: function($input, includeGroups, onSelect) {
+    var autocomplete = $input.data('kendoAutoComplete')
+    if(autocomplete) autocomplete.destroy();
+
     $input.kendoAutoComplete({
       minLength: 3,
       dataTextField: "name",
@@ -7228,6 +7231,9 @@ var balloon = {
     var $meta_tags = $('#fs-properties-meta-tags-tags'),
       $meta_tags_parent = $meta_tags.parent(),
       $input = $meta_tags_parent.find('input');
+
+    var autocomplete = $input.data('kendoAutoComplete');
+    if(autocomplete) autocomplete.destroy();
 
     $input.kendoAutoComplete({
       select: onSelect,
