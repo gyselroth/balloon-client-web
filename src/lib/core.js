@@ -4482,6 +4482,12 @@ var balloon = {
       for(var i=0; i < maxConsumersDisplayed-1 && i < numConsumers; i++) {
         var curAcl = acl[i];
 
+        if(curAcl.type === 'user' && curAcl.id === node.owner.id) {
+          //Do not display owner twice;
+          maxConsumersDisplayed++;
+          continue;
+        }
+
         var $li_consumer = $('<li class="avatar-' + curAcl.type + '"><div><span></span><p>'+ i18next.t('view.share.privilege_text_'+curAcl.privilege, curAcl.role.name) +'</p></div></li>');
         $fs_share_consumers_ul.append($li_consumer);
         if(curAcl.type === 'user') balloon.displayAvatar($li_consumer, curAcl.id);

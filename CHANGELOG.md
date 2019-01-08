@@ -3,7 +3,7 @@
 **Date**:
 
 * [FIX] Avoid double requests in autocomplete #104
-
+* [FIX] Do not show owner in list of share consumers #85
 
 
 ## 3.0.8
@@ -20,7 +20,7 @@
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Nov 13 09:39:22 CET 2018
 
-* [FIX] File uploads are sent with wrong Content-Type header #106 
+* [FIX] File uploads are sent with wrong Content-Type header #106
 
 
 ## 3.0.6
