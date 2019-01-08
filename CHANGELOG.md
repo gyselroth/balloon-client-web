@@ -1,3 +1,11 @@
+## 3.0.9
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+* [FIX] Avoid double requests in autocomplete #104
+
+
+
 ## 3.0.8
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Dez 05 08:55:22 CET 2018
