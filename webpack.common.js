@@ -25,7 +25,7 @@ module.exports = {
     rules: [
       {
         test    : /\.(png|jpg|svg|gif|eot|woff|woff2|ttf)$/,
-        loader  : 'url-loader?limit=30000&name=assets/[name].[ext]'
+        loader  : 'url-loader?limit=30000&name=assets/[name].[hash].[ext]'
       },
       {
         test: /\.js$/,

@@ -4,6 +4,7 @@
 
 * [FIX] Avoid double requests in autocomplete #104
 * [FIX] Do not show owner in list of share consumers #85
+* [CHANGE] Use hash for all assets #84
 
 
 ## 3.0.8

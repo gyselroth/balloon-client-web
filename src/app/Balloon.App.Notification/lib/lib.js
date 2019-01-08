@@ -8,6 +8,7 @@
 import $ from "jquery";
 import i18next from 'i18next';
 import css from '../styles/style.scss';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 var app = {
   id: 'Balloon.App.Notification',
@@ -161,7 +162,7 @@ var app = {
           $messageContent.append(
             '<div class="fs-notifications-delete-message">'+
               '<svg class="gr-icon gr-i-close" viewBox="0 0 24 24">'+
-                '<use xlink:href="/assets/icons.svg#close"></use>'+
+                '<use xlink:href="'+iconsSvg+'#close"></use>'+
               '</svg>'+
             '</div>'
           );

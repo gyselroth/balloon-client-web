@@ -1,4 +1,5 @@
 import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 (function($) {
   var kendo = window.kendo;
@@ -21,7 +22,7 @@ import kendoWindow from 'kendo-ui-core/js/kendo.window.js';
         var $newIcon = $origIcon.parent().find('.gr-i-close');
 
         if($newIcon.length === 0) {
-          $origIcon.parent().append('<svg class="gr-icon gr-i-close" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#close"></use></svg>');
+          $origIcon.parent().append('<svg class="gr-icon gr-i-close" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#close"></use></svg>');
         }
       }
 
