@@ -7,6 +7,7 @@
 * [CHANGE] Use hash for all assets #84
 * [FIX] Reload tree after changeing to readonly flag #79
 * [FIX] Design issue share search user/groups #114
+* [FIX] Undefined collection name in push state #78
 
 
 ## 3.0.8

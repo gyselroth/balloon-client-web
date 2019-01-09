@@ -4060,7 +4060,7 @@ var balloon = {
 
       if($that.attr('id') != 'fs-crumb-home') {
         list.push({
-          name: $that.find('div').html(),
+          name: $that.html(),
           id:   $that.attr('fs-id'),
         });
       }
