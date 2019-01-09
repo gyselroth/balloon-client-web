@@ -6,6 +6,7 @@
 * [FIX] Do not show owner in list of share consumers #85
 * [CHANGE] Use hash for all assets #84
 * [FIX] Reload tree after changeing to readonly flag #79
+* [FIX] Design issue share search user/groups #114
 
 
 ## 3.0.8
