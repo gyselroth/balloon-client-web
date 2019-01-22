@@ -1,6 +1,6 @@
 ## 3.0.9
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Tue Jan 22 14:34:01 CET 2019
 
 * [FIX] Avoid double requests in autocomplete #104
 * [FIX] Do not show owner in list of share consumers #85
