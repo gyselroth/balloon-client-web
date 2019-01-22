@@ -13,6 +13,8 @@ import i18nextSprintfPostProcessor from 'i18next-sprintf-postprocessor';
 import jqueryI18next from 'jquery-i18next';
 import login from './auth.js'
 import app from './app.js'
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
+
 
 var translate = {
   config: {},
@@ -76,7 +78,7 @@ var translate = {
         process: function(value, key, options, translator) {
           var regex = /\{icon-([a-z\-]+)\}/g;
           return value.replace(regex, function(match, name) {
-            return "<svg class='gr-icon gr-i-"+name+"' viewBox='0 0 24 24'><use xlink:href='/assets/icons.svg#"+name+"'></use></svg>";
+            return "<svg class='gr-icon gr-i-"+name+"' viewBox='0 0 24 24'><use xlink:href='"+iconsSvg+"#"+name+"'></use></svg>";
           });
         }
       })

@@ -17,6 +17,7 @@ import i18next from 'i18next';
 import app from './app.js';
 import fileExtIconMap from './file-ext-icon-map.js';
 import mimeFileExtMap from './mime-file-ext-map.js';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 window.$ = $;
 $.ajaxSetup({
@@ -536,8 +537,8 @@ var balloon = {
       $fs_content_view.append(
         '<dt id="fs-content-view-title-' + view + '" class="disabled">'+
             '<span>' + i18next.t(viewConfig.title) + '</span>'+
-            '<svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="/assets/icons.svg#arrowhead-n"></use></svg>'+
-            '<svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="/assets/icons.svg#arrowhead-s"></use></svg>'+
+            '<svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="'+iconsSvg+'#arrowhead-n"></use></svg>'+
+            '<svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="'+iconsSvg+'#arrowhead-s"></use></svg>'+
         '</dt>'
       );
 
@@ -562,7 +563,7 @@ var balloon = {
         '<li id="fs-menu-'+item.name+'" title="'+label+'">'+
           '<div class="fs-menu-left-icon">'+
             '<svg class="gr-icon gr-i-'+item.icon+'">'+
-              '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#'+item.icon+'">'+
+              '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#'+item.icon+'">'+
             '</svg>'+
           '</div>'+
           '<div>'+
@@ -605,7 +606,7 @@ var balloon = {
 
       var $item = $(
         '<li id="fs-' + item.name + '" title="' + label + '">'+
-            '<svg class="gr-icon gr-i-' + item.icon + '"><use xlink:href="/assets/icons.svg#' + item.icon + '"></use></svg>'+
+            '<svg class="gr-icon gr-i-' + item.icon + '"><use xlink:href="'+iconsSvg+'#' + item.icon + '"></use></svg>'+
             (item.hasCount ? '<div id="fs-' + item.name + '-count" class="fs-identity-count">0</div>' : '')+
         '</li>'
       );
@@ -678,7 +679,7 @@ var balloon = {
       var $item = $(
         '<li data-type=' + item.name + ' title="' + label + '">'+
             '<svg class="gr-icon gr-i-' + item.icon + '">'+
-              '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#' + item.icon + '">'+
+              '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#' + item.icon + '">'+
             '</svg>'+
             '<span> ' + label + '</span>'+
         '</li>'
@@ -889,7 +890,7 @@ var balloon = {
 
     clue = clue.substr(0, clue.search('</span>')+7);
 
-    clue += '<svg viewBox="0 0 24 24" class="gr-icon gr-i-file-drag"><use xlink:href="/assets/icons.svg#file-drag"></use></svg>';
+    clue += '<svg viewBox="0 0 24 24" class="gr-icon gr-i-file-drag"><use xlink:href="'+iconsSvg+'#file-drag"></use></svg>';
     clue += '<div class="clue-item-count">' + $itemCount + '</span>';
 
     $('.k-drag-clue').html(clue);
@@ -1261,27 +1262,27 @@ var balloon = {
             switch(metaOrder[metaProp]) {
             case 'sharelink_token':
               if(node.sharelink_token) {
-                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.sharelink') + '"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="/assets/icons.svg#hyperlink"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.sharelink') + '"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="'+iconsSvg+'#hyperlink"></use></svg></div>');
               }
               break;
             case 'deleted':
               if(node.deleted) {
-                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.deleted') + '"><svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.deleted') + '"><svg class="gr-icon gr-i-trash"><use xlink:href="'+iconsSvg+'#trash"></use></svg></div>');
               }
               break;
             case 'readonly':
               if(node.readonly) {
-                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.readonly') + '"><svg class="gr-icon gr-i-lock"><use xlink:href="/assets/icons.svg#lock"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.readonly') + '"><svg class="gr-icon gr-i-lock"><use xlink:href="'+iconsSvg+'#lock"></use></svg></div>');
               }
               break;
             case 'destroy':
               if(node.destroy) {
-                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.destroy') + '"><svg class="gr-icon gr-i-flag"><use xlink:href="/assets/icons.svg#flag"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.destroy') + '"><svg class="gr-icon gr-i-flag"><use xlink:href="'+iconsSvg+'#flag"></use></svg></div>');
               }
               break;
             case 'subscription':
               if(node.subscription) {
-                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.subscription') + '"><svg class="gr-icon gr-i-volume-up"><use xlink:href="/assets/icons.svg#volume-up"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.subscription') + '"><svg class="gr-icon gr-i-volume-up"><use xlink:href="'+iconsSvg+'#volume-up"></use></svg></div>');
               }
               break;
             case 'color_tag':
@@ -1329,7 +1330,7 @@ var balloon = {
 
         case 'icon':
           var spriteClass = balloon.getSpriteClass(node);
-          $node_el.append('<div class="fs-browser-column fs-browser-column-icon"><svg class="gr-icon  ' + spriteClass + '"><use xlink:href="/assets/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg></div>');
+          $node_el.append('<div class="fs-browser-column fs-browser-column-icon"><svg class="gr-icon  ' + spriteClass + '"><use xlink:href="'+iconsSvg+'#' + spriteClass.replace('gr-i-', '') + '"></use></svg></div>');
           break;
 
         case 'checkbox':
@@ -2065,7 +2066,7 @@ var balloon = {
 
           $node = $('<li></li>');
 
-          $icon = $('<div class="fs-events-icon"><svg class="gr-icon"><use xlink:href="/assets/icons.svg#undo"></use></svg></div>');
+          $icon = $('<div class="fs-events-icon"><svg class="gr-icon"><use xlink:href="'+iconsSvg+'#undo"></use></svg></div>');
           balloon._spriteIcon($icon, icon);
           $node.append($icon);
 
@@ -2137,7 +2138,7 @@ var balloon = {
 
           if(undo === true) {
             var that = this;
-            $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="/assets/icons.svg#undo"></use></svg></div>').unbind('click').bind('click',
+            $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="'+iconsSvg+'#undo"></use></svg></div>').unbind('click').bind('click',
               body.data[log], function(e) {
                 balloon._undoEvent.apply(that, [e, node]);
               });
@@ -2633,6 +2634,7 @@ var balloon = {
         },
         success: function(data) {
           node.readonly = data.readonly;
+          balloon.reloadTree();
         }
       });
     });
@@ -3363,7 +3365,7 @@ var balloon = {
 
     var iconId = dir === 'asc' ? 'expand' : 'collapse';
 
-    $(this).find('span').append('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#' + iconId + '"></use></svg>');
+    $(this).find('span').append('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="'+iconsSvg+'#' + iconId + '"></use></svg>');
 
     balloon.sortTree(field, dir);
   },
@@ -3894,7 +3896,7 @@ var balloon = {
       modal: true,
       open: function() {
         $fs_error_win.parent().addClass('fs-error-window');
-        var $icon = '<svg class="gr-icon gr-i-warning-fill" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#warning-fill"></use></svg>';
+        var $icon = '<svg class="gr-icon gr-i-warning-fill" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#warning-fill"></use></svg>';
         $fs_error_win.prev().find('.k-window-title').prepend($icon);
 
         $fs_error_win.find('input[name="ok"]').off('click').on('click', function() {
@@ -4058,7 +4060,7 @@ var balloon = {
 
       if($that.attr('id') != 'fs-crumb-home') {
         list.push({
-          name: $that.find('div').html(),
+          name: $that.html(),
           id:   $that.attr('fs-id'),
         });
       }
@@ -4482,6 +4484,12 @@ var balloon = {
       for(var i=0; i < maxConsumersDisplayed-1 && i < numConsumers; i++) {
         var curAcl = acl[i];
 
+        if(curAcl.type === 'user' && curAcl.id === node.owner.id) {
+          //Do not display owner twice;
+          maxConsumersDisplayed++;
+          continue;
+        }
+
         var $li_consumer = $('<li class="avatar-' + curAcl.type + '"><div><span></span><p>'+ i18next.t('view.share.privilege_text_'+curAcl.privilege, curAcl.role.name) +'</p></div></li>');
         $fs_share_consumers_ul.append($li_consumer);
         if(curAcl.type === 'user') balloon.displayAvatar($li_consumer, curAcl.id);
@@ -4792,6 +4800,9 @@ var balloon = {
    * @return object
    */
   _userAndGroupAutocomplete: function($input, includeGroups, onSelect) {
+    var autocomplete = $input.data('kendoAutoComplete')
+    if(autocomplete) autocomplete.destroy();
+
     $input.kendoAutoComplete({
       minLength: 3,
       dataTextField: "name",
@@ -4932,7 +4943,7 @@ var balloon = {
     var icon = item.type === 'group' ? 'group' : 'person';
     var $consumer = $(
       '<li id="fs-share-window-consumer-' + item.role.id + '">'+
-        '<svg class="gr-icon gr-i-'+icon+'"><use xlink:href="/assets/icons.svg#'+icon+'"></use></svg>'+
+        '<svg class="gr-icon gr-i-'+icon+'"><use xlink:href="'+iconsSvg+'#'+icon+'"></use></svg>'+
         '<span>'+name+'</span>'+
       '</li>'
     );
@@ -4941,7 +4952,7 @@ var balloon = {
       '<div class="fs-share-window-privilege-selector">'+
         '<div class="fs-share-window-selected-privilege">'+
             '<span class="fs-share-window-selected-privilege-label">' + i18next.t('view.share.privilege_' + privilege) + '</span>'+
-            '<svg class="gr-icon gr-i-expand"><use xlink:href="/assets/icons.svg#expand"></use></svg>'+
+            '<svg class="gr-icon gr-i-expand"><use xlink:href="'+iconsSvg+'#expand"></use></svg>'+
         '</div>'+
       '</div>'
     );
@@ -4956,7 +4967,7 @@ var balloon = {
         '<li>'+
             '<input id="priv_' + itemId + '_' + itemPrivilege + '" type="radio" name="priv_'+item.role.id+'" value="' + itemPrivilege + '" ' + (itemPrivilege === privilege ? ' checked' : '') + ' />'+
             '<label for="priv_'  + itemId + '_' + itemPrivilege + '">'+
-                '<svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="/assets/icons.svg#checkmark"></use></svg>'+
+                '<svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="'+iconsSvg+'#checkmark"></use></svg>'+
                 '<span class="fs-share-window-privilege-label">' + i18next.t('view.share.privilege_' + itemPrivilege) + '</span>'+
             '</label>'+
         '</li>'
@@ -5552,7 +5563,7 @@ var balloon = {
       var $recipient = $(
         '<div class="tag" data-recipient-address="' + address + '" data-recipient-type="' + type + '">'+
           '<div class="tag-name">'+ label + '</div>'+
-          '<div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>'+
+          '<div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="'+iconsSvg+'#close"></use></svg></div>'+
         '</div>'
       );
 
@@ -5764,7 +5775,7 @@ var balloon = {
           var spriteClass = ext !== false ? balloon.getSpriteClass(ext) : 'gr-i-file';
           children.push(
             '<li data-item="'+mimes[i]._id+'">'+
-              '<svg class="gr-icon  ' + spriteClass + '"><use xlink:href="/assets/icons.svg#' + spriteClass.replace('gr-i-', '') + '"></use></svg>'+
+              '<svg class="gr-icon  ' + spriteClass + '"><use xlink:href="'+iconsSvg+'#' + spriteClass.replace('gr-i-', '') + '"></use></svg>'+
               '<div>['+mimes[i]._id+']</div></li>'
           );
         }
@@ -6639,7 +6650,7 @@ var balloon = {
     $div_content_inner.append($element);
     $div_content_inner.append('<div id="fs-display-title">' + node.name + '</div>');
 
-    var $close = $('<div id="fs-display-close"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg><div>');
+    var $close = $('<div id="fs-display-close"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="'+iconsSvg+'#close"></use></svg><div>');
     $div_content_inner.append($close);
     $div_content.show().html($div_content_inner);
 
@@ -7169,7 +7180,7 @@ var balloon = {
           $('#fs-metadata-share').parent().show();
 
           var iconId = node.shareowner.name == login.username ? 'folder-shared' : 'folder-received';
-          $icon.replaceWith('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#' + iconId + '"></use></svg>');
+          $icon.replaceWith('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="'+iconsSvg+'#' + iconId + '"></use></svg>');
         }
         break;
       default:
@@ -7228,6 +7239,9 @@ var balloon = {
     var $meta_tags = $('#fs-properties-meta-tags-tags'),
       $meta_tags_parent = $meta_tags.parent(),
       $input = $meta_tags_parent.find('input');
+
+    var autocomplete = $input.data('kendoAutoComplete');
+    if(autocomplete) autocomplete.destroy();
 
     $input.kendoAutoComplete({
       select: onSelect,
@@ -7292,7 +7306,7 @@ var balloon = {
       $fs_prop_tags_list.empty();
 
       for(var tag in node.meta.tags) {
-        $fs_prop_tags_list.append('<li class="tag"><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
+        $fs_prop_tags_list.append('<li class="tag"><div class="tag-name">'+node.meta.tags[tag]+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="'+iconsSvg+'#close"></use></svg></div></li>');
       }
     }
 
@@ -7468,7 +7482,7 @@ var balloon = {
 
     e.preventDefault();
 
-    $fs_prop_tags.find('ul').append('<li class="tag"><div class="tag-name">'+tagValue+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div></li>');
+    $fs_prop_tags.find('ul').append('<li class="tag"><div class="tag-name">'+tagValue+'</div><div class="fs-delete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="'+iconsSvg+'#close"></use></svg></div></li>');
     tags.push(tagValue);
 
     balloon.saveMetaAttributes(node, {tags: tags});
@@ -8128,7 +8142,7 @@ var balloon = {
         });
 
         progressnode.prepend('<div class="fs-progress-filename">'+file.name+'</div>');
-        progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#close"></use></svg></div>');
+        progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#close"></use></svg></div>');
 
         balloon.upload_manager.upload_bytes += file.blob.size;
       }
@@ -8241,7 +8255,7 @@ var balloon = {
         file.manager.count.success++;
         file.manager.progress.mgr_chunk.value(file.manager.count.transfer);
 
-        file.progress.find('.fs-progress-icon').replaceWith('<div class="fs-progress-icon fs-progress-complete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#checkmark"></use></svg></div>');
+        file.progress.find('.fs-progress-icon').replaceWith('<div class="fs-progress-icon fs-progress-complete"><svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#checkmark"></use></svg></div>');
         file.progress.find('.fs-progress-icon').off('click');
 
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
@@ -8421,7 +8435,7 @@ var balloon = {
         }
 
         file.progress.find('.k-state-selected').addClass('fs-progress-error');
-        file.progress.find('.fs-progress-icon').addClass('fs-progress-error').replaceWith('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-error"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#error"></use></svg></div>');
+        file.progress.find('.fs-progress-icon').addClass('fs-progress-error').replaceWith('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-error"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#error"></use></svg></div>');
         file.progress.find('.fs-progress-icon').off('click');
 
         file.status = 2;

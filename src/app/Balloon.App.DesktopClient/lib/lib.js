@@ -10,6 +10,7 @@ import i18next from 'i18next';
 import css from '../styles/style.scss';
 import login from '../../../lib/auth.js';
 import balloonWindow from '../../../lib/widget-balloon-window.js';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 var app = {
   id: 'Balloon.App.DesktopClient',
@@ -17,7 +18,7 @@ var app = {
   render: function() {
     this.$menu = $('<li id="fs-menu-user-desktop" data-i18n="[title]app.desktopclient.menu">'
       +'<div class="fs-menu-left-icon">'
-        +'<svg class="gr-icon gr-i-app-download"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons.svg#app-download"></use></svg>'
+        +'<svg class="gr-icon gr-i-app-download"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#app-download"></use></svg>'
       +'</div>'
       +'<div><span>'+i18next.t('app.desktopclient.menu')+'</span></div>'
     +'</li>');

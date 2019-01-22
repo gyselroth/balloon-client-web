@@ -8,6 +8,7 @@
 import $ from "jquery";
 import i18next from 'i18next';
 import css from '../styles/style.scss';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 var app = {
   id: 'Balloon.App.ClamAv',
@@ -43,14 +44,14 @@ var app = {
 
     if(app.balloon.last.malware_quarantine === true) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-positive">'
-          +'<svg class="gr-icon gr-i-checked-false"><use xlink:href="/assets/icons.svg#checked-false"></use></svg>'
+          +'<svg class="gr-icon gr-i-checked-false"><use xlink:href="'+iconsSvg+'#checked-false"></use></svg>'
           +'<span>'+i18next.t('app.clamav.malware_found', app.balloon.last.malware_reason)+'</span>'
         +'</div>');
 
       $('#fs-metadata').prepend($node);
     } else if(app.balloon.last.malware_quarantine === false) {
       var $node = $('<div id="fs-clamav" class="fs-clamav-negative">'
-          +'<svg class="gr-icon gr-i-checked-true"><use xlink:href="/assets/icons.svg#checked-true"></use></svg>'
+          +'<svg class="gr-icon gr-i-checked-true"><use xlink:href="'+iconsSvg+'#checked-true"></use></svg>'
           +'<span>'+i18next.t('app.clamav.clean')+'</span>'
         +'</div>');
 

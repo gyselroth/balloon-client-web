@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<% iconsSvg = require('../node_modules/@gyselroth/icon-collection/src/icons.svg') %>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -128,7 +129,6 @@
     </div>
 
     <div style="display: none;" id="fs-namespace">
-
         <!-- TODO pixtron - what is this for? -->
         <div id="fs-browser-properties"></div>
 
@@ -137,8 +137,8 @@
 
         <div id="fs-browser-top-bar">
             <div id="fs-menu-left-toggl" data-i18n="[title]nav.action.toggle_menu">
-                <svg class="gr-icon gr-i-menu"><use xlink:href="/assets/icons.svg#menu"></use></svg>
-                <svg class="gr-icon gr-i-arrowhead-w"><use xlink:href="/assets/icons.svg#arrowhead-w"></use></svg>
+                <svg class="gr-icon gr-i-menu"><use xlink:href="<%= iconsSvg %>#menu"></use></svg>
+                <svg class="gr-icon gr-i-arrowhead-w"><use xlink:href="<%= iconsSvg %>#arrowhead-w"></use></svg>
             </div>
 
             <div id="fs-logo">
@@ -147,13 +147,13 @@
             </div>
 
             <div id="fs-search">
-                <svg viewBox="0 0 24 24" class="gr-icon gr-i-search"><use xlink:href="/assets/icons.svg#search"></use></svg>
+                <svg viewBox="0 0 24 24" class="gr-icon gr-i-search"><use xlink:href="<%= iconsSvg %>#search"></use></svg>
                 <input id="fs-search-input" type="text" data-i18n="[placeholder]nav.action.search" />
                 <div id="fs-search-reset">
-                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg>
+                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg>
                 </div>
                 <div id="fs-search-toggle-filter">
-                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-adjust"><use xlink:href="/assets/icons.svg#adjust"></use></svg>
+                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-adjust"><use xlink:href="<%= iconsSvg %>#adjust"></use></svg>
                 </div>
             </div>
 
@@ -189,18 +189,18 @@
             <div id="fs-search-filter-content">
                 <section id="fs-search-filter-tags">
                     <h2 data-i18n="search.filter.tags"></h2>
-                    <div data-i18n="search.filter.no_tags"></div>
-                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>
+                        <div data-i18n="search.filter.no_tags"></div>
+                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg></div>
                 </section>
                 <section id="fs-search-filter-color">
                     <h2 data-i18n="search.filter.color"></h2>
                     <div data-i18n="search.filter.no_color"></div>
-                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>
+                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg></div>
                 </section>
                 <section id="fs-search-filter-mime">
                     <h2 data-i18n="search.filter.mime"></h2>
                     <div data-i18n="search.filter.no_mime"></div>
-                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="/assets/icons.svg#close"></use></svg></div>
+                    <div class="fs-search-filter-section-reset"><span data-i18n="search.reset_filter"></span><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg></div>
                 </section>
             </div>
             <div id="fs-search-filter-buttons">
@@ -227,11 +227,11 @@
                         <div id="fs-browser-action">
                             <ul id="fs-browser-action-buttons">
                                 <li data-i18n="[title]nav.action.add">
-                                    <svg class="gr-icon gr-i-add"><use xlink:href="/assets/icons.svg#add"></use></svg>
+                                    <svg class="gr-icon gr-i-add"><use xlink:href="<%= iconsSvg %>#add"></use></svg>
                                     <div id="fs-action-add" class="fs-action-element"></div>
                                 </li>
                                 <li data-i18n="[title]nav.action.upload">
-                                    <svg class="gr-icon gr-i-cloud-upload"><use xlink:href="/assets/icons.svg#cloud-upload"></use></svg>
+                                    <svg class="gr-icon gr-i-cloud-upload"><use xlink:href="<%= iconsSvg %>#cloud-upload"></use></svg>
                                     <div id="fs-action-upload" class="fs-action-element"></div>
                                 </li>
                             </ul>
@@ -248,10 +248,10 @@
                     <div id="fs-browser">
                         <div id="fs-browser-header">
                             <div class="fs-browser-column fs-browser-column-icon" data-i18n="[title]nav.action.filter">
-                                <svg class="gr-icon gr-i-funnel" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#funnel"></use></svg>
+                                <svg class="gr-icon gr-i-funnel" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#funnel"></use></svg>
                                 <div id="fs-action-filter" class="fs-action-element"></div>
                             </div>
-                            <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-sortable fs-browser-column-name"><div data-i18n="tree.column.name"></div><span><svg class="gr-icon gr-i-expand" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#expand"></use></svg></span></div>
+                            <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-sortable fs-browser-column-name"><div data-i18n="tree.column.name"></div><span><svg class="gr-icon gr-i-expand" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#expand"></use></svg></span></div>
                             <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-sortable fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
                             <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-sortable fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
                             <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-checkbox"></div>
@@ -288,7 +288,7 @@
                         <div id="fs-browser-tree"></div>
 
                         <div id="fs-action-refresh" class="fs-action-element" data-i18n="[title]nav.action.refresh">
-                            <svg class="gr-icon gr-i-refresh"><use xlink:href="/assets/icons.svg#refresh"></use></svg>
+                            <svg class="gr-icon gr-i-refresh"><use xlink:href="<%= iconsSvg %>#refresh"></use></svg>
                         </div>
 
                         <div id="fs-upload"></div>
@@ -308,26 +308,26 @@
 
                     <ul id="fs-browser-select-action">
                         <li id="fs-action-download" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.download">
-                            <svg class="gr-icon gr-i-download"><use xlink:href="/assets/icons.svg#download"></use></svg>
+                            <svg class="gr-icon gr-i-download"><use xlink:href="<%= iconsSvg %>#download"></use></svg>
                         </li>
                         <li id="fs-action-delete" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.delete">
-                            <svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg>
+                            <svg class="gr-icon gr-i-trash"><use xlink:href="<%= iconsSvg %>#trash"></use></svg>
                         </li>
                         <li id="fs-action-restore" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.restore">
-                            <svg class="gr-icon gr-i-restore-trash"><use xlink:href="/assets/icons.svg#restore-trash"></use></svg>
+                            <svg class="gr-icon gr-i-restore-trash"><use xlink:href="<%= iconsSvg %>#restore-trash"></use></svg>
                         </li>
                         <li id="fs-action-copy" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.copy">
-                            <svg class="gr-icon gr-i-copy"><use xlink:href="/assets/icons.svg#copy"></use></svg>
+                            <svg class="gr-icon gr-i-copy"><use xlink:href="<%= iconsSvg %>#copy"></use></svg>
                         </li>
                         <li id="fs-action-cut" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.cut">
-                            <svg class="gr-icon gr-i-cut"><use xlink:href="/assets/icons.svg#cut"></use></svg>
+                            <svg class="gr-icon gr-i-cut"><use xlink:href="<%= iconsSvg %>#cut"></use></svg>
                         </li>
                         <li id="fs-action-paste" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.paste">
                             <div id="fs-action-paste-count" class="fs-tiny-button-count"></div>
-                            <svg class="gr-icon gr-i-paste"><use xlink:href="/assets/icons.svg#paste"></use></svg>
+                            <svg class="gr-icon gr-i-paste"><use xlink:href="<%= iconsSvg %>#paste"></use></svg>
                         </li>
                         <li id="fs-action-rename" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.rename">
-                            <svg class="gr-icon gr-i-text-edit"><use xlink:href="/assets/icons.svg#text-edit"></use></svg>
+                            <svg class="gr-icon gr-i-text-edit"><use xlink:href="<%= iconsSvg %>#text-edit"></use></svg>
                         </li>
                     </ul>
 
@@ -346,7 +346,7 @@
                                         </div>
                                         <div id="fs-preview-add-tag-button">
                                             <div class="fs-add">
-                                                <svg viewBox="0 0 24 24" class="gr-icon gr-i-plus"><use xlink:href="/assets/icons.svg#plus"></use></svg>
+                                                <svg viewBox="0 0 24 24" class="gr-icon gr-i-plus"><use xlink:href="<%= iconsSvg %>#plus"></use></svg>
                                             </div>
                                         </div>
                                     </div>
@@ -431,7 +431,7 @@
                                     <tr class="fs-searchable">
                                         <th data-i18n="view.prop.head.share"></th>
                                         <td id="fs-metadata-share">
-                                            <svg class="gr-icon gr-i-folder-shared" viewBox="0 0 24 24"><use xlink:href="/assets/icons.svg#folder-shared"></use></svg>
+                                            <svg class="gr-icon gr-i-folder-shared" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#folder-shared"></use></svg>
                                             <span class="fs-value"></span>
                                         </td>
                                     </tr>
@@ -504,7 +504,7 @@
                         <div class="sk-circle6 sk-child"></div>
                     </div>
                     <div id="fs-upload-progress-info-icon-complete">
-                        <svg class="gr-icon gr-i-check"><use xlink:href="/assets/icons.svg#check"></use></svg>
+                        <svg class="gr-icon gr-i-check"><use xlink:href="<%= iconsSvg %>#check"></use></svg>
                     </div>
                 </div>
 
@@ -522,9 +522,9 @@
         </div>
 
         <div id="fs-display-live">
-            <div id="fs-display-left"><svg viewBox="0 0 24 24" class="gr-icon gr-i-arrowhead-w"><use xlink:href="/assets/icons.svg#arrowhead-w"></use></svg></div>
+            <div id="fs-display-left"><svg viewBox="0 0 24 24" class="gr-icon gr-i-arrowhead-w"><use xlink:href="<%= iconsSvg %>#arrowhead-w"></use></svg></div>
             <div id="fs-display-content"></div>
-            <div id="fs-display-right"><svg viewBox="0 0 24 24" class="gr-icon gr-i-arrowhead-e"><use xlink:href="/assets/icons.svg#arrowhead-e"></use></svg></div>
+            <div id="fs-display-right"><svg viewBox="0 0 24 24" class="gr-icon gr-i-arrowhead-e"><use xlink:href="<%= iconsSvg %>#arrowhead-e"></use></svg></div>
         </div>
 
         <div id="fs-event-window" data-i18n="[title]login.events">
@@ -678,7 +678,7 @@
                         <div class="sk-circle6 sk-child"></div>
                     </div>
                     <div id="fs-uploadmgr-transfer-icon-complete">
-                        <svg class="gr-icon gr-i-check"><use xlink:href="/assets/icons.svg#check"></use></svg>
+                        <svg class="gr-icon gr-i-check"><use xlink:href="<%= iconsSvg %>#check"></use></svg>
                     </div>
                 </div>
             </div>
@@ -759,12 +759,12 @@
                 <div class="fs-share-link-window-row">
                     <input type="text" readonly="readonly" name="file_url">
                     <div id="fs-share-link-window-delete" data-i18n="[title]view.share.delete">
-                        <svg class="gr-icon gr-i-trash"><use xlink:href="/assets/icons.svg#trash"></use></svg>
+                        <svg class="gr-icon gr-i-trash"><use xlink:href="<%= iconsSvg %>#trash"></use></svg>
                     </div>
                 </div>
 
                 <div id="fs-share-link-window-hint-delete">
-                    <svg class="gr-icon gr-i-info"><use xlink:href="/assets/icons.svg#info"></use></svg>
+                    <svg class="gr-icon gr-i-info"><use xlink:href="<%= iconsSvg %>#info"></use></svg>
                     <p class="fs-hint" data-i18n="view.share_link.hint_remove_url"></p>
                 </div>
 
@@ -802,41 +802,41 @@
                     <div id="fs-share-window-search-role" class="fs-share-window-privilege-selector">
                         <div class="fs-share-window-selected-privilege">
                             <span class="fs-share-window-selected-privilege-label" data-i18n="view.share.privilege_rw"></span>
-                            <svg class="gr-icon gr-i-expand"><use xlink:href="/assets/icons.svg#expand"></use></svg>
+                            <svg class="gr-icon gr-i-expand"><use xlink:href="<%= iconsSvg %>#expand"></use></svg>
                         </div>
                         <ul class="fs-share-window-privileges">
                             <li>
                                 <input id="new_share_consumer_privilege_m" type="radio" name="new_share_consumer_privilege" value="m" />
                                 <label for="new_share_consumer_privilege_m">
-                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="/assets/icons.svg#checkmark"></use></svg>
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="<%= iconsSvg %>#checkmark"></use></svg>
                                     <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_m"></span>
                                 </label>
                             </li>
                             <li>
                                 <input id="new_share_consumer_privilege_r" type="radio" name="new_share_consumer_privilege" value="r" />
                                 <label for="new_share_consumer_privilege_r">
-                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="/assets/icons.svg#checkmark"></use></svg>
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="<%= iconsSvg %>#checkmark"></use></svg>
                                     <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_r"></span>
                                 </label>
                             </li>
                             <li>
                                 <input id="new_share_consumer_privilege_rw" type="radio" name="new_share_consumer_privilege" value="rw" checked />
                                 <label for="new_share_consumer_privilege_rw">
-                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="/assets/icons.svg#checkmark"></use></svg>
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="<%= iconsSvg %>#checkmark"></use></svg>
                                     <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_rw"></span>
                                 </label>
                             </li>
                             <li>
                                 <input id="new_share_consumer_privilege_w+" type="radio" name="new_share_consumer_privilege" value="w+" />
                                 <label for="new_share_consumer_privilege_w+">
-                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="/assets/icons.svg#checkmark"></use></svg>
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="<%= iconsSvg %>#checkmark"></use></svg>
                                     <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_w+"></span>
                                 </label>
                             </li>
                             <li>
                                 <input id="new_share_consumer_privilege_d" type="radio" name="new_share_consumer_privilege" value="d" />
                                 <label for="new_share_consumer_privilege_d">
-                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="/assets/icons.svg#checkmark"></use></svg>
+                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-checkmark"><use xlink:href="<%= iconsSvg %>#checkmark"></use></svg>
                                     <span class="fs-share-window-privilege-label" data-i18n="view.share.privilege_d"></span>
                                 </label>
                             </li>
@@ -854,7 +854,7 @@
                 </nav>
 
                 <div id="fs-share-window-remove">
-                    <svg class="gr-icon gr-i-info"><use xlink:href="/assets/icons.svg#info"></use></svg>
+                    <svg class="gr-icon gr-i-info"><use xlink:href="<%= iconsSvg %>#info"></use></svg>
                     <p class="fs-hint" data-i18n="view.share.hint_remove"></p>
                     <input type="submit" name="unshare" class="fs-button-small" data-i18n="[value]view.share.delete"/>
                     <hr class="full-width" />
@@ -891,8 +891,8 @@
     <div id="fs-snackbar">
         <span id="fs-snackbar-message"></span>
         <span id="fs-snackbar-icon">
-            <svg class="gr-icon gr-i-check"><use xlink:href="/assets/icons.svg#check"></use></svg>
-            <svg class="gr-icon gr-i-undo"><use xlink:href="/assets/icons.svg#undo"></use></svg>
+            <svg class="gr-icon gr-i-check"><use xlink:href="<%= iconsSvg %>#check"></use></svg>
+            <svg class="gr-icon gr-i-undo"><use xlink:href="<%= iconsSvg %>#undo"></use></svg>
         </span>
     </div>
 

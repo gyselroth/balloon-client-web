@@ -1,3 +1,15 @@
+## 3.0.9
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Jan 22 14:34:01 CET 2019
+
+* [FIX] Avoid double requests in autocomplete #104
+* [FIX] Do not show owner in list of share consumers #85
+* [CHANGE] Use hash for all assets #84
+* [FIX] Reload tree after changeing to readonly flag #79
+* [FIX] Design issue share search user/groups #114
+* [FIX] Undefined collection name in push state #78
+
+
 ## 3.0.8
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Dez 05 08:55:22 CET 2018
@@ -12,7 +24,7 @@
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Nov 13 09:39:22 CET 2018
 
-* [FIX] File uploads are sent with wrong Content-Type header #106 
+* [FIX] File uploads are sent with wrong Content-Type header #106
 
 
 ## 3.0.6
