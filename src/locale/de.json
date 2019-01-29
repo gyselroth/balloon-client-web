@@ -68,6 +68,10 @@
     "results": "Suchresultate",
     "reset_filter": "Zurücksetzen",
     "apply_filter": "Anwenden",
+    "mode": {
+      "fulltext": "Volltextsuche",
+      "nodename": "Dateiname"
+    },
     "filter": {
       "color": "Farbe",
       "tags": "Tags",

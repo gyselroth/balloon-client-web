@@ -104,7 +104,7 @@
     }
 
     #fs-search-reset {
-      display: none;
+      display: block;
       position: absolute;
       width: 40px;
       height: $height;
@@ -119,6 +119,97 @@
         width: 14px;
         height: 14px;
         cursor: pointer;
+      }
+    }
+
+    #fs-search-mode-toggle {
+      display: block;
+      position: absolute;
+      width: auto;
+      height: $height;
+      right: 65px;
+      top: 0;
+      cursor: pointer;
+      color: $colorMediumGrey;
+
+
+      span {
+        position: relative;
+        top: -2px;
+      }
+
+      .gr-i-expand {
+        position: relative;
+        top: 5px;
+        left: -3px;
+        cursor: pointer;
+      }
+    }
+
+    #fs-search-mode-dropdown {
+      display: none;
+      $dropdownWidth: 220px;
+
+      @include dropdown($dropdownWidth, 52px);
+
+      left: calc(100% - #{$dropdownWidth + 42px});
+      top: 41px;
+      display: none;
+
+      ul {
+        li {
+          line-height: 40px;
+          font-size: 15px;
+          background-color: $colorWhite;
+          cursor: pointer;
+          z-index: 17;
+          padding: 0;
+
+          .gr-icon {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+          }
+
+          label {
+            padding: 0 12px;
+            display: block;
+            color: $colorMediumGrey;
+            cursor: pointer;
+          }
+
+          input[type="radio"] {
+            display: none;
+          }
+
+          &:hover {
+            background-color: $colorBrightGrey;
+
+            label {
+              color: $colorDarkGrey;
+            }
+          }
+
+          &:first-child {
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+          }
+
+          &:last-child {
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+          }
+        }
+      }
+    }
+
+    &.fs-search-mode-dropdown-open {
+      #fs-search-mode-toggle .gr-i-expand {
+        color: $colorDarkGrey;
+      }
+
+      #fs-search-mode-dropdown {
+        display: block;
       }
     }
 
@@ -159,10 +250,6 @@
     }
 
     &.fs-search-focused {
-      #fs-search-reset {
-        display: block;
-      }
-
       #fs-search-input {
         @include shadow-selected;
         padding: 4px 30px 6px 44px;
