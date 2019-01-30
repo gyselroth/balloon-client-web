@@ -20,6 +20,7 @@ var login = {
   oidc: [],
   notifier: null,
   handler: null,
+  mayHideLoader: true,
 
   init: function(config) {
     if(config && config.auth) {
@@ -31,9 +32,17 @@ var login = {
         this.oidc = config.auth.oidc;
       }
 
-      var type = window.location.hash.substr(1);
-      if(type) {
-        login.initOidcAuth(type);
+      var hash = window.location.hash.substr(1);
+
+      if(hash) {
+        if(login.initOidcAuth(hash)) {
+          login.mayHideLoader = false;
+        } else {
+          var pairs = this.parseAuthorizationResponse();
+          if(pairs.access_token) {
+            login.mayHideLoader = false;
+          }
+        }
       }
     }
 
@@ -73,6 +82,7 @@ var login = {
         login.adapter = 'oidc';
         login.verifyOidcAuthentication();
       } else {
+        login.hideLoader(true);
         $('#login-oidc-error').show();
       }
 
@@ -114,11 +124,7 @@ var login = {
       type:'GET',
       url: '/api/auth',
       complete: function(response) {
-        $('#login-loader').addClass('ready-for-take-off');
-
-        setTimeout(function(){
-          $('#login-loader').remove();
-        }, 350);
+        login.hideLoader();
 
         switch(response.status) {
         case 401:
@@ -189,6 +195,8 @@ var login = {
       url: '/api/v2/users/whoami',
       cache: false,
       complete: function(response) {
+        login.hideLoader(true);
+
         switch(response.status) {
         case 401:
         case 403:
@@ -277,7 +285,7 @@ var login = {
     var idp = this.getIdpConfigByProviderUrl(provider_url);
 
     if(!idp) {
-      return;
+      return false;
     }
 
     AuthorizationServiceConfiguration.fetchFromIssuer(idp.providerUrl).then(configuration => {
@@ -286,6 +294,8 @@ var login = {
 
       login.handler.performAuthorizationRequest(configuration, request);
     });
+
+    return true;
   },
 
   initBasicAuth: function() {
@@ -377,6 +387,16 @@ var login = {
     balloon.resetDom();
     $('#fs-namespace').hide();
   },
+
+  hideLoader: function(force) {
+    if(force || this.mayHideLoader) {
+      $('#login-loader').addClass('ready-for-take-off');
+
+      setTimeout(function(){
+        $('#login-loader').remove();
+      }, 350);
+    }
+  }
 }
 
 export default login;
