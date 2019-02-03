@@ -81,6 +81,15 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
         this._object(modals.last())._overlay(true);
       }
     },
+
+    _keydown: function(e) {
+      if(this.options.draggable && !e.ctrlKey && !e.altKey && [37,38,39,40].indexOf(e.keyCode) > -1) {
+        //do not move window with arrow keys (needed for scrolling)
+        return true;
+      }
+
+      Window.fn._keydown.call(this, e);
+    },
   });
 
   ui.plugin(BalloonWindow);
