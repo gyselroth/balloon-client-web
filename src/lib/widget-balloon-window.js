@@ -9,7 +9,12 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
   var BalloonWindow = Window.extend({
 
     init: function(target, options) {
+      var that = this;
       Window.fn.init.call(this, target, options);
+
+      if(options.closeViaOverlay === undefined) {
+        options.closeViaOverlay = true;
+      }
 
       var $target = $(target);
       var $parent = $target.parent();
@@ -27,6 +32,16 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
       }
 
       this.title(options.title);
+
+      var overlay = options.modal ? this._overlay(true) : $(undefined);
+      if(options.modal && options.closeViaOverlay) {
+        overlay.addClass('bln-overlay-clickable');
+        overlay.off('click').on('click', function() {
+          that.close();
+        });
+      } else {
+        overlay.removeClass('bln-overlay-clickable');
+      }
     },
 
     center: function () {
