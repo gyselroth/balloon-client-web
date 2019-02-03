@@ -1,0 +1,45 @@
+{
+  "app": {
+    "intelligentCollection": {
+      "addNew": "Intelligenter Ordner",
+      "addNewWin": {
+        "title": "Neuer Intelligenter Ordner"
+      },
+      "properties": {
+        "name": "Name",
+        "color": "Farbmarkierung",
+        "changed": "Geändert"
+      },
+      "operators": {
+        "string": {
+          "contains": "Enthält",
+          "startsWith": "Beginnt mit",
+          "endsWith": "Endet mit",
+          "equals": "Ist",
+          "notEquals": "Ist nicht"
+        },
+        "color": {
+          "has": "Ist markiert mit",
+          "hasNot": "Ist nicht markiert mit"
+        },
+        "date": {
+          "since": "Innerhalb der letzten",
+          "exactly": "Genau",
+          "before": "Vor",
+          "after": "Nach",
+          "today": "Heute",
+          "yesterday": "Gestern",
+          "thisweek": "Diese Woche",
+          "thismonth": "Diesen Monat",
+          "thisyear": "Dieses Jahr",
+          "sinceVal2": {
+            "days": "Tage",
+            "weeks": "Wochen",
+            "months": "Monate",
+            "years": "Jahre"
+          }
+        }
+      }
+    }
+  }
+}

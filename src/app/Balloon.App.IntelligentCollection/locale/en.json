@@ -1,0 +1,45 @@
+{
+  "app": {
+    "intelligentCollection": {
+      "addNew": "Intelligent folder",
+      "addNewWin": {
+        "title": "New intelligent folder"
+      },
+      "properties": {
+        "name": "Name",
+        "color": "Color",
+        "changed": "Changed"
+      },
+      "operators": {
+        "string": {
+          "contains": "Contains",
+          "startsWith": "Starts with",
+          "endsWith": "Ends with",
+          "equals": "Is",
+          "notEquals": "Is not"
+        },
+        "color": {
+          "has": "Is marked with",
+          "hasNot": "Is not marked with"
+        },
+        "date": {
+          "since": "Since",
+          "exactly": "Exactly",
+          "before": "Before",
+          "after": "After",
+          "today": "Today",
+          "yesterday": "Yesterday",
+          "thisweek": "This week",
+          "thismonth": "This month",
+          "thisyear": "This year",
+          "sinceVal2": {
+            "days": "Days",
+            "weeks": "Weeks",
+            "months": "Months",
+            "years": "Years"
+          }
+        }
+      }
+    }
+  }
+}
