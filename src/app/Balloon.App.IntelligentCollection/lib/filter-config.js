@@ -40,6 +40,11 @@ var config = {
       label: 'app.intelligentCollection.properties.name',
       dataType: 'string',
     },
+    tag: {
+      dbField: 'meta.tags',
+      label: 'app.intelligentCollection.properties.tag',
+      dataType: 'string',
+    },
     color: {
       dbField: 'meta.color',
       label: 'app.intelligentCollection.properties.color',
