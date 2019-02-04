@@ -3,7 +3,11 @@
     "intelligentCollection": {
       "addNew": "Intelligenter Ordner",
       "addNewWin": {
-        "title": "Neuer Intelligenter Ordner"
+        "title": "Neuer Intelligenter Ordner",
+        "comparsion": {
+          "and": "Bei Erfüllen aller der folgenden Bedingungen",
+          "or": "Bei Erfüllen einer der folgenden Bedingungen"
+        }
       },
       "properties": {
         "name": "Name",

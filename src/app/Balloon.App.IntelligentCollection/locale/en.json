@@ -3,7 +3,11 @@
     "intelligentCollection": {
       "addNew": "Intelligent folder",
       "addNewWin": {
-        "title": "New intelligent folder"
+        "title": "New intelligent folder",
+        "comparsion": {
+          "and": "If all of the following conditions matches",
+          "or": "If one of the following conditions matches"
+        }
       },
       "properties": {
         "name": "Name",

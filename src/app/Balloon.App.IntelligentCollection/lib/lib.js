@@ -67,6 +67,14 @@ var app = {
       '<div class="fs-window-form">'+
         '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
       '</div>'+
+      '<hr class="full-width" />'+
+      '<div id="fs-intelligent-collection-window-comparsion">'+
+        '<select name="comparsion">'+
+          '<option value="and" selected="selected">' + i18next.t('app.intelligentCollection.addNewWin.comparsion.and') + '</option>'+
+          '<option value="or">' + i18next.t('app.intelligentCollection.addNewWin.comparsion.or') + '</option>'+
+        '</select>'+
+        '<svg class="gr-icon gr-i-expand"><use xlink:href="'+iconsSvg+'#expand"></use></svg>'+
+      '</div>'+
       '<div id="fs-intelligent-collection-window-filters"></div>'+
       '<hr class="full-width" />'+
       '<div class="fs-window-secondary-actions">'+
@@ -228,15 +236,17 @@ var app = {
     var filter;
 
     if(this.filters.length > 1) {
-      var $and = [];
+      var $constraints = [];
+      var comparsion = $('#fs-intelligent-collection-window-comparsion select').val();
 
       var i;
       for(i in this.filters) {
         var constraint = this._createFilterQuery(this.filters[i]);
-        $and.push(constraint)
+        $constraints.push(constraint)
       }
 
-      filter = {'$and': $and};
+      filter = {};
+      filter['$'+comparsion] = $constraints;
     } else {
       filter = this._createFilterQuery(this.filters[0]);
     }
