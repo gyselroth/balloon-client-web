@@ -1,3 +1,16 @@
+import {fileExtMimeMap} from '../../../lib/mime-file-ext-map.js';
+
+const mimeDropDownOptions = Object.keys(fileExtMimeMap).map(function(ext) {
+  return {
+    value: ext,
+    label: ext
+  };
+}).sort(function(a, b) {
+  if (a.label > b.label) return 1;
+  if (a.label < b.label) return -1;
+  return 0;
+});
+
 function validateInputString(name, values, $filter) {
   var curVal = values[name];
   var valid = curVal !== '' && curVal !== undefined;
@@ -15,8 +28,12 @@ function validateColor(name, values, $filter) {
   return  curVal !== '' && curVal !== undefined;
 }
 
+function validateDropdown(name, values, $filter) {
+  var curVal = values[name];
+  return  curVal !== '' && curVal !== undefined;
+}
 
-module.exports = {
+var config = {
   properties: {
     name: {
       dbField: 'name',
@@ -27,6 +44,11 @@ module.exports = {
       dbField: 'meta.color',
       label: 'app.intelligentCollection.properties.color',
       dataType: 'color',
+    },
+    mime: {
+      dbField: 'mime',
+      label: 'app.intelligentCollection.properties.mime',
+      dataType: 'mime',
     },
     /*
     //TODO pixtron - find a way to query date fields
@@ -243,6 +265,61 @@ module.exports = {
           }
         }
       }
+    },
+    mime: {
+      defaultOperator: 'has',
+      operators: {
+        has: {
+          label: 'app.intelligentCollection.operators.mime.has',
+          values: [
+            {
+              type: 'dropdown',
+              options: mimeDropDownOptions
+            }
+          ],
+          query: function(property, values) {
+            var query = {};
+            var mimes = fileExtMimeMap[values['dropdown_0']];
+
+            if(mimes.length > 1) {
+              query[property] = {$in: mimes};
+            } else {
+              query[property] = mimes[0];
+            }
+
+            return query;
+          },
+          validate: function(values, $filter) {
+            return validateDropdown('dropdown_0', values, $filter);
+          }
+        },
+        hasNot: {
+          label: 'app.intelligentCollection.operators.mime.hasNot',
+          values: [
+            {
+              type: 'dropdown',
+              options: mimeDropDownOptions
+            }
+          ],
+          query: function(property, values) {
+            var query = {};
+            var mimes = fileExtMimeMap[values['dropdown_0']];
+
+            if(mimes.length > 1) {
+              query[property] = {$nin: mimes};
+            } else {
+              query[property] = {$ne: mimes[0]};
+            }
+
+            return query;
+          },
+          validate: function(values, $filter) {
+            return validateDropdown('dropdown_0', values, $filter);
+          }
+        }
+      }
     }
   }
 }
+
+export default config;

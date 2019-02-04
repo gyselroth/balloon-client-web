@@ -8,7 +8,8 @@
       "properties": {
         "name": "Name",
         "color": "Farbmarkierung",
-        "changed": "Geändert"
+        "changed": "Geändert",
+        "mime": "Dateityp"
       },
       "operators": {
         "string": {
@@ -21,6 +22,10 @@
         "color": {
           "has": "Ist markiert mit",
           "hasNot": "Ist nicht markiert mit"
+        },
+        "mime": {
+          "has": "Ist",
+          "hasNot": "Ist nicht"
         },
         "date": {
           "since": "Innerhalb der letzten",

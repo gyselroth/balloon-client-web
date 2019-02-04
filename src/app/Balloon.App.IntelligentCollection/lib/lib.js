@@ -474,7 +474,9 @@ var app = {
 
         $select.off('change').on('change', function(event) {
           event.preventDefault();
-          app._onValueChanged(filter, $(this));
+
+          var $this = $(this);
+          app._onValueChanged(filter, $this.attr('name'), $this.val());
         });
 
         $field = $('<div class="fs-intelligent-collection-filter-value-dropdown"></div>');

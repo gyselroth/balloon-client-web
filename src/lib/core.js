@@ -16,7 +16,7 @@ import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
 import fileExtIconMap from './file-ext-icon-map.js';
-import mimeFileExtMap from './mime-file-ext-map.js';
+import {mimeFileExtMap} from './mime-file-ext-map.js';
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 window.$ = $;
