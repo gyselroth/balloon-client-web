@@ -19,9 +19,14 @@
         "tag": "Tags",
         "color": "Farbmarkierung",
         "changed": "Geändert",
-        "mime": "Dateityp"
+        "mime": "Dateityp",
+        "directory": "Verzeichnis"
       },
       "operators": {
+        "boolean": {
+          "true": "Ist wahr",
+          "false": "Ist falsch"
+        },
         "string": {
           "contains": "Enthält",
           "startsWith": "Beginnt mit",

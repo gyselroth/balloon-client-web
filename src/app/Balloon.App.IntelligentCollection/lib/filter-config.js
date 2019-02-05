@@ -89,9 +89,40 @@ var config = {
       dbField: 'changed',
       label: 'app.intelligentCollection.properties.changed',
       dataType: 'date',
-    }*/
+    },*/
+
+    directory: {
+      dbField: 'directory',
+      label: 'app.intelligentCollection.properties.directory',
+      dataType: 'boolean',
+    },
   },
   dataTypes: {
+    boolean: {
+      defaultOperator: 'true',
+      operators: {
+        true: {
+          label: 'app.intelligentCollection.operators.boolean.true',
+          values: [],
+          query: function(property, values) {
+            var query = {};
+            query[property] = true;
+
+            return query;
+          }
+        },
+        false: {
+          label: 'app.intelligentCollection.operators.boolean.false',
+          values: [],
+          query: function(property, values) {
+            var query = {};
+            query[property] = false;
+
+            return query;
+          }
+        }
+      }
+    },
     string: {
       defaultOperator: 'contains',
       operators: {

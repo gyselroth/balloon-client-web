@@ -19,9 +19,14 @@
         "tags": "Tags",
         "color": "Color",
         "changed": "Changed",
-        "mime": "Filetype"
+        "mime": "Filetype",
+        "directory": "Directory"
       },
       "operators": {
+        "boolean": {
+          "true": "Is true",
+          "false": "Is false"
+        },
         "string": {
           "contains": "Contains",
           "startsWith": "Starts with",

@@ -188,17 +188,19 @@ var app = {
     var $d = $.Deferred();
 
     var filter = this._createFiltersQuery();
+    var data = {
+      name: name,
+      id: this.balloon.getCurrentCollectionId(),
+      attributes: {
+        filter: filter
+      }
+    };
 
     this.balloon.xmlHttpRequest({
       url: this.balloon.base+'/collections',
       type: 'POST',
-      data: {
-        name: name,
-        id: this.balloon.getCurrentCollectionId(),
-        attributes: {
-          filter: filter
-        }
-      },
+      contentType: 'application/json',
+      data: JSON.stringify(data),
       success: function(data) {
         $d.resolve(data);
       }.bind(this),
