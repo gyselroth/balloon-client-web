@@ -434,7 +434,7 @@ var app = {
 
         break;
       case 'color':
-        var curVal = filter.values[name] || '';
+        var curVal = filter.values[name] || [];
         var fieldName = filter.filterId + '-' + name;
         var colors = ['magenta', 'purple', 'blue', 'green', 'yellow'];
 
@@ -446,9 +446,9 @@ var app = {
           var id = filter.filterId + '-' + name + '-' + color;
 
           var $label = $('<label for="' + id + '" class="fs-intelligent-collection-filter-value-color-' + color + '" title="' + color + '">&nbsp;</label>');
-          var $input = $('<input type="radio" name="' + fieldName + '" id="' + id + '" value="' + color + '" />');
+          var $input = $('<input type="checkbox" name="' + fieldName + '" id="' + id + '" value="' + color + '" />');
 
-          if(color === curVal) {
+          if(curVal.indexOf(color) !== -1) {
             $input.prop('checked', true);
           }
 
@@ -456,11 +456,15 @@ var app = {
           $field.append($label);
         }
 
-        $field.find('input[type="radio"]').off('change').on('change', function(event) {
+        $field.find('input[type="checkbox"]').off('change').on('change', function(event) {
           event.preventDefault();
 
-          var $this = $(this);
-          app._onValueChanged(filter, name, $this.val());
+          var checked = [];
+          $field.find('input[type="checkbox"]:checked').each(function(index, elem) {
+            checked.push($(elem).val());
+          });
+
+          app._onValueChanged(filter, name, checked);
         });
 
         break;

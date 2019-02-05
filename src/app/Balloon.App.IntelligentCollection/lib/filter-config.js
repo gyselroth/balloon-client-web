@@ -25,7 +25,8 @@ function validateInputString(name, values, $filter) {
 
 function validateColor(name, values, $filter) {
   var curVal = values[name];
-  return  curVal !== '' && curVal !== undefined;
+
+  return Array.isArray(curVal) && curVal.length > 0;
 }
 
 function validateDropdown(name, values, $filter) {
@@ -303,7 +304,14 @@ var config = {
           ],
           query: function(property, values) {
             var query = {};
-            query[property] = values['color_0'];
+            var colors = values['color_0'];
+
+            if(colors.length > 1) {
+              var constraints = [];
+              query[property] = {$in: colors};
+            } else {
+              query[property] = colors[0];
+            }
 
             return query;
           },
@@ -320,7 +328,14 @@ var config = {
           ],
           query: function(property, values) {
             var query = {};
-            query[property] = {$ne: values['color_0']};
+            var colors = values['color_0'];
+
+            if(colors.length > 1) {
+              var constraints = [];
+              query[property] = {$nin: colors};
+            } else {
+              query[property] = {$ne: colors[0]};
+            }
 
             return query;
           },
