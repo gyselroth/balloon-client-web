@@ -44,6 +44,34 @@ var config = {
       dbField: 'meta.tags',
       label: 'app.intelligentCollection.properties.tag',
       dataType: 'string',
+      autocomplete: {
+        field: 'string_0',
+        options: function(app) {
+          return {
+            dataTextField: '_id',
+            dataSource: new kendo.data.DataSource({
+              transport: {
+                read: function(operation) {
+                  app.balloon.xmlHttpRequest({
+                    url: app.balloon.base+'/users/node-attribute-summary',
+                    data: {
+                      attributes: ['meta.tags']
+                    },
+                    success: function(data) {
+                      data['meta.tags'].sort();
+                      operation.success(data['meta.tags']);
+                    }
+                  });
+                }
+              },
+            }),
+            sort: {
+              dir: 'asc',
+              field: '_id'
+            }
+          }
+        }
+      }
     },
     color: {
       dbField: 'meta.color',

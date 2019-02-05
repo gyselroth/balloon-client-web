@@ -9,6 +9,11 @@
           "or": "If one of the following conditions matches"
         }
       },
+      "error": {
+        "autocomplete": {
+          "no_data": "No data found"
+        }
+      },
       "properties": {
         "name": "Name",
         "tags": "Tags",

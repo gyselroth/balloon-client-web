@@ -140,7 +140,7 @@ var app = {
             });
         })
       }
-    }).data("kendoBalloonWindow").center().open();
+    }).data('kendoBalloonWindow').center().open();
 
     return $d;
   },
@@ -397,7 +397,8 @@ var app = {
    * @return void
    */
   _renderValues: function(filter) {
-    var dataType = filterConfig.properties[filter.property].dataType;
+    var property = filterConfig.properties[filter.property];
+    var dataType = property.dataType;
     var values = filterConfig.dataTypes[dataType].operators[filter.operator].values;
 
     var $values = $('<div class="fs-intelligent-collection-filter-values"></div>');
@@ -499,6 +500,39 @@ var app = {
     }
 
     filter.$filter.find('.fs-intelligent-collection-filter-values').replaceWith($values);
+
+    if(property.autocomplete) {
+      var autocomplete = property.autocomplete;
+      this._addAutocompleteToValue(filter, filter.$filter.find('input[name="' + autocomplete.field + '"]'), autocomplete.options(app));
+    }
+  },
+
+  /**
+   * adds autocomplete to a given input field
+   *
+   * @param object filter
+   * @param $input object input field to add autocomplete to
+   * @param object options autocomplete options
+   * @return void
+   */
+  _addAutocompleteToValue: function(filter, $input, options) {
+    var autocompleteOptions = {
+      select: function(e) {
+        app._onValueChanged(filter, $input.attr('name'), e.item.text());
+      },
+      minLength: 0,
+      highlightFirst: true,
+      noDataTemplate: i18next.t('app.intelligentCollection.error.autocomplete.no_data'),
+      change: function(e) {
+        this.dataSource.read();
+      }
+    };
+
+    if(options) {
+      autocompleteOptions = $.extend(true, autocompleteOptions, options);
+    }
+
+    $input.kendoAutoComplete(autocompleteOptions);
   },
 
   /**

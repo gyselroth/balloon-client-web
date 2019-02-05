@@ -82,6 +82,18 @@
 
       margin-right: 0;
     }
+
+    .fs-intelligent-collection-filter-value {
+      span.k-autocomplete {
+        span {
+          display: none !important;
+        }
+
+        input {
+          padding: 6px;
+        }
+      }
+    }
   }
 
 
