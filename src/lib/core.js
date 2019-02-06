@@ -339,6 +339,14 @@ var balloon = {
   },
 
   /**
+   * Hooks called after tree data is bound, in order to check if fs_browser_actions may be displayed.
+   * If one hook returns false fs_browser_actions is not displayed.
+   *
+   * @var object
+   */
+  toggle_fs_browser_action_hooks: {},
+
+  /**
    * Init file browsing
    *
    * @return void
@@ -1185,7 +1193,7 @@ var balloon = {
   _treeDataBound: function(e) {
     balloon.resetDom(['multiselect']);
 
-    if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
+    if((!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) && balloon._evalToggleFsBrowserActionHooks()) {
       $('#fs-browser-action').show();
     } else {
       $('#fs-browser-action').hide();
@@ -8488,7 +8496,18 @@ var balloon = {
       .addClass('gr-i-'+icon);
 
     $icon.find('use').attr('xlink:href', iconUrl.substr(0, iconUrl.indexOf('#')+1) + icon);
-  }
+  },
+
+  /**
+   * Evaluate toggle_fs_browser_action_hooks
+   *
+   * @return boolean true if all hooks return true, false otherwise
+   */
+  _evalToggleFsBrowserActionHooks: function() {
+    return Object.keys(balloon.toggle_fs_browser_action_hooks).every(function(key) {
+      return balloon.toggle_fs_browser_action_hooks[key]();
+    });
+  },
 };
 
 import './app.js';
