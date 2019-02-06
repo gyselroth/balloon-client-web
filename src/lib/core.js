@@ -426,6 +426,8 @@ var balloon = {
     var $fs_search = $('#fs-search');
     var $fs_search_input = $fs_search.find('#fs-search-input');
     var $fs_search_filter_toggle = $fs_search.find('#fs-search-toggle-filter');
+    var $fs_search_mode_toggle = $fs_search.find('#fs-search-mode-toggle');
+    var $fs_search_mode_dropdown = $fs_search.find('#fs-search-mode-dropdown');
 
     $fs_search_input.off('focus').on('focus', function() {
       $fs_search.addClass('fs-search-focused');
@@ -468,6 +470,17 @@ var balloon = {
           }
         });
       }
+    });
+
+    $fs_search_mode_toggle.off('click').on('click', function() {
+      $fs_search.toggleClass('fs-search-mode-dropdown-open');
+    });
+
+    $('input[name="fs-search-mode"]').off('change').change(function() {
+      $fs_search_mode_toggle.find('span').contents().last().replaceWith(i18next.t('search.mode.' + this.value));
+      $fs_search.removeClass('fs-search-mode-dropdown-open');
+      balloon.advancedSearch();
+      $fs_search_input.focus();
     });
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
@@ -5911,6 +5924,7 @@ var balloon = {
   buildQuery: function(value, filter) {
     var a = value.split(':');
     var attr, type;
+    var mode = $('input[name="fs-search-mode"]:checked').val();
 
     if(a.length > 1) {
       attr  = a[0];
@@ -5928,24 +5942,25 @@ var balloon = {
     if(attr == undefined && value == "" && filter !== undefined) {
       query.body.query.bool.must = filter;
     } else if(attr == undefined) {
-      var should = [
-        {
+      var should = [{
+        match: {
+          name: {
+            query:value,
+            minimum_should_match: "90%"
+          }
+        }
+      }];
+
+      if(mode === 'fulltext') {
+        should.push({
           match: {
             "content.content": {
               query:value,
               minimum_should_match: "90%"
             }
           }
-        },
-        {
-          match: {
-            name: {
-              query:value,
-              minimum_should_match: "90%"
-            }
-          }
-        }
-      ];
+        });
+      }
 
       if(filter === undefined) {
         query.body.query.bool.should = should;
@@ -7912,7 +7927,14 @@ var balloon = {
         var $fs_search = $('#fs-search');
         var $fs_search_input = $fs_search.find('#fs-search-input');
 
-        $fs_search.removeClass('fs-search-focused').removeClass('fs-search-filtered');
+        $fs_search
+          .removeClass('fs-search-focused')
+          .removeClass('fs-search-filtered')
+          .removeClass('fs-search-mode-dropdown-open');
+
+        $fs_search.find('#fs-search-mode-toggle span').contents().last().replaceWith(i18next.t('search.mode.nodename'));
+        $fs_search.find('#fs-search-mode-nodename').prop('checked', true);
+
         $fs_search_input.val('');
         break;
 

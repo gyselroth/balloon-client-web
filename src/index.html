@@ -149,6 +149,22 @@
             <div id="fs-search">
                 <svg viewBox="0 0 24 24" class="gr-icon gr-i-search"><use xlink:href="<%= iconsSvg %>#search"></use></svg>
                 <input id="fs-search-input" type="text" data-i18n="[placeholder]nav.action.search" />
+                <div id="fs-search-mode-toggle">
+                    <span data-i18n="search.mode.nodename"></span>
+                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-expand"><use xlink:href="<%= iconsSvg %>#expand"></use></svg>
+                </div>
+                <div id="fs-search-mode-dropdown" class="bln-dropdown fs-search-dropwdown">
+                    <ul class="bln-dropdown-content fs-search-dropdown-content">
+                        <li data-i18n="[title]search.mode.nodename">
+                            <input type="radio" name="fs-search-mode" value="nodename" id="fs-search-mode-nodename" checked="checked" />
+                            <label for="fs-search-mode-nodename" data-i18n="search.mode.nodename"></label>
+                        </li>
+                        <li data-i18n="[title]search.mode.fulltext">
+                            <input type="radio" name="fs-search-mode" value="fulltext" id="fs-search-mode-fulltext" />
+                            <label for="fs-search-mode-fulltext" data-i18n="search.mode.fulltext"></label>
+                        </li>
+                    </ul>
+                </div>
                 <div id="fs-search-reset">
                     <svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg>
                 </div>
