@@ -1,7 +1,7 @@
 {
   "app": {
     "intelligentCollection": {
-      "addNew": "Intelligent folder",
+      "intelligentCollection": "Intelligent folder",
       "addNewWin": {
         "title": "New intelligent folder",
         "comparsion": {
