@@ -31,7 +31,7 @@ var app = {
   preInit: function(core) {
     this.balloon = core;
 
-    this.balloon.addNew('intelligentCollection', 'app.intelligentCollection.addNew', 'folder-system', this.addIntelligentCollection.bind(this));
+    this.balloon.addNew('intelligentCollection', 'app.intelligentCollection.addNew', 'folder-filter', this.addIntelligentCollection.bind(this));
 
     this.balloon.toggle_fs_browser_action_hooks['app.intelligentCollection'] = this._fsBroserActionHook;
   },
