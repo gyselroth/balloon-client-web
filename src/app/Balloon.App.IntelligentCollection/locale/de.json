@@ -1,0 +1,68 @@
+{
+  "app": {
+    "intelligentCollection": {
+      "intelligentCollection": "Intelligenter Ordner",
+      "addNewWin": {
+        "title": "Neuer Intelligenter Ordner",
+        "comparsion": {
+          "and": "Bei Erfüllen aller der folgenden Bedingungen",
+          "or": "Bei Erfüllen einer der folgenden Bedingungen"
+        }
+      },
+      "error": {
+        "autocomplete": {
+          "no_data": "Keine Daten gefunden"
+        }
+      },
+      "properties": {
+        "name": "Name",
+        "tag": "Tags",
+        "color": "Farbmarkierung",
+        "changed": "Geändert",
+        "mime": "Dateityp",
+        "directory": "Verzeichnis",
+        "author": "Autor",
+        "copyright": "Copyright",
+        "description": "Beschreibung"
+      },
+      "operators": {
+        "boolean": {
+          "true": "Ist wahr",
+          "false": "Ist falsch"
+        },
+        "string": {
+          "contains": "Enthält",
+          "startsWith": "Beginnt mit",
+          "endsWith": "Endet mit",
+          "equals": "Ist",
+          "notEquals": "Ist nicht"
+        },
+        "color": {
+          "has": "Ist markiert mit",
+          "hasNot": "Ist nicht markiert mit"
+        },
+        "mime": {
+          "has": "Ist",
+          "hasNot": "Ist nicht"
+        },
+        "date": {
+          "since": "Innerhalb der letzten",
+          "exactly": "Genau",
+          "before": "Vor",
+          "after": "Nach",
+          "today": "Heute",
+          "yesterday": "Gestern",
+          "thisweek": "Diese Woche",
+          "thismonth": "Diesen Monat",
+          "thisyear": "Dieses Jahr",
+          "sinceVal2": {
+            "days": "Tage",
+            "weeks": "Wochen",
+            "months": "Monate",
+            "years": "Jahre"
+          }
+        }
+      }
+    }
+  }
+}

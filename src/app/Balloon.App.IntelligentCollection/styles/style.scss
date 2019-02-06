@@ -1,0 +1,163 @@
+@import '../../../themes/default/scss/includes/colors';
+@import '../../../themes/default/scss/includes/mixins';
+
+.k-window.fs-intelligent-collection-window {
+  hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+
+}
+
+#fs-intelligent-collection-window {
+  display: none;
+  width: 840px;
+
+  .fs-window-form {
+    label {
+      float: none;
+      display: block;
+      font-weight: bold;
+      line-height: 20px;
+      font-size: 15px;
+    }
+
+    input {
+      width: 100%;
+    }
+  }
+
+  select {
+    width: auto;
+    height: 30px;
+    box-sizing: border-box;
+    border: 1px solid $colorLightGrey;
+    border-radius: 4px;
+    background-color: $colorWhite;
+    padding: 0 30px 0 10px;
+    font-size: 15px;
+    line-height: 30px;
+    color: $colorMediumGrey;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &::-ms-extend {
+      display: none;
+    }
+
+    & + .gr-i-expand {
+      position: absolute;
+      color: $colorMediumGrey;
+      top: 3px;
+      right: 5px;
+    }
+  }
+
+  #fs-intelligent-collection-window-comparsion {
+    position: relative;
+    display: inline-block;
+  }
+
+  .fs-intelligent-collection-filter {
+    @include clearfix;
+
+    & > div {
+      float: left;
+      position: relative;
+      margin-left: 10px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+
+    .fs-intelligent-collection-filter-controll {
+      $buttonSize: 30px;
+      float: right;
+
+      @include icon-button-small($buttonSize, $buttonSize);
+
+      margin-right: 0;
+    }
+
+    .fs-intelligent-collection-filter-value {
+      span.k-autocomplete {
+        span {
+          display: none !important;
+        }
+
+        input {
+          padding: 6px;
+        }
+      }
+    }
+  }
+
+
+  // Filter values
+  .fs-intelligent-collection-filter-value-colors {
+    @include clearfix;
+    padding-top: 5px;
+
+    input {
+      display: none;
+    }
+
+    label {
+      float: left;
+      display: block;
+      margin-right: 5px;
+      margin-top: 0;
+      padding: 0;
+      box-sizing: border-box;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border-style: solid;
+      border-width: 1px;
+      cursor: pointer;
+
+      &:before {
+        //hide default styled checkbox
+        display: none;
+      }
+
+      &.fs-intelligent-collection-filter-value-color-magenta {
+        border-color: $colorMagenta;
+      }
+      &.fs-intelligent-collection-filter-value-color-purple {
+        border-color: $colorPurple;
+      }
+      &.fs-intelligent-collection-filter-value-color-blue {
+        border-color: $colorBlue;
+      }
+      &.fs-intelligent-collection-filter-value-color-green {
+        border-color: $colorGreen;
+      }
+      &.fs-intelligent-collection-filter-value-color-yellow {
+        border-color: $colorYellow;
+      }
+    }
+  }
+
+  input:checked + label {
+    &.fs-intelligent-collection-filter-value-color-magenta {
+      background-color: $colorMagenta;
+    }
+    &.fs-intelligent-collection-filter-value-color-purple {
+      background-color: $colorPurple;
+    }
+    &.fs-intelligent-collection-filter-value-color-blue {
+      background-color: $colorBlue;
+    }
+    &.fs-intelligent-collection-filter-value-color-green {
+      background-color: $colorGreen;
+    }
+    &.fs-intelligent-collection-filter-value-color-yellow {
+      background-color: $colorYellow;
+    }
+  }
+}
