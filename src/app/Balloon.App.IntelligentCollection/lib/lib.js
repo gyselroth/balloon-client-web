@@ -32,6 +32,8 @@ var app = {
     this.balloon = core;
 
     this.balloon.addNew('intelligentCollection', 'app.intelligentCollection.addNew', 'folder-system', this.addIntelligentCollection.bind(this));
+
+    this.balloon.toggle_fs_browser_action_hooks['app.intelligentCollection'] = this._fsBroserActionHook;
   },
 
   postInit: function(core)  {
@@ -649,6 +651,19 @@ var app = {
     filter.values[name] = newValue;
     this._validateFilters();
   },
+
+  /**
+   * Validate if currentNode is a intelligent collection
+   *
+   * @return boolean true if it is a filtered collection
+   */
+  _fsBroserActionHook: function() {
+    var currentNode = app.balloon.getCurrentNode();
+
+    if(currentNode !== null && currentNode.directory && currentNode.filter) return false;
+
+    return true;
+  }
 };
 
 export default app;
