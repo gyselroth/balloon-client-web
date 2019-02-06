@@ -20,7 +20,10 @@
         "color": "Farbmarkierung",
         "changed": "Geändert",
         "mime": "Dateityp",
-        "directory": "Verzeichnis"
+        "directory": "Verzeichnis",
+        "author": "Autor",
+        "copyright": "Copyright",
+        "description": "Beschreibung"
       },
       "operators": {
         "boolean": {

@@ -97,6 +97,21 @@ var config = {
       label: 'app.intelligentCollection.properties.directory',
       dataType: 'boolean',
     },
+    author: {
+      dbField: 'meta.author',
+      label: 'app.intelligentCollection.properties.author',
+      dataType: 'string',
+    },
+    copyright: {
+      dbField: 'meta.copyright',
+      label: 'app.intelligentCollection.properties.copyright',
+      dataType: 'string',
+    },
+    description: {
+      dbField: 'meta.description',
+      label: 'app.intelligentCollection.properties.description',
+      dataType: 'string',
+    },
   },
   dataTypes: {
     boolean: {

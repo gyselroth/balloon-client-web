@@ -20,7 +20,10 @@
         "color": "Color",
         "changed": "Changed",
         "mime": "Filetype",
-        "directory": "Directory"
+        "directory": "Directory",
+        "author": "Autor",
+        "copyright": "Copyright",
+        "description": "Beschreibung"
       },
       "operators": {
         "boolean": {
