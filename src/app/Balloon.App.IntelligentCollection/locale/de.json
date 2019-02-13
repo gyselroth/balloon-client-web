@@ -21,9 +21,9 @@
         "changed": "Geändert",
         "mime": "Dateityp",
         "directory": "Verzeichnis",
-        "author": "Autor",
+        "author": "Author",
         "copyright": "Copyright",
-        "description": "Beschreibung"
+        "description": "Description"
       },
       "operators": {
         "boolean": {
