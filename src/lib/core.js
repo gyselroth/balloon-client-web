@@ -427,7 +427,6 @@ var balloon = {
     var $fs_search_input = $fs_search.find('#fs-search-input');
     var $fs_search_filter_toggle = $fs_search.find('#fs-search-toggle-filter');
     var $fs_search_mode_toggle = $fs_search.find('#fs-search-mode-toggle');
-    var $fs_search_mode_dropdown = $fs_search.find('#fs-search-mode-dropdown');
 
     $fs_search_input.off('focus').on('focus', function() {
       $fs_search.addClass('fs-search-focused');
@@ -472,9 +471,23 @@ var balloon = {
       }
     });
 
-    $fs_search_mode_toggle.off('click').on('click', function() {
+    function toggleSearchMode() {
       $fs_search.toggleClass('fs-search-mode-dropdown-open');
-    });
+      $(document).off('click.fs-search-mode-toggle');
+
+      if($fs_search.hasClass('fs-search-mode-dropdown-open')) {
+        $(document).on('click.fs-search-mode-toggle', function(event){
+          var $target = $(event.target);
+          var parentId = 'fs-search-mode-toggle';
+
+          if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
+
+          toggleSearchMode();
+        });
+      }
+    }
+
+    $fs_search_mode_toggle.off('click').on('click', toggleSearchMode);
 
     $('input[name="fs-search-mode"]').off('change').change(function() {
       $fs_search_mode_toggle.find('span').contents().last().replaceWith(i18next.t('search.mode.' + this.value));
