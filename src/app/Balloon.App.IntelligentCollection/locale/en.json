@@ -16,7 +16,7 @@
       },
       "properties": {
         "name": "Name",
-        "tags": "Tags",
+        "tag": "Tags",
         "color": "Color",
         "changed": "Changed",
         "mime": "Filetype",
