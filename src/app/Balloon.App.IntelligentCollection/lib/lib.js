@@ -69,6 +69,7 @@ var app = {
     var $win = this.$win;
 
     $win.html(
+      '<p class="hint">'+i18next.t('app.intelligentCollection.addNewWin.hint')+'</p>'+
       '<div class="error-message"></div>'+
       '<div class="fs-window-form">'+
         '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+

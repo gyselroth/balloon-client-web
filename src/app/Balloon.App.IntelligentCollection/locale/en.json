@@ -4,6 +4,7 @@
       "intelligentCollection": "Intelligent folder",
       "addNewWin": {
         "title": "New intelligent folder",
+        "hint": "Intelligent folders dynamically connect your cloud according to selected meta data. Note that intelligent folders can not be synced with the balloon desktop client and can not be used for a subscription (Recursive).",
         "comparsion": {
           "and": "If all of the following conditions matches",
           "or": "If one of the following conditions matches"

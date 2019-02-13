@@ -14,6 +14,11 @@
   display: none;
   width: 840px;
 
+  .hint {
+    color: $colorMediumGrey;
+    margin-top: -13px;
+  }
+
   .fs-window-form {
     label {
       float: none;

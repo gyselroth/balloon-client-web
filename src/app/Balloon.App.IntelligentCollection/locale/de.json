@@ -4,6 +4,7 @@
       "intelligentCollection": "Intelligenter Ordner",
       "addNewWin": {
         "title": "Neuer Intelligenter Ordner",
+        "hint": "Intelligente Ordner zeigen dynmisch Daten gemäss den gewählten Meta Daten an. Beachte, dass Intelligente Ordner nicht mit dem Balloon Desktop Client synchronisiert und auch nicht abonniert werden können (Rekursive).",
         "comparsion": {
           "and": "Bei Erfüllen aller der folgenden Bedingungen",
           "or": "Bei Erfüllen einer der folgenden Bedingungen"
