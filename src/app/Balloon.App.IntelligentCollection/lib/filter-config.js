@@ -151,7 +151,7 @@ var config = {
           ],
           query: function(property, values) {
             var query = {};
-            query[property] = {$regex: values['string_0']};
+            query[property] = {$regex: values['string_0'], $options: 'i'};
 
             return query;
           },
@@ -168,7 +168,7 @@ var config = {
           ],
           query: function(property, values) {
             var query = {};
-            query[property] = {$regex: '^' + values['string_0']};
+            query[property] = {$regex: '^' + values['string_0'], $options: 'i'};
 
             return query;
           },
@@ -185,7 +185,7 @@ var config = {
           ],
           query: function(property, values) {
             var query = {};
-            query[property] = {$regex: values['string_0'] + '$'};
+            query[property] = {$regex: values['string_0'] + '$', $options: 'i'};
 
             return query;
           },
