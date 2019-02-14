@@ -432,7 +432,8 @@ var app = {
         break;
       case 'integer':
         var curVal = filter.values[name] || '1';
-        var $field = $('<input type="number" name="' + name + '" min="0" value="' + curVal + '" />');
+        filter.values[name] = curVal;
+        var $field = $('<input type="text" class="number" name="' + name + '" value="' + curVal + '" />');
 
         $field.off('keyup').on('keyup', function(event) {
           event.preventDefault();

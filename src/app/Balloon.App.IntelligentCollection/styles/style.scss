@@ -88,7 +88,23 @@
       margin-right: 0;
     }
 
+    .fs-intelligent-collection-filter-values {
+      @include clearfix;
+    }
+
     .fs-intelligent-collection-filter-value {
+      position: relative;
+      float: left;
+      margin-left: 10px;
+
+      &:first-child{
+        margin-left: 0;
+      }
+
+      input.number {
+        width: 45px;
+      }
+
       span.k-autocomplete {
         span {
           display: none !important;

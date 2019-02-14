@@ -34,6 +34,19 @@ function validateDropdown(name, values, $filter) {
   return  curVal !== '' && curVal !== undefined;
 }
 
+function validateInputInteger(name, values, $filter) {
+  var curVal = values[name];
+  var valid = curVal !== '' && curVal !== undefined && parseInt(curVal)+'' === curVal;
+
+  if(valid === false && curVal !== undefined) {
+    $filter.find('input[name="'+name+'"]').addClass('error-input');
+  } else {
+    $filter.find('input[name="'+name+'"]').removeClass('error-input');
+  }
+
+  return valid;
+}
+
 var config = {
   properties: {
     name: {
@@ -227,9 +240,9 @@ var config = {
       }
     },
     date: {
-      defaultOperator: 'exactly',
+      defaultOperator: 'since',
       operators: {
-        /*since: {
+        since: {
           label: 'app.intelligentCollection.operators.date.since',
           values: [
             {
@@ -239,25 +252,44 @@ var config = {
               type: 'dropdown',
               options: [
                 {
-                  value: 'days',
+                  //1 day
+                  value: 86400,
                   label: 'app.intelligentCollection.operators.date.sinceVal2.days',
                 },
                 {
-                  value: 'weeks',
+                  //7 days
+                  value: 604800,
                   label: 'app.intelligentCollection.operators.date.sinceVal2.weeks',
                 },
                 {
-                  value: 'months',
+                  //30 days
+                  value: 2592000,
                   label: 'app.intelligentCollection.operators.date.sinceVal2.months',
                 },
                 {
-                  value: 'years',
+                  //365 days
+                  value: 31536000,
                   label: 'app.intelligentCollection.operators.date.sinceVal2.years',
                 }
               ]
             }
-          ]
-        },*/
+          ],
+          query: function(property, values) {
+            var date = new Date();
+
+            var subtract = parseInt(values['integer_0']) * parseInt(values['dropdown_1']) * 1000;
+            var $where = 'function() {'+
+              'return this.' + property + ' <= ISODate()'+
+              ' && '+
+              'this.' + property + ' >= ISODate().getTime() - ' + subtract + ';'+
+            '}';
+
+            return {$where: $where};
+          },
+          validate: function(values, $filter) {
+            return validateInputInteger('integer_0', values, $filter) && validateDropdown('dropdown_1', values, $filter);
+          }
+        },
         exactly: {
           label: 'app.intelligentCollection.operators.date.exactly',
           values: [
