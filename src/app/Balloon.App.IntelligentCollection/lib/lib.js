@@ -478,6 +478,7 @@ var app = {
         break;
       case 'dropdown':
         var curVal = filter.values[name] || value.options[0].value;
+        filter.values[name] = curVal;
         var $select = $('<select name="' + name + '"></select>');
 
         var i;
