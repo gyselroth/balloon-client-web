@@ -409,6 +409,7 @@ var app = {
     var property = filterConfig.properties[filter.property];
     var dataType = property.dataType;
     var values = filterConfig.dataTypes[dataType].operators[filter.operator].values;
+    var datePickers = [];
 
     var $values = $('<div class="fs-intelligent-collection-filter-values"></div>');
 
@@ -507,6 +508,27 @@ var app = {
         $field.append($select);
         $field.append('<svg class="gr-icon gr-i-expand"><use xlink:href="'+iconsSvg+'#expand"></use></svg>');
         break;
+      case 'date':
+        var curVal = filter.values[name] ? filter.values[name] : new Date();
+        filter.values[name] = curVal;
+        var $field = $('<input type="date" name="' + name + '" value="" />');
+
+        $field.off('keyup').on('keyup', function(event) {
+          event.preventDefault();
+          var $this = $(this);
+          app._onValueChanged(filter, $this.attr('name'), $this.val());
+        });
+
+        datePickers.push({
+          name: name,
+          value: curVal,
+          change: function() {
+            var $this = $(this.element);
+            app._onValueChanged(filter, $this.attr('name'), this.value());
+          }
+        });
+
+        break;
       }
 
       $values.append($('<div class="fs-intelligent-collection-filter-value ' + 'fs-intelligent-collection-filter-value-' + value.type  + '"></div>').append($field));
@@ -514,9 +536,21 @@ var app = {
 
     filter.$filter.find('.fs-intelligent-collection-filter-values').replaceWith($values);
 
+    //adding kendo ui widgets here as they can only successfully be added after elements have been added to the dom
     if(property.autocomplete) {
       var autocomplete = property.autocomplete;
       this._addAutocompleteToValue(filter, filter.$filter.find('input[name="' + autocomplete.field + '"]'), autocomplete.options(app));
+    }
+
+    if(datePickers.length > 0) {
+      var i;
+      for(i in datePickers) {
+        filter.$filter.find('input[name="' + datePickers[i].name + '"]').kendoBalloonDatePicker({
+          format: kendo.culture().calendar.patterns.d,
+          value: datePickers[i].value,
+          change: datePickers[i].change,
+        });
+      }
     }
   },
 

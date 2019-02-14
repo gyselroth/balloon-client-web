@@ -84,14 +84,11 @@ var config = {
       label: 'app.intelligentCollection.properties.mime',
       dataType: 'mime',
     },
-    /*
-    //TODO pixtron - find a way to query date fields
     changed: {
       dbField: 'changed',
       label: 'app.intelligentCollection.properties.changed',
       dataType: 'date',
-    },*/
-
+    },
     directory: {
       dbField: 'directory',
       label: 'app.intelligentCollection.properties.directory',
@@ -230,9 +227,9 @@ var config = {
       }
     },
     date: {
-      defaultOperator: 'since',
+      defaultOperator: 'exactly',
       operators: {
-        since: {
+        /*since: {
           label: 'app.intelligentCollection.operators.date.since',
           values: [
             {
@@ -260,14 +257,35 @@ var config = {
               ]
             }
           ]
-        },
+        },*/
         exactly: {
           label: 'app.intelligentCollection.operators.date.exactly',
           values: [
             {
               type: 'date',
             }
-          ]
+          ],
+          query: function(property, values) {
+            var query = {};
+
+            var date = values['date_0'];
+
+            var startDate = new Date(date.getTime());
+            startDate.setHours(0);
+            startDate.setMinutes(0);
+            startDate.setSeconds(0);
+            startDate.setMilliseconds(0);
+
+            var endDate = new Date(date.getTime());
+            endDate.setHours(23);
+            endDate.setMinutes(59);
+            endDate.setSeconds(59);
+            endDate.setMilliseconds(999);
+
+            query[property] = {$gte: {$date: startDate.getTime()}, $lte: {$date: endDate.getTime()}};
+
+            return query;
+          }
         },
         before: {
           label: 'app.intelligentCollection.operators.date.before',
@@ -275,7 +293,22 @@ var config = {
             {
               type: 'date',
             }
-          ]
+          ],
+          query: function(property, values) {
+            var query = {};
+
+            var date = values['date_0'];
+
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+
+
+            query[property] = {$lte: {$date: date.getTime()}};
+
+            return query;
+          }
         },
         after: {
           label: 'app.intelligentCollection.operators.date.after',
@@ -283,9 +316,23 @@ var config = {
             {
               type: 'date',
             }
-          ]
+          ],
+          query: function(property, values) {
+            var query = {};
+
+            var date = values['date_0'];
+
+            date.setHours(23);
+            date.setMinutes(59);
+            date.setSeconds(59);
+            date.setMilliseconds(999);
+
+            query[property] = {$gte: {$date: date.getTime()}};
+
+            return query;
+          }
         },
-        today: {
+        /*today: {
           label: 'app.intelligentCollection.operators.date.today',
           values: []
         },
@@ -304,7 +351,7 @@ var config = {
         thisyear: {
           label: 'app.intelligentCollection.operators.date.thisyear',
           values: []
-        }
+        }*/
       }
     },
     color: {

@@ -98,6 +98,15 @@
           padding: 6px;
         }
       }
+
+      .k-datepicker .k-picker-wrap .k-input {
+        padding: 6px;
+        height: auto;
+
+        &:focus {
+          padding: 5px;
+        }
+      }
     }
   }
 
