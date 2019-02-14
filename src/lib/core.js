@@ -5880,6 +5880,8 @@ var balloon = {
       });
     });
 
+    if(should1.length > 0) must.push({bool: {should: should1}});
+
     var should2 = [];
     $('#fs-search-filter-tags').find('li.fs-search-filter-selected').each(function(){
       should2.push({
@@ -5888,6 +5890,8 @@ var balloon = {
         }
       });
     });
+
+    if(should2.length > 0) must.push({bool: {should: should2}});
 
     var should3 = [];
     $('#fs-search-filter-color').find('li.fs-search-filter-selected').each(function(){
@@ -5898,11 +5902,7 @@ var balloon = {
       });
     });
 
-    must = [
-      {bool: {should: should1}},
-      {bool: {should: should2}},
-      {bool: {should: should3}},
-    ];
+    if(should3.length > 0) must.push({bool: {should: should3}});
 
     var content = $('#fs-search-input').val();
     var query   = balloon.buildQuery(content, must);
@@ -5921,9 +5921,12 @@ var balloon = {
     if(query == undefined) {
       balloon.datasource.data([]);
       return;
+    } else if(query.useV2nodes) {
+      balloon.refreshTree('/nodes', {query: query.query});
+    } else {
+      balloon.refreshTree('/files/search', {query: query});
     }
 
-    balloon.refreshTree('/files/search', {query: query});
   },
 
 
@@ -5944,6 +5947,10 @@ var balloon = {
       value = a[1];
     }
 
+    if(filter && filter.length === 0) {
+      filter = undefined;
+    }
+
     var query = {
       body: {
         from: 0,
@@ -5955,32 +5962,39 @@ var balloon = {
     if(attr == undefined && value == "" && filter !== undefined) {
       query.body.query.bool.must = filter;
     } else if(attr == undefined) {
-      var should = [{
-        match: {
-          name: {
-            query:value,
-            minimum_should_match: "90%"
-          }
-        }
-      }];
-
-      if(mode === 'fulltext') {
-        should.push({
+      if(filter === undefined && mode !== 'fulltext') {
+        query = {
+          useV2nodes: true,
+          query: {'name': {$regex:value, $options:'i'} },
+        };
+      } else {
+        var should = [{
           match: {
-            "content.content": {
+            name: {
               query:value,
               minimum_should_match: "90%"
             }
           }
-        });
-      }
+        }];
 
-      if(filter === undefined) {
-        query.body.query.bool.should = should;
-      } else {
-        query.body.query.bool.should = should;
-        query.body.query.bool.minimum_should_match = 1;
-        query.body.query.bool.must = filter;
+        if(mode === 'fulltext') {
+          should.push({
+            match: {
+              "content.content": {
+                query:value,
+                minimum_should_match: "90%"
+              }
+            }
+          });
+        }
+
+        if(filter === undefined) {
+          query.body.query.bool.should = should;
+        } else {
+          query.body.query.bool.should = should;
+          query.body.query.bool.minimum_should_match = 1;
+          query.body.query.bool.must = filter;
+        }
       }
     } else{
       query.body.query.bool = {must:{term:{}}};
