@@ -52,10 +52,6 @@
           "before": "Before",
           "after": "After",
           "today": "Today",
-          "yesterday": "Yesterday",
-          "thisweek": "This week",
-          "thismonth": "This month",
-          "thisyear": "This year",
           "sinceVal2": {
             "days": "Days",
             "weeks": "Weeks",

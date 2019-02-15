@@ -240,9 +240,9 @@ var config = {
       }
     },
     date: {
-      defaultOperator: 'since',
+      defaultOperator: 'exactly',
       operators: {
-        since: {
+        /*since: {
           label: 'app.intelligentCollection.operators.date.since',
           values: [
             {
@@ -287,7 +287,7 @@ var config = {
           validate: function(values, $filter) {
             return validateInputInteger('integer_0', values, $filter) && validateDropdown('dropdown_1', values, $filter);
           }
-        },
+        },*/
         exactly: {
           label: 'app.intelligentCollection.operators.date.exactly',
           values: [
@@ -361,27 +361,7 @@ var config = {
 
             return query;
           }
-        },
-        /*today: {
-          label: 'app.intelligentCollection.operators.date.today',
-          values: []
-        },
-        yesterday: {
-          label: 'app.intelligentCollection.operators.date.yesterday',
-          values: []
-        },
-        thisweek: {
-          label: 'app.intelligentCollection.operators.date.thisweek',
-          values: []
-        },
-        thismonth: {
-          label: 'app.intelligentCollection.operators.date.thismonth',
-          values: []
-        },
-        thisyear: {
-          label: 'app.intelligentCollection.operators.date.thisyear',
-          values: []
-        }*/
+        }
       }
     },
     color: {
