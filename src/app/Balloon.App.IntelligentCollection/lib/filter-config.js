@@ -275,8 +275,6 @@ var config = {
             }
           ],
           query: function(property, values) {
-            var date = new Date();
-
             var subtract = parseInt(values['integer_0']) * parseInt(values['dropdown_1']) * 1000;
             var $where = 'function() {'+
               'return this.' + property + ' <= ISODate()'+
