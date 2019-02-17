@@ -1,3 +1,4 @@
+@import '../../../themes/default/scss/includes/breakpoints';
 @import '../../../themes/default/scss/includes/colors';
 @import '../../../themes/default/scss/includes/mixins';
 
@@ -16,7 +17,7 @@
 
   .hint {
     color: $colorMediumGrey;
-    margin-top: -13px;
+    margin-top: 0;
   }
 
   .fs-window-form {
@@ -34,7 +35,7 @@
   }
 
   select {
-    width: auto;
+    width: 100%;
 
     padding: 1px 30px 1px 10px;
 
@@ -56,13 +57,10 @@
     @include clearfix;
 
     & > div {
-      float: left;
+      float: none;
       position: relative;
-      margin-left: 10px;
-
-      &:first-child {
-        margin-left: 0;
-      }
+      margin-left: 0;
+      margin-bottom: 10px;
     }
 
     .fs-intelligent-collection-filter-controll {
@@ -72,6 +70,7 @@
       @include icon-button-small($buttonSize, $buttonSize);
 
       margin-right: 0;
+      margin-left: 10px;
     }
 
     .fs-intelligent-collection-filter-values {
@@ -80,15 +79,20 @@
 
     .fs-intelligent-collection-filter-value {
       position: relative;
-      float: left;
+      float: none;
       margin-left: 10px;
 
       &:first-child{
         margin-left: 0;
       }
 
+      span.k-autocomplete,
+      input[type="text"] {
+        width: 100%;
+      }
+
       input.number {
-        width: 45px;
+        width: 100%;
       }
 
       span.k-autocomplete {
@@ -174,6 +178,43 @@
     }
     &.fs-intelligent-collection-filter-value-color-yellow {
       background-color: $colorYellow;
+    }
+  }
+
+  @media only screen and (min-width: 715px) {
+    select {
+      width: auto;
+    }
+
+    .fs-intelligent-collection-filter {
+      & > div {
+        float: left;
+        margin-left: 10px;
+        margin-bottom: 0;
+
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+
+      .fs-intelligent-collection-filter-value {
+        float: left;
+
+        span.k-autocomplete,
+        input[type="text"] {
+          width: 210px;
+        }
+
+        input.number {
+          width: 45px;
+        }
+      }
+    }
+  }
+
+  @media only screen and (min-width: $breakpointWindowFullscreen+1px) {
+    .hint {
+      margin-top: -13px;
     }
   }
 }
