@@ -40,6 +40,22 @@
       margin-bottom: 10px;
     }
 
+    .login-select {
+      position: relative;
+
+      select {
+        padding: 1px 6px;
+
+        &:focus {
+          padding: 0 5px;
+        }
+
+        & + .gr-i-expand {
+          top: 4px;
+        }
+      }
+    }
+
     #login-oidc {
       text-align: center;
 

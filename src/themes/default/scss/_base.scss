@@ -57,6 +57,45 @@ textarea {
   }
 }
 
+select {
+  height: 30px;
+  box-sizing: border-box;
+  border: 1px solid $colorLightGrey;
+  border-radius: 4px;
+  background-color: $colorWhite;
+
+  padding: 1px 10px;
+
+  font-size: 15px;
+  line-height: 28px;
+  color: $colorMediumGrey;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &:focus {
+    padding: 0 9px;
+    border: 2px solid $colorActiveBlue;
+  }
+
+  &::-ms-extend {
+    display: none;
+  }
+
+  &:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+  }
+
+  & + .gr-i-expand {
+    position: absolute;
+    color: $colorMediumGrey;
+    top: 3px;
+    right: 0;
+  }
+}
+
 input[type="checkbox"] {
   width: auto;
 }
