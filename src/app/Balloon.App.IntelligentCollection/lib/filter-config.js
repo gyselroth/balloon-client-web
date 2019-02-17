@@ -102,6 +102,11 @@ var config = {
       label: 'app.intelligentCollection.properties.changed',
       dataType: 'date',
     },
+    created: {
+      dbField: 'created',
+      label: 'app.intelligentCollection.properties.created',
+      dataType: 'date',
+    },
     directory: {
       dbField: 'directory',
       label: 'app.intelligentCollection.properties.directory',

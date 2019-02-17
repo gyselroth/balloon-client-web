@@ -20,6 +20,7 @@
         "tag": "Tags",
         "color": "Color",
         "changed": "Changed",
+        "created": "Created",
         "mime": "Filetype",
         "directory": "Directory",
         "author": "Autor",
