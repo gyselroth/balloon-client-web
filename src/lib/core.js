@@ -59,6 +59,11 @@ var balloon = {
 
 
   /**
+   * Separator used to separate multiple selected nodes in url's
+   */
+  URL_PARAM_SELECTED_SEPARATOR: ',',
+
+  /**
    * Map with [FILE EXTENSION]: [SPRITE ICON CLASS]
    */
   fileExtIconMap: fileExtIconMap,
@@ -1839,7 +1844,7 @@ var balloon = {
 
     if(list.length > 0) {
       urlParts.push(view);
-      urlParts.push(list.join(':'));
+      urlParts.push(list.join(balloon.URL_PARAM_SELECTED_SEPARATOR));
     }
 
     return (excludeHash ? '' : '#') + urlParts.join('/');
@@ -1863,7 +1868,7 @@ var balloon = {
     var urlParts = target.split('/');
 
     if(urlParts[3]) {
-      urlParts[3] = urlParts[3].split(':') || balloon.defaultUrlParams['selected'];
+      urlParts[3] = urlParts[3].split(balloon.URL_PARAM_SELECTED_SEPARATOR) || balloon.defaultUrlParams['selected'];
     }
 
     switch(key) {
