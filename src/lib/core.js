@@ -371,6 +371,10 @@ var balloon = {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
+    //reset last and previous uppon login
+    balloon.previous = null;
+    balloon.last = null;
+
     app.preInit(this);
     balloon.kendoFixes();
 
@@ -2432,6 +2436,9 @@ var balloon = {
       break;
 
     case 'logout':
+      //avoid unauthorized requests
+      $(window).unbind('popstate');
+      login.replaceState('');
       login.logout();
       break;
     }
