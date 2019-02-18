@@ -360,7 +360,7 @@ var balloon = {
   toggle_fs_browser_action_hooks: {},
 
   /**
-   * Init file browsing
+   * Init file browsing after current url has been resolved
    *
    * @return void
    */
@@ -371,6 +371,61 @@ var balloon = {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
 
+
+    balloon._resolveHash(window.location.hash.substr(1)).then(function() {
+      balloon._init();
+    });
+  },
+
+  /**
+   * Resolves a given hash to a certain url
+   *
+   * @param string hash
+   * @return $.Deferred()
+   */
+  _resolveHash: function(hash) {
+    var $d = $.Deferred();
+
+    var matches = /^share\/([a-f\d]{24})$/i.exec(hash)
+
+    if(matches !== null) {
+      var id = matches[1];
+
+      balloon.xmlHttpRequest({
+        url: balloon.base+'/nodes',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          id: id,
+          attributes: ['parent']
+        },
+        success: function(body) {
+          var parent = (body.parent && body.parent.id) ? body.parent.id : null;
+          var url = balloon._buildUrl(null, parent, null, [id], true);
+
+          login.replaceState(url);
+          balloon.history_last_url = '#' + url;
+          $d.resolve();
+        },
+        error: function(body) {
+          console.log('GOT ERROR', body);
+
+          $d.resolve();
+        }
+      });
+    } else {
+      $d.resolve();
+    }
+
+    return $d;
+  },
+
+  /**
+   * Init file browsing
+   *
+   * @return void
+   */
+  _init: function() {
     //reset last and previous uppon login
     balloon.previous = null;
     balloon.last = null;
@@ -1576,21 +1631,23 @@ var balloon = {
     balloon.previous = null;
     balloon.last = null;
 
-    var collection = balloon.getURLParam('collection'),
-      menu = balloon.getURLParam('menu');
+    balloon._resolveHash(window.location.hash.substr(1)).then(function() {
+      var collection = balloon.getURLParam('collection'),
+        menu = balloon.getURLParam('menu');
 
-    if(collection !== null) {
-      balloon.menuLeftAction(menu, false);
-      balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
-    } else {
-      balloon.menuLeftAction(menu);
-    }
+      if(collection !== null) {
+        balloon.menuLeftAction(menu, false);
+        balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
+      } else {
+        balloon.menuLeftAction(menu);
+      }
 
-    if(e.originalEvent.state === null) {
-      balloon.buildCrumb(collection);
-    } else {
-      balloon._repopulateCrumb(e.originalEvent.state.parents);
-    }
+      if(e.originalEvent.state === null) {
+        balloon.buildCrumb(collection);
+      } else {
+        balloon._repopulateCrumb(e.originalEvent.state.parents);
+      }
+    });
   },
 
   navigateTo: function(menu, collection, selected, view) {
@@ -1722,11 +1779,6 @@ var balloon = {
     var menu = balloon.getMenuName();
     var collection = balloon.getCurrentCollectionId() || balloon.defaultUrlParams['collection'];
 
-    var urlParts = [
-      menu,
-      collection
-    ];
-
     if(reset_selected !== true) {
       if(balloon.isMultiSelect()) {
         selected = balloon.getSelected();
@@ -1749,16 +1801,12 @@ var balloon = {
 
     var exec = replace === true ? 'replaceState' : 'pushState';
 
-    var curViewId = $('#fs-content-view dd.active').attr('id');
-
     if(selected.length > 0) {
+      var curViewId = $('#fs-content-view dd.active').attr('id');
       view = curViewId ? curViewId.replace('fs-', '') : balloon.defaultUrlParams.view;
-
-      urlParts.push(view);
-      urlParts.push(list.join(':'));
     }
 
-    var url = '#' + urlParts.join('/');
+    var url = balloon._buildUrl(menu, collection, view, list);
 
     if(balloon.history_last_url !== url) {
       window.history[exec](
@@ -1771,7 +1819,31 @@ var balloon = {
     }
   },
 
+  /**
+   * Create url
+   *
+   * @param string  menu
+   * @param string  collection
+   * @param string  view
+   * @param Array  list array of selected id's
+   * @param booelan  excludeHash
+   * @return  string
+   */
+  _buildUrl: function(menu, collection, view, list, excludeHash) {
+    if(!menu) menu = balloon.defaultUrlParams.menu;
+    if(!view) view = balloon.defaultUrlParams.view;
+    if(!collection) collection = balloon.defaultUrlParams.collection;
+    if(!list || list.length === 0) list = [];
 
+    var urlParts = [menu, collection];
+
+    if(list.length > 0) {
+      urlParts.push(view);
+      urlParts.push(list.join(':'));
+    }
+
+    return (excludeHash ? '' : '#') + urlParts.join('/');
+  },
 
   /**
    * Read query string param
