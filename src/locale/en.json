@@ -44,7 +44,8 @@
       "cut": "Cut",
       "paste": "Paste",
       "filter": "Filter",
-      "rename": "Rename"
+      "rename": "Rename",
+      "perma-link": "Copy permalink"
     },
     "view": {
       "preview": "Preview",
@@ -159,7 +160,8 @@
         "copyright": "Copyright",
         "path": "Path",
         "coordinate": "Coordinate",
-        "author": "Author"
+        "author": "Author",
+        "perma-link": "Permalink"
       },
       "data": {
         "size": "%s (%s Bytes)",

@@ -44,7 +44,8 @@
       "cut": "Ausschneiden",
       "paste": "Einfügen",
       "filter": "Filter",
-      "rename": "Umbenennen"
+      "rename": "Umbenennen",
+      "perma-link": "Perma Link kopieren"
     },
     "view": {
       "preview": "Vorschau",
@@ -159,7 +160,8 @@
         "copyright": "Copyright",
         "path": "Pfad",
         "coordinate": "Koordinaten",
-        "author": "Autor"
+        "author": "Autor",
+        "perma-link": "Perma Link"
       },
       "data": {
         "size": "%s (%s Bytes)",

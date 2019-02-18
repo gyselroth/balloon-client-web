@@ -1850,6 +1850,18 @@ var balloon = {
     return (excludeHash ? '' : '#') + urlParts.join('/');
   },
 
+
+  /**
+   * Create perma link for a given node
+   *
+   * @param string  id
+   * @param booelan  excludeOrigin
+   * @return  string
+   */
+  _buildPermaLink: function(id, excludeOrigin) {
+    return (excludeOrigin ? '' : window.location.origin) + '/#share/' + id;
+  },
+
   /**
    * Read query string param
    *
@@ -7370,6 +7382,34 @@ var balloon = {
         }
       });
     }
+
+    var $parent = $('#fs-metadata-perma-link');
+    $field = $parent.find('.fs-value');
+    $parent.parent().show();
+    value = balloon._buildPermaLink(node.id, true);
+
+    $field.html(value);
+
+    $field.unbind('click').bind('click', function() {
+      balloon._copyPermaLink(node.id);
+    });
+  },
+
+
+  /**
+   * Copy permalink to clipboard
+   *
+   * @return void
+   */
+  _copyPermaLink: function(id) {
+    var tmpEl = document.createElement('textarea');
+    tmpEl.value = balloon._buildPermaLink(id, false);
+    document.body.appendChild(tmpEl);
+    tmpEl.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmpEl);
+
+    balloon.showSnackbar({message: 'view.share_link.link_copied'});
   },
 
   /**
@@ -7761,6 +7801,7 @@ var balloon = {
 
       if(!balloon.isSearch() && !balloon.isMultiSelect()) {
         actions.push('rename');
+        actions.push('perma-link');
       }
 
       if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
@@ -7885,6 +7926,11 @@ var balloon = {
 
     case 'rename':
       balloon.initRename();
+      break;
+    case 'perma-link':
+      var selected = balloon.getSelected(balloon.getCurrentNode());
+
+      balloon._copyPermaLink(selected.id);
       break;
 
     }
