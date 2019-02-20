@@ -1,9 +1,16 @@
-## 3.0.10
+## 3.1.0
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**:
 
 * [CHANGE] Newer notifications should be on top #113
-* [CHANGE] Nice URL's and easy way to share balloon url's #83, #122
+* [FEATURE] Nice URL's and easy way to share balloon url's #83
+* [FEATURE] gui for special filtered folders #10
+* [FIX] Uncaught TypeError when navigation away from deep links #122
+* [CHANGE] If a sso oidc provider is called directly the login window must not be shown #72
+* [CHANGE] Modals should be closable by clicking the greyed out area #50
+* [CHANGE] BalloonWindow keydown #67
+* [FEATURE] Choose between fulltextsearch and name only search #69
+
 
 ## 3.0.9
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
