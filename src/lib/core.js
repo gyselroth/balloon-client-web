@@ -1644,7 +1644,7 @@ var balloon = {
         balloon.menuLeftAction(menu, false);
         balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
       } else {
-        balloon.menuLeftAction(menu);
+        balloon.menuLeftAction(menu, true, false);
       }
 
       if(e.originalEvent.state === null) {
@@ -2623,7 +2623,7 @@ var balloon = {
    *
    * @return void
    */
-  menuLeftAction: function(menu, exec) {
+  menuLeftAction: function(menu, exec, changeState) {
     var $d;
     if(menu === null) {
       menu = 'cloud';
@@ -2661,11 +2661,13 @@ var balloon = {
       balloon.setSearchCrumbTitle(action);
     }
 
+    if(changeState !== false) {
+      balloon.pushState(false, true);
+    }
+
     if(exec === false) {
       return $.Deferred().resolve().promise();
     }
-
-    balloon.pushState(false, true);
 
     if(action in balloon.menu_left_items) {
       $d = balloon.menu_left_items[action].callback();
