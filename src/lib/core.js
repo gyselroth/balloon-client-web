@@ -7801,7 +7801,6 @@ var balloon = {
 
       if(!balloon.isSearch() && !balloon.isMultiSelect()) {
         actions.push('rename');
-        actions.push('perma-link');
       }
 
       if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
@@ -7810,6 +7809,10 @@ var balloon = {
 
       if(balloon.last) {
         actions.push('delete');
+      }
+
+      if(balloon.last && !balloon.isMultiSelect()) {
+        actions.push('perma-link');
       }
 
       if(balloon.last && balloon.last.deleted) {
