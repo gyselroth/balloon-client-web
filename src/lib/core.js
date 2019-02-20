@@ -7789,6 +7789,7 @@ var balloon = {
    */
   updatePannel: function(enabled) {
     var $layout = $('#fs-browser-layout');
+    var menu = balloon.getURLParam('menu');
 
     if(enabled === undefined) enabled = true;
 
@@ -7813,7 +7814,7 @@ var balloon = {
         actions.push('delete');
       }
 
-      if(balloon.last && !balloon.isMultiSelect()) {
+      if(balloon.last && !balloon.isMultiSelect() && menu !== 'trash' && !balloon.last.deleted) {
         actions.push('perma-link');
       }
 
