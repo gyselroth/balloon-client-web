@@ -2025,7 +2025,7 @@ var balloon = {
     };
 
     return balloon.xmlHttpRequest({
-      url: balloon.base+'/users/'+login.user.id,
+      url: balloon.base+'/users/',
       type: 'PATCH',
       dataType: 'json',
       contentType: 'application/json',
