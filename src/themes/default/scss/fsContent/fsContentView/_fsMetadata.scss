@@ -84,6 +84,13 @@
           margin-right: 3px;
         }
       }
+
+      &#fs-metadata-perma-link {
+        .fs-value {
+          color: $colorActiveBlue;
+          cursor: pointer;
+        }
+      }
     }
   }
 }

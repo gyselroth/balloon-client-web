@@ -1,9 +1,9 @@
 ## 3.0.10
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: 
+**Date**:
 
 * [CHANGE] Newer notifications should be on top #113
-
+* [CHANGE] Nice URL's and easy way to share balloon url's #83, #122
 
 ## 3.0.9
 **Maintainer**: balloon-team <opensource@gyselroth.net>\

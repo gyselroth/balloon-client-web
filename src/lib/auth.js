@@ -31,20 +31,9 @@ var login = {
       if(config.auth.oidc) {
         this.oidc = config.auth.oidc;
       }
-
-      var hash = window.location.hash.substr(1);
-
-      if(hash) {
-        if(login.initOidcAuth(hash)) {
-          login.mayHideLoader = false;
-        } else {
-          var pairs = this.parseAuthorizationResponse();
-          if(pairs.access_token) {
-            login.mayHideLoader = false;
-          }
-        }
-      }
     }
+
+    this._initHash();
 
     $('#login-footer').find('span').html(process.env.VERSION);
     if(this.basic === false) {
@@ -57,6 +46,33 @@ var login = {
     }
 
     this.checkAuth();
+  },
+
+  _initHash: function() {
+    var hash = window.location.hash.substr(1);
+
+    if(hash) {
+      if(login.initOidcAuth(hash)) {
+        login.mayHideLoader = false;
+      } else {
+        var pairs = this.parseAuthorizationResponse();
+        if(pairs.access_token) {
+          login.mayHideLoader = false;
+        } else {
+          //assume it is an internal balloon url
+          localStorage.setItem('redirectAfterLogin', hash);
+          login.replaceState('');
+        }
+      }
+    }
+  },
+
+  replaceState: function(hash) {
+    if(!window.history || !window.history.replaceState) {
+      window.location.hash = hash;
+    } else {
+      window.history.replaceState(null, '', '#'+hash);
+    }
   },
 
   parseAuthorizationResponse: function() {
@@ -86,7 +102,7 @@ var login = {
         $('#login-oidc-error').show();
       }
 
-      window.location.hash = '';
+      login.replaceState('');
     });
 
     this.handler.setAuthorizationNotifier(this.notifier);
@@ -168,6 +184,10 @@ var login = {
     login.token = null;
     login.destroyBrowser();
 
+    $(window).unbind('popstate').bind('popstate', function(e) {
+      login._initHash();
+    });
+
     if(login.adapter === 'basic') {
       if(navigator.userAgent.indexOf('MSIE') > -1 || navigator.userAgent.indexOf('Edge') > -1) {
         document.execCommand('ClearAuthenticationCache', 'false');
@@ -234,7 +254,6 @@ var login = {
       dataType: 'json',
       cache: false,
       success: function(body) {
-        window.location.hash = '';
         login.user = body;
         localStorage.username = login.user.username;
 
@@ -376,6 +395,15 @@ var login = {
   },
 
   initBrowser: function() {
+    var redirectAfterLogin = localStorage.getItem('redirectAfterLogin');
+
+    if(redirectAfterLogin) {
+      localStorage.removeItem('redirectAfterLogin');
+      login.replaceState(redirectAfterLogin);
+    }
+
+    $(window).unbind('popstate');
+
     $('#login').hide();
     $('#fs-namespace').show();
 

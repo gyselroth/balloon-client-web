@@ -59,6 +59,11 @@ var balloon = {
 
 
   /**
+   * Separator used to separate multiple selected nodes in url's
+   */
+  URL_PARAM_SELECTED_SEPARATOR: ',',
+
+  /**
    * Map with [FILE EXTENSION]: [SPRITE ICON CLASS]
    */
   fileExtIconMap: fileExtIconMap,
@@ -238,6 +243,19 @@ var balloon = {
    */
   hints: [],
 
+
+  /**
+   * Default url params
+   *
+   * @var object
+   */
+  defaultUrlParams: {
+    'menu': 'cloud',
+    'view': 'preview',
+    'collection': 'root',
+    'selected': null
+  },
+
   /**
    * Content views in side pannel
    *
@@ -347,7 +365,7 @@ var balloon = {
   toggle_fs_browser_action_hooks: {},
 
   /**
-   * Init file browsing
+   * Init file browsing after current url has been resolved
    *
    * @return void
    */
@@ -357,6 +375,65 @@ var balloon = {
     } else {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
     }
+
+
+    balloon._resolveHash(window.location.hash.substr(1)).then(function() {
+      balloon._init();
+    });
+  },
+
+  /**
+   * Resolves a given hash to a certain url
+   *
+   * @param string hash
+   * @return $.Deferred()
+   */
+  _resolveHash: function(hash) {
+    var $d = $.Deferred();
+
+    var matches = /^share\/([a-f\d]{24})$/i.exec(hash)
+
+    if(matches !== null) {
+      var id = matches[1];
+
+      balloon.xmlHttpRequest({
+        url: balloon.base+'/nodes',
+        type: 'GET',
+        dataType: 'json',
+        data: {
+          id: id,
+          attributes: ['parent']
+        },
+        success: function(body) {
+          var parent = (body.parent && body.parent.id) ? body.parent.id : null;
+          var url = balloon._buildUrl(null, parent, null, [id], true);
+
+          login.replaceState(url);
+          balloon.history_last_url = '#' + url;
+          $d.resolve();
+        },
+        error: function(body) {
+          console.log('GOT ERROR', body);
+
+          $d.resolve();
+        }
+      });
+    } else {
+      $d.resolve();
+    }
+
+    return $d;
+  },
+
+  /**
+   * Init file browsing
+   *
+   * @return void
+   */
+  _init: function() {
+    //reset last and previous uppon login
+    balloon.previous = null;
+    balloon.last = null;
 
     app.preInit(this);
     balloon.kendoFixes();
@@ -1225,7 +1302,7 @@ var balloon = {
       $('#fs-browser-action').hide();
     }
 
-    var selected = balloon.getURLParam('selected[]'),
+    var selected = balloon.getURLParam('selected'),
       $fs_browser_tree = $("#fs-browser-tree"),
       $k_tree = $fs_browser_tree.data('kendoTreeView'),
       select_match = false;
@@ -1559,23 +1636,23 @@ var balloon = {
     balloon.previous = null;
     balloon.last = null;
 
-    var view     = balloon.getURLParam('view'),
-      collection = balloon.getURLParam('collection'),
-      selected   = balloon.getURLParam('selected[]'),
-      menu     = balloon.getURLParam('menu');
+    balloon._resolveHash(window.location.hash.substr(1)).then(function() {
+      var collection = balloon.getURLParam('collection'),
+        menu = balloon.getURLParam('menu');
 
-    if(collection !== null) {
-      balloon.menuLeftAction(menu, false);
-      balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
-    } else {
-      balloon.menuLeftAction(menu);
-    }
+      if(collection !== null) {
+        balloon.menuLeftAction(menu, false);
+        balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
+      } else {
+        balloon.menuLeftAction(menu);
+      }
 
-    if(e.originalEvent.state === null) {
-      balloon.buildCrumb(collection);
-    } else {
-      balloon._repopulateCrumb(e.originalEvent.state.parents);
-    }
+      if(e.originalEvent.state === null) {
+        balloon.buildCrumb(collection);
+      } else {
+        balloon._repopulateCrumb(e.originalEvent.state.parents);
+      }
+    });
   },
 
   navigateTo: function(menu, collection, selected, view) {
@@ -1702,10 +1779,10 @@ var balloon = {
 
     var list = [];
     var selected = [];
+    var view = null;
 
-    if(balloon.getSelected() === null) {
-      return;
-    }
+    var menu = balloon.getMenuName();
+    var collection = balloon.getCurrentCollectionId() || balloon.defaultUrlParams['collection'];
 
     if(reset_selected !== true) {
       if(balloon.isMultiSelect()) {
@@ -1713,6 +1790,11 @@ var balloon = {
       } else {
         selected.push(balloon.getSelected());
       }
+
+      //remove current collection from selection
+      selected = selected.filter(function(node) {
+        return  node.id !== collection;
+      });
 
       for(var node in selected) {
         list.push(selected[node].id);
@@ -1722,22 +1804,14 @@ var balloon = {
       balloon.previous = null;
     }
 
-    var exec;
-    if(replace === true) {
-      exec = 'replaceState';
-    } else {
-      exec = 'pushState';
+    var exec = replace === true ? 'replaceState' : 'pushState';
+
+    if(selected.length > 0) {
+      var curViewId = $('#fs-content-view dd.active').attr('id');
+      view = curViewId ? curViewId.replace('fs-', '') : balloon.defaultUrlParams.view;
     }
 
-    var curViewId = $('#fs-content-view dd.active').attr('id');
-    var view = curViewId ? curViewId.replace('fs-', '') : null;
-
-    var url = '?' + balloon.param('menu', balloon.getMenuName())
-            + '&' + balloon.param('menu')
-            + '&' + balloon.param('collection', balloon.getCurrentCollectionId())
-            + '&' + balloon.param('selected', list);
-
-    if(view) url += '&' + balloon.param('view', view)
+    var url = balloon._buildUrl(menu, collection, view, list);
 
     if(balloon.history_last_url !== url) {
       window.history[exec](
@@ -1750,41 +1824,85 @@ var balloon = {
     }
   },
 
+  /**
+   * Create url
+   *
+   * @param string  menu
+   * @param string  collection
+   * @param string  view
+   * @param Array  list array of selected id's
+   * @param booelan  excludeHash
+   * @return  string
+   */
+  _buildUrl: function(menu, collection, view, list, excludeHash) {
+    if(!menu) menu = balloon.defaultUrlParams.menu;
+    if(!view) view = balloon.defaultUrlParams.view;
+    if(!collection) collection = balloon.defaultUrlParams.collection;
+    if(!list || list.length === 0) list = [];
 
+    var urlParts = [menu, collection];
+
+    if(list.length > 0) {
+      urlParts.push(view);
+      urlParts.push(list.join(balloon.URL_PARAM_SELECTED_SEPARATOR));
+    }
+
+    return (excludeHash ? '' : '#') + urlParts.join('/');
+  },
+
+
+  /**
+   * Create perma link for a given node
+   *
+   * @param string  id
+   * @param booelan  excludeOrigin
+   * @return  string
+   */
+  _buildPermaLink: function(id, excludeOrigin) {
+    return (excludeOrigin ? '' : window.location.origin) + '/#share/' + id;
+  },
 
   /**
    * Read query string param
    *
    * @param   string key
-   * @param   string target
    * @return  mixed
    */
-  getURLParam: function(key, target) {
+  getURLParam: function(key) {
     var values = [];
-    if(!target) {
-      target = document.location.href;
+    var target = document.location.hash.substr(1);
+    var defaultParam = balloon.defaultUrlParams[key];
+
+    if(target.length === 0) {
+      return key === 'view' || key === 'collection' ? null : defaultParam;
     }
 
-    key = key.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var urlParts = target.split('/');
 
-    var pattern = key + '=([^&#]+)';
-    var o_reg = new RegExp(pattern,'ig');
-    while(true) {
-      var matches = o_reg.exec(target);
-      if(matches && matches[1]) {
-        values.push(matches[1]);
-      }      else {
-        break;
+    if(urlParts[3]) {
+      urlParts[3] = urlParts[3].split(balloon.URL_PARAM_SELECTED_SEPARATOR) || balloon.defaultUrlParams['selected'];
+    }
+
+    switch(key) {
+    case 'menu':
+      values = urlParts[0];
+      break;
+    case 'collection':
+      values = urlParts[1] === defaultParam ? null : urlParts[1];
+      break;
+    case 'view':
+      if(urlParts[3] !== balloon.defaultUrlParams['selected']) {
+        values = urlParts[2] || defaultParam;
+      } else {
+        values = null;
       }
+      break;
+    case 'selected':
+      values = urlParts[3];
+      break;
     }
 
-    if(!values.length) {
-      return null;
-    }    else if(key.slice(-4) == '\\[\\]') {
-      return values;
-    }    else {
-      return values.length == 1 ? values[0] : values;
-    }
+    return values;
   },
 
   /**
@@ -2407,6 +2525,9 @@ var balloon = {
       break;
 
     case 'logout':
+      //avoid unauthorized requests
+      $(window).unbind('popstate');
+      login.replaceState('');
       login.logout();
       break;
     }
@@ -7261,6 +7382,34 @@ var balloon = {
         }
       });
     }
+
+    var $parent = $('#fs-metadata-perma-link');
+    $field = $parent.find('.fs-value');
+    $parent.parent().show();
+    value = balloon._buildPermaLink(node.id, true);
+
+    $field.html(value);
+
+    $field.unbind('click').bind('click', function() {
+      balloon._copyPermaLink(node.id);
+    });
+  },
+
+
+  /**
+   * Copy permalink to clipboard
+   *
+   * @return void
+   */
+  _copyPermaLink: function(id) {
+    var tmpEl = document.createElement('textarea');
+    tmpEl.value = balloon._buildPermaLink(id, false);
+    document.body.appendChild(tmpEl);
+    tmpEl.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmpEl);
+
+    balloon.showSnackbar({message: 'view.share_link.link_copied'});
   },
 
   /**
@@ -7652,6 +7801,7 @@ var balloon = {
 
       if(!balloon.isSearch() && !balloon.isMultiSelect()) {
         actions.push('rename');
+        actions.push('perma-link');
       }
 
       if(!balloon.isSearch() || balloon.getCurrentCollectionId() !== null) {
@@ -7776,6 +7926,11 @@ var balloon = {
 
     case 'rename':
       balloon.initRename();
+      break;
+    case 'perma-link':
+      var selected = balloon.getSelected(balloon.getCurrentNode());
+
+      balloon._copyPermaLink(selected.id);
       break;
 
     }
