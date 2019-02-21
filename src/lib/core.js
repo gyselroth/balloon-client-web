@@ -413,8 +413,6 @@ var balloon = {
           $d.resolve();
         },
         error: function(body) {
-          console.log('GOT ERROR', body);
-
           $d.resolve();
         }
       });
@@ -448,6 +446,9 @@ var balloon = {
 
     $(".fs-action-element").unbind('click').click(balloon.doAction);
     $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
+
+    //change password should only be active for users logged in with basic auth
+    $('#fs-menu-user-change-password').toggle(login.getAdapter() === 'basic');
 
     $(document).unbind('drop').on('drop', function(e) {
       e.stopPropagation();
@@ -1936,6 +1937,105 @@ var balloon = {
     return out;
   },
 
+  /**
+   * Display change püassword modal
+   *
+   * @return void
+   */
+  displayChangePassword: function() {
+    var formValid = false;
+    var $fs_win = $('#fs-change-password-window');
+    var $btnSave = $fs_win.find('input[name="save"]').attr('disabled', true);;
+    var $btnCancel = $fs_win.find('input[name="cancel"]');
+    var $inputRepeatPw = $fs_win.find('input[name="password_repeat"]').val('');
+    var $inputPw = $fs_win.find('input[name="password"]').val('');
+
+    $fs_win.find('input').removeClass('error-input');
+
+    var fieldsValid = {
+      password: false,
+      password_repeat: false,
+    };
+
+    $fs_win.find('input[type="password"]').off('keyup blur').on('keyup blur', function(event) {
+      var $this = $(this);
+      var fieldName = $this.attr('name');
+
+      if(event.keyCode && event.keyCode === 13) {
+        if(formValid) $btnSave.click();
+        return;
+      }
+
+      if(event.keyCode && event.keyCode === 9) {
+        //validating on tab out is performed by blur to get correct fieldName
+        return;
+      }
+
+      if($this.val() === '') {
+        fieldsValid[fieldName] = false;
+      } else {
+        fieldsValid[fieldName] = true;
+
+        if($inputRepeatPw.val() !== '' && $inputPw.val()!== '' && $inputRepeatPw.val() !== $inputPw.val()) {
+          fieldsValid['password_repeat'] = false;
+          $inputRepeatPw.addClass('error-input');
+        }
+      }
+
+      $this.toggleClass('error-input', !fieldsValid[fieldName]);
+
+      formValid = Object.keys(fieldsValid).every(function(key) {
+        return fieldsValid[key] === true;
+      });
+
+      $btnSave.attr('disabled', !formValid);
+    });
+
+    $btnSave.off('click').on('click', function(event){
+      event.preventDefault();
+
+      var password = $inputPw.val();
+      balloon._changePassword(password).then(function() {
+        $fs_win.data('kendoBalloonWindow').close();
+      });
+    });
+
+    $btnCancel.off('click').on('click', function(){
+      $fs_win.data('kendoBalloonWindow').close();
+    });
+
+    $fs_win.kendoBalloonWindow({
+      title: $fs_win.attr('title'),
+      resizable: false,
+      modal: true,
+      activate: function() {
+        $inputPw.focus();
+      }
+    }).data('kendoBalloonWindow').center().open();
+  },
+
+  /**
+   * Calls api to change password for current user
+   *
+   * @return void
+   */
+  _changePassword(password) {
+    var data = {
+      password: password
+    };
+
+    return balloon.xmlHttpRequest({
+      url: balloon.base+'/users/',
+      type: 'PATCH',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: function(body) {
+        login.doBasicAuth(login.user.username, password);
+      }
+    });
+  },
+
   displayAvatar: function($avatar, userId) {
     $avatar.css('background-image', '').removeClass('has-avatar');
 
@@ -2522,6 +2622,10 @@ var balloon = {
 
     case 'profile':
       balloon.displayUserProfile();
+      break;
+
+    case 'change-password':
+      balloon.displayChangePassword();
       break;
 
     case 'logout':

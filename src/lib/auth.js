@@ -410,6 +410,10 @@ var login = {
     balloon.init();
   },
 
+  getAdapter: function() {
+    return this.adapter;
+  },
+
   destroyBrowser: function() {
     $('#login').show();
     balloon.resetDom();

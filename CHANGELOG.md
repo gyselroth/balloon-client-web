@@ -10,6 +10,7 @@
 * [CHANGE] Modals should be closable by clicking the greyed out area #50
 * [CHANGE] BalloonWindow keydown #67
 * [FEATURE] Choose between fulltextsearch and name only search #69
+* [FEATURE] Change password #116
 
 
 ## 3.0.9

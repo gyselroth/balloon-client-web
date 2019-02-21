@@ -5,6 +5,7 @@
     "password": "Passwort",
     "login": "Login",
     "logout": "Logout",
+    "change-password": "Passwort ändern",
     "events": "Events",
     "profile": "Profil",
     "settings": "Einstellungen",
@@ -268,6 +269,10 @@
     },
     "events": {
       "show_all": "Alle Events anzeigen"
+    },
+    "change-password": {
+      "password": "Passwort",
+      "password-repeat": "Passwort wiederholen"
     }
   },
   "error": {

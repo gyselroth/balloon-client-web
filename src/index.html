@@ -191,6 +191,7 @@
                             <ul>
                                 <li id="fs-menu-user-profile" data-i18n="login.profile;[title]login.profile"></li>
                                 <li id="fs-menu-user-events" data-i18n="login.events;[title]login.events"></li>
+                                <li id="fs-menu-user-change-password" data-i18n="login.change-password;[title]login.change-password"></li>
                                 <li id="fs-menu-user-logout" data-i18n="login.logout;[title]login.logout"></li>
                             </ul>
                         </div>
@@ -572,6 +573,22 @@
                 <hr />
                 <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.history.cancel"/>
                 <input type="button" tabindex="1" name="apply" class="fs-button-primary" data-i18n="[value]view.history.restore"/>
+            </div>
+        </div>
+
+        <div id="fs-change-password-window" data-i18n="[title]login.change-password">
+            <div id="fs-change-password-window-content">
+                <form name="change-password" class="fs-window-form" action="#">
+                    <label for="fs-change-password-window-password" data-i18n="view.change-password.password"></label>
+                    <input type="password" id="fs-change-password-window-password" name="password" />
+
+                    <label for="fs-change-password-window-password-repeat" data-i18n="view.change-password.password-repeat"></label>
+                    <input type="password" id="fs-change-password-window-password-repeat" name="password_repeat" />
+                </form>
+            </div>
+            <div id="fs-change-password-window-button-wrapper" class="fs-window-secondary-actions">
+                <input type="button" tabindex="2" name="cancel" data-i18n="[value]button.cancel"/>
+                <input type="button" tabindex="1" name="save" class="fs-button-primary" data-i18n="[value]button.save"/>
             </div>
         </div>
 
