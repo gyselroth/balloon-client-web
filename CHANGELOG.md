@@ -1,6 +1,6 @@
-## 3.1.0
+## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Thu Feb 21 13:40:02 CET 2019
 
 * [CHANGE] Newer notifications should be on top #113
 * [FEATURE] Nice URL's and easy way to share balloon url's #83
