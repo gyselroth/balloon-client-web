@@ -8368,23 +8368,33 @@ var balloon = {
     e.stopPropagation();
     e.preventDefault();
 
+    var files = [];
+    var blobs = [];
+
     if('originalEvent' in e && 'dataTransfer' in e.originalEvent) {
-      var blobs = e.originalEvent.dataTransfer.files;
+      blobs = e.originalEvent.dataTransfer.files;
     } else {
-      var blobs = e.target.files;
+      blobs = e.target.files;
     }
 
-    balloon.uploadFiles(blobs, parent_node);
+    var i;
+    for(i=0; i<blobs.length; i++) {
+      files.push({
+        blob: blobs[i],
+        parent: parent_node
+      });
+    }
+
+    balloon.uploadFiles(files);
   },
 
   /**
    * Prepare selected files for upload
    *
    * @param   array files
-   * @param   object|string parent_node
    * @return  void
    */
-  uploadFiles: function(files, parent_node) {
+  uploadFiles: function(files) {
     var $div = $('#fs-uploadmgr');
     var $k_manager_win = $div.kendoBalloonWindow({
       title: $div.attr('title'),
@@ -8399,7 +8409,6 @@ var balloon = {
       balloon.resetDom('uploadmgr-progress-files');
 
       balloon.upload_manager = {
-        parent_node: parent_node,
         progress: {
           mgr_percent: null,
           notifier_percent: null,
@@ -8420,16 +8429,17 @@ var balloon = {
 
     var $upload_list = $('#fs-upload-list');
     for(var i = 0, progressnode, file, last = balloon.upload_manager.count.last_started; file = files[i]; i++, last++) {
-      if(file instanceof Blob) {
+      if(file.blob instanceof Blob) {
         file = {
-          name: file.name,
-          blob: file
-        }
+          name: file.blob.name,
+          blob: file.blob,
+          parent: file.parent
+        };
       }
 
       if(file.blob.size === 0) {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
-      } else if(file.blob.size != 0) {
+      } else {
         var progressId = 'fs-upload-'+last;
         progressnode = $('<div id="'+progressId+'" class="fs-uploadmgr-progress"><div id="'+progressId+'-progress" class="fs-uploadmgr-progressbar"></div></div>');
         $upload_list.append(progressnode);
@@ -8445,6 +8455,7 @@ var balloon = {
           progress:   progressnode,
           blob:     file.blob,
           name:     file.name,
+          parent:   file.parent,
           index:    1,
           start:    0,
           end:    0,
@@ -8649,8 +8660,8 @@ var balloon = {
       url += '&session='+file.session;
     }
 
-    if(file.manager.parent_node !== null) {
-      url += '&collection='+balloon.id(file.manager.parent_node);
+    if(file.parent !== null) {
+      url += '&collection='+balloon.id(file.parent);
     }
 
     var chunk = file.blob.slice(file.start, file.end),
@@ -8768,7 +8779,7 @@ var balloon = {
               blob: file.blob
             };
 
-            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file], file.manager.parent_node]);
+            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file], file.parent]);
           } else {
             balloon.displayError(e);
           }
