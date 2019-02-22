@@ -47,6 +47,8 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
       } else {
         overlay.removeClass('bln-overlay-clickable');
       }
+
+      return that;
     },
 
     center: function () {
