@@ -1503,7 +1503,7 @@ var balloon = {
         }
       }
 
-      if(node.directory) {
+      if(node.directory && balloon.id(node) !== '_FOLDERUP') {
         balloon.fileUpload(node);
       }
 
