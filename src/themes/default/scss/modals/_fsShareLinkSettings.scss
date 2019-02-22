@@ -37,6 +37,11 @@ $sidePadding: 30px;
 
       margin-bottom: 25px;
 
+      p.fs-hint {
+        display: block;
+        color: $colorMediumGrey;
+      }
+
       &:last-child {
         margin-bottom: 0;
       }
