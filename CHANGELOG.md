@@ -11,6 +11,7 @@
 * [CHANGE] BalloonWindow keydown #67
 * [FEATURE] Choose between fulltextsearch and name only search #69
 * [FEATURE] Change password #116
+* [CHANGE] Add hint to share link settings #134
 
 
 ## 3.0.9
