@@ -8776,10 +8776,11 @@ var balloon = {
             var new_name = balloon.getCloneName(file.blob.name);
             var new_file = {
               name: new_name,
-              blob: file.blob
+              blob: file.blob,
+              parent: file.parent
             };
 
-            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file], file.parent]);
+            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file]]);
           } else {
             balloon.displayError(e);
           }
