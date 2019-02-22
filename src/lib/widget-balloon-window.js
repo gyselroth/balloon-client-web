@@ -12,8 +12,8 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
       var that = this;
       Window.fn.init.call(this, target, options);
 
-      if(options.closeViaOverlay === undefined) {
-        options.closeViaOverlay = true;
+      if(this.options.closeViaOverlay === undefined) {
+        this.options.closeViaOverlay = true;
       }
 
       var $target = $(target);
@@ -32,9 +32,14 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
       }
 
       this.title(options.title);
+    },
 
-      var overlay = options.modal ? this._overlay(true) : $(undefined);
-      if(options.modal && options.closeViaOverlay) {
+    open: function() {
+      var that = this;
+      Window.fn.open.call(this);
+
+      var overlay = this.options.modal ? this._overlay(true) : $(undefined);
+      if(this.options.modal && this.options.closeViaOverlay) {
         overlay.addClass('bln-overlay-clickable');
         overlay.off('click').on('click', function() {
           that.close();
