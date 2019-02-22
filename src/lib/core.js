@@ -8327,19 +8327,12 @@ var balloon = {
    */
   fileUpload: function(parent_node, dom_node) {
     var dn,
-      directory,
       $fs_browser_tree = $('#fs-browser-tree');
 
     if(dom_node != undefined) {
       dn = dom_node;
     } else {
       dn = $('#fs-browser-tree').find('.k-item[fs-id='+balloon.id(parent_node)+']');
-    }
-
-    if(typeof(parent_node) == 'string' || parent_node === null) {
-      directory = true;
-    } else {
-      directory = parent_node.directory;
     }
 
     function handleDragOver(e) {
