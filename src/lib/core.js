@@ -903,18 +903,18 @@ var balloon = {
    */
   xmlHttpRequest: function(options) {
     if(options.beforeSend === undefined) {
-      options.beforeSend = balloon.showSpinner;
+      options.beforeSend = options.suppressSpinner !== true ? balloon.showSpinner : undefined;
     } else {
       var beforeSend = options.beforeSend;
       options.beforeSend = function(jqXHR, settings) {
-        balloon.showSpinner();
+        if(options.suppressSpinner !== true) balloon.showSpinner();
         beforeSend(jqXHR, settings);
       };
     }
 
     var complete = options.complete;
     options.complete = function(jqXHR, textStatus) {
-      balloon.hideSpinner();
+      if(options.suppressSpinner !==true) balloon.hideSpinner();
 
       var valid = ['POST', 'PUT', 'DELETE', 'PATCH'],
         show  = options.suppressSnackbar !== true && (valid.indexOf(options.type) > -1);
@@ -8381,6 +8381,8 @@ var balloon = {
     var $d = $.Deferred();
 
     var options = {
+      suppressSpinner: true,
+      suppressSnackbar: true,
       /*
       //TODO pixtron - handle errror when folder already exists?
       error: function(response) {
@@ -8417,18 +8419,22 @@ var balloon = {
 
     if('originalEvent' in e && 'dataTransfer' in e.originalEvent) {
       try {
+        balloon.showSpinner();
         var handler = new dataTransferItemsHandler(balloon._uploadCreateCollection, balloon._handleFileEntry);
         var $d = handler.handleItems(e.originalEvent.dataTransfer.items, balloon.id(parent_node));
 
         $d.done(function(files) {
+          balloon.hideSpinner();
           balloon.uploadFiles(files);
         });
 
         $d.fail(function(err) {
+          balloon.hideSpinner();
           blobs = e.originalEvent.dataTransfer.files;
           balloon._handleFileSelectFilesOnly(blobs, parent_node);
         });
       } catch(err) {
+        balloon.hideSpinner();
         blobs = e.originalEvent.dataTransfer.files;
       }
     } else {
