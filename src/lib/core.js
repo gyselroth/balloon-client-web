@@ -12,6 +12,7 @@ import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
 import balloonWindow from './widget-balloon-window.js';
 import balloonDatePicker from './widget-balloon-datepicker.js';
 import balloonTimePicker from './widget-balloon-timepicker.js';
+import dataTransferItemsHandler from './data-transfer-items-handler.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
@@ -4572,28 +4573,7 @@ var balloon = {
    * @return  void
    */
   addFolder: function(name) {
-    var $d = $.Deferred();
-
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/collections',
-      type: 'POST',
-      data: {
-        id:   balloon.getCurrentCollectionId(),
-        name: name,
-      },
-      dataType: 'json',
-      complete: function(jqXHR, textStatus) {
-        switch(textStatus) {
-        case 'success':
-          $d.resolve(jqXHR.responseJSON);
-          break;
-        default:
-          $d.reject();
-        }
-      },
-    });
-
-    return $d;
+    return balloon._createCollection(balloon.getCurrentCollectionId(), name);
   },
 
 
@@ -8354,6 +8334,71 @@ var balloon = {
 
 
   /**
+   * Creates a collection
+   *
+   * @param   string parent parent collection id
+   * @param   string name name of the new collection
+   * @param   object options override request options
+   * @return  $.Deferred
+   */
+  _createCollection: function(parent, name, options) {
+    var $d = $.Deferred();
+
+    var reqOptions = {
+      url: balloon.base+'/collections',
+      type: 'POST',
+      data: {
+        id: parent,
+        name: name,
+      },
+      dataType: 'json',
+      complete: function(jqXHR, textStatus) {
+        switch(textStatus) {
+        case 'success':
+          $d.resolve(jqXHR.responseJSON);
+          break;
+        default:
+          $d.reject();
+        }
+      }
+    };
+
+    $.extend(true, reqOptions, options || {});
+
+    balloon.xmlHttpRequest(reqOptions);
+
+    return $d;
+  },
+
+  /**
+   * Creates a collection for uploaded folder
+   *
+   * @param   string parent parent collection id
+   * @param   string name name of the new collection
+   * @return  $.Deferred
+   */
+  _uploadCreateCollection: function(parent, name) {
+    var $d = $.Deferred();
+
+    var options = {
+      /*
+      //TODO pixtron - handle errror when folder already exists?
+      error: function(response) {
+      }*/
+    }
+
+    balloon._createCollection(parent, name, options)
+      .done(function(response) {
+        $d.resolve(response.id);
+      })
+      .fail(function() {
+        $d.reject();
+      });
+
+    return $d;
+  },
+
+  /**
    * Prepare selected files for upload
    *
    * @param   object e
@@ -8368,16 +8413,69 @@ var balloon = {
     e.stopPropagation();
     e.preventDefault();
 
-    var files = [];
-    var blobs = [];
+    var blobs;
 
     if('originalEvent' in e && 'dataTransfer' in e.originalEvent) {
-      blobs = e.originalEvent.dataTransfer.files;
+      try {
+        var handler = new dataTransferItemsHandler(balloon._uploadCreateCollection, balloon._handleFileEntry);
+        var $d = handler.handleItems(e.originalEvent.dataTransfer.items, balloon.id(parent_node));
+
+        $d.done(function(files) {
+          balloon.uploadFiles(files);
+        });
+
+        $d.fail(function(err) {
+          blobs = e.originalEvent.dataTransfer.files;
+          balloon._handleFileSelectFilesOnly(blobs, parent_node);
+        });
+      } catch(err) {
+        blobs = e.originalEvent.dataTransfer.files;
+      }
     } else {
       blobs = e.target.files;
     }
 
+    if(blobs) {
+      //if blobs are set - either browser does not support directory upload, or only files have been selected
+      balloon._handleFileSelectFilesOnly(blobs, parent_node);
+    }
+  },
+
+  /**
+   * Prepare a FileEntry for upload
+   *
+   * @param   FileEntry file
+   * @param   parent parent id where the file should be uploaded to
+   * @return  $.Deferred
+   */
+  _handleFileEntry: function(file, parent) {
+    var $d = $.Deferred();
+
+    file.file(function(fileObj) {
+      var files = [{
+        blob: fileObj,
+        parent: parent
+      }];
+
+      balloon.uploadFiles(files);
+      $d.resolve();
+    }, function(err) {
+      $d.reject(err);
+    });
+
+    return $d;
+  },
+
+  /**
+   * Prepare selected files for upload, if it is a files only upload
+   *
+   * @param   FileList blobs
+   * @return  void
+   */
+  _handleFileSelectFilesOnly: function(blobs, parent_node) {
     var i;
+    var files = [];
+
     for(i=0; i<blobs.length; i++) {
       files.push({
         blob: blobs[i],
