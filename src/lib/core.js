@@ -8629,7 +8629,7 @@ var balloon = {
       return;
     }
 
-    $('#fs-upload-list').on('click', '.fs-progress-icon', function() {
+    $('#fs-upload-list').off('click', '.fs-progress-icon').on('click', '.fs-progress-icon', function() {
       var i  = parseInt($(this).parent().attr('id').substr(10)),
         file = balloon.upload_manager.files[i];
 
