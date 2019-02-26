@@ -4,6 +4,7 @@
 
 * [CHANGE] Add hint to share link settings #134
 * [FIX] File does not get uploaded #139
+* [FEATURE] Upload directories by drag and drop #11
 
 
 ## 3.1.0-alpha1
