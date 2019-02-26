@@ -373,6 +373,16 @@ var balloon = {
    */
   toggle_fs_browser_action_hooks: {},
 
+
+  /**
+   * Generates a uuid v4.
+   *
+   * @author https://gist.github.com/LeverOne/1308368;
+   * @return string uuid4
+   */
+  // eslint-disable-next-line
+  uuid: function(a,b){for(b=a='';a++<36;b+=a*51&52?(a^15?8^Math.random()*(a^20?16:4):4).toString(16):'-');return b},
+
   /**
    * Init file browsing after current url has been resolved
    *
@@ -8565,21 +8575,22 @@ var balloon = {
           notifier_percent: null,
           mgr_chunk:   null,
         },
-        files: [],
+        files: {},
+        queue: [],
+        pending: {},
         upload_bytes: 0,
         transfered_bytes: 0,
         count: {
           upload:   0,
           transfer: 0,
-          success:  0,
-          last_started: 0
+          success:  0
         },
         start_time: new Date(),
       };
     }
 
     var $upload_list = $('#fs-upload-list');
-    for(var i = 0, progressnode, file, last = balloon.upload_manager.count.last_started; file = files[i]; i++, last++) {
+    for(var i = 0, progressnode, file; file = files[i]; i++) {
       if(file.blob instanceof Blob) {
         file = {
           name: file.blob.name,
@@ -8591,7 +8602,8 @@ var balloon = {
       if(file.blob.size === 0) {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
       } else {
-        var progressId = 'fs-upload-'+last;
+        var uuid = balloon.uuid();
+        var progressId = 'fs-upload-'+uuid;
         progressnode = $('<div id="'+progressId+'" class="fs-uploadmgr-progress"><div id="'+progressId+'-progress" class="fs-uploadmgr-progressbar"></div></div>');
         $upload_list.append(progressnode);
 
@@ -8602,7 +8614,7 @@ var balloon = {
           },
         });
 
-        balloon.upload_manager.files.push({
+        balloon.upload_manager.files[uuid] = {
           progress:   progressnode,
           blob:     file.blob,
           name:     file.name,
@@ -8616,7 +8628,10 @@ var balloon = {
           manager:  balloon.upload_manager,
           request:  null,
           status:   1,
-        });
+          id: uuid,
+        };
+
+        balloon.upload_manager.queue.push(uuid);
 
         progressnode.prepend('<div class="fs-progress-filename">'+file.name+'</div>');
         progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#close"></use></svg></div>');
@@ -8625,13 +8640,13 @@ var balloon = {
       }
     }
 
-    if(balloon.upload_manager.files.length <= 0) {
+    if(Object.keys(balloon.upload_manager.files).length <= 0) {
       return;
     }
 
     $('#fs-upload-list').off('click', '.fs-progress-icon').on('click', '.fs-progress-icon', function() {
-      var i  = parseInt($(this).parent().attr('id').substr(10)),
-        file = balloon.upload_manager.files[i];
+      var uuid  = $(this).parent().attr('id').substr(10),
+        file = balloon.upload_manager.files[uuid];
 
       if(file.status !== 1) {
         return;
@@ -8640,7 +8655,7 @@ var balloon = {
       file.status = 0;
     });
 
-    balloon.upload_manager.count.upload  = balloon.upload_manager.files.length;
+    balloon.upload_manager.count.upload  = Object.keys(balloon.upload_manager.files).length;
     balloon._initProgress(balloon.upload_manager);
 
     $('#fs-upload-progress').unbind('click').click(function(){
@@ -8656,12 +8671,42 @@ var balloon = {
     $('#fs-upload-progree-info-status-uploaded').html('0');
     $('#fs-upload-progree-info-status-total').html(balloon.getReadableFileSizeString(balloon.upload_manager.upload_bytes));
 
-    for(var i = balloon.upload_manager.count.last_started; i < balloon.upload_manager.count.upload; i++) {
-      balloon.upload_manager.count.last_started = i + 1;
-      balloon._chunkUploadManager(balloon.upload_manager.files[i]);
+    balloon._uploadManagerNext();
+
+  },
+
+  /**
+   * Try to start next uploads
+   *
+   * @return void
+   */
+  _uploadManagerNext: function() {
+    var maxConcurrentRequests = 3;
+    var pending = Object.keys(balloon.upload_manager.pending).length;
+
+    for(pending; pending < maxConcurrentRequests; pending++) {
+      var uuid = balloon.upload_manager.queue.shift();
+
+      if(uuid && balloon.upload_manager.files[uuid]) {
+        balloon.upload_manager.pending[uuid] = true;
+        balloon._chunkUploadManager(balloon.upload_manager.files[uuid]);
+      } else {
+        //no more uploads
+        break;
+      }
     }
   },
 
+  /**
+   * Upload done, removes it from pending uploads, and schedules next
+   *
+   * @param  string uuid, id of the file
+   * @return void
+   */
+  _uploadManagerDone: function(uuid) {
+    delete balloon.upload_manager.pending[uuid];
+    balloon._uploadManagerNext();
+  },
 
   /**
    * Init upload progress bars
@@ -8738,6 +8783,8 @@ var balloon = {
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
           file.manager.count.success.toString(), file.manager.count.upload)
         );
+
+        balloon._uploadManagerDone(file.id);
       }
 
       return;
@@ -8758,6 +8805,8 @@ var balloon = {
       $($('#fs-uploadmgr-files-progress .k-item')[file.manager.count.transfer]).addClass('fs-progress-error');
 
       file.manager.count.transfer++;
+
+      balloon._uploadManagerDone(file.id);
     } else {
       file.end = file.start + balloon.BYTES_PER_CHUNK;
 
@@ -8856,7 +8905,6 @@ var balloon = {
               $('#fs-uploadmgr-time').html(i18next.t('uploadmgr.time_left', balloon.timeSince(end)));
             }
           }
-
         }, false);
 
         file.request = xhr;
