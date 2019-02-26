@@ -114,6 +114,14 @@ var balloon = {
 
 
   /**
+   * Queue for uploaded collections
+    */
+  uploadCollectionManager: {
+    uploadCreateCollectionQueue: [],
+    uploadCreateCollectionPending: {}
+  },
+
+  /**
    * Is initialized?
    *
    * @var bool
@@ -8380,24 +8388,63 @@ var balloon = {
   _uploadCreateCollection: function(parent, name) {
     var $d = $.Deferred();
 
-    var options = {
-      suppressSpinner: true,
-      suppressSnackbar: true,
-      /*
-      //TODO pixtron - handle errror when folder already exists?
-      error: function(response) {
-      }*/
-    }
-
-    balloon._createCollection(parent, name, options)
-      .done(function(response) {
+    balloon.uploadCollectionManager.uploadCreateCollectionQueue.push({
+      parent: parent,
+      name: name,
+      done: function(response) {
+        balloon._uploadCreateCollectionDone(parent, name);
+        balloon._uploadCreateCollectionNext();
         $d.resolve(response.id);
-      })
-      .fail(function() {
+      },
+      fail: function() {
         $d.reject();
-      });
+      },
+    });
+
+    balloon._uploadCreateCollectionNext();
 
     return $d;
+  },
+
+  /**
+   * Checks if a new task can be shifted from the queue
+   *
+   * @return  void
+   */
+  _uploadCreateCollectionNext: function() {
+    var maxConcurrentRequests = 3;
+
+    if(Object.keys(balloon.uploadCollectionManager.uploadCreateCollectionPending).length < maxConcurrentRequests) {
+      var task = this.uploadCollectionManager.uploadCreateCollectionQueue.shift();
+
+      if(task) {
+        balloon.uploadCollectionManager.uploadCreateCollectionPending[task.parent+'-'+task.name] = task;
+
+        var options = {
+          suppressSpinner: true,
+          suppressSnackbar: true,
+          /*
+          //TODO pixtron - handle errror when folder already exists?
+          error: function(response) {
+          }*/
+        };
+
+        balloon._createCollection(task.parent, task.name, options)
+          .done(task.done)
+          .fail(task.fail);
+      }
+    }
+  },
+
+  /**
+   * Removes done task from the create collection pending queue
+   *
+   * @param  string parent parent id
+   * @param  string name name of the collection
+   * @return  void
+   */
+  _uploadCreateCollectionDone: function(parent, name) {
+    delete balloon.uploadCollectionManager.uploadCreateCollectionPending[parent+'-'+name];
   },
 
   /**
