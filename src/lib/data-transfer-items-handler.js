@@ -1,8 +1,24 @@
+/**
+ * Constructor for DataTransferItemList handler
+ *
+ * @param function onCreateDir called when a directory is found.
+ *                 Needs to return a promise, which is resolved with the id
+ *                 of the created collection.
+ * @param function onScheduleFile called when a file is found
+ * @return $.Deferred
+ */
 var dataTransferItemsHandler = function(onCreateDir, onScheduleFile) {
   this._onCreateDir = onCreateDir;
   this._onScheduleFile = onScheduleFile;
 }
 
+/**
+ * Handle dropped items
+ *
+ * @param DataTransferItemList dataTransferItems
+ * @param string parent parent id
+ * @return $.Deferred
+ */
 dataTransferItemsHandler.prototype.handleItems = function(dataTransferItems, parent) {
   var entries = [];
 
@@ -15,6 +31,13 @@ dataTransferItemsHandler.prototype.handleItems = function(dataTransferItems, par
   return this._handleEntries(entries, parent);
 }
 
+/**
+ * Handle array of entries
+ *
+ * @param Array[DirectoryEntry|FileEntry] entries
+ * @param string parent parent id
+ * @return $.Deferred
+ */
 dataTransferItemsHandler.prototype._handleEntries = function(entries, parent) {
   var promises = [];
   var $d = $.Deferred();
@@ -37,6 +60,13 @@ dataTransferItemsHandler.prototype._handleEntries = function(entries, parent) {
   return $d;
 }
 
+/**
+ * Handle single entry
+ *
+ * @param DirectoryEntry|FileEntry entry
+ * @param string parent parent id
+ * @return $.Deferred
+ */
 dataTransferItemsHandler.prototype._handleEntry = function(entry, parent) {
   var that = this;
   var $d = $.Deferred();
@@ -61,6 +91,13 @@ dataTransferItemsHandler.prototype._handleEntry = function(entry, parent) {
   return $d;
 }
 
+/**
+ * Read contents of dir, and handle it
+ *
+ * @param DirectoryEntry entry
+ * @param string parent parent id
+ * @return $.Deferred
+ */
 dataTransferItemsHandler.prototype._readDir = function(entry, parent) {
   var that = this;
   var $d = $.Deferred();
