@@ -8482,7 +8482,6 @@ var balloon = {
 
         $d.done(function(files) {
           balloon.hideSpinner();
-          balloon.uploadFiles(files);
         });
 
         $d.fail(function(err) {
