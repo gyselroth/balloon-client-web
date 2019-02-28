@@ -5,6 +5,8 @@
     "password": "Password",
     "login": "Login",
     "logout": "Logout",
+    "code": "Code",
+    "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
     "change-password": "Change password",
     "events": "Events",
     "profile": "Profile",
@@ -12,7 +14,8 @@
     "help": "Hilfe",
     "error": {
       "server": "The balloon server reports an ongoing incident, please try it again later.",
-      "basic": "Wrong username or password given.",
+      "credentials": "Wrong username or password given.",
+      "code": "Invalid code provided.",
       "oidc": "There was an error authenticate you via the choosen identity provider."
     }
   },

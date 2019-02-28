@@ -1,13 +1,6 @@
 ## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Thu Feb 21 13:40:02 CET 2019
-
-* [CHANGE] Add hint to share link settings #134
-
-
-## 3.1.0-alpha1
-**Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Thu Feb 21 13:40:02 CET 2019
+**Date**:
 
 * [CHANGE] Newer notifications should be on top #113
 * [FEATURE] Nice URL's and easy way to share balloon url's #83
@@ -18,6 +11,8 @@
 * [CHANGE] BalloonWindow keydown #67
 * [FEATURE] Choose between fulltextsearch and name only search #69
 * [FEATURE] Change password #116
+* [CHANGE] Add hint to share link settings #134
+* [FEATURE] Support for two factor auth and token authentication #141
 
 
 ## 3.0.9

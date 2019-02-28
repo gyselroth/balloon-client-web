@@ -5,6 +5,8 @@
     "password": "Passwort",
     "login": "Login",
     "logout": "Logout",
+    "code": "Code",
+    "multi_factor_auth": "Dieses Konto ist mit multi factor authentication geschützt. Bitte gib den Code vom google authenticator ein:",
     "change-password": "Passwort ändern",
     "events": "Events",
     "profile": "Profil",
@@ -12,7 +14,8 @@
     "help": "Hilfe",
     "error": {
       "server": "Der balloon-Server meldet aktuell eine Störung, bitte versuche es später erneut.",
-      "basic": "Der Benutzername oder das Passwort ist falsch.",
+      "credentials": "Der Benutzername oder das Passwort ist falsch.",
+      "code": "Der Code ist ungültig.",
       "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider."
     }
   },
