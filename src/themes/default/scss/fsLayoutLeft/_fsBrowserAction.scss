@@ -54,7 +54,7 @@
     ul {
       li {
         line-height: 40px;
-        font-size: 15px;
+        font-size: $fontSizeParagraph;
         background-color: $colorWhite;
         cursor: pointer;
         z-index: 17;
@@ -64,6 +64,7 @@
           display: inline-block;
           vertical-align: middle;
           margin-right: 8px;
+          margin-top: -2px;
         }
 
         span {

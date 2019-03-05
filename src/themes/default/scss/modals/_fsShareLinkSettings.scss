@@ -37,11 +37,6 @@ $sidePadding: 30px;
 
       margin-bottom: 25px;
 
-      p.fs-hint {
-        display: block;
-        color: $colorMediumGrey;
-      }
-
       &:last-child {
         margin-bottom: 0;
       }
@@ -81,7 +76,7 @@ $sidePadding: 30px;
       #fs-share-link-destroy {
         & + label {
           padding-top: 1px;
-          font-size: 15px;
+          font-size: $fontSizeParagraph;
         }
       }
 
@@ -100,15 +95,16 @@ $sidePadding: 30px;
       & > .k-datepicker input[type="text"],
       & > .k-timepicker input[type="text"],
       & > input[type="password"] {
-        font-size: 15px;
-        padding: 13px 15px 14px;
+        font-size: $fontSizeParagraph;
+        font-weight: $fontWeightParagraph;
+        padding: 12px 15px 13px;
         height: auto;
       }
 
       & > .k-datepicker .k-state-focused input[type="text"],
       & > .k-timepicker .k-state-focused input[type="text"],
       & > input[type="password"]:focus {
-        padding: 12px 14px 13px;
+        padding: 11px 14px 12px;
       }
     }
   }

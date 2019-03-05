@@ -46,9 +46,15 @@ $sidePadding: 30px;
 
       input[name="file_url"] {
         color: $colorActiveBlue;
-        font-size: 15px;
+        font-size: $fontSizeParagraph;
+        font-weight: $fontWeightParagraph;
+        padding: 5px 6px;
         width: calc(100% - #{$deleteButtonSize + 10px});
         float: left;
+
+        &:focus {
+          padding: 4px 5px;
+        }
       }
 
       #fs-share-link-window-delete {
@@ -60,40 +66,20 @@ $sidePadding: 30px;
       }
     }
 
-    .fs-hint {
-      color: $colorMediumGrey;
-      line-height: 18px;
-      font-size: 13px;
-    }
-
     h2 {
       margin: 20px 0 7px;
 
       span {
-        font-size: 15px;
-        font-weight: 700;
+        display: inline-block;
+        font-size: $fontSizeParagraphBold;
+        font-weight: $fontWeightParagraphBold;
+        line-height: $lineHeightParagraphBold;
 
         &.fs-hint {
           margin-left: 4px;
-          font-size: 15px;
-          font-weight: 300;
+          font-size: $fontSizeParagraph;
+          font-weight: $fontWeightParagraph;
         }
-      }
-    }
-
-    #fs-share-link-window-hint-delete {
-      position: relative;
-      color: $colorMediumGrey;
-      margin-top: 19px;
-
-      svg {
-        position: absolute;
-        top: -3px;
-        left: 0;
-      }
-
-      p {
-        padding-left: 30px;
       }
     }
 
@@ -102,9 +88,9 @@ $sidePadding: 30px;
 
       label {
         display: block;
-        font-size: 15px;
-        line-height: 17px;
-        font-weight: 700;
+        font-size: $fontSizeParagraphBold;
+        font-weight: $fontWeightParagraphBold;
+        line-height: $lineHeightParagraphBold;
         margin: 20px 0 8px;
 
         &:first-child {
@@ -113,12 +99,12 @@ $sidePadding: 30px;
       }
 
       textarea {
-        font-size: 15px;
-        padding: 13px 15px 14px;
+        font-size: $fontSizeParagraph;
+        padding: 12px 15px 13px;
         height: auto;
 
         &:focus {
-          padding: 12px 14px 13px;
+          padding: 11px 14px 12px;
         }
       }
 
@@ -164,7 +150,8 @@ $sidePadding: 30px;
           input {
             float: left;
             border: 1px solid transparent !important;
-            font-size: 15px;
+            font-size: $fontSizeParagraph;
+            font-weight: $fontWeightParagraph;
             line-height: 28px;
             padding: 0;
             height: auto;

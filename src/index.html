@@ -813,14 +813,14 @@
                     </div>
                 </div>
 
-                <div id="fs-share-link-window-hint-delete">
+                <div id="fs-share-link-window-hint-delete" class="fs-hint-info">
                     <svg class="gr-icon gr-i-info"><use xlink:href="<%= iconsSvg %>#info"></use></svg>
                     <p class="fs-hint" data-i18n="view.share_link.hint_remove_url"></p>
                 </div>
 
-                <fieldset id="fs-share-link-window-message-form">
-                    <hr class="full-width" />
+                <hr class="full-width" />
 
+                <fieldset id="fs-share-link-window-message-form">
                     <label for="fs-share-link-window-recipient" data-i18n="view.share_link.recipient"></label>
 
                     <label for="fs-share-link-window-recipient" id="fs-share-link-window-recipient-list">
@@ -903,12 +903,12 @@
                     <a class="toggle-condense" data-i18n="view.share.collapse"></a>
                 </nav>
 
-                <div id="fs-share-window-remove">
+                <div id="fs-share-window-remove" class="fs-hint-info">
                     <svg class="gr-icon gr-i-info"><use xlink:href="<%= iconsSvg %>#info"></use></svg>
                     <p class="fs-hint" data-i18n="view.share.hint_remove"></p>
                     <input type="submit" name="unshare" class="fs-button-small" data-i18n="[value]view.share.delete"/>
-                    <hr class="full-width" />
                 </div>
+                <hr class="full-width" />
             </div>
             <div id="fs-share-window-button-wrapper" class="fs-window-secondary-actions">
                 <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.share.cancel" />

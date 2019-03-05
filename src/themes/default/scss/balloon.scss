@@ -2,6 +2,7 @@
 
 @import 'includes/breakpoints';
 @import 'includes/colors';
+@import 'includes/fonts';
 @import 'includes/mixins';
 @import 'includes/grIcons';
 @import 'includes/sk-circle';
@@ -45,11 +46,7 @@
 @import 'modals/base';
 
 body {
-  font-family: Ubuntu, arial, verdana, sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 16px;
-  color: $colorDarkGrey;
+  @include font-paragraph-small;
   overflow: hidden;
 }
 

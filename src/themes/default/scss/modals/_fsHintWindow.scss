@@ -27,8 +27,8 @@ $sidePadding: 50px;
 
   #fs-hint-window-content {
     hyphens: auto;
-    font-size: 15px;
-    line-height: 20px;
+    font-size: $fontSizeParagraph;
+    line-height: $lineHeightParagraph;
     color: $colorDarkGrey;
 
     a,

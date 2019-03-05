@@ -1,11 +1,7 @@
 #fs-browser-summary,
 #fs-properties-name {
   @include clearfix;
-  line-height: 18px;
-
-  font-size: 15px;
-  font-weight: bold;
-
+  @include font-paragraph-bold;
 
   span {
     $extWidth: 53px;

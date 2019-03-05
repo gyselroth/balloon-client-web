@@ -36,8 +36,9 @@
     #fs-browser-fresh {
       display: none;
 
-      font-size: 17px;
-      line-height: 19px;
+      font-size: $fontSizeParagraph;
+      font-weight: $fontWeightParagraph;
+      line-height: $lineHeightParagraph;
       color: $colorDarkGrey;
       margin-top: 36px;
     }

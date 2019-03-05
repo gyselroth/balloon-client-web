@@ -135,12 +135,12 @@
 
       span {
         position: relative;
-        top: -2px;
+        top: -1px;
       }
 
       .gr-i-expand {
         position: relative;
-        top: 5px;
+        top: 6px;
         left: -1px;
         cursor: pointer;
       }
@@ -158,8 +158,8 @@
 
       ul {
         li {
+          @include font-paragraph;
           line-height: 40px;
-          font-size: 15px;
           background-color: $colorWhite;
           cursor: pointer;
           z-index: 17;
@@ -214,7 +214,7 @@
     }
 
     #fs-search-input {
-      padding: 5px 120px 7px 45px;
+      padding: 6px 120px 6px 45px;
       float: left;
       width: calc(100% - 40px);
       height: 100%;
@@ -224,8 +224,8 @@
       border-radius: 20px;
       border: solid 1px $colorLightGrey;
 
-      line-height: 17px;
-      font-size: 15px;
+      line-height: 18px;
+      font-size: $fontSizeParagraphSmall;
       letter-spacing: 0.5px;
       text-align: left;
       color: $colorDarkGrey;
@@ -379,7 +379,6 @@
           #fs-quota-percent,
           .k-progress-status {
             margin: 8px 0 0 0;
-            font-size: 13px;
             line-height: 15px;
             color: $colorMediumGrey;
           }
@@ -401,8 +400,8 @@
           border-top: 1px solid $colorLightGrey;
 
           li {
-            font-size: 15px;
-            line-height: 2.67;
+            font-size: $fontSizeParagraph;
+            line-height: 40px;
             text-align: left;
             color: $colorMediumGrey;
 

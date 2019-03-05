@@ -12,8 +12,6 @@ $sidePadding: 60px;
 
   #fs-destroy-date-window-content {
     p {
-      font-size: 13px;
-      line-height: 18px;
       color: $colorMediumGrey;
       margin: 0;
     }
@@ -37,14 +35,12 @@ $sidePadding: 60px;
         }
 
         label {
+          @include font-paragraph-bold;
           display: block;
-          font-size: 15px;
-          line-height: 20px;
-          font-weight: 700;
 
           span {
             color: $colorMediumGrey;
-            font-weight: 300;
+            font-weight: $fontWeightParagraph;
           }
         }
 
@@ -62,15 +58,16 @@ $sidePadding: 60px;
         & > .k-datepicker input[type="text"],
         & > .k-timepicker input[type="text"],
         & > input[type="password"] {
-          font-size: 15px;
-          padding: 13px 15px 14px;
+          font-size: $fontSizeParagraph;
+          font-weight: $fontWeightParagraph;
+          padding: 12px 15px 13px;
           height: auto;
         }
 
         & > .k-datepicker .k-state-focused input[type="text"],
         & > .k-timepicker .k-state-focused input[type="text"],
         & > input[type="password"]:focus {
-          padding: 12px 14px 13px;
+          padding: 11px 14px 12px;
         }
       }
     }

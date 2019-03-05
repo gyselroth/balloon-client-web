@@ -20,11 +20,8 @@
 
   #fs-search-filter-content {
     h2 {
-      font-size: 15px;
-      line-height: 19px;
-      font-weight: 400;
+      @include font-paragraph-bold;
       margin: 14px 0 12px 0;
-      color: $colorDarkGrey;
     }
 
     section {
@@ -44,6 +41,7 @@
         position: absolute;
         right: 0;
         top: 0;
+        line-height: $lineHeightParagraph;
         color: $colorMediumGrey;
         cursor: pointer;
 
@@ -203,7 +201,6 @@
     div {
       float: left;
       padding: 10px 0 11px;
-      font-size: 13px;
       line-height: 15px;
       color: $colorMediumGrey;
     }
