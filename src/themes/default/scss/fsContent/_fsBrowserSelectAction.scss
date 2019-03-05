@@ -4,7 +4,6 @@
   margin-top: 16px;
   height: $buttonHeight;
   width: 345px;
-  overflow: hidden;
 
   li {
     @include icon-button-small($buttonHeight, $buttonHeight);
