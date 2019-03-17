@@ -640,6 +640,8 @@ var balloon = {
     var i;
     var $fs_content_view_template = $('#fs-content-view');
     var $fs_content_view = $('<dl id="fs-content-view"></dl>');
+    var $fs_content_nav_small = $('#fs-content-nav-small');
+
     var keys = Object.keys(balloon.fs_content_views);
 
     for(i=0; i<keys.length; i++) {
@@ -656,6 +658,15 @@ var balloon = {
 
       var $content = viewConfig.$content || $fs_content_view_template.find('#fs-'+view).clone();
       $fs_content_view.append($content);
+
+      var $navItem = $(
+        '<li id="fs-content-nav-' + view + '" class="disabled">' +
+          '<span>' + i18next.t(viewConfig.title) + '</span>' +
+          '<svg viewBox="0 0 24 24" class="gr-icon gr-i-arrowhead-e"><use xlink:href="'+iconsSvg+'#arrowhead-e"></use></svg>'+
+        '</li>'
+      );
+
+      $fs_content_nav_small.append($navItem);
     }
 
     $fs_content_view_template.replaceWith($fs_content_view);
@@ -1621,6 +1632,30 @@ var balloon = {
       if(balloon.getViewName() != action) {
         balloon.switchView(action);
       }
+    });
+
+    $('.fs-content-close').off('click').click(function() {
+      balloon.deselectAll();
+    });
+
+    $('#fs-content-nav-small li').off('click').not('.disabled').click(function() {
+      var action = $(this).attr('id').substr(15);
+
+      if($('#fs-content-view-wrap').hasClass('active-mobile') === false || balloon.getViewName() != action) {
+        balloon.switchView(action, true);
+      }
+    });
+
+    $('.fs-content-close').off('click').click(function() {
+      balloon.deselectAll();
+    });
+
+    $('#fs-content-view-header .fs-content-view-close').off('click').click(function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      $('#fs-content-view-wrap').removeClass('active-mobile').addClass('inactive-mobile');
+      $('#fs-content-view dd.active').removeClass('active');
     });
   },
 
@@ -2804,10 +2839,15 @@ var balloon = {
    *
    * @return void
    */
-  switchView: function(view) {
+  switchView: function(view, visibleMobile) {
+    $('#fs-content-view-wrap').removeClass('active-mobile').removeClass('inactive-mobile');
     $('#fs-content-view').find('dt,dd').removeClass('active');
-    var $title = $('#fs-content-view-title-'+view).addClass('active');
+    var $title = $('#fs-content-view-title-'+view).addClass(['active']);
     $title.next().addClass('active');
+
+    if(visibleMobile) {
+      $('#fs-content-view-wrap').addClass('active-mobile');
+    }
 
     var viewConfig = balloon._getViewConfig(view);
 
@@ -3274,6 +3314,9 @@ var balloon = {
    * @return bool
    */
   isMobileViewPort: function() {
+    //TODO pixtron - change this
+    return false;
+
     if(balloon.DEBUG_SIMULATOR.mobileport === true) {
       return true;
     }
@@ -3925,7 +3968,8 @@ var balloon = {
       $selected.addClass('fs-multiselected');
     }
 
-    $('#fs-browser-summary').html(i18next.t('tree.selected', {count: balloon.multiselect.length})).show();
+    $('#fs-browser-summary div:first-child').html(i18next.t('tree.selected', {count: balloon.multiselect.length}));
+    $('#fs-browser-summary').show();
   },
 
 
@@ -7378,19 +7422,27 @@ var balloon = {
    * @return  void
    */
   displayName: function(node) {
-    var $fs_prop_name = $('#fs-properties-name');
+    var $fs_prop_name = $('#fs-properties-name div:first-child');
+    var $fs_content_view_header = $('#fs-content-view-header');
+
     var $field = $fs_prop_name.find('.fs-value');
+    var $field_header = $fs_content_view_header.find('.fs-value');
 
     var ext = balloon.getFileExtension(node);
     var name = node.name;
 
     $fs_prop_name.find('.fs-ext').remove();
+    $fs_content_view_header.find('.fs-ext').remove();
 
     if(ext != null && node.directory == false) {
       $fs_prop_name.append('<span class="fs-ext">('+ext+')</span>');
-      $field.html(name.substr(0, name.length-ext.length-1));
+      $fs_content_view_header.append('<span class="fs-ext">('+ext+')</span>');
+      var filename = name.substr(0, name.length-ext.length-1);
+      $field.html(filename);
+      $field_header.html(filename);
     } else {
       $field.html(name);
+      $field_header.html(name);
     }
   },
 
@@ -7843,6 +7895,7 @@ var balloon = {
     for(var element in elements) {
       var $title = $('#fs-content-view-title-'+elements[element]).removeClass('disabled');
       $title.next().removeClass('disabled');
+      $('#fs-content-nav-' + elements[element]).removeClass('disabled');
     }
   },
 
@@ -7892,7 +7945,7 @@ var balloon = {
    * @return void
    */
   updatePannel: function(enabled) {
-    var $layout = $('#fs-browser-layout');
+    var $fs_browser_layout = $('#fs-browser-layout');
     var menu = balloon.getURLParam('menu');
 
     if(enabled === undefined) enabled = true;
@@ -7902,6 +7955,8 @@ var balloon = {
     if(balloon.selected_action.command !== null) {
       actions.push('paste');
     }
+
+    $fs_browser_layout.toggleClass('fs-content-visible', enabled);
 
     if(enabled === true) {
       actions.push('download');
@@ -8206,7 +8261,9 @@ var balloon = {
         break;
 
       case 'view-bar':
+        $('#fs-content-view-wrap').removeClass('active-mobile').removeClass('inactive-mobile');
         $('#fs-content-view').find('dt,dd').addClass('disabled').removeClass('active');
+        $('#fs-content-nav-small li').addClass('disabled');
         $('#fs-content-view dt').unbind('click');
         $('#fs-properties-name span').html('');
         break;
@@ -8238,7 +8295,7 @@ var balloon = {
 
       case 'multiselect':
         balloon.multiselect = [];
-        $('#fs-browser-summary').html('');
+        $('#fs-browser-summary div:first-child').html('');
         $('#fs-browser-tree').find('.fs-multiselected')
           .removeClass('fs-multiselected')
           .removeClass('k-state-selected');

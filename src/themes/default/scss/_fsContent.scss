@@ -1,18 +1,21 @@
-$fsContentSidePadding: 30px;
+$fsContentSidePaddingM: 30px;
+$fsContentSidePaddingS: 10px;
 
 @import './fsContent/fsBrowserSelectAction';
 @import './fsContent/fsPropertiesName';
 @import './fsContent/fsContentView';
+@import './fsContent/fsContentNavSmall';
 
 #fs-content {
-
   position: absolute;
-  right: 0;
-  top: 0;
+  left: 0;
+  bottom: 0;
   border-top: 1px solid $colorBrightGrey;
   background-color: $colorWhite;
   height: 100%;
   overflow: hidden;
+  display: none;
+  z-index: 17;
 
   #fs-content-inner {
     height: 100%;
@@ -20,6 +23,23 @@ $fsContentSidePadding: 30px;
     overflow-y: auto;
     border-bottom: 1px solid $colorBrightGrey;
     box-sizing: border-box;
-    padding: 22px $fsContentSidePadding 0;
+    padding: 22px $fsContentSidePaddingS 0;
+  }
+
+  .fs-content-visible & {
+    display: block;
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    left: auto;
+    bottom: auto;
+    right: 0;
+    top: $headerHeight;
+    height: calc(100% - #{$headerHeight});
+    display: block;
+
+    #fs-content-inner {
+      padding: 22px $fsContentSidePaddingM 0;
+    }
   }
 }

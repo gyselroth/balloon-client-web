@@ -1,11 +1,12 @@
 
 #fs-browser-layout {
   position: absolute;
-  top: 60px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   overflow: hidden;
+  padding-top: $headerHeight;
   z-index: 10;
 
   #fs-layout-left {
@@ -13,12 +14,20 @@
   }
 
   #fs-content {
-    width: 0;
+    width: 100%;
   }
 
   #fs-layout-left,
   #fs-content {
     transition: width 0.3s ease-in-out;
+  }
+
+  @media screen and (max-width: #{$breakpointPannelVisible - 1px}) {
+
+
+    &.fs-content-visible {
+      z-index: 17;
+    }
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {

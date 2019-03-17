@@ -2,6 +2,7 @@
   $buttonHeight: 30px;
 
   margin-top: 16px;
+  margin-bottom: 20px;
   height: $buttonHeight;
   width: 345px;
 
@@ -11,5 +12,9 @@
     &:last-child {
       margin-right: 0;
     }
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    margin-bottom: 0;
   }
 }

@@ -6,88 +6,172 @@
 @import './fsContentView/fsShare';
 @import './fsContentView/fsShareLink';
 
-#fs-content-view {
-  margin-top: 20px;
 
-  dt {
-    position: relative;
-    font-size: $fontSizeLead;
-    font-weight: $fontWeightLead;
-    line-height: 20px;
-    color: $colorDarkGrey;
-    border-top: 1px solid $colorBrightGrey;
-    margin: 0 -1*$fsContentSidePadding 0;
-    padding: 16px $fsContentSidePadding 18px;
-    cursor: pointer;
+#fs-content-view-wrap {
+  $contentViewSmallAnimationDuration: 0.5s;
 
-    .gr-icon {
-      display: block;
-      position: absolute;
-      top: 13px;
-      right: 20px;
-      color: $colorMediumGrey;
-    }
+  position: absolute;
+  width: 100%;
+  right: -100%;
+  top: 0;
+  bottom: 0;
+  background-color: $colorWhite;
 
-    .gr-i-arrowhead-n {
+  &.active-mobile {
+    right: 0;
+    animation: fs-content-view-small-in $contentViewSmallAnimationDuration ease-in-out;
+  }
+
+  &.inactive-mobile {
+    animation: fs-content-view-small-out $contentViewSmallAnimationDuration ease-in-out;
+  }
+
+  #fs-content-view {
+    background-color: $colorWhite;
+    padding: 0 $fsContentSidePaddingS*2;
+
+    dt {
       display: none;
-    }
+      font-size: $fontSizeLead;
+      font-weight: $fontWeightLead;
+      line-height: 20px;
+      color: $colorDarkGrey;
+      border-top: 1px solid $colorBrightGrey;
+      margin: 0 -1*$fsContentSidePaddingM 0;
+      padding: 16px $fsContentSidePaddingM 18px;
 
-    &.active {
-      &:before {
-        content: "";
+      &.active {
         display: block;
-        height: 100%;
-        width: 2px;
-        background-color: $colorActiveBlue;
-        position: absolute;
-        left: 0;
-        top: 0;
       }
 
-      .gr-i-arrowhead-s {
+      .gr-icon {
         display: none;
       }
-      .gr-i-arrowhead-n {
-        display: block;
-      }
     }
 
-    &.disabled {
-      color: $colorLightGrey;
+    dd {
+      @include font-paragraph-small;
 
-      .gr-i-arrowhead-s {
-        color: $colorLightGrey;
+      display: none;
+      padding: 0;
+
+      color: $colorMediumGrey;
+      vertical-align: middle;
+
+      &.active {
+        display: block;
+      }
+
+      &.disabled {
+        display: none !important;
       }
     }
   }
 
-  dd {
-    @include font-paragraph-small;
-    position: relative;
-    display: none;
-    padding-top: 2px;
-    padding-bottom: 65px;
+  @media screen and (min-width: $breakpointPannelVisible) {
+    position: static;
+    width: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
 
-    color: $colorMediumGrey;
-    vertical-align: middle;
+    &.active-mobile {
+      right: auto;
+      animation: none;
+    }
 
-    &.active {
-      display: block;
+    #fs-content-view-header {
+      display: none;
+    }
 
-      &:before {
-        content: "";
+    #fs-content-view {
+      margin-top: 20px;
+      padding: 0;
+
+      dt {
         display: block;
-        height: 100%;
-        width: 2px;
-        background-color: $colorActiveBlue;
-        position: absolute;
-        left: -30px;
-        top: 0;
+        position: relative;
+        cursor: pointer;
+
+        .gr-icon {
+          display: block;
+          position: absolute;
+          top: 13px;
+          right: 20px;
+          color: $colorMediumGrey;
+        }
+
+        .gr-i-arrowhead-n {
+          display: none;
+        }
+
+        &.active {
+          &:before {
+            content: "";
+            display: block;
+            height: 100%;
+            width: 2px;
+            background-color: $colorActiveBlue;
+            position: absolute;
+            left: 0;
+            top: 0;
+          }
+
+          .gr-i-arrowhead-s {
+            display: none;
+          }
+          .gr-i-arrowhead-n {
+            display: block;
+          }
+        }
+
+        &.disabled {
+          color: $colorLightGrey;
+
+          .gr-i-arrowhead-s {
+            color: $colorLightGrey;
+          }
+        }
+      }
+
+      dd {
+        position: relative;
+        padding-top: 2px;
+        padding-bottom: 65px;
+
+        &.active {
+          &:before {
+            content: "";
+            display: block;
+            height: 100%;
+            width: 2px;
+            background-color: $colorActiveBlue;
+            position: absolute;
+            left: -30px;
+            top: 0;
+          }
+        }
       }
     }
+  }
+}
 
-    &.disabled {
-      display: none !important;
-    }
+@keyframes fs-content-view-small-in {
+  0%   {
+    right: -100%;
+  }
+
+  100% {
+    right: 0;
+  }
+}
+
+@keyframes fs-content-view-small-out {
+  0%   {
+    right: 0;
+  }
+
+  100% {
+    right: -100%;
   }
 }
