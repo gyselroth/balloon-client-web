@@ -272,6 +272,9 @@ var login = {
   updateFsIdentity: function() {
     $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
 
+    //change password should only be active for internal users
+    $('#fs-menu-user-change-password').toggle((login.user && login.user.auth === 'internal'));
+
     return balloon.displayAvatar($('#fs-identity-avatar'));
   },
 

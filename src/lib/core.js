@@ -466,9 +466,6 @@ var balloon = {
     $(".fs-action-element").unbind('click').click(balloon.doAction);
     $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
 
-    //change password should only be active for users logged in with basic auth
-    $('#fs-menu-user-change-password').toggle(login.getAdapter() === 'basic');
-
     $(document).unbind('drop').on('drop', function(e) {
       e.stopPropagation();
       e.preventDefault();
