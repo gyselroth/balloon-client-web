@@ -12,6 +12,7 @@ import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
 import balloonWindow from './widget-balloon-window.js';
 import balloonDatePicker from './widget-balloon-datepicker.js';
 import balloonTimePicker from './widget-balloon-timepicker.js';
+import dataTransferItemsHandler from './data-transfer-items-handler.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
@@ -111,6 +112,14 @@ var balloon = {
    */
   upload_manager: null,
 
+
+  /**
+   * Queue for uploaded collections
+    */
+  uploadCollectionManager: {
+    uploadCreateCollectionQueue: [],
+    uploadCreateCollectionPending: {}
+  },
 
   /**
    * Is initialized?
@@ -363,6 +372,16 @@ var balloon = {
    * @var object
    */
   toggle_fs_browser_action_hooks: {},
+
+
+  /**
+   * Generates a uuid v4.
+   *
+   * @author https://gist.github.com/LeverOne/1308368;
+   * @return string uuid4
+   */
+  // eslint-disable-next-line
+  uuid: function(a,b){for(b=a='';a++<36;b+=a*51&52?(a^15?8^Math.random()*(a^20?16:4):4).toString(16):'-');return b},
 
   /**
    * Init file browsing after current url has been resolved
@@ -902,18 +921,18 @@ var balloon = {
    */
   xmlHttpRequest: function(options) {
     if(options.beforeSend === undefined) {
-      options.beforeSend = balloon.showSpinner;
+      options.beforeSend = options.suppressSpinner !== true ? balloon.showSpinner : undefined;
     } else {
       var beforeSend = options.beforeSend;
       options.beforeSend = function(jqXHR, settings) {
-        balloon.showSpinner();
+        if(options.suppressSpinner !== true) balloon.showSpinner();
         beforeSend(jqXHR, settings);
       };
     }
 
     var complete = options.complete;
     options.complete = function(jqXHR, textStatus) {
-      balloon.hideSpinner();
+      if(options.suppressSpinner !==true) balloon.hideSpinner();
 
       var valid = ['POST', 'PUT', 'DELETE', 'PATCH'],
         show  = options.suppressSnackbar !== true && (valid.indexOf(options.type) > -1);
@@ -1503,7 +1522,7 @@ var balloon = {
         }
       }
 
-      if(node.directory) {
+      if(node.directory && balloon.id(node) !== '_FOLDERUP') {
         balloon.fileUpload(node);
       }
 
@@ -4572,28 +4591,7 @@ var balloon = {
    * @return  void
    */
   addFolder: function(name) {
-    var $d = $.Deferred();
-
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/collections',
-      type: 'POST',
-      data: {
-        id:   balloon.getCurrentCollectionId(),
-        name: name,
-      },
-      dataType: 'json',
-      complete: function(jqXHR, textStatus) {
-        switch(textStatus) {
-        case 'success':
-          $d.resolve(jqXHR.responseJSON);
-          break;
-        default:
-          $d.reject();
-        }
-      },
-    });
-
-    return $d;
+    return balloon._createCollection(balloon.getCurrentCollectionId(), name);
   },
 
 
@@ -8327,19 +8325,12 @@ var balloon = {
    */
   fileUpload: function(parent_node, dom_node) {
     var dn,
-      directory,
       $fs_browser_tree = $('#fs-browser-tree');
 
     if(dom_node != undefined) {
       dn = dom_node;
     } else {
       dn = $('#fs-browser-tree').find('.k-item[fs-id='+balloon.id(parent_node)+']');
-    }
-
-    if(typeof(parent_node) == 'string' || parent_node === null) {
-      directory = true;
-    } else {
-      directory = parent_node.directory;
     }
 
     function handleDragOver(e) {
@@ -8361,6 +8352,112 @@ var balloon = {
 
 
   /**
+   * Creates a collection
+   *
+   * @param   string parent parent collection id
+   * @param   string name name of the new collection
+   * @param   object options override request options
+   * @return  $.Deferred
+   */
+  _createCollection: function(parent, name, options) {
+    var $d = $.Deferred();
+
+    var reqOptions = {
+      url: balloon.base+'/collections',
+      type: 'POST',
+      data: {
+        id: parent,
+        name: name,
+      },
+      dataType: 'json',
+      complete: function(jqXHR, textStatus) {
+        switch(textStatus) {
+        case 'success':
+          $d.resolve(jqXHR.responseJSON);
+          break;
+        default:
+          $d.reject();
+        }
+      }
+    };
+
+    $.extend(true, reqOptions, options || {});
+
+    balloon.xmlHttpRequest(reqOptions);
+
+    return $d;
+  },
+
+  /**
+   * Creates a collection for uploaded folder
+   *
+   * @param   string parent parent collection id
+   * @param   string name name of the new collection
+   * @return  $.Deferred
+   */
+  _uploadCreateCollection: function(parent, name) {
+    var $d = $.Deferred();
+
+    balloon.uploadCollectionManager.uploadCreateCollectionQueue.push({
+      parent: parent,
+      name: name,
+      done: function(response) {
+        balloon._uploadCreateCollectionDone(parent, name);
+        balloon._uploadCreateCollectionNext();
+        $d.resolve(response.id);
+      },
+      fail: function() {
+        $d.reject();
+      },
+    });
+
+    balloon._uploadCreateCollectionNext();
+
+    return $d;
+  },
+
+  /**
+   * Checks if a new task can be shifted from the queue
+   *
+   * @return  void
+   */
+  _uploadCreateCollectionNext: function() {
+    var maxConcurrentRequests = 3;
+
+    if(Object.keys(balloon.uploadCollectionManager.uploadCreateCollectionPending).length < maxConcurrentRequests) {
+      var task = this.uploadCollectionManager.uploadCreateCollectionQueue.shift();
+
+      if(task) {
+        balloon.uploadCollectionManager.uploadCreateCollectionPending[task.parent+'-'+task.name] = task;
+
+        var options = {
+          suppressSpinner: true,
+          suppressSnackbar: true,
+          /*
+          //TODO pixtron - handle errror when folder already exists?
+          error: function(response) {
+          }*/
+        };
+
+        balloon._createCollection(task.parent, task.name, options)
+          .done(task.done)
+          .fail(task.fail);
+      }
+    }
+  },
+
+  /**
+   * Removes done task from the create collection pending queue
+   *
+   * @param  string parent parent id
+   * @param  string name name of the collection
+   * @return  void
+   */
+  _uploadCreateCollectionDone: function(parent, name) {
+    delete balloon.uploadCollectionManager.uploadCreateCollectionPending[parent+'-'+name];
+  },
+
+  /**
    * Prepare selected files for upload
    *
    * @param   object e
@@ -8375,23 +8472,89 @@ var balloon = {
     e.stopPropagation();
     e.preventDefault();
 
+    var blobs;
+
     if('originalEvent' in e && 'dataTransfer' in e.originalEvent) {
-      var blobs = e.originalEvent.dataTransfer.files;
+      try {
+        balloon.showSpinner();
+        var handler = new dataTransferItemsHandler(balloon._uploadCreateCollection, balloon._handleFileEntry);
+        var $d = handler.handleItems(e.originalEvent.dataTransfer.items, balloon.id(parent_node));
+
+        $d.done(function(files) {
+          balloon.hideSpinner();
+        });
+
+        $d.fail(function(err) {
+          balloon.hideSpinner();
+          blobs = e.originalEvent.dataTransfer.files;
+          balloon._handleFileSelectFilesOnly(blobs, parent_node);
+        });
+      } catch(err) {
+        balloon.hideSpinner();
+        blobs = e.originalEvent.dataTransfer.files;
+      }
     } else {
-      var blobs = e.target.files;
+      blobs = e.target.files;
     }
 
-    balloon.uploadFiles(blobs, parent_node);
+    if(blobs) {
+      //if blobs are set - either browser does not support directory upload, or only files have been selected
+      balloon._handleFileSelectFilesOnly(blobs, parent_node);
+    }
+  },
+
+  /**
+   * Prepare a FileEntry for upload
+   *
+   * @param   FileEntry file
+   * @param   parent parent id where the file should be uploaded to
+   * @return  $.Deferred
+   */
+  _handleFileEntry: function(file, parent) {
+    var $d = $.Deferred();
+
+    file.file(function(fileObj) {
+      var files = [{
+        blob: fileObj,
+        parent: parent
+      }];
+
+      balloon.uploadFiles(files);
+      $d.resolve();
+    }, function(err) {
+      $d.reject(err);
+    });
+
+    return $d;
+  },
+
+  /**
+   * Prepare selected files for upload, if it is a files only upload
+   *
+   * @param   FileList blobs
+   * @return  void
+   */
+  _handleFileSelectFilesOnly: function(blobs, parent_node) {
+    var i;
+    var files = [];
+
+    for(i=0; i<blobs.length; i++) {
+      files.push({
+        blob: blobs[i],
+        parent: parent_node
+      });
+    }
+
+    balloon.uploadFiles(files);
   },
 
   /**
    * Prepare selected files for upload
    *
    * @param   array files
-   * @param   object|string parent_node
    * @return  void
    */
-  uploadFiles: function(files, parent_node) {
+  uploadFiles: function(files) {
     var $div = $('#fs-uploadmgr');
     var $k_manager_win = $div.kendoBalloonWindow({
       title: $div.attr('title'),
@@ -8406,38 +8569,40 @@ var balloon = {
       balloon.resetDom('uploadmgr-progress-files');
 
       balloon.upload_manager = {
-        parent_node: parent_node,
         progress: {
           mgr_percent: null,
           notifier_percent: null,
           mgr_chunk:   null,
         },
-        files: [],
+        files: {},
+        queue: [],
+        pending: {},
         upload_bytes: 0,
         transfered_bytes: 0,
         count: {
           upload:   0,
           transfer: 0,
-          success:  0,
-          last_started: 0
+          success:  0
         },
         start_time: new Date(),
       };
     }
 
     var $upload_list = $('#fs-upload-list');
-    for(var i = 0, progressnode, file, last = balloon.upload_manager.count.last_started; file = files[i]; i++, last++) {
-      if(file instanceof Blob) {
+    for(var i = 0, progressnode, file; file = files[i]; i++) {
+      if(file.blob instanceof Blob) {
         file = {
-          name: file.name,
-          blob: file
-        }
+          name: file.blob.name,
+          blob: file.blob,
+          parent: file.parent
+        };
       }
 
       if(file.blob.size === 0) {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
-      } else if(file.blob.size != 0) {
-        var progressId = 'fs-upload-'+last;
+      } else {
+        var uuid = balloon.uuid();
+        var progressId = 'fs-upload-'+uuid;
         progressnode = $('<div id="'+progressId+'" class="fs-uploadmgr-progress"><div id="'+progressId+'-progress" class="fs-uploadmgr-progressbar"></div></div>');
         $upload_list.append(progressnode);
 
@@ -8448,10 +8613,11 @@ var balloon = {
           },
         });
 
-        balloon.upload_manager.files.push({
+        balloon.upload_manager.files[uuid] = {
           progress:   progressnode,
           blob:     file.blob,
           name:     file.name,
+          parent:   file.parent,
           index:    1,
           start:    0,
           end:    0,
@@ -8461,7 +8627,10 @@ var balloon = {
           manager:  balloon.upload_manager,
           request:  null,
           status:   1,
-        });
+          id: uuid,
+        };
+
+        balloon.upload_manager.queue.push(uuid);
 
         progressnode.prepend('<div class="fs-progress-filename">'+file.name+'</div>');
         progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#close"></use></svg></div>');
@@ -8470,13 +8639,13 @@ var balloon = {
       }
     }
 
-    if(balloon.upload_manager.files.length <= 0) {
+    if(Object.keys(balloon.upload_manager.files).length <= 0) {
       return;
     }
 
-    $('#fs-upload-list').on('click', '.fs-progress-icon', function() {
-      var i  = parseInt($(this).parent().attr('id').substr(10)),
-        file = balloon.upload_manager.files[i];
+    $('#fs-upload-list').off('click', '.fs-progress-icon').on('click', '.fs-progress-icon', function() {
+      var uuid  = $(this).parent().attr('id').substr(10),
+        file = balloon.upload_manager.files[uuid];
 
       if(file.status !== 1) {
         return;
@@ -8485,7 +8654,7 @@ var balloon = {
       file.status = 0;
     });
 
-    balloon.upload_manager.count.upload  = balloon.upload_manager.files.length;
+    balloon.upload_manager.count.upload  = Object.keys(balloon.upload_manager.files).length;
     balloon._initProgress(balloon.upload_manager);
 
     $('#fs-upload-progress').unbind('click').click(function(){
@@ -8501,12 +8670,42 @@ var balloon = {
     $('#fs-upload-progree-info-status-uploaded').html('0');
     $('#fs-upload-progree-info-status-total').html(balloon.getReadableFileSizeString(balloon.upload_manager.upload_bytes));
 
-    for(var i = balloon.upload_manager.count.last_started; i < balloon.upload_manager.count.upload; i++) {
-      balloon.upload_manager.count.last_started = i + 1;
-      balloon._chunkUploadManager(balloon.upload_manager.files[i]);
+    balloon._uploadManagerNext();
+
+  },
+
+  /**
+   * Try to start next uploads
+   *
+   * @return void
+   */
+  _uploadManagerNext: function() {
+    var maxConcurrentRequests = 3;
+    var pending = Object.keys(balloon.upload_manager.pending).length;
+
+    for(pending; pending < maxConcurrentRequests; pending++) {
+      var uuid = balloon.upload_manager.queue.shift();
+
+      if(uuid && balloon.upload_manager.files[uuid]) {
+        balloon.upload_manager.pending[uuid] = true;
+        balloon._chunkUploadManager(balloon.upload_manager.files[uuid]);
+      } else {
+        //no more uploads
+        break;
+      }
     }
   },
 
+  /**
+   * Upload done, removes it from pending uploads, and schedules next
+   *
+   * @param  string uuid, id of the file
+   * @return void
+   */
+  _uploadManagerDone: function(uuid) {
+    delete balloon.upload_manager.pending[uuid];
+    balloon._uploadManagerNext();
+  },
 
   /**
    * Init upload progress bars
@@ -8583,6 +8782,8 @@ var balloon = {
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
           file.manager.count.success.toString(), file.manager.count.upload)
         );
+
+        balloon._uploadManagerDone(file.id);
       }
 
       return;
@@ -8603,6 +8804,8 @@ var balloon = {
       $($('#fs-uploadmgr-files-progress .k-item')[file.manager.count.transfer]).addClass('fs-progress-error');
 
       file.manager.count.transfer++;
+
+      balloon._uploadManagerDone(file.id);
     } else {
       file.end = file.start + balloon.BYTES_PER_CHUNK;
 
@@ -8656,8 +8859,8 @@ var balloon = {
       url += '&session='+file.session;
     }
 
-    if(file.manager.parent_node !== null) {
-      url += '&collection='+balloon.id(file.manager.parent_node);
+    if(file.parent !== null) {
+      url += '&collection='+balloon.id(file.parent);
     }
 
     var chunk = file.blob.slice(file.start, file.end),
@@ -8701,7 +8904,6 @@ var balloon = {
               $('#fs-uploadmgr-time').html(i18next.t('uploadmgr.time_left', balloon.timeSince(end)));
             }
           }
-
         }, false);
 
         file.request = xhr;
@@ -8772,10 +8974,11 @@ var balloon = {
             var new_name = balloon.getCloneName(file.blob.name);
             var new_file = {
               name: new_name,
-              blob: file.blob
+              blob: file.blob,
+              parent: file.parent
             };
 
-            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file], file.manager.parent_node]);
+            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file]]);
           } else {
             balloon.displayError(e);
           }

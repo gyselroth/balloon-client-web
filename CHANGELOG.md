@@ -3,6 +3,8 @@
 **Date**: Thu Feb 21 13:40:02 CET 2019
 
 * [CHANGE] Add hint to share link settings #134
+* [FIX] File does not get uploaded #139
+* [FEATURE] Upload directories by drag and drop #11
 
 
 ## 3.1.0-alpha1
