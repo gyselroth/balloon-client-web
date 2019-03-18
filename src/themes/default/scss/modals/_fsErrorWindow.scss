@@ -38,17 +38,18 @@
       border-collapse: collapse;
       margin-top: 25px;
 
-      th,
-      td {
+      th {
+        font-size: $fontSizeParagraphBold;
+        line-height: $lineHeightParagraphBold;
+        font-weight: $fontWeightParagraphBold;
         text-align: left;
-        font-size: 15px;
-        line-height: 20px;
-        font-style: bold;
         width: 149px;
       }
 
       td {
-        font-style: normal;
+        font-size: $fontSizeParagraph;
+        line-height: $lineHeightParagraph;
+        font-weight: $fontWeightParagraph;
         width: 371px;
         padding-left: 11px;
       }

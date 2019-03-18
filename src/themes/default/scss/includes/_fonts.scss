@@ -1,0 +1,120 @@
+$fontFamilyUbuntu: 'Ubuntu', Helvetica, Arial, sans-serif;
+
+$fontSizeHeadline: 24px;
+$fontWeightHeadline: 500;
+$lineHeightHeadline: 30px;
+@mixin font-headline() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeHeadline;
+  line-height: $lineHeightHeadline;
+  font-weight: $fontWeightHeadline;
+  color: $colorDarkGrey;
+}
+
+$fontSizeLead: 18px;
+$fontWeightLead: 300;
+$lineHeightLead: 24px;
+@mixin font-lead() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeLead;
+  line-height: $lineHeightLead;
+  font-weight: $fontWeightLead;
+  color: $colorDarkGrey;
+}
+
+$fontSizeLeadBold: 18px;
+$fontWeightLeadBold: 300;
+$lineHeightLeadBold: 24px;
+@mixin font-lead-bold() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeLeadBold;
+  line-height: $lineHeightLeadBold;
+  font-weight: $fontWeightLeadBold;
+  color: $colorDarkGrey;
+}
+
+
+$fontSizeParagraph: 16px;
+$fontWeightParagraph: 300;
+$lineHeightParagraph: 22px;
+@mixin font-paragraph() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeParagraph;
+  line-height: $lineHeightParagraph;
+  font-weight: $fontWeightParagraph;
+  color: $colorDarkGrey;
+}
+
+
+$fontSizeParagraphBold: $fontSizeParagraph;
+$fontWeightParagraphBold: bold;
+$lineHeightParagraphBold: $lineHeightParagraph;
+@mixin font-paragraph-bold() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeParagraphBold;
+  line-height: $lineHeightParagraphBold;
+  font-weight: $fontWeightParagraphBold;
+  color: $colorDarkGrey;
+}
+
+
+$fontSizeParagraphSmall: 14px;
+$fontWeightParagraphSmall: 300;
+$lineHeightParagraphSmall: 20px;
+@mixin font-paragraph-small() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeParagraphSmall;
+  line-height: $lineHeightParagraphSmall;
+  font-weight: $fontWeightParagraphSmall;
+  color: $colorDarkGrey;
+}
+
+
+$fontSizeParagraphSmallBold: $fontSizeParagraphSmall;
+$fontWeightParagraphSmallBold: bold;
+$lineHeightParagraphSmallBold: $lineHeightParagraphSmall;
+@mixin font-paragraph-small-bold() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeParagraphSmallBold;
+  line-height: $lineHeightParagraphSmallBold;
+  font-weight: $fontWeightParagraphSmallBold;
+  color: $colorDarkGrey;
+}
+
+
+$fontSizeTabs: 13px;
+$fontWeightTabs: 300;
+$lineHeightTabs: 17px;
+@mixin font-tabs() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeTabs;
+  line-height: $lineHeightTabs;
+  font-weight: $fontWeightTabs;
+  color: $colorMediumGrey;
+
+  &:hover {
+    color: $colorDarkGrey;
+  }
+}
+
+$fontSizeTabsBold: $fontSizeTabs;
+$fontWeightTabsBold: bold;
+$lineHeightTabsBold: $lineHeightTabs;
+@mixin font-tabs-bold() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeTabsBold;
+  line-height: $lineHeightTabsBold;
+  font-weight: $fontWeightTabsBold;
+  color: $colorDarkGrey;
+}
+
+$fontSizeParagraphXs: 11px;
+$fontWeightParagraphXs: 400;
+$lineHeightParagraphXs: 15px;
+@mixin font-paragraph-xs() {
+  font-family: $fontFamilyUbuntu;
+  font-size: $fontSizeParagraphXs;
+  line-height: $lineHeightParagraphXs;
+  font-weight: $fontWeightParagraphXs;
+  color: $colorDarkGrey;
+}

@@ -11,8 +11,8 @@
 
   dt {
     position: relative;
-    font-size: 18px;
-    font-weight: 300;
+    font-size: $fontSizeLead;
+    font-weight: $fontWeightLead;
     line-height: 20px;
     color: $colorDarkGrey;
     border-top: 1px solid $colorBrightGrey;
@@ -62,13 +62,12 @@
   }
 
   dd {
+    @include font-paragraph-small;
     position: relative;
     display: none;
     padding-top: 2px;
     padding-bottom: 65px;
 
-    font-size: 13px;
-    line-height: 20px;
     color: $colorMediumGrey;
     vertical-align: middle;
 

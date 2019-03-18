@@ -11,7 +11,7 @@
   ul.k-list {
     li {
       background-color: $colorWhite;
-      font-size: 15px;
+      font-size: $fontSizeParagraph;
       line-height: 30px;
       color: $colorDarkGrey;
       cursor: pointer;
@@ -27,7 +27,7 @@
 
   .k-nodata {
     padding: 0 14px;
-    font-size: 15px;
+    font-size: $fontSizeParagraph;
     line-height: 30px;
     color: $colorDarkGrey;
   }

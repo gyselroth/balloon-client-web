@@ -11,7 +11,7 @@
   #fs-upload-progress-info {
     @include shadow-default;
 
-    $width: 260px;
+    $width: 285px;
 
     position: absolute;
     bottom: 16px;
@@ -27,8 +27,6 @@
 
     & > div {
       display: inline-block;
-      font-size: 13px;
-      color: $colorDarkGrey;
       margin-right: 8px;
 
       &:after {

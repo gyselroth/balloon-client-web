@@ -11,8 +11,8 @@
       width: auto;
       height: 17px;
       line-height: 17px;
-      font-family: Ubuntu;
-      font-size: 15px;
+      font-size: $fontSizeParagraph;
+      font-weight: $fontWeightParagraph;
       letter-spacing: 0.3px;
       text-align: left;
       vertical-align: baseline;
@@ -36,8 +36,7 @@
         width: auto;
         height: 27px;
         line-height: 27px;
-        font-family: Ubuntu;
-        font-size: 15px;
+        font-size: $fontSizeParagraph;
         font-weight: 500;
         letter-spacing: 0.4px;
         text-align: left;
@@ -55,9 +54,9 @@
         display: inline-block;
 
         &:last-child {
+          @include font-headline;
           height: 27px;
           line-height: 27px;
-          font-size: 24px;
         }
       }
     }

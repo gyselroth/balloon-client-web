@@ -22,8 +22,8 @@
     width: 100%;
 
     li {
+      @include font-tabs;
 
-      color: $colorMediumGrey;
       width: 100%;
       position: relative;
       cursor: pointer;
@@ -46,10 +46,6 @@
         background-color: $colorBrightGrey;
       }
 
-      &:hover {
-        color: $colorDarkGrey;
-      }
-
       .fs-menu-left-icon {
         @include icon-button(60px, 60px);
 
@@ -64,16 +60,16 @@
           span {
             display: inline-block;
             vertical-align: middle;
-            font-size: 13px;
-            line-height: 17px;
+            line-height: $lineHeightTabs;
             text-transform: uppercase;
           }
         }
       }
 
       &.fs-menu-left-active {
+        @include font-tabs-bold;
+
         border-left: 4px solid $colorActiveBlue;
-        color: $colorDarkGrey;
 
         .fs-menu-left-icon {
           width: 56px;
@@ -84,7 +80,6 @@
 
           & + div {
             left: 56px;
-            font-weight: 700;
           }
         }
       }

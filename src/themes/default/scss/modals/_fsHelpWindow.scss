@@ -23,9 +23,9 @@ $sidePadding: 60px;
         border-radius: 4px;
         padding: 8px;
         margin-bottom: 10px;
-        font-size: 15px;
-        line-height: 17px;
-        font-weight: 300;
+        font-size: $fontSizeParagraph;
+        font-weight: $fontWeightParagraph;
+        line-height: $lineHeightParagraph;
         color: $colorDarkGrey;
 
         &:last-child {
