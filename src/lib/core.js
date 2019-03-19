@@ -2004,15 +2004,15 @@ var balloon = {
   displayUserProfile: function() {
     balloon.resetDom('user-profile');
 
-    $('#fs-profile-window dl dt').not('.disabled').off('click').on('click', function(event) {
-      var view = $(this).attr('id').substr(24);
-      balloon._userProfileNavigateTo(view);
-    });
-
     //change password should only be possible for internal users
     var mayChangePassword = (login.user && login.user.auth === 'internal');
     $('#fs-profile-window-title-change-password').toggleClass('disabled', !mayChangePassword);
     $('#fs-profile-window-change-password').toggleClass('disabled', !mayChangePassword);
+
+    $('#fs-profile-window dl dt').not('.disabled').off('click').on('click', function(event) {
+      var view = $(this).attr('id').substr(24);
+      balloon._userProfileNavigateTo(view);
+    });
 
     balloon._userProfileNavigateTo('overview');
 
@@ -2167,6 +2167,8 @@ var balloon = {
     var $inputRepeatPw = $view.find('input[name="password_repeat"]').val('');
     var $inputPw = $view.find('input[name="password"]').val('');
 
+    $('#fs-profile-window-change-password-buttons').show();
+    $('#fs-profile-window-change-password-form').show();
     $('#fs-profile-window-change-password-success').hide();
     $view.find('input').removeClass('error-input');
     $inputPw.focus();
