@@ -272,9 +272,6 @@ var login = {
   updateFsIdentity: function() {
     $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
 
-    //change password should only be active for internal users
-    $('#fs-menu-user-change-password').toggle((login.user && login.user.auth === 'internal'));
-
     return balloon.displayAvatar($('#fs-identity-avatar'));
   },
 
@@ -431,7 +428,6 @@ var login = {
 
       case 200:
         login.adapter = 'oidc';
-        console.log(response);
         login.token = response.responseJSON.access_token;
         login.fetchIdentity();
         login.initBrowser();

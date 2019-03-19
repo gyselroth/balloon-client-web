@@ -7,7 +7,6 @@
     "logout": "Logout",
     "code": "Code",
     "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
-    "change-password": "Change password",
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
@@ -26,6 +25,10 @@
     "quota_used": "Used Storage",
     "quota_unlimited": "Unlimited",
     "user": "User",
+    "nav": {
+      "overview": "Overview",
+      "change-password": "Change password"
+    },
     "attribute": {
       "id": "User Id",
       "created": "Created",
@@ -274,7 +277,8 @@
     },
     "change-password": {
       "password": "Password",
-      "password-repeat": "Repeat password"
+      "password-repeat": "Repeat password",
+      "success": "The password has been changed"
     }
   },
   "error": {

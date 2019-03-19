@@ -7,7 +7,6 @@
     "logout": "Logout",
     "code": "Code",
     "multi_factor_auth": "Dieses Konto ist mit multi factor authentication geschützt. Bitte gib den Code vom google authenticator ein:",
-    "change-password": "Passwort ändern",
     "events": "Events",
     "profile": "Profil",
     "settings": "Einstellungen",
@@ -26,6 +25,10 @@
     "quota_used": "Benutzter Speicherplatz",
     "quota_unlimited": "Unlimitiert",
     "user": "Benutzer",
+    "nav": {
+      "overview": "Übersicht",
+      "change-password": "Passwort ändern"
+    },
     "attribute": {
       "id": "Benutzer-ID",
       "created": "Erstellt",
@@ -275,7 +278,8 @@
     },
     "change-password": {
       "password": "Passwort",
-      "password-repeat": "Passwort wiederholen"
+      "password-repeat": "Passwort wiederholen",
+      "success": "Das Passwort wurde geändert"
     }
   },
   "error": {

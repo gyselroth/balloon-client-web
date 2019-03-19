@@ -33,6 +33,10 @@ $sidePadding: 50px;
   $lineHeight: 30px;
   display: none;
 
+  dl {
+    @include accordion;
+  }
+
   #fs-profile-window-quota {
     position: relative;
     margin-bottom: 50px;
@@ -129,6 +133,20 @@ $sidePadding: 50px;
         padding-left: 80px;
         color: $colorDarkGrey;
         width: 346px;
+      }
+    }
+  }
+
+  #fs-profile-window-change-password {
+    .fs-window-form {
+      $labelWidth: 150px;
+
+      label {
+        width: $labelWidth;
+      }
+
+      input[type='password'] {
+        width: calc(100% - #{$labelWidth + 15px});
       }
     }
   }

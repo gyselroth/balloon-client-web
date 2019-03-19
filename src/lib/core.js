@@ -1954,26 +1954,229 @@ var balloon = {
   },
 
   /**
-   * Display change püassword modal
+   * Calls api to change password for current user
    *
    * @return void
    */
-  displayChangePassword: function() {
-    var formValid = false;
-    var $fs_win = $('#fs-change-password-window');
-    var $btnSave = $fs_win.find('input[name="save"]').attr('disabled', true);;
-    var $btnCancel = $fs_win.find('input[name="cancel"]');
-    var $inputRepeatPw = $fs_win.find('input[name="password_repeat"]').val('');
-    var $inputPw = $fs_win.find('input[name="password"]').val('');
+  _changePassword(password) {
+    var data = {
+      password: password
+    };
 
-    $fs_win.find('input').removeClass('error-input');
+    return balloon.xmlHttpRequest({
+      url: balloon.base+'/users/' + login.user.id,
+      type: 'PATCH',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      success: function(body) {
+        if(login.getAdapter() === 'basic') {
+          login.doBasicAuth(login.user.username, password);
+        }
+      }
+    });
+  },
+
+  displayAvatar: function($avatar, userId) {
+    $avatar.css('background-image', '').removeClass('has-avatar');
+
+    var endpoint = userId !== undefined ? '/users/' + userId + '/avatar' : '/users/avatar';
+
+    balloon.xmlHttpRequest({
+      url: balloon.base+endpoint,
+      type: 'GET',
+      mimeType: "text/plain; charset=x-user-defined",
+      cache: false,
+      success: function(body) {
+        $avatar.addClass('has-avatar').css('background-image', 'url(data:image/jpeg;base64,'+balloon.base64Encode(body)+')');
+      },
+      error: function() {
+        $avatar.css('background-image', '').removeClass('has-avatar');
+      }
+    });;
+  },
+
+  /**
+   * Display user profile
+   *
+   * @return void
+   */
+  displayUserProfile: function() {
+    balloon.resetDom('user-profile');
+
+    $('#fs-profile-window dl dt').not('.disabled').off('click').on('click', function(event) {
+      var view = $(this).attr('id').substr(24);
+      balloon._userProfileNavigateTo(view);
+    });
+
+    //change password should only be possible for internal users
+    var mayChangePassword = (login.user && login.user.auth === 'internal');
+    $('#fs-profile-window-title-change-password').toggleClass('disabled', !mayChangePassword);
+    $('#fs-profile-window-change-password').toggleClass('disabled', !mayChangePassword);
+
+    balloon._userProfileNavigateTo('overview');
+
+    var $fs_profile_win = $('#fs-profile-window');
+    $fs_profile_win.kendoBalloonWindow({
+      title: $fs_profile_win.attr('title'),
+      resizable: false,
+      modal: true,
+      open: function() {
+
+      }
+    }).data("kendoBalloonWindow").center().open();
+  },
+
+  /**
+   * Navigates to a given view in the profile window
+   *
+   * @param   string view
+   * @return  void
+   */
+  _userProfileNavigateTo(view) {
+    $('#fs-profile-window dl > *').removeClass('active');
+
+    $('#fs-profile-window-title-'+view).addClass('active');
+    $('#fs-profile-window-'+view).addClass('active');
+
+    switch(view) {
+    case 'overview':
+      balloon._displayUserProfileOverview();
+      break;
+    case 'change-password':
+      balloon._displayUserProfileChangePassword();
+      break;
+    }
+
+  },
+
+  /**
+   * Displays the profile overview
+   *
+   * @return  void
+   */
+  _displayUserProfileOverview: function() {
+    $('#fs-profile-user').find('tr').remove();
+    balloon.displayAvatar($('#fs-profile-avatar'));
+
+    balloon.xmlHttpRequest({
+      url: balloon.base+'/users/whoami',
+      type: 'GET',
+      success: function(body) {
+        // Quota
+        var used = balloon.getReadableFileSizeString(body.used);
+        var max;
+        var free;
+        var percentage;
+        var percentageText;
+
+        if(body.hard_quota === -1) {
+          max = i18next.t('profile.quota_unlimited');
+          free = max;
+          percentage = 0;
+          percentageText = max;
+        } else {
+          percentage = Math.round(body.used/body.hard_quota*100);
+          percentageText = percentage + '%';
+
+          max  = balloon.getReadableFileSizeString(body.hard_quota),
+          free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
+        }
+
+        var $fs_quota = $('#fs-quota-circle');
+        $fs_quota.find('.css-fallback').removeClass(function(index, className) {
+          return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
+        }).addClass('chart-'+percentage);
+        $fs_quota.find('.percent-text').text(percentageText);
+        $fs_quota.find('.chart').removeClass(function(index, className) {
+          return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
+        }).addClass('chart-'+percentage);
+
+
+        $('#fs-profile-quota-used').find('td').html(used);
+        $('#fs-profile-quota-max').find('td').html(max);
+        $('#fs-profile-quota-left').find('td').html(free);
+
+
+        // User attributes
+        var $table = $('#fs-profile-user').find('table');
+        var attributes = ['id', 'username', 'created'];
+        for(var i=0; i<attributes.length; i++) {
+          var attribute = attributes[i];
+          var value = body[attribute];
+
+          switch(attribute) {
+          case 'created':
+          case 'last_attr_sync':
+            var date   = new Date(value),
+              format = kendo.toString(date, kendo.culture().calendar.patterns.g),
+              since  = balloon.timeSince(date);
+
+            $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
+            break;
+          case 'hard_quota':
+          case 'soft_quota':
+          case 'available':
+            break;
+
+          case 'used':
+            var used = balloon.getReadableFileSizeString(body.used);
+            var max;
+            var free;
+
+            if(body.hard_quota === -1) {
+              $fs_quota_usage.hide();
+              max = i18next.t('profile.quota_unlimited');
+              free = max;
+            } else {
+              var percentage = Math.round(body.used/body.hard_quota*100);
+              $k_progress.value(percentage);
+
+              if(percentage >= 90) {
+                $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+              } else {
+                $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+              }
+
+              max  = balloon.getReadableFileSizeString(body.hard_quota),
+              free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
+            }
+
+            $('#fs-profile-quota-used').find('td').html(used);
+            $('#fs-profile-quota-max').find('td').html(max);
+            $('#fs-profile-quota-left').find('td').html(free);
+            break;
+          default:
+            $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+value+'</td></tr>')
+            break;
+          }
+        }
+      }
+    });
+  },
+
+  /**
+   * Displays the change password screen
+   *
+   * @return  void
+   */
+  _displayUserProfileChangePassword: function() {
+    var formValid = false;
+    var $view = $('#fs-profile-window-change-password');
+    var $btnSave = $view.find('input[name="save"]').attr('disabled', true);;
+    var $inputRepeatPw = $view.find('input[name="password_repeat"]').val('');
+    var $inputPw = $view.find('input[name="password"]').val('');
+
+    $('#fs-profile-window-change-password-success').hide();
+    $view.find('input').removeClass('error-input');
+    $inputPw.focus();
 
     var fieldsValid = {
       password: false,
       password_repeat: false,
     };
 
-    $fs_win.find('input[type="password"]').off('keyup blur').on('keyup blur', function(event) {
+    $view.find('input[type="password"]').off('keyup blur').on('keyup blur', function(event) {
       var $this = $(this);
       var fieldName = $this.attr('name');
 
@@ -2012,179 +2215,12 @@ var balloon = {
 
       var password = $inputPw.val();
       balloon._changePassword(password).then(function() {
-        $fs_win.data('kendoBalloonWindow').close();
+        $('#fs-profile-window-change-password-buttons').hide();
+        $('#fs-profile-window-change-password-form').hide();
+        $('#fs-profile-window-change-password-success').show();
       });
     });
-
-    $btnCancel.off('click').on('click', function(){
-      $fs_win.data('kendoBalloonWindow').close();
-    });
-
-    $fs_win.kendoBalloonWindow({
-      title: $fs_win.attr('title'),
-      resizable: false,
-      modal: true,
-      activate: function() {
-        $inputPw.focus();
-      }
-    }).data('kendoBalloonWindow').center().open();
   },
-
-  /**
-   * Calls api to change password for current user
-   *
-   * @return void
-   */
-  _changePassword(password) {
-    var data = {
-      password: password
-    };
-
-    return balloon.xmlHttpRequest({
-      url: balloon.base+'/users/',
-      type: 'PATCH',
-      dataType: 'json',
-      contentType: 'application/json',
-      data: JSON.stringify(data),
-      success: function(body) {
-        login.doBasicAuth(login.user.username, password);
-      }
-    });
-  },
-
-  displayAvatar: function($avatar, userId) {
-    $avatar.css('background-image', '').removeClass('has-avatar');
-
-    var endpoint = userId !== undefined ? '/users/' + userId + '/avatar' : '/users/avatar';
-
-    balloon.xmlHttpRequest({
-      url: balloon.base+endpoint,
-      type: 'GET',
-      mimeType: "text/plain; charset=x-user-defined",
-      cache: false,
-      success: function(body) {
-        $avatar.addClass('has-avatar').css('background-image', 'url(data:image/jpeg;base64,'+balloon.base64Encode(body)+')');
-      },
-      error: function() {
-        $avatar.css('background-image', '').removeClass('has-avatar');
-      }
-    });;
-  },
-
-  /**
-   * Display user profile
-   *
-   * @return void
-   */
-  displayUserProfile: function() {
-    balloon.resetDom('user-profile');
-
-    var $fs_profile_win = $('#fs-profile-window');
-    $fs_profile_win.kendoBalloonWindow({
-      title: $fs_profile_win.attr('title'),
-      resizable: false,
-      modal: true,
-      open: function() {
-        balloon.displayAvatar($('#fs-profile-avatar'));
-
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/users/whoami',
-          type: 'GET',
-          success: function(body) {
-            // Quota
-            var used = balloon.getReadableFileSizeString(body.used);
-            var max;
-            var free;
-            var percentage;
-            var percentageText;
-
-            if(body.hard_quota === -1) {
-              max = i18next.t('profile.quota_unlimited');
-              free = max;
-              percentage = 0;
-              percentageText = max;
-            } else {
-              percentage = Math.round(body.used/body.hard_quota*100);
-              percentageText = percentage + '%';
-
-              max  = balloon.getReadableFileSizeString(body.hard_quota),
-              free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
-            }
-
-            var $fs_quota = $('#fs-quota-circle');
-            $fs_quota.find('.css-fallback').removeClass(function(index, className) {
-              return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
-            }).addClass('chart-'+percentage);
-            $fs_quota.find('.percent-text').text(percentageText);
-            $fs_quota.find('.chart').removeClass(function(index, className) {
-              return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
-            }).addClass('chart-'+percentage);
-
-
-            $('#fs-profile-quota-used').find('td').html(used);
-            $('#fs-profile-quota-max').find('td').html(max);
-            $('#fs-profile-quota-left').find('td').html(free);
-
-
-            // User attributes
-            var $table = $('#fs-profile-user').find('table');
-            var attributes = ['id', 'username', 'created'];
-            for(var i=0; i<attributes.length; i++) {
-              var attribute = attributes[i];
-              var value = body[attribute];
-
-              switch(attribute) {
-              case 'created':
-              case 'last_attr_sync':
-                var date   = new Date(value),
-                  format = kendo.toString(date, kendo.culture().calendar.patterns.g),
-                  since  = balloon.timeSince(date);
-
-                $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
-                break;
-              case 'hard_quota':
-              case 'soft_quota':
-              case 'available':
-                break;
-
-              case 'used':
-                var used = balloon.getReadableFileSizeString(body.used);
-                var max;
-                var free;
-
-                if(body.hard_quota === -1) {
-                  $fs_quota_usage.hide();
-                  max = i18next.t('profile.quota_unlimited');
-                  free = max;
-                } else {
-                  var percentage = Math.round(body.used/body.hard_quota*100);
-                  $k_progress.value(percentage);
-
-                  if(percentage >= 90) {
-                    $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
-                  } else {
-                    $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
-                  }
-
-                  max  = balloon.getReadableFileSizeString(body.hard_quota),
-                  free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
-                }
-
-                $('#fs-profile-quota-used').find('td').html(used);
-                $('#fs-profile-quota-max').find('td').html(max);
-                $('#fs-profile-quota-left').find('td').html(free);
-              break;
-              default:
-                $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+value+'</td></tr>')
-                break;
-              }
-            }
-          }
-        });
-      }
-    }).data("kendoBalloonWindow").center().open();
-  },
-
 
   /**
    * Get and display event log
@@ -2638,10 +2674,6 @@ var balloon = {
 
     case 'profile':
       balloon.displayUserProfile();
-      break;
-
-    case 'change-password':
-      balloon.displayChangePassword();
       break;
 
     case 'logout':
@@ -8128,6 +8160,7 @@ var balloon = {
 
       case 'user-profile':
         $('#fs-profile-user').find('tr').remove();
+        $('#fs-profile-window dl > *').removeClass('active');
         balloon.resetWindow('fs-profile-window');
         break;
 
