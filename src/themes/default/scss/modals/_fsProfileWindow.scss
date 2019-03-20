@@ -150,6 +150,36 @@ $sidePadding: 50px;
       }
     }
   }
+
+  #fs-profile-window-google-authenticator {
+    @include clearfix;
+
+    p {
+      margin-bottom: 20px;
+
+      a {
+        color: $colorActiveBlue;
+
+        &:hover {
+          text-decoration: underline;
+          color: $colorHoverBlue;
+        }
+      }
+    }
+
+    #fs-profile-window-google-authenticator-buttons {
+      float: left;
+      width: calc(100%-200px);
+    }
+
+    #fs-profile-window-google-authenticator-code {
+      float: right;
+      width: 200px;
+      height: 200px;
+    }
+
+
+  }
 }
 
 @media only screen and (max-width: $breakpointWindowFullscreen) {

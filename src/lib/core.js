@@ -6,6 +6,7 @@
  */
 
 import $ from "jquery";
+import {qrcode, modes, ecLevel} from 'qrcode.es';
 import kendoAutoComplete from 'kendo-ui-core/js/kendo.autocomplete.js';
 import kendoProgressBar from 'kendo-ui-core/js/kendo.progressbar.js';
 import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
@@ -2009,6 +2010,10 @@ var balloon = {
     $('#fs-profile-window-title-change-password').toggleClass('disabled', !mayChangePassword);
     $('#fs-profile-window-change-password').toggleClass('disabled', !mayChangePassword);
 
+    var mayActivate2FA = (login.getAdapter() !== 'basic' && login.user && login.user.auth === 'internal');
+    $('#fs-profile-window-title-google-authenticator').toggleClass('disabled', !mayActivate2FA);
+    $('#fs-profile-window-change-google-authenticator').toggleClass('disabled', !mayActivate2FA);
+
     $('#fs-profile-window dl dt').not('.disabled').off('click').on('click', function(event) {
       var view = $(this).attr('id').substr(24);
       balloon._userProfileNavigateTo(view);
@@ -2033,7 +2038,7 @@ var balloon = {
    * @param   string view
    * @return  void
    */
-  _userProfileNavigateTo(view) {
+  _userProfileNavigateTo: function(view) {
     $('#fs-profile-window dl > *').removeClass('active');
 
     $('#fs-profile-window-title-'+view).addClass('active');
@@ -2045,6 +2050,9 @@ var balloon = {
       break;
     case 'change-password':
       balloon._displayUserProfileChangePassword();
+      break;
+    case 'google-authenticator':
+      balloon._displayUserProfileGoogleAuthenticator();
       break;
     }
 
@@ -2222,6 +2230,105 @@ var balloon = {
         $('#fs-profile-window-change-password-success').show();
       });
     });
+  },
+
+  /**
+   * Displays the google authenticator screen
+   *
+   * @return  void
+   */
+  _displayUserProfileGoogleAuthenticator: function() {
+    var $view = $('#fs-profile-window-google-authenticator');
+    var $buttons = $view.find('#fs-profile-window-google-authenticator-buttons');
+    var $code = $view.find('#fs-profile-window-google-authenticator-code');
+    var $hintInactive = $view.find('#fs-profile-window-google-authenticator-hint-incative').hide();
+    var $hintActive = $view.find('#fs-profile-window-google-authenticator-hint-active').hide();
+    var $btnActivate = $buttons.find('input[name="activate"]').hide();
+    var $btnDeactivate = $buttons.find('input[name="deactivate"]').hide();
+
+    $code.find('canvas').remove();
+
+    if(login.user.multi_factor_auth === false) {
+      $btnActivate.show();
+      $hintInactive.show();
+    } else {
+      $btnDeactivate.show();
+      $hintActive.show();
+    }
+
+    $btnActivate.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      var msg  = i18next.t('profile.google-authenticator.confirm.activate');
+
+      balloon.promptConfirm(msg, function() {
+        var data = {
+          multi_factor_auth: true
+        };
+
+        $btnActivate.hide();
+
+        balloon.xmlHttpRequest({
+          url: balloon.base+'/users/' + login.user.id,
+          type: 'PATCH',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function(body) {
+            var qrCodeSetting = {
+              size: 200,
+              ecLevel: ecLevel.QUARTILE,
+              minVersion: 8,
+              background: '#fff',
+              fill: '#39a5ff',
+              mode: modes.NORMAL,
+              radius: 0,
+              mSize: 0.15,
+            };
+
+            login.user.multi_factor_auth = true;
+
+            var qrCode = new qrcode($code[0]);
+            qrCode.generate(body.multi_factor_uri, qrCodeSetting);
+
+            $btnDeactivate.show();
+          }
+        });
+      });
+    });
+
+    $btnDeactivate.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      var msg  = i18next.t('profile.google-authenticator.confirm.deactivate');
+
+      balloon.promptConfirm(msg, function() {
+        var data = {
+          multi_factor_auth: false
+        };
+
+        $btnDeactivate.hide();
+        $code.find('canvas').remove();
+
+        balloon.xmlHttpRequest({
+          url: balloon.base+'/users/' + login.user.id,
+          type: 'PATCH',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function(body) {
+            $btnActivate.show();
+            $hintActive.hide();
+            $hintInactive.show();
+
+            login.user.multi_factor_auth = false;
+          }
+        });
+      });
+    });
+
+
+
   },
 
   /**

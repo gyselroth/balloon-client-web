@@ -27,7 +27,8 @@
     "user": "Benutzer",
     "nav": {
       "overview": "Übersicht",
-      "change-password": "Passwort ändern"
+      "change-password": "Passwort ändern",
+      "google-authenticator": "Zweifaktor Authentifizierung"
     },
     "attribute": {
       "id": "Benutzer-ID",
@@ -35,6 +36,18 @@
       "username": "Benutzername",
       "name": "Name",
       "mail": "E-Mail"
+    },
+    "google-authenticator": {
+      "activate": "Aktivieren",
+      "deactivate": "Deaktivieren",
+      "confirm": {
+        "activate": "Bist Du sicher, dass Du Zweifaktor Authentifizierung aktivieren willst?",
+        "deactivate": "Bist Du sicher, dass Du Zweifaktor Authentifizierung deaktivieren willst?"
+      },
+      "hint": {
+        "inactive": "Um Zweifaktor Authentifizierung nutzen zu können benötigst Du die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a> auf Deinem Smartphone. Nach dem Aktivieren wird Dir auf der rechten Seite einmalig ein QR Code angezeigt, welchen Du mit der App scannen musst.",
+        "active": "Zweifaktor Authentifizierung ist aktiv."
+      }
     }
   },
   "nav": {
