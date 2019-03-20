@@ -280,7 +280,7 @@ var login = {
   },
 
   xmlHttpRequest: function(options) {
-    if(login.token) {
+    if(login.token && !options.disableToken) {
       if(options.headers) {
         options.headers["Authorization"] = 'Bearer '+login.token;
       } else {

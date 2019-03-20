@@ -291,6 +291,7 @@
     "change-password": {
       "password": "Password",
       "password-repeat": "Repeat password",
+      "password-old": "Current password",
       "success": "The password has been changed"
     }
   },

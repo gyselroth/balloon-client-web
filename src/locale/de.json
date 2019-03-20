@@ -292,6 +292,7 @@
     "change-password": {
       "password": "Passwort",
       "password-repeat": "Passwort wiederholen",
+      "password-old": "Bisheriges Passwort",
       "success": "Das Passwort wurde geändert"
     }
   },

@@ -1957,14 +1957,16 @@ var balloon = {
   /**
    * Calls api to change password for current user
    *
+   * @param string password
+   * @param string oldPassword
    * @return void
    */
-  _changePassword(password) {
+  _changePassword(password, oldPassword) {
     var data = {
       password: password
     };
 
-    return balloon.xmlHttpRequest({
+    var options = {
       url: balloon.base+'/users/' + login.user.id,
       type: 'PATCH',
       dataType: 'json',
@@ -1975,7 +1977,15 @@ var balloon = {
           login.doBasicAuth(login.user.username, password);
         }
       }
-    });
+    };
+
+    if(login.getAdapter() !== 'basic') {
+      options.password = oldPassword;
+      options.username = login.user.username;
+      options.disableToken = true;
+    }
+
+    return balloon.xmlHttpRequest(options);
   },
 
   displayAvatar: function($avatar, userId) {
@@ -2174,6 +2184,9 @@ var balloon = {
     var $btnSave = $view.find('input[name="save"]').attr('disabled', true);;
     var $inputRepeatPw = $view.find('input[name="password_repeat"]').val('');
     var $inputPw = $view.find('input[name="password"]').val('');
+    var $inputPwOld = $view.find('input[name="password_old"]').val('');
+
+    $view.find('#fs-profile-window-change-password-form-password-old-wrap').toggle(login.getAdapter() !== 'basic');
 
     $('#fs-profile-window-change-password-buttons').show();
     $('#fs-profile-window-change-password-form').show();
@@ -2184,7 +2197,12 @@ var balloon = {
     var fieldsValid = {
       password: false,
       password_repeat: false,
+      password_old: false,
     };
+
+    if(login.getAdapter() === 'basic') {
+      fieldsValid['password_old'] = true;
+    }
 
     $view.find('input[type="password"]').off('keyup blur').on('keyup blur', function(event) {
       var $this = $(this);
@@ -2204,8 +2222,12 @@ var balloon = {
         fieldsValid[fieldName] = false;
       } else {
         fieldsValid[fieldName] = true;
+        $inputRepeatPw.removeClass('error-input');
 
-        if($inputRepeatPw.val() !== '' && $inputPw.val()!== '' && $inputRepeatPw.val() !== $inputPw.val()) {
+        if(
+          fieldName !== 'password_old' && $inputRepeatPw.val() !== ''
+          && $inputPw.val()!== '' && $inputRepeatPw.val() !== $inputPw.val()
+        ) {
           fieldsValid['password_repeat'] = false;
           $inputRepeatPw.addClass('error-input');
         }
@@ -2224,7 +2246,9 @@ var balloon = {
       event.preventDefault();
 
       var password = $inputPw.val();
-      balloon._changePassword(password).then(function() {
+      var oldPassword = $inputPwOld.val();
+
+      balloon._changePassword(password, oldPassword).then(function() {
         $('#fs-profile-window-change-password-buttons').hide();
         $('#fs-profile-window-change-password-form').hide();
         $('#fs-profile-window-change-password-success').show();
