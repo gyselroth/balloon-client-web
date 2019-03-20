@@ -340,7 +340,7 @@ var login = {
 
     $password_input.val('');
 
-    if(this.credentials === 'basic') {
+    if(login.credentials === 'basic') {
       return login.doBasicAuth(username, password);
     }
 
