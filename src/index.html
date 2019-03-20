@@ -114,10 +114,16 @@
             </div>
             <div id="login-server-error" class="error-message" data-i18n="login.error.server"></div>
             <div id="login-body">
-               <div id="login-basic-error" class="error-message" data-i18n="login.error.basic"></div>
+               <div id="login-credentials-error" class="error-message" data-i18n="login.error.credentials"></div>
+               <div id="login-code-error" class="error-message" data-i18n="login.error.code"></div>
                <div id="login-basic">
                   <input type="text" name="username" autocomplete="off" data-i18n="[placeholder]login.username"/>
                   <input type="password" name="password" autocomplete="off" data-i18n="[placeholder]login.password"/>
+
+                  <div id="login-mfa">
+                      <p data-i18n="login.multi_factor_auth"></p>
+                      <input type="text" name="code" autocomplete="off" data-i18n="[placeholder]login.code"/>
+                  </div>
                   <div class="login-select">
                       <select id="login-locale"></select>
                       <svg class="gr-icon gr-i-expand"><use xlink:href="<%= iconsSvg %>#expand"></use></svg>
@@ -191,7 +197,6 @@
                             <ul>
                                 <li id="fs-menu-user-profile" data-i18n="login.profile;[title]login.profile"></li>
                                 <li id="fs-menu-user-events" data-i18n="login.events;[title]login.events"></li>
-                                <li id="fs-menu-user-change-password" data-i18n="login.change-password;[title]login.change-password"></li>
                                 <li id="fs-menu-user-logout" data-i18n="login.logout;[title]login.logout"></li>
                             </ul>
                         </div>
@@ -576,68 +581,101 @@
             </div>
         </div>
 
-        <div id="fs-change-password-window" data-i18n="[title]login.change-password">
-            <div id="fs-change-password-window-content">
-                <form name="change-password" class="fs-window-form" action="#">
-                    <label for="fs-change-password-window-password" data-i18n="view.change-password.password"></label>
-                    <input type="password" id="fs-change-password-window-password" name="password" />
-
-                    <label for="fs-change-password-window-password-repeat" data-i18n="view.change-password.password-repeat"></label>
-                    <input type="password" id="fs-change-password-window-password-repeat" name="password_repeat" />
-                </form>
-            </div>
-            <div id="fs-change-password-window-button-wrapper" class="fs-window-secondary-actions">
-                <input type="button" tabindex="2" name="cancel" data-i18n="[value]button.cancel"/>
-                <input type="button" tabindex="1" name="save" class="fs-button-primary" data-i18n="[value]button.save"/>
-            </div>
-        </div>
-
         <div id="fs-profile-window" data-i18n="[title]login.profile">
-            <div id="fs-profile-window-quota">
-                <div id="fs-quota-circle" class="percent-circle">
-                    <div class="css-fallback chart-0">
-                        <span class="percent-text">0%</span>
-                        <div class="slice">
-                            <div class="bar"></div>
-                            <div class="fill"></div>
+            <dl>
+                <dt id="fs-profile-window-title-overview" data-i18n="[title]profile.nav.overview">
+                    <span data-i18n="profile.nav.overview"></span>
+                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-n"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-s"></use></svg>
+                </dt>
+                <dd id="fs-profile-window-overview">
+                    <div id="fs-profile-window-quota">
+                        <div id="fs-quota-circle" class="percent-circle">
+                            <div class="css-fallback chart-0">
+                                <span class="percent-text">0%</span>
+                                <div class="slice">
+                                    <div class="bar"></div>
+                                    <div class="fill"></div>
+                                </div>
+                            </div>
+                            <figure class="chart chart-0 animate">
+                                <svg viewbox="0, 0, 230, 230" role="img" xmlns="http://www.w3.org/2000/svg">
+                                    <circle r="96" cx="50%" cy="50%" class="circle-background"/>
+                                    <circle r="96" cx="50%" cy="50%" class="circle-foreground"/>
+                                </svg>
+                                <figcaption></figcaption>
+                            </figure>
+                        </div>
+
+                        <div id="fs-profile-quota">
+                            <table>
+                                <tr id="fs-profile-quota-max">
+                                    <th data-i18n="profile.quota_max"></th>
+                                    <td></td>
+                                </tr>
+                                <tr id="fs-profile-quota-used">
+                                    <th data-i18n="profile.quota_used"></th>
+                                    <td></td>
+                                </tr>
+                                <tr id="fs-profile-quota-left">
+                                    <th data-i18n="profile.quota_left"></th>
+                                    <td></td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
-                    <figure class="chart chart-0 animate">
-                        <svg viewbox="0, 0, 230, 230" role="img" xmlns="http://www.w3.org/2000/svg">
-                            <circle r="96" cx="50%" cy="50%" class="circle-background"/>
-                            <circle r="96" cx="50%" cy="50%" class="circle-foreground"/>
-                        </svg>
-                        <figcaption></figcaption>
-                    </figure>
-                </div>
 
-                <div id="fs-profile-quota">
-                    <table>
-                        <tr id="fs-profile-quota-max">
-                            <th data-i18n="profile.quota_max"></th>
-                            <td></td>
-                        </tr>
-                        <tr id="fs-profile-quota-used">
-                            <th data-i18n="profile.quota_used"></th>
-                            <td></td>
-                        </tr>
-                        <tr id="fs-profile-quota-left">
-                            <th data-i18n="profile.quota_left"></th>
-                            <td></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+                    <div id="fs-profile-window-user">
+                    <div id="fs-profile-avatar" class="avatar-user"></div>
 
-            <hr class="full-width" />
+                    <div id="fs-profile-user">
+                        <table></table>
+                    </div>
+                </dd>
 
-            <div id="fs-profile-window-user">
-                <div id="fs-profile-avatar" class="avatar-user"></div>
+                <dt id="fs-profile-window-title-change-password" data-i18n="[title]profile.nav.change-password">
+                    <span data-i18n="profile.nav.change-password;[title]login.change-password"></span>
+                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-n"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-s"></use></svg>
+                </dt>
+                <dd id="fs-profile-window-change-password">
+                    <div id="fs-profile-window-change-password-form">
+                        <form name="change-password" class="fs-window-form" action="#">
+                            <label for="fs-profile-window-change-password-form" data-i18n="view.change-password.password"></label>
+                            <input type="password" id="fs-profile-window-change-password-form-password" name="password" />
 
-                <div id="fs-profile-user">
-                    <table></table>
-                </div>
-            </div>
+                            <label for="fs-profile-window-change-password-form-password-repeat" data-i18n="view.change-password.password-repeat"></label>
+                            <input type="password" id="fs-profile-window-change-password-form-password-repeat" name="password_repeat" />
+
+                            <div id="fs-profile-window-change-password-form-password-old-wrap">
+                                <label for="fs-profile-window-change-password-form-password-old" data-i18n="view.change-password.password-old"></label>
+                                <input type="password" id="fs-profile-window-change-password-form-password-old" name="password_old" />
+                            </div>
+                        </form>
+                    </div>
+                    <div id="fs-profile-window-change-password-buttons" class="fs-window-secondary-actions">
+                        <input type="button" tabindex="1" name="save" class="fs-button-primary" data-i18n="[value]button.save"/>
+                    </div>
+                    <div id="fs-profile-window-change-password-success" data-i18n="view.change-password.success"></div>
+                </dd>
+
+                <dt id="fs-profile-window-title-google-authenticator" data-i18n="[title]profile.nav.google-authenticator">
+                    <span data-i18n="profile.nav.google-authenticator"></span>
+                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-n"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-s"></use></svg>
+                </dt>
+                <dd id="fs-profile-window-google-authenticator">
+                    <p id="fs-profile-window-google-authenticator-hint-incative" data-i18n="[html]profile.google-authenticator.hint.inactive"></p>
+                    <p id="fs-profile-window-google-authenticator-hint-active" data-i18n="profile.google-authenticator.hint.active"></p>
+
+                    <div id="fs-profile-window-google-authenticator-buttons">
+                        <input type="button" tabindex="1" name="activate" class="fs-button-primary" data-i18n="[value]profile.google-authenticator.activate" />
+                        <input type="button" tabindex="1" name="deactivate" class="fs-button-primary" data-i18n="[value]profile.google-authenticator.deactivate" />
+                    </div>
+
+                    <div id="fs-profile-window-google-authenticator-code"></div>
+                </dd>
+            </dl>
         </div>
 
         <div id="fs-error-window" data-i18n="[title]error.error">

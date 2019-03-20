@@ -5,6 +5,7 @@
 * [CHANGE] Add hint to share link settings #134
 * [FIX] File does not get uploaded #139
 * [FEATURE] Upload directories by drag and drop #11
+* [FEATURE] Support for two factor auth and token authentication #141
 
 
 ## 3.1.0-alpha1

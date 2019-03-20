@@ -2,8 +2,9 @@
   "localScript": "/path/to/local_script.js",
   "default_lang": "en",
   "auth": {
-    "basic": true,
-    "oidc": [{
+    "credentials": "token",
+    "oidc": [
+      {
       "providerUrl": "https://accounts.google.com",
       "clientId": "myclientid",
       "redirectUri": "https://url-to-my-balloon-server",

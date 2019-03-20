@@ -56,6 +56,14 @@
       }
     }
 
+    #login-mfa {
+      display: none;
+
+      p {
+        margin-bottom: 6px;
+      }
+    }
+
     #login-oidc {
       text-align: center;
 
@@ -79,14 +87,12 @@
     }
   }
 
-  input,
-  textarea {
-    .error,
-    .k-invalid
-     {
-      background-color: #f9ede7 !important;
-      border-color: #ce0e0e !important;
-    }
+  input.error,
+  textarea.error,
+  input.k-invalid,
+  textarea.k-invalid {
+    background-color: #f9ede7 !important;
+    border-color: #ce0e0e !important;
   }
 
   #login-footer {

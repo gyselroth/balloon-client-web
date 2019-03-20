@@ -5,14 +5,16 @@
     "password": "Passwort",
     "login": "Login",
     "logout": "Logout",
-    "change-password": "Passwort ändern",
+    "code": "Code",
+    "multi_factor_auth": "Dieses Konto ist mit multi factor authentication geschützt. Bitte gib den Code vom google authenticator ein:",
     "events": "Events",
     "profile": "Profil",
     "settings": "Einstellungen",
     "help": "Hilfe",
     "error": {
       "server": "Der balloon-Server meldet aktuell eine Störung, bitte versuche es später erneut.",
-      "basic": "Der Benutzername oder das Passwort ist falsch.",
+      "credentials": "Der Benutzername oder das Passwort ist falsch.",
+      "code": "Der Code ist ungültig.",
       "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider."
     }
   },
@@ -23,12 +25,29 @@
     "quota_used": "Benutzter Speicherplatz",
     "quota_unlimited": "Unlimitiert",
     "user": "Benutzer",
+    "nav": {
+      "overview": "Übersicht",
+      "change-password": "Passwort ändern",
+      "google-authenticator": "Zweifaktor Authentifizierung"
+    },
     "attribute": {
       "id": "Benutzer-ID",
       "created": "Erstellt",
       "username": "Benutzername",
       "name": "Name",
       "mail": "E-Mail"
+    },
+    "google-authenticator": {
+      "activate": "Aktivieren",
+      "deactivate": "Deaktivieren",
+      "confirm": {
+        "activate": "Bist Du sicher, dass Du Zweifaktor Authentifizierung aktivieren willst?",
+        "deactivate": "Bist Du sicher, dass Du Zweifaktor Authentifizierung deaktivieren willst?"
+      },
+      "hint": {
+        "inactive": "Um Zweifaktor Authentifizierung nutzen zu können benötigst Du die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a> auf Deinem Smartphone. Nach dem Aktivieren wird Dir auf der rechten Seite einmalig ein QR Code angezeigt, welchen Du mit der App scannen musst.",
+        "active": "Zweifaktor Authentifizierung ist aktiv."
+      }
     }
   },
   "nav": {
@@ -272,7 +291,9 @@
     },
     "change-password": {
       "password": "Passwort",
-      "password-repeat": "Passwort wiederholen"
+      "password-repeat": "Passwort wiederholen",
+      "password-old": "Bisheriges Passwort",
+      "success": "Das Passwort wurde geändert"
     }
   },
   "error": {
