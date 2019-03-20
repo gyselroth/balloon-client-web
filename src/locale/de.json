@@ -28,7 +28,7 @@
     "nav": {
       "overview": "Übersicht",
       "change-password": "Passwort ändern",
-      "google-authenticator": "Zweifaktor Authentifizierung"
+      "google-authenticator": "Multi-Faktor-Authentisierung"
     },
     "attribute": {
       "id": "Benutzer-ID",
@@ -41,12 +41,12 @@
       "activate": "Aktivieren",
       "deactivate": "Deaktivieren",
       "confirm": {
-        "activate": "Bist Du sicher, dass Du Zweifaktor Authentifizierung aktivieren willst?",
-        "deactivate": "Bist Du sicher, dass Du Zweifaktor Authentifizierung deaktivieren willst?"
+        "activate": "Bist du sicher, dass du Multi-Faktor-Authentisierung aktivieren willst? Nach Aktivierung ist der Zugang nur noch mithilfe der Google Authenticator App möglich.",
+        "deactivate": "Bist du sicher, dass du Multi-Faktor-Authentisierung deaktivieren willst?"
       },
       "hint": {
-        "inactive": "Um Zweifaktor Authentifizierung nutzen zu können benötigst Du die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a> auf Deinem Smartphone. Nach dem Aktivieren wird Dir auf der rechten Seite einmalig ein QR Code angezeigt, welchen Du mit der App scannen musst.",
-        "active": "Zweifaktor Authentifizierung ist aktiv."
+        "inactive": "Um Multi-Faktor-Authentisierung nutzen zu können benötigst du ein Smartphone und die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a>. Nach dem Aktivieren wird dir einmalig ein QR Code angezeigt, welchen du mit der App scannen musst. Achtug: Nach Aktivierung von Multi-Faktor-Authentisierung ist der Zugang nur noch mit dieser App möglich.",
+        "active": "Multi-Faktor-Authentisierung ist aktiv."
       }
     }
   },

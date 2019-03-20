@@ -41,12 +41,12 @@
       "activate": "Activate",
       "deactivate": "Deactivate",
       "confirm": {
-        "activate": "Do you really want to activate two factor authentication?",
-        "deactivate": "Do you really want to deactivate two factor authentication?"
+        "activate": "Do you really want to activate multi factor authentication? After the activation the login will only be possible using the google authenticator app.",
+        "deactivate": "Do you really want to deactivate multi factor authentication?"
       },
       "hint": {
-        "inactive": "In order to activate two factor authentication, you need the app <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=en\" target=\"blank\">Google Authenticator</a> on your smartphone. After activating two factor authentication a QR code, which you need to scan with the app, will be displayed on the right side.",
-        "active": "Two factor authentication is active."
+        "inactive": "In order to activate multi factor authentication, you need a smartphone and the app <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=en\" target=\"blank\">Google Authenticator</a>. After activating multi factor authentication a QR code, which you need to scan with the app, will be displayed. Attention, after the activation the login will only be possible using the google authenticator app.",
+        "active": "Multi factor authentication is enabled."
       }
     }
   },

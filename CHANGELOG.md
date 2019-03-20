@@ -1,17 +1,11 @@
 ## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Thu Feb 21 13:40:02 CET 2019
+**Date**: Wed Mar 20 13:40:02 CET 2019
 
 * [CHANGE] Add hint to share link settings #134
 * [FIX] File does not get uploaded #139
 * [FEATURE] Upload directories by drag and drop #11
 * [FEATURE] Support for two factor auth and token authentication #141
-
-
-## 3.1.0-alpha1
-**Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Thu Feb 21 13:40:02 CET 2019
-
 * [CHANGE] Newer notifications should be on top #113
 * [FEATURE] Nice URL's and easy way to share balloon url's #83
 * [FEATURE] gui for special filtered folders #10
