@@ -358,7 +358,7 @@
   }
 }
 
-@mixin accordion {
+@mixin accordion($sidePadding:30px, $highlightActive:true) {
   dt {
     position: relative;
     font-size: $fontSizeLead;
@@ -366,8 +366,8 @@
     line-height: 20px;
     color: $colorDarkGrey;
     border-top: 1px solid $colorBrightGrey;
-    margin: 0 -1*$fsContentSidePadding 0;
-    padding: 16px $fsContentSidePadding 18px;
+    margin: 0 -1*$sidePadding 0;
+    padding: 16px $sidePadding 18px;
     cursor: pointer;
 
     .gr-icon {
@@ -383,15 +383,17 @@
     }
 
     &.active {
-      &:before {
-        content: "";
-        display: block;
-        height: 100%;
-        width: 2px;
-        background-color: $colorActiveBlue;
-        position: absolute;
-        left: 0;
-        top: 0;
+      @if $highlightActive == true {
+        &:before {
+          content: "";
+          display: block;
+          height: 100%;
+          width: 2px;
+          background-color: $colorActiveBlue;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
       }
 
       .gr-i-arrowhead-s {
@@ -424,15 +426,17 @@
     &.active {
       display: block;
 
-      &:before {
-        content: "";
-        display: block;
-        height: 100%;
-        width: 2px;
-        background-color: $colorActiveBlue;
-        position: absolute;
-        left: -30px;
-        top: 0;
+      @if $highlightActive == true {
+        &:before {
+          content: "";
+          display: block;
+          height: 100%;
+          width: 2px;
+          background-color: $colorActiveBlue;
+          position: absolute;
+          left: -1 * $sidePadding;
+          top: 0;
+        }
       }
     }
 

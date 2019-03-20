@@ -9,5 +9,5 @@
 #fs-content-view {
   margin-top: 20px;
 
-  @include accordion;
+  @include accordion($fsContentSidePadding);
 }

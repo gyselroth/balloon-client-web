@@ -34,7 +34,7 @@ $sidePadding: 50px;
   display: none;
 
   dl {
-    @include accordion;
+    @include accordion($sidePadding, false);
   }
 
   #fs-profile-window-quota {
