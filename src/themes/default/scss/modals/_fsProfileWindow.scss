@@ -141,12 +141,16 @@ $sidePadding: 50px;
     .fs-window-form {
       $labelWidth: 150px;
 
-      label {
-        width: $labelWidth;
-      }
+      & > div {
+        @include clearfix;
 
-      input[type='password'] {
-        width: calc(100% - #{$labelWidth + 15px});
+        label {
+          width: $labelWidth;
+        }
+
+        input[type='password'] {
+          width: calc(100% - #{$labelWidth + 15px});
+        }
       }
     }
   }
