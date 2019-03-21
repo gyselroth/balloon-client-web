@@ -2192,7 +2192,7 @@ var balloon = {
     $('#fs-profile-window-change-password-form').show();
     $('#fs-profile-window-change-password-success').hide();
     $view.find('input').removeClass('error-input');
-    $inputPw.focus();
+    $inputPwOld.focus();
 
     var fieldsValid = {
       password: false,

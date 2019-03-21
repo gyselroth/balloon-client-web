@@ -1,6 +1,6 @@
 ## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Wed Mar 20 13:40:02 CET 2019
+**Date**: Thu Mar 21 12:25:01 CET 2019
 
 * [CHANGE] Add hint to share link settings #134
 * [FIX] File does not get uploaded #139
