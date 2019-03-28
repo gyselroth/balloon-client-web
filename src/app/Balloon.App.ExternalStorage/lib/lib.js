@@ -227,6 +227,7 @@ var app = {
           break;
 
           default:
+            app.balloon.displayError(error);
         }
       },
       success: function(data) {

@@ -1,3 +1,10 @@
+## 3.1.0-beta2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Thu Mar 28 16:51:02 CET 2019
+
+* [FIX] Display "InvalidEncryptionKey" message when adding external storage #142
+
+
 ## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Thu Mar 21 12:25:01 CET 2019
