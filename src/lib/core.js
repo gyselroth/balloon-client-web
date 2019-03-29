@@ -2020,7 +2020,7 @@ var balloon = {
     $('#fs-profile-window-title-change-password').toggleClass('disabled', !mayChangePassword);
     $('#fs-profile-window-change-password').toggleClass('disabled', !mayChangePassword);
 
-    var mayActivate2FA = (login.getAdapter() !== 'basic' && login.user && login.user.auth === 'internal');
+    var mayActivate2FA = (login.getAdapter() !== 'basic' && login.user && login.internalIdp === true);
     $('#fs-profile-window-title-google-authenticator').toggleClass('disabled', !mayActivate2FA);
     $('#fs-profile-window-change-google-authenticator').toggleClass('disabled', !mayActivate2FA);
 

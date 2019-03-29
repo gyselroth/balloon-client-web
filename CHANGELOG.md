@@ -3,6 +3,8 @@
 **Date**: Thu Mar 28 16:51:02 CET 2019
 
 * [FIX] Display "InvalidEncryptionKey" message when adding external storage #142
+* [FIX] Display multi factor if authenticated via internal Idp #141
+* [FIX] fixed multi auth trigger if relogin is executed #141
 
 
 ## 3.1.0-beta1

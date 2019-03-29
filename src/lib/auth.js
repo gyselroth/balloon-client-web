@@ -21,6 +21,7 @@ var login = {
   notifier: null,
   handler: null,
   mayHideLoader: true,
+  internalIdp: true,
 
   init: function(config) {
     if(config && config.auth) {
@@ -96,6 +97,7 @@ var login = {
       if (response && hash.access_token) {
         login.token = hash.access_token;
         login.adapter = 'oidc';
+        login.internalIdp = false;
         login.verifyOidcAuthentication();
       } else {
         login.hideLoader(true);
@@ -119,15 +121,15 @@ var login = {
       var $input_username = $login.find('input[name=username]').focus();
 
       $('#fs-namespace').hide();
-      $login.find('input[type=submit]').on('click', login.initBasicAuth);
+      $login.find('input[type=submit]').off('click').on('click', login.initUsernamePasswordAuth);
 
       if(localStorage.username !== undefined) {
         $input_username.val(localStorage.username);
       }
 
-      $(document).on('keydown', function(e) {
+      $(document).off('keydown.password').on('keydown.password', function(e) {
         if(e.keyCode === 13 && login.credentials !== null) {
-          login.initBasicAuth();
+          login.initUsernamePasswordAuth();
         }
       });
 
@@ -318,7 +320,7 @@ var login = {
     return true;
   },
 
-  initBasicAuth: function() {
+  initUsernamePasswordAuth: function() {
     var $login = $('#login');
     $login.find('.error-message').hide();
     var $username_input = $login.find('input[name=username]');
@@ -407,7 +409,7 @@ var login = {
             login.doMultiFactorTokenAuth(username, password, code);
           });
 
-          $(document).on('keydown', function(e) {
+          $(document).off('keydown.token').on('keydown.token', function(e) {
             if(e.keyCode === 13) {
               let code = $code_input.val();
               $code_input.val('');
@@ -427,6 +429,7 @@ var login = {
         break;
 
       case 200:
+        login.internalIdp = true;
         login.adapter = 'oidc';
         login.token = response.responseJSON.access_token;
         login.fetchIdentity();
