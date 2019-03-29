@@ -274,7 +274,7 @@ var login = {
   updateFsIdentity: function() {
     $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
 
-    return balloon.displayAvatar($('#fs-identity-avatar'));
+    return balloon.displayAvatar($('#fs-identity-avatar'), login.user.id);
   },
 
   getAccessToken: function() {

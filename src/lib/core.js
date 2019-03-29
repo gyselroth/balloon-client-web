@@ -1991,10 +1991,8 @@ var balloon = {
   displayAvatar: function($avatar, userId) {
     $avatar.css('background-image', '').removeClass('has-avatar');
 
-    var endpoint = userId !== undefined ? '/users/' + userId + '/avatar' : '/users/avatar';
-
     balloon.xmlHttpRequest({
-      url: balloon.base+endpoint,
+      url: balloon.base+'/users/'+userId+'/avatar',
       type: 'GET',
       mimeType: "text/plain; charset=x-user-defined",
       cache: false,
@@ -2075,7 +2073,7 @@ var balloon = {
    */
   _displayUserProfileOverview: function() {
     $('#fs-profile-user').find('tr').remove();
-    balloon.displayAvatar($('#fs-profile-avatar'));
+    balloon.displayAvatar($('#fs-profile-avatar'), login.user.id);
 
     balloon.xmlHttpRequest({
       url: balloon.base+'/users/whoami',
@@ -4894,7 +4892,7 @@ var balloon = {
 
     $fs_share_consumers_ul.off('click').on('click', balloon.showShare);
 
-    balloon.displayAvatar($li_owner);
+    balloon.displayAvatar($li_owner, login.user.id);
 
     if(!node.shared && !node.reference) {
       $fs_share_consumers.find('.fs-share-hint-owner-only').show();

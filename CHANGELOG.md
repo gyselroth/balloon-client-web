@@ -1,12 +1,13 @@
 ## 3.1.0-beta2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Thu Mar 28 16:51:02 CET 2019
+**Date**: Fri Mar 29 16:32:43 CET 2019
 
 * [FIX] Display "InvalidEncryptionKey" message when adding external storage #142
 * [FIX] Display multi factor if authenticated via internal Idp #141
 * [FIX] fixed multi auth trigger if relogin is executed #141
 * [CHANGE] Make it possible to enable/disable apps #147
-
+* [FIX] loggedin user avatar gets loaded correctly
+ 
 
 ## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
