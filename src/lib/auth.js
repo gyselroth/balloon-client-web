@@ -22,8 +22,11 @@ var login = {
   handler: null,
   mayHideLoader: true,
   internalIdp: true,
+  recaptchaKey: null,
 
   init: function(config) {
+    this.recaptchaKey = config.recaptchaKey;
+
     if(config && config.auth) {
       if(config.auth.credentials) {
         this.credentials = config.auth.credentials;
@@ -360,6 +363,11 @@ var login = {
       dataType: 'json',
       url: '/api/auth',
       complete: function(response) {
+        if(response.responseJSON.error === 'Balloon\\App\\Recaptcha\\Exception\\InvalidRecaptchaToken') {
+          login.displayRecaptcha();
+          return;
+        }
+
         switch(response.status) {
         case 401:
         case 403:
@@ -398,7 +406,9 @@ var login = {
       case 400:
       case 401:
       case 403:
-        if(response.responseJSON.error === 'Balloon\\App\\Idp\\Exception\\MultiFactorAuthenticationRequired') {
+        if(response.responseJSON.error === 'Balloon\\App\\Recaptcha\\Exception\\InvalidRecaptchaToken') {
+          login.displayRecaptcha();
+        } else if(response.responseJSON.error === 'Balloon\\App\\Idp\\Exception\\MultiFactorAuthenticationRequired') {
           $username_input.hide();
           $password_input.hide();
           $login_mfa.show();
@@ -455,7 +465,7 @@ var login = {
         code: code,
         grant_type: 'password_mfa',
       },
-      url: '/api/v2/tokens',
+      url: '/api/v2/tokens'+login.getRecaptchaString(),
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
       },
@@ -465,6 +475,15 @@ var login = {
     }).always(function() {
       $spinner.hide();
     });
+  },
+
+  getRecaptchaString: function() {
+    var captcha = $('.g-recaptcha-response').val()
+    if(captcha) {
+      return '?g-recaptcha-response='+captcha;
+    }
+
+    return '';
   },
 
   doTokenAuth: function(username, password) {
@@ -477,7 +496,7 @@ var login = {
         password: password,
         grant_type: 'password',
       },
-      url: '/api/v2/tokens',
+      url: '/api/v2/tokens'+login.getRecaptchaString(),
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
       },
@@ -489,6 +508,12 @@ var login = {
     });
   },
 
+  displayCaptcha: function() {
+    $.getScript('https://www.google.com/recaptcha/api.js', function() {
+      $('.g-recaptcha').attr('data-sitekey', login.recaptchaKey);
+    });
+  },
+
   doBasicAuth: function(username, password) {
     var $spinner = $('#fs-spinner').show();
 
@@ -497,7 +522,7 @@ var login = {
       username: username,
       password: password,
       dataType: 'json',
-      url: '/api/basic-auth',
+      url: '/api/basic-auth'+login.getRecaptchaString(),
       complete: login.verifyBasicIdentity
     }).always(function() {
       $spinner.hide();
