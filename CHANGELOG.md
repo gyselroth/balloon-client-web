@@ -5,6 +5,7 @@
 * [FIX] Display "InvalidEncryptionKey" message when adding external storage #142
 * [FIX] Display multi factor if authenticated via internal Idp #141
 * [FIX] fixed multi auth trigger if relogin is executed #141
+* [CHANGE] Make it possible to enable/disable apps #147
 
 
 ## 3.1.0-beta1

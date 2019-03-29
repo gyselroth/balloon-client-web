@@ -5936,7 +5936,7 @@ var balloon = {
    * @return void
    */
   initShareLinkMessageForm: function(node) {
-    if(app.isInstalled('Balloon.App.Notification') === false) {
+    if(app.isEnabled('Balloon.App.Notification') === false) {
       // require the Notification app to be installed in order to send messages
       $fs_share_link_message_form.hide();
       return;
