@@ -6152,7 +6152,7 @@ var balloon = {
     $fs_search_input.off('keyup').on('keyup', balloon.buildExtendedSearchQuery);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/users/node-attribute-summary',
+      url: balloon.base+'/users/' + login.user.id + '/node-attribute-summary',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -7716,7 +7716,7 @@ var balloon = {
         transport: {
           read: function(operation) {
             balloon.xmlHttpRequest({
-              url: balloon.base+'/users/node-attribute-summary',
+              url: balloon.base+'/users/' + login.user.id + '/node-attribute-summary',
               data: {
                 attributes: ['meta.tags']
               },
