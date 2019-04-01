@@ -4,7 +4,7 @@ RUN apk add --update openssl \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir /usr/share/balloon-web/nginx -p
-COPY build/* /usr/share/balloon-web/
+COPY build/ /usr/share/balloon-web/
 COPY packaging/nginx.conf /etc/nginx/conf.d/balloon.conf
 
 RUN sed -i "s#unix:/run/php/php7.2-fpm.sock#balloon:9000#g" /etc/nginx/conf.d/balloon.conf \
