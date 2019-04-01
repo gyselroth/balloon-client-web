@@ -14,46 +14,57 @@ import burl from '../app/Balloon.App.Burl/lib/lib.js';
 import external from '../app/Balloon.App.ExternalStorage/lib/lib.js';
 import intelligentCollection from '../app/Balloon.App.IntelligentCollection/lib/lib.js';
 
-var apps = [
-  office,
-  convert,
-  notification,
-  clamav,
-  desktop,
-  burl,
-  external,
-  intelligentCollection
-]
+const map = {
+  'Balloon.App.Office': office,
+  'Balloon.App.Convert': convert,
+  'Balloon.App.Notification': notification,
+  'Balloon.App.ClamAv': clamav,
+  'Balloon.App.DesktopClient': desktop,
+  'Balloon.App.Burl': burl,
+  'Balloon.App.ExternalStorage': external,
+  'Balloon.App.IntelligentCollection': intelligentCollection,
+};
 
 var app = {
-  isInstalled: function(appId) {
-    var foundApp = apps.find(function(app) {
-      return app.id !== undefined && app.id === appId;
-    });
+  apps: {
+    'Balloon.App.Office': {enabled: true, config: {}},
+    'Balloon.App.Convert': {enabled: true, config: {}},
+    'Balloon.App.Notification': {enabled: true, config: {}},
+    'Balloon.App.ClamAv': {enabled: true, config: {}},
+    'Balloon.App.DesktopClient': {enabled: true, config: {}},
+    'Balloon.App.Burl': {enabled: true, config: {}},
+    'Balloon.App.ExternalStorage': {enabled: true, config: {}},
+    'Balloon.App.IntelligentCollection': {enabled: true, config: {}}
+  },
 
-    return foundApp !== undefined;
+  init: function(config) {
+    this.apps = $.extend(this.apps, config.apps || {});
+  },
+
+  isEnabled: function(app) {
+    return this.apps[app] && this.apps[app].enabled === true;
   },
 
   render: function() {
-    for(let app in apps) {
-      if(apps[app]['render']) {
-        apps[app].render();
+    for (const [name, app] of Object.entries(this.apps)) {
+      if(app.enabled === true && map[name]['render']) {
+        map[name].render();
       }
     }
   },
 
   preInit: function(core) {
-    for(let app in apps) {
-      if(apps[app]['preInit']) {
-        apps[app].preInit(core);
+    for (const [name, app] of Object.entries(this.apps)) {
+      if(app.enabled === true && map[name]['preInit']) {
+        map[name].preInit(core);
       }
     }
   },
 
   postInit: function(core) {
-    for(let app in apps) {
-      if(apps[app]['postInit']) {
-        apps[app].postInit(core);
+    for (const [name, app] of Object.entries(this.apps)) {
+      if(app.enabled === true && map[name]['postInit']) {
+        map[name].postInit(core);
       }
     }
   }

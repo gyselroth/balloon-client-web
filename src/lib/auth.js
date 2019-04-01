@@ -16,16 +16,17 @@ var login = {
   token: undefined,
   adapter: null,
   user: null,
-  basic: true,
+  credentials: 'token',
   oidc: [],
   notifier: null,
   handler: null,
   mayHideLoader: true,
+  internalIdp: true,
 
   init: function(config) {
     if(config && config.auth) {
-      if(config.auth.basic === false) {
-        this.basic = false;
+      if(config.auth.credentials) {
+        this.credentials = config.auth.credentials;
       }
 
       if(config.auth.oidc) {
@@ -36,7 +37,7 @@ var login = {
     this._initHash();
 
     $('#login-footer').find('span').html(process.env.VERSION);
-    if(this.basic === false) {
+    if(this.credentials === null) {
       $('#login-basic').hide();
     }
 
@@ -96,6 +97,7 @@ var login = {
       if (response && hash.access_token) {
         login.token = hash.access_token;
         login.adapter = 'oidc';
+        login.internalIdp = false;
         login.verifyOidcAuthentication();
       } else {
         login.hideLoader(true);
@@ -116,17 +118,18 @@ var login = {
       login.destroyBrowser();
 
       var $login = $('#login').show();
+      var $input_username = $login.find('input[name=username]').focus();
 
       $('#fs-namespace').hide();
-      $login.find('input[type=submit]').on('click', login.initBasicAuth);
+      $login.find('input[type=submit]').off('click').on('click', login.initUsernamePasswordAuth);
 
       if(localStorage.username !== undefined) {
-        $login.find('input[name=username]').val(localStorage.username);
+        $input_username.val(localStorage.username);
       }
 
-      $(document).on('keydown', function(e) {
-        if(e.keyCode === 13 && login.basic === true) {
-          login.initBasicAuth();
+      $(document).off('keydown.password').on('keydown.password', function(e) {
+        if(e.keyCode === 13 && login.credentials !== null) {
+          login.initUsernamePasswordAuth();
         }
       });
 
@@ -159,7 +162,7 @@ var login = {
 
         case 200:
         case 404:
-          login.verifyIdentity();
+          login.verifyBasicIdentity();
           break;
 
         default:
@@ -271,7 +274,7 @@ var login = {
   updateFsIdentity: function() {
     $('#fs-identity').show().find('#fs-identity-username').html(login.user.username);
 
-    return balloon.displayAvatar($('#fs-identity-avatar'));
+    return balloon.displayAvatar($('#fs-identity-avatar'), login.user.id);
   },
 
   getAccessToken: function() {
@@ -279,7 +282,7 @@ var login = {
   },
 
   xmlHttpRequest: function(options) {
-    if(login.token) {
+    if(login.token && !options.disableToken) {
       if(options.headers) {
         options.headers["Authorization"] = 'Bearer '+login.token;
       } else {
@@ -317,7 +320,7 @@ var login = {
     return true;
   },
 
-  initBasicAuth: function() {
+  initUsernamePasswordAuth: function() {
     var $login = $('#login');
     $login.find('.error-message').hide();
     var $username_input = $login.find('input[name=username]');
@@ -339,10 +342,14 @@ var login = {
 
     $password_input.val('');
 
-    login.doBasicAuth(username, password);
+    if(login.credentials === 'basic') {
+      return login.doBasicAuth(username, password);
+    }
+
+    return login.doTokenAuth(username, password);
   },
 
-  verifyIdentity: function() {
+  verifyBasicIdentity: function() {
     var $login = $('#login');
     var $username_input = $login.find('input[name=username]');
     var $password_input = $login.find('input[name=password]');
@@ -357,7 +364,7 @@ var login = {
         case 401:
         case 403:
           $('#fs-namespace').hide();
-          $('#login-basic-error').show();
+          $('#login-credentials-error').show();
           $username_input.addClass('error');
           $password_input.addClass('error');
           break;
@@ -379,6 +386,109 @@ var login = {
     });
   },
 
+  verifyTokenIdentity: function(response, username, password, mfa) {
+    var $login = $('#login');
+    var $login_mfa = $('#login-mfa');
+    var $username_input = $login.find('input[name=username]');
+    var $password_input = $login.find('input[name=password]');
+    var $code_input = $login.find('input[name=code]');
+    window.location.hash = '';
+
+    switch(response.status) {
+      case 400:
+      case 401:
+      case 403:
+        if(response.responseJSON.error === 'Balloon\\App\\Idp\\Exception\\MultiFactorAuthenticationRequired') {
+          $username_input.hide();
+          $password_input.hide();
+          $login_mfa.show();
+
+          $login.find('input[type=submit]').focus().unbind('click').on('click', function() {
+            let code = $code_input.val();
+            $code_input.val('');
+            login.doMultiFactorTokenAuth(username, password, code);
+          });
+
+          $(document).off('keydown.token').on('keydown.token', function(e) {
+            if(e.keyCode === 13) {
+              let code = $code_input.val();
+              $code_input.val('');
+              login.doMultiFactorTokenAuth(username, password, code);
+            }
+          });
+        } else if(mfa === true) {
+          $('#fs-namespace').hide();
+          $('#login-mfa-error').show();
+          $code_input.addClass('error');
+        } else {
+          $('#fs-namespace').hide();
+          $('#login-credentials-error').show();
+          $username_input.addClass('error');
+          $password_input.addClass('error');
+        }
+        break;
+
+      case 200:
+        login.internalIdp = true;
+        login.adapter = 'oidc';
+        login.token = response.responseJSON.access_token;
+        login.fetchIdentity();
+        login.initBrowser();
+        break;
+
+      default:
+        $('#login').show();
+        $('#login-server-error').show();
+        $('#login-body').hide();
+      break;
+    }
+  },
+
+  doMultiFactorTokenAuth: function(username, password, code) {
+    var $spinner = $('#fs-spinner').show();
+
+    $.ajax({
+      type: 'POST',
+      data: {
+        username: username,
+        password: password,
+        code: code,
+        grant_type: 'password_mfa',
+      },
+      url: '/api/v2/tokens',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
+      },
+      complete: function(response) {
+        login.verifyTokenIdentity(response, username, password, true)
+      }
+    }).always(function() {
+      $spinner.hide();
+    });
+  },
+
+  doTokenAuth: function(username, password) {
+    var $spinner = $('#fs-spinner').show();
+
+    $.ajax({
+      type: 'POST',
+      data: {
+        username: username,
+        password: password,
+        grant_type: 'password',
+      },
+      url: '/api/v2/tokens',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
+      },
+      complete: function(response) {
+        login.verifyTokenIdentity(response, username, password, false)
+      }
+    }).always(function() {
+      $spinner.hide();
+    });
+  },
+
   doBasicAuth: function(username, password) {
     var $spinner = $('#fs-spinner').show();
 
@@ -388,7 +498,7 @@ var login = {
       password: password,
       dataType: 'json',
       url: '/api/basic-auth',
-      complete: login.verifyIdentity
+      complete: login.verifyBasicIdentity
     }).always(function() {
       $spinner.hide();
     });
@@ -415,7 +525,13 @@ var login = {
   },
 
   destroyBrowser: function() {
-    $('#login').show();
+    var $login = $('#login');
+    $login.find('input[name=username]').show().removeClass('error');
+    $login.find('input[name=password]').show().removeClass('error');
+    $login.find('input[name=code]').show().removeClass('error');
+    $('#login-mfa').hide();
+
+    $login.show();
     balloon.resetDom();
     $('#fs-namespace').hide();
   },

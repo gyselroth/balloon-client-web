@@ -357,3 +357,91 @@
     background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjOTk5OTk5IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGQ9Ik0yMSwxMi40MWwtMC41Mi0uMjhBMTIuMTUsMTIuMTUsMCwwLDAsMTUsMTFIMTN2MmgyYTExLjYxLDExLjYxLDAsMCwxLDQsLjY2VjE2SDE1VjE0LjQxbC0wLjUyLS4yOEExMi4xNSwxMi4xNSwwLDAsMCw5LDEzYTEyLjE1LDEyLjE1LDAsMCwwLTUuNDgsMS4xMkwzLDE0LjQxVjIwSDE1VjE4aDZWMTIuNDFaTTEzLDE4SDVWMTUuNjZBMTEuNiwxMS42LDAsMCwxLDksMTVhMTEuNjEsMTEuNjEsMCwwLDEsNCwuNjZWMThaIi8+PHBhdGggZD0iTTksMTJhMywzLDAsMCwwLDMtM1Y4QTMsMywwLDAsMCw2LDhWOUEzLDMsMCwwLDAsOSwxMlpNNy44LDhhMS4yLDEuMiwwLDAsMSwyLjQsMFY5QTEuMiwxLjIsMCwxLDEsNy44LDlWOFoiLz48cGF0aCBkPSJNMTYsMTBhMywzLDAsMCwwLDMtM1Y2YTMsMywwLDAsMC02LDBWN0EzLDMsMCwwLDAsMTYsMTBaTTE0LjgsNmExLjIsMS4yLDAsMCwxLDIuNCwwVjdhMS4yLDEuMiwwLDAsMS0yLjQsMFY2WiIvPjwvc3ZnPg==');
   }
 }
+
+@mixin accordion($sidePadding:30px, $highlightActive:true) {
+  dt {
+    position: relative;
+    font-size: $fontSizeLead;
+    font-weight: $fontWeightLead;
+    line-height: 20px;
+    color: $colorDarkGrey;
+    border-top: 1px solid $colorBrightGrey;
+    margin: 0 -1*$sidePadding 0;
+    padding: 16px $sidePadding 18px;
+    cursor: pointer;
+
+    .gr-icon {
+      display: block;
+      position: absolute;
+      top: 13px;
+      right: 20px;
+      color: $colorMediumGrey;
+    }
+
+    .gr-i-arrowhead-n {
+      display: none;
+    }
+
+    &.active {
+      @if $highlightActive == true {
+        &:before {
+          content: "";
+          display: block;
+          height: 100%;
+          width: 2px;
+          background-color: $colorActiveBlue;
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
+      }
+
+      .gr-i-arrowhead-s {
+        display: none;
+      }
+      .gr-i-arrowhead-n {
+        display: block;
+      }
+    }
+
+    &.disabled {
+      color: $colorLightGrey;
+
+      .gr-i-arrowhead-s {
+        color: $colorLightGrey;
+      }
+    }
+  }
+
+  dd {
+    @include font-paragraph-small;
+    position: relative;
+    display: none;
+    padding-top: 2px;
+    padding-bottom: 65px;
+
+    color: $colorMediumGrey;
+    vertical-align: middle;
+
+    &.active {
+      display: block;
+
+      @if $highlightActive == true {
+        &:before {
+          content: "";
+          display: block;
+          height: 100%;
+          width: 2px;
+          background-color: $colorActiveBlue;
+          position: absolute;
+          left: -1 * $sidePadding;
+          top: 0;
+        }
+      }
+    }
+
+    &.disabled {
+      display: none !important;
+    }
+  }
+}

@@ -6,12 +6,14 @@
  */
 
 import $ from "jquery";
+import {qrcode, modes, ecLevel} from 'qrcode.es';
 import kendoAutoComplete from 'kendo-ui-core/js/kendo.autocomplete.js';
 import kendoProgressBar from 'kendo-ui-core/js/kendo.progressbar.js';
 import kendoTreeview from 'kendo-ui-web/scripts/kendo.treeview.min.js';
 import balloonWindow from './widget-balloon-window.js';
 import balloonDatePicker from './widget-balloon-datepicker.js';
 import balloonTimePicker from './widget-balloon-timepicker.js';
+import dataTransferItemsHandler from './data-transfer-items-handler.js';
 import login from './auth.js';
 import i18next from 'i18next';
 import app from './app.js';
@@ -111,6 +113,14 @@ var balloon = {
    */
   upload_manager: null,
 
+
+  /**
+   * Queue for uploaded collections
+    */
+  uploadCollectionManager: {
+    uploadCreateCollectionQueue: [],
+    uploadCreateCollectionPending: {}
+  },
 
   /**
    * Is initialized?
@@ -364,6 +374,16 @@ var balloon = {
    */
   toggle_fs_browser_action_hooks: {},
 
+
+  /**
+   * Generates a uuid v4.
+   *
+   * @author https://gist.github.com/LeverOne/1308368;
+   * @return string uuid4
+   */
+  // eslint-disable-next-line
+  uuid: function(a,b){for(b=a='';a++<36;b+=a*51&52?(a^15?8^Math.random()*(a^20?16:4):4).toString(16):'-');return b},
+
   /**
    * Init file browsing after current url has been resolved
    *
@@ -446,9 +466,6 @@ var balloon = {
 
     $(".fs-action-element").unbind('click').click(balloon.doAction);
     $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
-
-    //change password should only be active for users logged in with basic auth
-    $('#fs-menu-user-change-password').toggle(login.getAdapter() === 'basic');
 
     $(document).unbind('drop').on('drop', function(e) {
       e.stopPropagation();
@@ -913,18 +930,18 @@ var balloon = {
    */
   xmlHttpRequest: function(options) {
     if(options.beforeSend === undefined) {
-      options.beforeSend = balloon.showSpinner;
+      options.beforeSend = options.suppressSpinner !== true ? balloon.showSpinner : undefined;
     } else {
       var beforeSend = options.beforeSend;
       options.beforeSend = function(jqXHR, settings) {
-        balloon.showSpinner();
+        if(options.suppressSpinner !== true) balloon.showSpinner();
         beforeSend(jqXHR, settings);
       };
     }
 
     var complete = options.complete;
     options.complete = function(jqXHR, textStatus) {
-      balloon.hideSpinner();
+      if(options.suppressSpinner !==true) balloon.hideSpinner();
 
       var valid = ['POST', 'PUT', 'DELETE', 'PATCH'],
         show  = options.suppressSnackbar !== true && (valid.indexOf(options.type) > -1);
@@ -1514,7 +1531,7 @@ var balloon = {
         }
       }
 
-      if(node.directory) {
+      if(node.directory && balloon.id(node) !== '_FOLDERUP') {
         balloon.fileUpload(node);
       }
 
@@ -1973,111 +1990,44 @@ var balloon = {
   },
 
   /**
-   * Display change püassword modal
-   *
-   * @return void
-   */
-  displayChangePassword: function() {
-    var formValid = false;
-    var $fs_win = $('#fs-change-password-window');
-    var $btnSave = $fs_win.find('input[name="save"]').attr('disabled', true);;
-    var $btnCancel = $fs_win.find('input[name="cancel"]');
-    var $inputRepeatPw = $fs_win.find('input[name="password_repeat"]').val('');
-    var $inputPw = $fs_win.find('input[name="password"]').val('');
-
-    $fs_win.find('input').removeClass('error-input');
-
-    var fieldsValid = {
-      password: false,
-      password_repeat: false,
-    };
-
-    $fs_win.find('input[type="password"]').off('keyup blur').on('keyup blur', function(event) {
-      var $this = $(this);
-      var fieldName = $this.attr('name');
-
-      if(event.keyCode && event.keyCode === 13) {
-        if(formValid) $btnSave.click();
-        return;
-      }
-
-      if(event.keyCode && event.keyCode === 9) {
-        //validating on tab out is performed by blur to get correct fieldName
-        return;
-      }
-
-      if($this.val() === '') {
-        fieldsValid[fieldName] = false;
-      } else {
-        fieldsValid[fieldName] = true;
-
-        if($inputRepeatPw.val() !== '' && $inputPw.val()!== '' && $inputRepeatPw.val() !== $inputPw.val()) {
-          fieldsValid['password_repeat'] = false;
-          $inputRepeatPw.addClass('error-input');
-        }
-      }
-
-      $this.toggleClass('error-input', !fieldsValid[fieldName]);
-
-      formValid = Object.keys(fieldsValid).every(function(key) {
-        return fieldsValid[key] === true;
-      });
-
-      $btnSave.attr('disabled', !formValid);
-    });
-
-    $btnSave.off('click').on('click', function(event){
-      event.preventDefault();
-
-      var password = $inputPw.val();
-      balloon._changePassword(password).then(function() {
-        $fs_win.data('kendoBalloonWindow').close();
-      });
-    });
-
-    $btnCancel.off('click').on('click', function(){
-      $fs_win.data('kendoBalloonWindow').close();
-    });
-
-    $fs_win.kendoBalloonWindow({
-      title: $fs_win.attr('title'),
-      resizable: false,
-      modal: true,
-      activate: function() {
-        $inputPw.focus();
-      }
-    }).data('kendoBalloonWindow').center().open();
-  },
-
-  /**
    * Calls api to change password for current user
    *
+   * @param string password
+   * @param string oldPassword
    * @return void
    */
-  _changePassword(password) {
+  _changePassword(password, oldPassword) {
     var data = {
       password: password
     };
 
-    return balloon.xmlHttpRequest({
-      url: balloon.base+'/users/',
+    var options = {
+      url: balloon.base+'/users/' + login.user.id,
       type: 'PATCH',
       dataType: 'json',
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: function(body) {
-        login.doBasicAuth(login.user.username, password);
+        if(login.getAdapter() === 'basic') {
+          login.doBasicAuth(login.user.username, password);
+        }
       }
-    });
+    };
+
+    if(login.getAdapter() !== 'basic') {
+      options.password = oldPassword;
+      options.username = login.user.username;
+      options.disableToken = true;
+    }
+
+    return balloon.xmlHttpRequest(options);
   },
 
   displayAvatar: function($avatar, userId) {
     $avatar.css('background-image', '').removeClass('has-avatar');
 
-    var endpoint = userId !== undefined ? '/users/' + userId + '/avatar' : '/users/avatar';
-
     balloon.xmlHttpRequest({
-      url: balloon.base+endpoint,
+      url: balloon.base+'/users/'+userId+'/avatar',
       type: 'GET',
       mimeType: "text/plain; charset=x-user-defined",
       cache: false,
@@ -2098,112 +2048,345 @@ var balloon = {
   displayUserProfile: function() {
     balloon.resetDom('user-profile');
 
+    //change password should only be possible for internal users
+    var mayChangePassword = (login.user && login.user.auth === 'internal');
+    $('#fs-profile-window-title-change-password').toggleClass('disabled', !mayChangePassword);
+    $('#fs-profile-window-change-password').toggleClass('disabled', !mayChangePassword);
+
+    var mayActivate2FA = (login.getAdapter() !== 'basic' && login.user && login.internalIdp === true);
+    $('#fs-profile-window-title-google-authenticator').toggleClass('disabled', !mayActivate2FA);
+    $('#fs-profile-window-change-google-authenticator').toggleClass('disabled', !mayActivate2FA);
+
+    $('#fs-profile-window dl dt').not('.disabled').off('click').on('click', function(event) {
+      var view = $(this).attr('id').substr(24);
+      balloon._userProfileNavigateTo(view);
+    });
+
+    balloon._userProfileNavigateTo('overview');
+
     var $fs_profile_win = $('#fs-profile-window');
     $fs_profile_win.kendoBalloonWindow({
       title: $fs_profile_win.attr('title'),
       resizable: false,
       modal: true,
       open: function() {
-        balloon.displayAvatar($('#fs-profile-avatar'));
 
-        balloon.xmlHttpRequest({
-          url: balloon.base+'/users/whoami',
-          type: 'GET',
-          success: function(body) {
-            // Quota
+      }
+    }).data("kendoBalloonWindow").center().open();
+  },
+
+  /**
+   * Navigates to a given view in the profile window
+   *
+   * @param   string view
+   * @return  void
+   */
+  _userProfileNavigateTo: function(view) {
+    $('#fs-profile-window dl > *').removeClass('active');
+
+    $('#fs-profile-window-title-'+view).addClass('active');
+    $('#fs-profile-window-'+view).addClass('active');
+
+    switch(view) {
+    case 'overview':
+      balloon._displayUserProfileOverview();
+      break;
+    case 'change-password':
+      balloon._displayUserProfileChangePassword();
+      break;
+    case 'google-authenticator':
+      balloon._displayUserProfileGoogleAuthenticator();
+      break;
+    }
+
+  },
+
+  /**
+   * Displays the profile overview
+   *
+   * @return  void
+   */
+  _displayUserProfileOverview: function() {
+    $('#fs-profile-user').find('tr').remove();
+    balloon.displayAvatar($('#fs-profile-avatar'), login.user.id);
+
+    balloon.xmlHttpRequest({
+      url: balloon.base+'/users/whoami',
+      type: 'GET',
+      success: function(body) {
+        // Quota
+        var used = balloon.getReadableFileSizeString(body.used);
+        var max;
+        var free;
+        var percentage;
+        var percentageText;
+
+        if(body.hard_quota === -1) {
+          max = i18next.t('profile.quota_unlimited');
+          free = max;
+          percentage = 0;
+          percentageText = max;
+        } else {
+          percentage = Math.round(body.used/body.hard_quota*100);
+          percentageText = percentage + '%';
+
+          max  = balloon.getReadableFileSizeString(body.hard_quota),
+          free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
+        }
+
+        var $fs_quota = $('#fs-quota-circle');
+        $fs_quota.find('.css-fallback').removeClass(function(index, className) {
+          return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
+        }).addClass('chart-'+percentage);
+        $fs_quota.find('.percent-text').text(percentageText);
+        $fs_quota.find('.chart').removeClass(function(index, className) {
+          return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
+        }).addClass('chart-'+percentage);
+
+
+        $('#fs-profile-quota-used').find('td').html(used);
+        $('#fs-profile-quota-max').find('td').html(max);
+        $('#fs-profile-quota-left').find('td').html(free);
+
+
+        // User attributes
+        var $table = $('#fs-profile-user').find('table');
+        var attributes = ['id', 'username', 'created'];
+        for(var i=0; i<attributes.length; i++) {
+          var attribute = attributes[i];
+          var value = body[attribute];
+
+          switch(attribute) {
+          case 'created':
+          case 'last_attr_sync':
+            var date   = new Date(value),
+              format = kendo.toString(date, kendo.culture().calendar.patterns.g),
+              since  = balloon.timeSince(date);
+
+            $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
+            break;
+          case 'hard_quota':
+          case 'soft_quota':
+          case 'available':
+            break;
+
+          case 'used':
             var used = balloon.getReadableFileSizeString(body.used);
             var max;
             var free;
-            var percentage;
-            var percentageText;
 
             if(body.hard_quota === -1) {
+              $fs_quota_usage.hide();
               max = i18next.t('profile.quota_unlimited');
               free = max;
-              percentage = 0;
-              percentageText = max;
             } else {
-              percentage = Math.round(body.used/body.hard_quota*100);
-              percentageText = percentage + '%';
+              var percentage = Math.round(body.used/body.hard_quota*100);
+              $k_progress.value(percentage);
+
+              if(percentage >= 90) {
+                $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
+              } else {
+                $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
+              }
 
               max  = balloon.getReadableFileSizeString(body.hard_quota),
               free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
             }
 
-            var $fs_quota = $('#fs-quota-circle');
-            $fs_quota.find('.css-fallback').removeClass(function(index, className) {
-              return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
-            }).addClass('chart-'+percentage);
-            $fs_quota.find('.percent-text').text(percentageText);
-            $fs_quota.find('.chart').removeClass(function(index, className) {
-              return (className.match(/(^|\s)chart-\S+/g) || []).join(' ');
-            }).addClass('chart-'+percentage);
-
-
             $('#fs-profile-quota-used').find('td').html(used);
             $('#fs-profile-quota-max').find('td').html(max);
             $('#fs-profile-quota-left').find('td').html(free);
-
-
-            // User attributes
-            var $table = $('#fs-profile-user').find('table');
-            var attributes = ['id', 'username', 'created'];
-            for(var i=0; i<attributes.length; i++) {
-              var attribute = attributes[i];
-              var value = body[attribute];
-
-              switch(attribute) {
-              case 'created':
-              case 'last_attr_sync':
-                var date   = new Date(value),
-                  format = kendo.toString(date, kendo.culture().calendar.patterns.g),
-                  since  = balloon.timeSince(date);
-
-                $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+i18next.t('view.history.changed_since', since, format)+'</td></tr>');
-                break;
-              case 'hard_quota':
-              case 'soft_quota':
-              case 'available':
-                break;
-
-              case 'used':
-                var used = balloon.getReadableFileSizeString(body.used);
-                var max;
-                var free;
-
-                if(body.hard_quota === -1) {
-                  $fs_quota_usage.hide();
-                  max = i18next.t('profile.quota_unlimited');
-                  free = max;
-                } else {
-                  var percentage = Math.round(body.used/body.hard_quota*100);
-                  $k_progress.value(percentage);
-
-                  if(percentage >= 90) {
-                    $fs_quota_usage.find('.k-state-selected').addClass('fs-quota-high');
-                  } else {
-                    $fs_quota_usage.find('.k-state-selected').removeClass('fs-quota-high');
-                  }
-
-                  max  = balloon.getReadableFileSizeString(body.hard_quota),
-                  free = balloon.getReadableFileSizeString(body.hard_quota - body.used);
-                }
-
-                $('#fs-profile-quota-used').find('td').html(used);
-                $('#fs-profile-quota-max').find('td').html(max);
-                $('#fs-profile-quota-left').find('td').html(free);
-              break;
-              default:
-                $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+value+'</td></tr>')
-                break;
-              }
-            }
+            break;
+          default:
+            $table.append('<tr><th>'+i18next.t('profile.attribute.'+attribute)+'</th><td>'+value+'</td></tr>')
+            break;
           }
-        });
+        }
       }
-    }).data("kendoBalloonWindow").center().open();
+    });
   },
 
+  /**
+   * Displays the change password screen
+   *
+   * @return  void
+   */
+  _displayUserProfileChangePassword: function() {
+    var formValid = false;
+    var $view = $('#fs-profile-window-change-password');
+    var $btnSave = $view.find('input[name="save"]').attr('disabled', true);;
+    var $inputRepeatPw = $view.find('input[name="password_repeat"]').val('');
+    var $inputPw = $view.find('input[name="password"]').val('');
+    var $inputPwOld = $view.find('input[name="password_old"]').val('');
+
+    $view.find('#fs-profile-window-change-password-form-password-old-wrap').toggle(login.getAdapter() !== 'basic');
+
+    $('#fs-profile-window-change-password-buttons').show();
+    $('#fs-profile-window-change-password-form').show();
+    $('#fs-profile-window-change-password-success').hide();
+    $view.find('input').removeClass('error-input');
+    $inputPwOld.focus();
+
+    var fieldsValid = {
+      password: false,
+      password_repeat: false,
+      password_old: false,
+    };
+
+    if(login.getAdapter() === 'basic') {
+      fieldsValid['password_old'] = true;
+    }
+
+    $view.find('input[type="password"]').off('keyup blur').on('keyup blur', function(event) {
+      var $this = $(this);
+      var fieldName = $this.attr('name');
+
+      if(event.keyCode && event.keyCode === 13) {
+        if(formValid) $btnSave.click();
+        return;
+      }
+
+      if(event.keyCode && event.keyCode === 9) {
+        //validating on tab out is performed by blur to get correct fieldName
+        return;
+      }
+
+      if($this.val() === '') {
+        fieldsValid[fieldName] = false;
+      } else {
+        fieldsValid[fieldName] = true;
+        $inputRepeatPw.removeClass('error-input');
+
+        if(
+          fieldName !== 'password_old' && $inputRepeatPw.val() !== ''
+          && $inputPw.val()!== '' && $inputRepeatPw.val() !== $inputPw.val()
+        ) {
+          fieldsValid['password_repeat'] = false;
+          $inputRepeatPw.addClass('error-input');
+        }
+      }
+
+      $this.toggleClass('error-input', !fieldsValid[fieldName]);
+
+      formValid = Object.keys(fieldsValid).every(function(key) {
+        return fieldsValid[key] === true;
+      });
+
+      $btnSave.attr('disabled', !formValid);
+    });
+
+    $btnSave.off('click').on('click', function(event){
+      event.preventDefault();
+
+      var password = $inputPw.val();
+      var oldPassword = $inputPwOld.val();
+
+      balloon._changePassword(password, oldPassword).then(function() {
+        $('#fs-profile-window-change-password-buttons').hide();
+        $('#fs-profile-window-change-password-form').hide();
+        $('#fs-profile-window-change-password-success').show();
+      });
+    });
+  },
+
+  /**
+   * Displays the google authenticator screen
+   *
+   * @return  void
+   */
+  _displayUserProfileGoogleAuthenticator: function() {
+    var $view = $('#fs-profile-window-google-authenticator');
+    var $buttons = $view.find('#fs-profile-window-google-authenticator-buttons');
+    var $code = $view.find('#fs-profile-window-google-authenticator-code');
+    var $hintInactive = $view.find('#fs-profile-window-google-authenticator-hint-incative').hide();
+    var $hintActive = $view.find('#fs-profile-window-google-authenticator-hint-active').hide();
+    var $btnActivate = $buttons.find('input[name="activate"]').hide();
+    var $btnDeactivate = $buttons.find('input[name="deactivate"]').hide();
+
+    $code.find('canvas').remove();
+
+    if(login.user.multi_factor_auth === false) {
+      $btnActivate.show();
+      $hintInactive.show();
+    } else {
+      $btnDeactivate.show();
+      $hintActive.show();
+    }
+
+    $btnActivate.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      var msg  = i18next.t('profile.google-authenticator.confirm.activate');
+
+      balloon.promptConfirm(msg, function() {
+        var data = {
+          multi_factor_auth: true
+        };
+
+        $btnActivate.hide();
+
+        balloon.xmlHttpRequest({
+          url: balloon.base+'/users/' + login.user.id,
+          type: 'PATCH',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function(body) {
+            var qrCodeSetting = {
+              size: 200,
+              ecLevel: ecLevel.QUARTILE,
+              minVersion: 8,
+              background: '#fff',
+              fill: '#39a5ff',
+              mode: modes.NORMAL,
+              radius: 0,
+              mSize: 0.15,
+            };
+
+            login.user.multi_factor_auth = true;
+
+            var qrCode = new qrcode($code[0]);
+            qrCode.generate(body.multi_factor_uri, qrCodeSetting);
+
+            $btnDeactivate.show();
+          }
+        });
+      });
+    });
+
+    $btnDeactivate.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      var msg  = i18next.t('profile.google-authenticator.confirm.deactivate');
+
+      balloon.promptConfirm(msg, function() {
+        var data = {
+          multi_factor_auth: false
+        };
+
+        $btnDeactivate.hide();
+        $code.find('canvas').remove();
+
+        balloon.xmlHttpRequest({
+          url: balloon.base+'/users/' + login.user.id,
+          type: 'PATCH',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function(body) {
+            $btnActivate.show();
+            $hintActive.hide();
+            $hintInactive.show();
+
+            login.user.multi_factor_auth = false;
+          }
+        });
+      });
+    });
+
+
+
+  },
 
   /**
    * Get and display event log
@@ -2657,10 +2840,6 @@ var balloon = {
 
     case 'profile':
       balloon.displayUserProfile();
-      break;
-
-    case 'change-password':
-      balloon.displayChangePassword();
       break;
 
     case 'logout':
@@ -4616,28 +4795,7 @@ var balloon = {
    * @return  void
    */
   addFolder: function(name) {
-    var $d = $.Deferred();
-
-    balloon.xmlHttpRequest({
-      url: balloon.base+'/collections',
-      type: 'POST',
-      data: {
-        id:   balloon.getCurrentCollectionId(),
-        name: name,
-      },
-      dataType: 'json',
-      complete: function(jqXHR, textStatus) {
-        switch(textStatus) {
-        case 'success':
-          $d.resolve(jqXHR.responseJSON);
-          break;
-        default:
-          $d.reject();
-        }
-      },
-    });
-
-    return $d;
+    return balloon._createCollection(balloon.getCurrentCollectionId(), name);
   },
 
 
@@ -4778,7 +4936,7 @@ var balloon = {
 
     $fs_share_consumers_ul.off('click').on('click', balloon.showShare);
 
-    balloon.displayAvatar($li_owner);
+    balloon.displayAvatar($li_owner, login.user.id);
 
     if(!node.shared && !node.reference) {
       $fs_share_consumers.find('.fs-share-hint-owner-only').show();
@@ -5820,7 +5978,7 @@ var balloon = {
    * @return void
    */
   initShareLinkMessageForm: function(node) {
-    if(app.isInstalled('Balloon.App.Notification') === false) {
+    if(app.isEnabled('Balloon.App.Notification') === false) {
       // require the Notification app to be installed in order to send messages
       $fs_share_link_message_form.hide();
       return;
@@ -6038,7 +6196,7 @@ var balloon = {
     $fs_search_input.off('keyup').on('keyup', balloon.buildExtendedSearchQuery);
 
     balloon.xmlHttpRequest({
-      url: balloon.base+'/users/node-attribute-summary',
+      url: balloon.base+'/users/' + login.user.id + '/node-attribute-summary',
       type: 'GET',
       dataType: 'json',
       data: {
@@ -7610,7 +7768,7 @@ var balloon = {
         transport: {
           read: function(operation) {
             balloon.xmlHttpRequest({
-              url: balloon.base+'/users/node-attribute-summary',
+              url: balloon.base+'/users/' + login.user.id + '/node-attribute-summary',
               data: {
                 attributes: ['meta.tags']
               },
@@ -8188,6 +8346,7 @@ var balloon = {
 
       case 'user-profile':
         $('#fs-profile-user').find('tr').remove();
+        $('#fs-profile-window dl > *').removeClass('active');
         balloon.resetWindow('fs-profile-window');
         break;
 
@@ -8384,19 +8543,12 @@ var balloon = {
    */
   fileUpload: function(parent_node, dom_node) {
     var dn,
-      directory,
       $fs_browser_tree = $('#fs-browser-tree');
 
     if(dom_node != undefined) {
       dn = dom_node;
     } else {
       dn = $('#fs-browser-tree').find('.k-item[fs-id='+balloon.id(parent_node)+']');
-    }
-
-    if(typeof(parent_node) == 'string' || parent_node === null) {
-      directory = true;
-    } else {
-      directory = parent_node.directory;
     }
 
     function handleDragOver(e) {
@@ -8418,6 +8570,112 @@ var balloon = {
 
 
   /**
+   * Creates a collection
+   *
+   * @param   string parent parent collection id
+   * @param   string name name of the new collection
+   * @param   object options override request options
+   * @return  $.Deferred
+   */
+  _createCollection: function(parent, name, options) {
+    var $d = $.Deferred();
+
+    var reqOptions = {
+      url: balloon.base+'/collections',
+      type: 'POST',
+      data: {
+        id: parent,
+        name: name,
+      },
+      dataType: 'json',
+      complete: function(jqXHR, textStatus) {
+        switch(textStatus) {
+        case 'success':
+          $d.resolve(jqXHR.responseJSON);
+          break;
+        default:
+          $d.reject();
+        }
+      }
+    };
+
+    $.extend(true, reqOptions, options || {});
+
+    balloon.xmlHttpRequest(reqOptions);
+
+    return $d;
+  },
+
+  /**
+   * Creates a collection for uploaded folder
+   *
+   * @param   string parent parent collection id
+   * @param   string name name of the new collection
+   * @return  $.Deferred
+   */
+  _uploadCreateCollection: function(parent, name) {
+    var $d = $.Deferred();
+
+    balloon.uploadCollectionManager.uploadCreateCollectionQueue.push({
+      parent: parent,
+      name: name,
+      done: function(response) {
+        balloon._uploadCreateCollectionDone(parent, name);
+        balloon._uploadCreateCollectionNext();
+        $d.resolve(response.id);
+      },
+      fail: function() {
+        $d.reject();
+      },
+    });
+
+    balloon._uploadCreateCollectionNext();
+
+    return $d;
+  },
+
+  /**
+   * Checks if a new task can be shifted from the queue
+   *
+   * @return  void
+   */
+  _uploadCreateCollectionNext: function() {
+    var maxConcurrentRequests = 3;
+
+    if(Object.keys(balloon.uploadCollectionManager.uploadCreateCollectionPending).length < maxConcurrentRequests) {
+      var task = this.uploadCollectionManager.uploadCreateCollectionQueue.shift();
+
+      if(task) {
+        balloon.uploadCollectionManager.uploadCreateCollectionPending[task.parent+'-'+task.name] = task;
+
+        var options = {
+          suppressSpinner: true,
+          suppressSnackbar: true,
+          /*
+          //TODO pixtron - handle errror when folder already exists?
+          error: function(response) {
+          }*/
+        };
+
+        balloon._createCollection(task.parent, task.name, options)
+          .done(task.done)
+          .fail(task.fail);
+      }
+    }
+  },
+
+  /**
+   * Removes done task from the create collection pending queue
+   *
+   * @param  string parent parent id
+   * @param  string name name of the collection
+   * @return  void
+   */
+  _uploadCreateCollectionDone: function(parent, name) {
+    delete balloon.uploadCollectionManager.uploadCreateCollectionPending[parent+'-'+name];
+  },
+
+  /**
    * Prepare selected files for upload
    *
    * @param   object e
@@ -8432,23 +8690,89 @@ var balloon = {
     e.stopPropagation();
     e.preventDefault();
 
+    var blobs;
+
     if('originalEvent' in e && 'dataTransfer' in e.originalEvent) {
-      var blobs = e.originalEvent.dataTransfer.files;
+      try {
+        balloon.showSpinner();
+        var handler = new dataTransferItemsHandler(balloon._uploadCreateCollection, balloon._handleFileEntry);
+        var $d = handler.handleItems(e.originalEvent.dataTransfer.items, balloon.id(parent_node));
+
+        $d.done(function(files) {
+          balloon.hideSpinner();
+        });
+
+        $d.fail(function(err) {
+          balloon.hideSpinner();
+          blobs = e.originalEvent.dataTransfer.files;
+          balloon._handleFileSelectFilesOnly(blobs, parent_node);
+        });
+      } catch(err) {
+        balloon.hideSpinner();
+        blobs = e.originalEvent.dataTransfer.files;
+      }
     } else {
-      var blobs = e.target.files;
+      blobs = e.target.files;
     }
 
-    balloon.uploadFiles(blobs, parent_node);
+    if(blobs) {
+      //if blobs are set - either browser does not support directory upload, or only files have been selected
+      balloon._handleFileSelectFilesOnly(blobs, parent_node);
+    }
+  },
+
+  /**
+   * Prepare a FileEntry for upload
+   *
+   * @param   FileEntry file
+   * @param   parent parent id where the file should be uploaded to
+   * @return  $.Deferred
+   */
+  _handleFileEntry: function(file, parent) {
+    var $d = $.Deferred();
+
+    file.file(function(fileObj) {
+      var files = [{
+        blob: fileObj,
+        parent: parent
+      }];
+
+      balloon.uploadFiles(files);
+      $d.resolve();
+    }, function(err) {
+      $d.reject(err);
+    });
+
+    return $d;
+  },
+
+  /**
+   * Prepare selected files for upload, if it is a files only upload
+   *
+   * @param   FileList blobs
+   * @return  void
+   */
+  _handleFileSelectFilesOnly: function(blobs, parent_node) {
+    var i;
+    var files = [];
+
+    for(i=0; i<blobs.length; i++) {
+      files.push({
+        blob: blobs[i],
+        parent: parent_node
+      });
+    }
+
+    balloon.uploadFiles(files);
   },
 
   /**
    * Prepare selected files for upload
    *
    * @param   array files
-   * @param   object|string parent_node
    * @return  void
    */
-  uploadFiles: function(files, parent_node) {
+  uploadFiles: function(files) {
     var $div = $('#fs-uploadmgr');
     var $k_manager_win = $div.kendoBalloonWindow({
       title: $div.attr('title'),
@@ -8463,38 +8787,40 @@ var balloon = {
       balloon.resetDom('uploadmgr-progress-files');
 
       balloon.upload_manager = {
-        parent_node: parent_node,
         progress: {
           mgr_percent: null,
           notifier_percent: null,
           mgr_chunk:   null,
         },
-        files: [],
+        files: {},
+        queue: [],
+        pending: {},
         upload_bytes: 0,
         transfered_bytes: 0,
         count: {
           upload:   0,
           transfer: 0,
-          success:  0,
-          last_started: 0
+          success:  0
         },
         start_time: new Date(),
       };
     }
 
     var $upload_list = $('#fs-upload-list');
-    for(var i = 0, progressnode, file, last = balloon.upload_manager.count.last_started; file = files[i]; i++, last++) {
-      if(file instanceof Blob) {
+    for(var i = 0, progressnode, file; file = files[i]; i++) {
+      if(file.blob instanceof Blob) {
         file = {
-          name: file.name,
-          blob: file
-        }
+          name: file.blob.name,
+          blob: file.blob,
+          parent: file.parent
+        };
       }
 
       if(file.blob.size === 0) {
         balloon.displayError(new Error('Upload folders or empty files is not yet supported'));
-      } else if(file.blob.size != 0) {
-        var progressId = 'fs-upload-'+last;
+      } else {
+        var uuid = balloon.uuid();
+        var progressId = 'fs-upload-'+uuid;
         progressnode = $('<div id="'+progressId+'" class="fs-uploadmgr-progress"><div id="'+progressId+'-progress" class="fs-uploadmgr-progressbar"></div></div>');
         $upload_list.append(progressnode);
 
@@ -8505,10 +8831,11 @@ var balloon = {
           },
         });
 
-        balloon.upload_manager.files.push({
+        balloon.upload_manager.files[uuid] = {
           progress:   progressnode,
           blob:     file.blob,
           name:     file.name,
+          parent:   file.parent,
           index:    1,
           start:    0,
           end:    0,
@@ -8518,7 +8845,10 @@ var balloon = {
           manager:  balloon.upload_manager,
           request:  null,
           status:   1,
-        });
+          id: uuid,
+        };
+
+        balloon.upload_manager.queue.push(uuid);
 
         progressnode.prepend('<div class="fs-progress-filename">'+file.name+'</div>');
         progressnode.append('<div class="fs-progress-icon"><svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#close"></use></svg></div>');
@@ -8527,13 +8857,13 @@ var balloon = {
       }
     }
 
-    if(balloon.upload_manager.files.length <= 0) {
+    if(Object.keys(balloon.upload_manager.files).length <= 0) {
       return;
     }
 
-    $('#fs-upload-list').on('click', '.fs-progress-icon', function() {
-      var i  = parseInt($(this).parent().attr('id').substr(10)),
-        file = balloon.upload_manager.files[i];
+    $('#fs-upload-list').off('click', '.fs-progress-icon').on('click', '.fs-progress-icon', function() {
+      var uuid  = $(this).parent().attr('id').substr(10),
+        file = balloon.upload_manager.files[uuid];
 
       if(file.status !== 1) {
         return;
@@ -8542,7 +8872,7 @@ var balloon = {
       file.status = 0;
     });
 
-    balloon.upload_manager.count.upload  = balloon.upload_manager.files.length;
+    balloon.upload_manager.count.upload  = Object.keys(balloon.upload_manager.files).length;
     balloon._initProgress(balloon.upload_manager);
 
     $('#fs-upload-progress').unbind('click').click(function(){
@@ -8558,12 +8888,42 @@ var balloon = {
     $('#fs-upload-progree-info-status-uploaded').html('0');
     $('#fs-upload-progree-info-status-total').html(balloon.getReadableFileSizeString(balloon.upload_manager.upload_bytes));
 
-    for(var i = balloon.upload_manager.count.last_started; i < balloon.upload_manager.count.upload; i++) {
-      balloon.upload_manager.count.last_started = i + 1;
-      balloon._chunkUploadManager(balloon.upload_manager.files[i]);
+    balloon._uploadManagerNext();
+
+  },
+
+  /**
+   * Try to start next uploads
+   *
+   * @return void
+   */
+  _uploadManagerNext: function() {
+    var maxConcurrentRequests = 3;
+    var pending = Object.keys(balloon.upload_manager.pending).length;
+
+    for(pending; pending < maxConcurrentRequests; pending++) {
+      var uuid = balloon.upload_manager.queue.shift();
+
+      if(uuid && balloon.upload_manager.files[uuid]) {
+        balloon.upload_manager.pending[uuid] = true;
+        balloon._chunkUploadManager(balloon.upload_manager.files[uuid]);
+      } else {
+        //no more uploads
+        break;
+      }
     }
   },
 
+  /**
+   * Upload done, removes it from pending uploads, and schedules next
+   *
+   * @param  string uuid, id of the file
+   * @return void
+   */
+  _uploadManagerDone: function(uuid) {
+    delete balloon.upload_manager.pending[uuid];
+    balloon._uploadManagerNext();
+  },
 
   /**
    * Init upload progress bars
@@ -8640,6 +9000,8 @@ var balloon = {
         $('#fs-uploadmgr-files').html(i18next.t('uploadmgr.files_uploaded',
           file.manager.count.success.toString(), file.manager.count.upload)
         );
+
+        balloon._uploadManagerDone(file.id);
       }
 
       return;
@@ -8660,6 +9022,8 @@ var balloon = {
       $($('#fs-uploadmgr-files-progress .k-item')[file.manager.count.transfer]).addClass('fs-progress-error');
 
       file.manager.count.transfer++;
+
+      balloon._uploadManagerDone(file.id);
     } else {
       file.end = file.start + balloon.BYTES_PER_CHUNK;
 
@@ -8713,8 +9077,8 @@ var balloon = {
       url += '&session='+file.session;
     }
 
-    if(file.manager.parent_node !== null) {
-      url += '&collection='+balloon.id(file.manager.parent_node);
+    if(file.parent !== null) {
+      url += '&collection='+balloon.id(file.parent);
     }
 
     var chunk = file.blob.slice(file.start, file.end),
@@ -8758,7 +9122,6 @@ var balloon = {
               $('#fs-uploadmgr-time').html(i18next.t('uploadmgr.time_left', balloon.timeSince(end)));
             }
           }
-
         }, false);
 
         file.request = xhr;
@@ -8829,10 +9192,11 @@ var balloon = {
             var new_name = balloon.getCloneName(file.blob.name);
             var new_file = {
               name: new_name,
-              blob: file.blob
+              blob: file.blob,
+              parent: file.parent
             };
 
-            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file], file.manager.parent_node]);
+            balloon.promptConfirm(i18next.t('prompt.auto_rename_node', file.blob.name, new_name), 'uploadFiles', [[new_file]]);
           } else {
             balloon.displayError(e);
           }

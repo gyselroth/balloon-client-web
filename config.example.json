@@ -1,9 +1,20 @@
 {
   "localScript": "/path/to/local_script.js",
   "default_lang": "en",
+  "apps": {
+    "Balloon.App.Office": {""enabled": true, "config": {{},
+    "Balloon.App.Convert": {""enabled": true, "config": {}},
+    "Balloon.App.Notification": {""enabled": true, "config": {}},
+    "Balloon.App.ClamAv": {"enabled": true, "config": {}},
+    "Balloon.App.DesktopClient": {"enabled": true, "config": {}},
+    "Balloon.App.Burl": {"enabled": true, "config": {}},
+    "Balloon.App.ExternalStorage": {"enabled": true, "config": {}},
+    "Balloon.App.IntelligentCollection": {"enabled": true, "config": {}}
+  },
   "auth": {
-    "basic": true,
-    "oidc": [{
+    "credentials": "token",
+    "oidc": [
+      {
       "providerUrl": "https://accounts.google.com",
       "clientId": "myclientid",
       "redirectUri": "https://url-to-my-balloon-server",

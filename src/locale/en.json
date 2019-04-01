@@ -5,14 +5,16 @@
     "password": "Password",
     "login": "Login",
     "logout": "Logout",
-    "change-password": "Change password",
+    "code": "Code",
+    "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
     "help": "Hilfe",
     "error": {
       "server": "The balloon server reports an ongoing incident, please try it again later.",
-      "basic": "Wrong username or password given.",
+      "credentials": "Wrong username or password given.",
+      "code": "Invalid code provided.",
       "oidc": "There was an error authenticate you via the choosen identity provider."
     }
   },
@@ -23,12 +25,29 @@
     "quota_used": "Used Storage",
     "quota_unlimited": "Unlimited",
     "user": "User",
+    "nav": {
+      "overview": "Overview",
+      "change-password": "Change password",
+      "google-authenticator": "Two factor authentication"
+    },
     "attribute": {
       "id": "User Id",
       "created": "Created",
       "username": "Username",
       "name": "Name",
       "mail": "E-mail"
+    },
+    "google-authenticator": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "confirm": {
+        "activate": "Do you really want to activate multi factor authentication? After the activation the login will only be possible using the google authenticator app.",
+        "deactivate": "Do you really want to deactivate multi factor authentication?"
+      },
+      "hint": {
+        "inactive": "In order to activate multi factor authentication, you need a smartphone and the app <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=en\" target=\"blank\">Google Authenticator</a>. After activating multi factor authentication a QR code, which you need to scan with the app, will be displayed. Attention, after the activation the login will only be possible using the google authenticator app.",
+        "active": "Multi factor authentication is enabled."
+      }
     }
   },
   "nav": {
@@ -271,7 +290,9 @@
     },
     "change-password": {
       "password": "Password",
-      "password-repeat": "Repeat password"
+      "password-repeat": "Repeat password",
+      "password-old": "Current password",
+      "success": "The password has been changed"
     }
   },
   "error": {

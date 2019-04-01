@@ -121,6 +121,7 @@ var translate = {
 
         $('[data-i18n]').localize();
 
+        app.init(config);
         app.render();
         login.init(translate.config);
 

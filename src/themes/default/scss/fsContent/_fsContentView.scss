@@ -27,21 +27,27 @@
   }
 
   #fs-content-view {
+    @include accordion($fsContentSidePaddingS);
+
     background-color: $colorWhite;
     padding: 0 $fsContentSidePaddingS*2;
 
     dt {
       display: none;
-      font-size: $fontSizeLead;
-      font-weight: $fontWeightLead;
-      line-height: 20px;
-      color: $colorDarkGrey;
-      border-top: 1px solid $colorBrightGrey;
+
       margin: 0 -1*$fsContentSidePaddingM 0;
       padding: 16px $fsContentSidePaddingM 18px;
 
       &.active {
         display: block;
+
+        &:before {
+          display: none;
+        }
+
+        .gr-i-arrowhead-n {
+          display: none;
+        }
       }
 
       .gr-icon {
@@ -50,16 +56,13 @@
     }
 
     dd {
-      @include font-paragraph-small;
-
       display: none;
       padding: 0;
 
-      color: $colorMediumGrey;
-      vertical-align: middle;
-
       &.active {
-        display: block;
+        &:before {
+          display: none;
+        }
       }
 
       &.disabled {
