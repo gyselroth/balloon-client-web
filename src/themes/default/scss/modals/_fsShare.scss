@@ -60,10 +60,7 @@ $sidePadding: 30px;
         cursor: pointer;
 
         .fs-share-window-selected-privilege-label {
-          font-size: $fontSizeParagraphSmall;
-          line-height: 14px;
-          vertical-align: middle;
-          margin-right: 2px;
+          display: none;
         }
 
         .gr-icon {
@@ -196,6 +193,22 @@ $sidePadding: 30px;
 
           &.toggle-condense {
             display: block;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointWindowFullscreen+1px) {
+    #fs-share-window-content {
+      .fs-share-window-privilege-selector {
+        .fs-share-window-selected-privilege {
+          .fs-share-window-selected-privilege-label {
+            display: inline;
+            font-size: $fontSizeParagraphSmall;
+            line-height: 14px;
+            vertical-align: middle;
+            margin-right: 2px;
           }
         }
       }
