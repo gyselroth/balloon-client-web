@@ -1,6 +1,6 @@
 ## 3.1.0-beta3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Tue Apr 02 14:32:43 CEST 2019
+**Date**: Tue Apr 02 15:25:43 CEST 2019
 
 * [FIX] search summary attributes are now displayed correctly
 * [CHANGE] Renew access_token for token login #151
