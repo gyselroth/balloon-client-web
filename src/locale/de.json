@@ -45,7 +45,7 @@
         "deactivate": "Bist du sicher, dass du Multi-Faktor-Authentisierung deaktivieren willst?"
       },
       "hint": {
-        "inactive": "Um Multi-Faktor-Authentisierung nutzen zu können benötigst du ein Smartphone und die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a>. Nach dem Aktivieren wird dir einmalig ein QR Code angezeigt, welchen du mit der App scannen musst. Achtug: Nach Aktivierung von Multi-Faktor-Authentisierung ist der Zugang nur noch mit dieser App möglich.",
+        "inactive": "Um Multi-Faktor-Authentisierung nutzen zu können benötigst du ein Smartphone und die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a>. Nach dem Aktivieren wird dir einmalig ein QR Code angezeigt, welchen du mit der App scannen musst. Achtung: Nach Aktivierung von Multi-Faktor-Authentisierung ist der Zugang nur noch mit dieser App möglich.",
         "active": "Multi-Faktor-Authentisierung ist aktiv."
       }
     }
