@@ -24,7 +24,8 @@ $sidePadding: 30px;
 
 #fs-share-link-settings-window {
   $checkboxSize: 20px;
-  $labelWidth: 250px;
+  $labelWidthS: 240px;
+  $labelWidthM: 250px;
 
   display: none;
   width: 700px + (2 * $sidePadding);
@@ -68,7 +69,7 @@ $sidePadding: 30px;
 
         & + label {
           padding-left: 10px;
-          width: $labelWidth;
+          width: $labelWidthS;
           line-height: $height;
 
           span {
@@ -125,10 +126,16 @@ $sidePadding: 30px;
           float: left;
         }
 
+        .fs-share-link-settings-window-checkbox {
+          & + label {
+            width: $labelWidthM;
+          }
+        }
+
         & > .k-datepicker,
         & > .k-timepicker,
         & > input[type="password"] {
-          width: calc(100% - #{$checkboxSize + $labelWidth}) !important;
+          width: calc(100% - #{$checkboxSize + $labelWidthM}) !important;
         }
       }
     }
