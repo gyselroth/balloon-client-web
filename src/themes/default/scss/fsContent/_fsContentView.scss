@@ -63,6 +63,9 @@
         &:before {
           display: none;
         }
+
+        max-height: calc(100vh - 120px);
+        overflow: scroll;
       }
 
       &.disabled {
@@ -153,6 +156,9 @@
             left: -30px;
             top: 0;
           }
+
+          max-height: auto;
+          overflow: auto;
         }
       }
     }

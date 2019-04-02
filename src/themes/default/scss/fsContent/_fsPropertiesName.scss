@@ -83,4 +83,25 @@
 
     color: $colorMediumGrey;
   }
+
+  .fs-value,
+  .fs-ext {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .fs-value {
+    text-overflow: ellipsis;
+    max-width: calc(100% - 50px);
+
+    &:last-child {
+      max-width: 100%;
+    }
+  }
+
+  .fs-ext {
+    text-transform: uppercase;
+  }
+
 }
