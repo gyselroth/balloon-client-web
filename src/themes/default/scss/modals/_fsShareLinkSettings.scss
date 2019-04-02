@@ -23,16 +23,15 @@ $sidePadding: 30px;
 }
 
 #fs-share-link-settings-window {
+  $checkboxSize: 20px;
+  $labelWidth: 250px;
+
   display: none;
   width: 700px + (2 * $sidePadding);
   padding-bottom: 31px;
 
-
   #fs-share-link-settings-window-content {
     .fs-share-link-settings-window-row {
-      $checkboxSize: 20px;
-      $labelWidth: 250px;
-
       @include clearfix;
 
       margin-bottom: 25px;
@@ -47,8 +46,13 @@ $sidePadding: 30px;
       & > input[type="password"] {
         display: block;
         box-sizing: border-box;
+      }
+
+      .fs-share-link-settings-window-checkbox,
+      & > label {
         float: left;
       }
+
 
       .fs-share-link-settings-window-checkbox {
         $height: 45px;
@@ -84,7 +88,7 @@ $sidePadding: 30px;
       & > .k-datepicker,
       & > .k-timepicker,
       & > input[type="password"] {
-        width: calc(100% - #{$checkboxSize + $labelWidth}) !important;
+        width: 100% !important;
 
         .k-select {
           top: 9px;
@@ -111,5 +115,22 @@ $sidePadding: 30px;
 
   .fs-window-secondary-actions {
     margin-top: 30px;
+  }
+
+  @media screen and (min-width: $breakpointWindowFullscreen+1px) {
+    #fs-share-link-settings-window-content {
+      .fs-share-link-settings-window-row {
+        & > input[type="text"],
+        & > input[type="password"] {
+          float: left;
+        }
+
+        & > .k-datepicker,
+        & > .k-timepicker,
+        & > input[type="password"] {
+          width: calc(100% - #{$checkboxSize + $labelWidth}) !important;
+        }
+      }
+    }
   }
 }

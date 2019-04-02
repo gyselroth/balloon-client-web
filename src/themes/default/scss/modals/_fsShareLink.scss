@@ -24,9 +24,10 @@ $sidePadding: 30px;
 
 #fs-share-link-window {
   $deleteButtonSize: 30px;
+  $windowWidth: 700px + (2 * $sidePadding);
 
   display: none;
-  width: 700px  + (2 * $sidePadding);
+  width: $windowWidth;
   padding-bottom: 30px;
 
   #fs-share-link-window-content {
@@ -34,13 +35,14 @@ $sidePadding: 30px;
       @include clearfix;
 
       p.fs-hint {
-        display:  block;
-        float: left;
-        width: 510px;
+        display: block;
+        float: none;
+        width: 100%;
+        margin-bottom: 10px;
 
         & + input {
           display: block;
-          float:  right;
+          float: none;
         }
       }
 
@@ -145,7 +147,6 @@ $sidePadding: 30px;
           border: none;
           background-color: transparent;
           background-image: none;
-          width: auto;
 
           input {
             float: left;
@@ -169,6 +170,22 @@ $sidePadding: 30px;
 
       .fs-window-secondary-actions {
         margin-top: 30px;
+      }
+    }
+  }
+
+  @media screen and (min-width: $windowWidth) {
+    #fs-share-link-window-content {
+      .fs-share-link-window-row {
+        p.fs-hint {
+          float: left;
+          width: 510px;
+          margin-bottom: 0;
+
+          & + input {
+            float: right;
+          }
+        }
       }
     }
   }
