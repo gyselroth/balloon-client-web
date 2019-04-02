@@ -232,6 +232,14 @@
     .fs-window-secondary-actions {
       input {
         margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &[name="cancel"] {
+          display: none;
+        }
       }
     }
   }

@@ -45,7 +45,15 @@ $sidePadding: 60px;
     left: 0;
 
     input:last-child {
-      margin-right: 60px;
+      margin-right: 30px;
+    }
+  }
+
+  @media screen and (min-width: $breakpointWindowFullscreen+1px) {
+    #fs-history-window-button-wrapper {
+      input:last-child {
+        margin-right: 60px;
+      }
     }
   }
 }
