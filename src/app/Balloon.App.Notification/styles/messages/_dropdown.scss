@@ -12,11 +12,11 @@ Styles for "message center"
       & > li {
         #fs-notifications-dropdown-wrap {
           width: 640px;
-          max-width: calc(100vw - 17px);
-          right: -52px;
+          max-width: calc(100vw - 20px);
+          right: -80px;
 
           .bln-dropdown-spike {
-            right: 54px;
+            right: 82px;
           }
 
           #fs-notifications-dropdown {
@@ -37,7 +37,12 @@ Styles for "message center"
 
         @media screen and (min-width: $breakpointMenuVisible) {
           #fs-notifications-dropdown-wrap {
-            max-width: calc(100vw - 87px);
+            max-width: calc(100vw - 107px);
+            right: -52px;
+
+            .bln-dropdown-spike {
+              right: 54px;
+            }
           }
         }
 
