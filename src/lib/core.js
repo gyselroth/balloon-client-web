@@ -1651,10 +1651,6 @@ var balloon = {
       }
     });
 
-    $('.fs-content-close').off('click').click(function() {
-      balloon.deselectAll();
-    });
-
     $('#fs-content-nav-small li').off('click').not('.disabled').click(function() {
       var action = $(this).attr('id').substr(15);
 
@@ -1663,8 +1659,10 @@ var balloon = {
       }
     });
 
-    $('.fs-content-close').off('click').click(function() {
-      balloon.deselectAll();
+    $('.fs-content-close').off('click').click(function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      $('#fs-browser-layout').removeClass('fs-content-visible');
     });
 
     $('#fs-content-view-header .fs-content-view-close').off('click').click(function(event) {
@@ -3381,6 +3379,9 @@ var balloon = {
     }
     var $target = $(e.target);
 
+    if($target.hasClass('fs-browser-column-icon') || $target.parents().hasClass('fs-browser-column-icon')) {
+      $('#fs-browser-layout').addClass('fs-content-visible');
+    }
 
     balloon.previous_clicked_id = balloon.last_clicked_id;
     balloon.last_clicked_id = $target.attr('fs-id') || $target.parents('[fs-id]').attr('fs-id');
@@ -8127,8 +8128,6 @@ var balloon = {
       actions.push('paste');
     }
 
-    $fs_browser_layout.toggleClass('fs-content-visible', enabled);
-
     if(enabled === true) {
       actions.push('download');
 
@@ -8386,6 +8385,7 @@ var balloon = {
         break;
 
       case 'selected':
+        $("#fs-browser-summary").hide();
         var $name = $("#fs-properties-name").hide();
         $name.find('.fs-sprite').removeAttr('class').addClass('fs-sprite');
         $name.find('.fs-value').html('');
