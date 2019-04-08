@@ -13,7 +13,8 @@ const {AuthorizationNotifier} = require('@openid/appauth/built/authorization_req
 const {RedirectRequestHandler} = require('@openid/appauth/built/redirect_based_handler.js');
 
 var login = {
-  token: undefined,
+  accessToken: undefined,
+  refreshToken: undefined,
   adapter: null,
   user: null,
   credentials: 'token',
@@ -95,7 +96,7 @@ var login = {
     this.notifier.setAuthorizationListener(function (request, response, error) {
       var hash = login.parseAuthorizationResponse();
       if (response && hash.access_token) {
-        login.token = hash.access_token;
+        login.accessToken = hash.access_token;
         login.adapter = 'oidc';
         login.internalIdp = false;
         login.verifyOidcAuthentication();
@@ -152,7 +153,7 @@ var login = {
           break;
 
         case 400:
-          if(login.token) {
+          if(login.accessToken) {
             login.adapter = 'oidc';
           } else {
             login.adapter = 'basic';
@@ -174,9 +175,9 @@ var login = {
       }
     }
 
-    if(login.token) {
+    if(login.accessToken) {
       options.headers = {
-        "Authorization": 'Bearer '+login.token,
+        "Authorization": 'Bearer '+login.accessToken,
       }
     }
 
@@ -184,7 +185,9 @@ var login = {
   },
 
   logout: function() {
-    login.token = null;
+    login.internalIdp = true;
+    login.refreshToken = null;
+    login.accessToken = null;
     login.destroyBrowser();
 
     $(window).unbind('popstate').bind('popstate', function(e) {
@@ -278,19 +281,46 @@ var login = {
   },
 
   getAccessToken: function() {
-    return login.token;
+    return login.accessToken;
   },
 
-  xmlHttpRequest: function(options) {
-    if(login.token && !options.disableToken) {
+  getRequestHeaders: function(options) {
+    if(login.accessToken && !options.disableToken) {
       if(options.headers) {
-        options.headers["Authorization"] = 'Bearer '+login.token;
+        options.headers["Authorization"] = 'Bearer '+login.accessToken;
       } else {
         options.headers = {
-          "Authorization": 'Bearer '+login.token
+          "Authorization": 'Bearer '+login.accessToken
         };
       }
     }
+
+    return options;
+  },
+
+  xmlHttpRequest: function(options) {
+    options = login.getRequestHeaders(options);
+
+    var error = options.error;
+    options.error = function(response) {
+      if(response.status === 401) {
+        if(login.refreshToken) {
+          login.renewToken().then(() => {
+            options.error = error;
+            options = login.getRequestHeaders(options);
+            return $.ajax(options);
+          }).catch(() => {
+            login.logout();
+          });
+        } else if(login.internalIdp === false && localStorage.lastIdpUrl) {
+          login.initOidcAuth(localStorage.lastIdpUrl);
+        } else {
+          login.logout();
+        }
+      } else if(error !== undefined) {
+        error(response);
+      }
+    };
 
     return $.ajax(options);
   },
@@ -309,6 +339,8 @@ var login = {
     if(!idp) {
       return false;
     }
+
+    localStorage.lastIdpUrl = provider_url;
 
     AuthorizationServiceConfiguration.fetchFromIssuer(idp.providerUrl).then(configuration => {
       var request = new AuthorizationRequest(
@@ -431,7 +463,8 @@ var login = {
       case 200:
         login.internalIdp = true;
         login.adapter = 'oidc';
-        login.token = response.responseJSON.access_token;
+        login.accessToken = response.responseJSON.access_token;
+        login.refreshToken = response.responseJSON.refresh_token;
         login.fetchIdentity();
         login.initBrowser();
         break;
@@ -442,6 +475,36 @@ var login = {
         $('#login-body').hide();
       break;
     }
+  },
+
+  renewToken: function() {
+    var $d = $.Deferred();
+    var $spinner = $('#fs-spinner').show();
+
+    $.ajax({
+      type: 'POST',
+      data: {
+        refresh_token: login.refreshToken,
+        grant_type: 'refresh_token',
+      },
+      url: '/api/v2/tokens',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
+      },
+      complete: function(response) {
+        if(response.responseJSON.access_token) {
+          login.accessToken = response.responseJSON.access_token;
+          $d.resolve();
+        } else {
+          login.logout();
+          $d.reject();
+        }
+      }
+    }).always(function() {
+      $spinner.hide();
+    });
+
+    return $d;
   },
 
   doMultiFactorTokenAuth: function(username, password, code) {

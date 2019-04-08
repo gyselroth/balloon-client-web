@@ -8773,20 +8773,18 @@ var balloon = {
    * @return  void
    */
   uploadFiles: function(files) {
-    var $div = $('#fs-uploadmgr');
-    var $k_manager_win = $div.kendoBalloonWindow({
-      title: $div.attr('title'),
-      resizable: false,
-      modal: true,
-    }).data("kendoBalloonWindow");
-
     balloon.resetDom(['upload-progress', 'uploadmgr-progress']);
 
     if(balloon.upload_manager === null ||
     balloon.upload_manager.count.transfer === balloon.upload_manager.count.upload) {
       balloon.resetDom('uploadmgr-progress-files');
 
+      if(balloon.upload_manager && balloon.upload_manager.window) {
+        balloon.upload_manager.window.close();
+      }
+
       balloon.upload_manager = {
+        window: undefined,
         progress: {
           mgr_percent: null,
           notifier_percent: null,
@@ -8876,7 +8874,7 @@ var balloon = {
     balloon._initProgress(balloon.upload_manager);
 
     $('#fs-upload-progress').unbind('click').click(function(){
-      $k_manager_win.center().open();
+      balloon._openUploadManagerWindow();
     });
 
     $('#fs-uploadmgr-files').html(
@@ -8890,6 +8888,28 @@ var balloon = {
 
     balloon._uploadManagerNext();
 
+  },
+
+  /**
+   * Opens the upload manager window
+   *
+   * @return void
+   */
+  _openUploadManagerWindow: function() {
+    var $div = $('#fs-uploadmgr');
+
+    if(!balloon.upload_manager.window) {
+      $div.kendoBalloonWindow({
+        title: $div.attr('title'),
+        resizable: false,
+        modal: true,
+      });
+
+      balloon.upload_manager.window = $div.data('kendoBalloonWindow');
+    }
+
+
+    balloon.upload_manager.window.center().open()
   },
 
   /**

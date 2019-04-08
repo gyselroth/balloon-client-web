@@ -1,3 +1,18 @@
+## 3.1.0-beta4
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+* [FIX] Avoid wrongly positioned upload manager #153
+
+## 3.1.0-beta3
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Apr 02 15:25:43 CEST 2019
+
+* [FIX] search summary attributes are now displayed correctly
+* [CHANGE] Renew access_token for token login #151
+* [FIX] Handle expired auth tokens #145
+
+
 ## 3.1.0-beta2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Mar 29 16:32:43 CET 2019
@@ -7,7 +22,7 @@
 * [FIX] fixed multi auth trigger if relogin is executed #141
 * [CHANGE] Make it possible to enable/disable apps #147
 * [FIX] loggedin user avatar gets loaded correctly
- 
+
 
 ## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
