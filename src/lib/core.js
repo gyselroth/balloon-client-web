@@ -4001,8 +4001,15 @@ var balloon = {
     }
 
     var node = balloon.getSelected(),
-      $target = $('#fs-browser').find('li[fs-id='+node.id+']').find('.fs-browser-column-name'),
+      $target,
       $input = $('<input class="fs-filename-rename" type="text" value="'+ node.name +'" />');
+
+
+    if(balloon.isMobileViewPort()) {
+      $target = $('#fs-properties-name div');
+    } else {
+      $target = $('#fs-browser').find('li[fs-id='+node.id+']').find('.fs-browser-column-name');
+    }
 
     balloon.rename_node = node;
     balloon.rename_input = $input;
@@ -7581,20 +7588,26 @@ var balloon = {
    */
   displayName: function(node) {
     var $fs_prop_name = $('#fs-properties-name div:first-child');
-    var $fs_content_view_header = $('#fs-content-view-header');
+    var $fs_content_view_header_filename = $('#fs-content-view-header-filename');
 
     var $field = $fs_prop_name.find('.fs-value');
-    var $field_header = $fs_content_view_header.find('.fs-value');
+    var $field_header = $fs_content_view_header_filename.find('.fs-value');
+
+    if($field.length === 0) {
+      $field = $('<span class="fs-value"></span>')
+      $fs_prop_name.append($field);
+    }
 
     var ext = balloon.getFileExtension(node);
     var name = node.name;
 
     $fs_prop_name.find('.fs-ext').remove();
-    $fs_content_view_header.find('.fs-ext').remove();
+    $fs_prop_name.find('input').remove();
+    $fs_content_view_header_filename.find('.fs-ext').remove();
 
     if(ext != null && node.directory == false) {
       $fs_prop_name.append('<span class="fs-ext">('+ext+')</span>');
-      $fs_content_view_header.append('<span class="fs-ext">('+ext+')</span>');
+      $fs_content_view_header_filename.append('<span class="fs-ext">('+ext+')</span>');
       var filename = name.substr(0, name.length-ext.length-1);
       $field.html(filename);
       $field_header.html(filename);
