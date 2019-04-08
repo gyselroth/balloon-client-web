@@ -1,3 +1,9 @@
+## 3.1.0-beta4
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+* [FIX] Avoid wrongly positioned upload manager #153
+
 ## 3.1.0-beta3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Apr 02 15:25:43 CEST 2019
@@ -16,7 +22,7 @@
 * [FIX] fixed multi auth trigger if relogin is executed #141
 * [CHANGE] Make it possible to enable/disable apps #147
 * [FIX] loggedin user avatar gets loaded correctly
- 
+
 
 ## 3.1.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
