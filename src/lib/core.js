@@ -1659,7 +1659,7 @@ var balloon = {
       }
     });
 
-    $('.fs-content-close').off('click').click(function(event) {
+    $('#fs-content-close').off('click').click(function(event) {
       event.stopPropagation();
       event.preventDefault();
       $('#fs-browser-layout').removeClass('fs-content-visible');

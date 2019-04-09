@@ -17,13 +17,22 @@ $fsContentSidePaddingS: 10px;
   display: none;
   z-index: 17;
 
+  #fs-content-close {
+    @include icon-button(24px);
+
+    position: absolute;
+    top: 20px;
+    right: 6px;
+    color: $colorMediumGrey;
+  }
+
   #fs-content-inner {
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
     border-bottom: 1px solid $colorBrightGrey;
     box-sizing: border-box;
-    padding: 22px $fsContentSidePaddingS 0;
+    padding: 42px $fsContentSidePaddingS 0;
   }
 
   .fs-content-visible & {
@@ -37,6 +46,10 @@ $fsContentSidePaddingS: 10px;
     top: $headerHeight;
     height: calc(100% - #{$headerHeight});
     display: block;
+
+    #fs-content-close {
+      display: none;
+    }
 
     #fs-content-inner {
       padding: 22px $fsContentSidePaddingM 0;

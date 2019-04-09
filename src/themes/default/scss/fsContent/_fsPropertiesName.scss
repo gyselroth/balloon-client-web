@@ -42,19 +42,12 @@
     }
   }
 
-  .fs-content-close {
-    @include icon-button(24px);
-
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: $colorMediumGrey;
-  }
-
   @media screen and (min-width: $breakpointPannelVisible) {
     @include font-paragraph-bold;
 
     div:first-child {
+      line-height: 20px;
+
       span {
         &.fs-value {
           max-width: calc(100% - #{$extWidth + $extMargin});
@@ -65,10 +58,21 @@
         }
       }
     }
+  }
+}
 
-    .fs-content-close {
-      display: none;
-    }
+#fs-browser-summary,
+#fs-properties-name {
+  position: absolute;
+  top: 22px;
+  left: 10px;
+  width: calc(100% - 44px);
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
   }
 }
 
