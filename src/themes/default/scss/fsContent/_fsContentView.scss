@@ -31,6 +31,7 @@
 
     background-color: $colorWhite;
     padding: 0 $fsContentSidePaddingS*2;
+    height: calc(100% - 65px);
 
     dt {
       display: none;
@@ -64,7 +65,7 @@
           display: none;
         }
 
-        max-height: calc(100vh - 120px);
+        max-height: calc(100% - 55px);
         overflow: scroll;
       }
 
@@ -80,6 +81,7 @@
     right: auto;
     top: auto;
     bottom: auto;
+    height: auto;
 
     &.active-mobile {
       right: auto;
