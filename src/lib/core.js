@@ -1646,9 +1646,7 @@ var balloon = {
     $('#fs-properties-name').show();
 
 
-    if(!balloon.isMobileViewPort()) {
-      balloon.updatePannel(true);
-    }
+    balloon.updatePannel(true);
 
     $('#fs-content-view dt').unbind('click').not('.disabled').click(function() {
       var $that = $(this),
