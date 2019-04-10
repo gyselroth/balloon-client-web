@@ -3498,9 +3498,6 @@ var balloon = {
    * @return bool
    */
   isMobileViewPort: function() {
-    //TODO pixtron - change this
-    return false;
-
     if(balloon.DEBUG_SIMULATOR.mobileport === true) {
       return true;
     }
