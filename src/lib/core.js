@@ -6656,6 +6656,8 @@ var balloon = {
         balloon.resetDom('multiselect');
       },
       success: function(data) {
+        $('#fs-browser-layout').removeClass('fs-content-visible');
+
         var count = 1;
         if(node instanceof Array) {
           count = node.length;
