@@ -12,6 +12,7 @@
 
   position: absolute;
   width: 100%;
+  height: 100%;
   right: -100%;
   top: 0;
   bottom: 0;
@@ -29,6 +30,7 @@
   #fs-content-view {
     @include accordion($fsContentSidePaddingS);
 
+    position: relative;
     background-color: $colorWhite;
     padding: 0 $fsContentSidePaddingS*2;
     height: calc(100% - 65px);

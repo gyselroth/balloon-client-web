@@ -28,8 +28,7 @@ $fsContentSidePaddingS: 10px;
 
   #fs-content-inner {
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     border-bottom: 1px solid $colorBrightGrey;
     box-sizing: border-box;
     padding: 42px $fsContentSidePaddingS 0;
@@ -52,6 +51,8 @@ $fsContentSidePaddingS: 10px;
     }
 
     #fs-content-inner {
+      overflow-x: hidden;
+      overflow-y: auto;
       padding: 22px $fsContentSidePaddingM 0;
     }
   }
