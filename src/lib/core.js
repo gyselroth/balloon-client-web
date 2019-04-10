@@ -639,6 +639,12 @@ var balloon = {
       balloon._updateCheckAllState();
     });
 
+    $('#fs-content-close').off('click').click(function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      $('#fs-browser-layout').removeClass('fs-content-visible');
+    });
+
     for(let i=1; i<=25; i++) {
       this.addHint("hint.hint_"+i);
     }
@@ -1657,12 +1663,6 @@ var balloon = {
       if($('#fs-content-view-wrap').hasClass('active-mobile') === false || balloon.getViewName() != action) {
         balloon.switchView(action, true);
       }
-    });
-
-    $('#fs-content-close').off('click').click(function(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      $('#fs-browser-layout').removeClass('fs-content-visible');
     });
 
     $('#fs-content-view-header .fs-content-view-close').off('click').click(function(event) {
