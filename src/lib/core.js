@@ -3381,7 +3381,11 @@ var balloon = {
     }
     var $target = $(e.target);
 
-    if($target.hasClass('fs-browser-column-icon') || $target.parents().hasClass('fs-browser-column-icon')) {
+    if(
+      ($target.hasClass('fs-browser-column-icon') || $target.parents().hasClass('fs-browser-column-icon'))
+      && $target.parents('[role="treeitem"]').hasClass('fs-folderup') === false
+    ) {
+      //show panel on tree icon click, but not for _FOLDERUP items
       $('#fs-browser-layout').addClass('fs-content-visible');
     }
 
