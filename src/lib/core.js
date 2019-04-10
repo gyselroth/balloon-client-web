@@ -509,14 +509,9 @@ var balloon = {
         .off('touchmove', '.k-in').on('touchmove', '.k-in', balloon._treeTouchMove);
     }
 
-    if(!balloon.isTouchDevice() && balloon.isMobileViewPort()) {
-      $fs_browser_tree
-        .off('dblclick', '.k-in').on('click', '.k-in', balloon._treeDblclick);
-    } else {
-      $fs_browser_tree
-        .off('click', '.k-in').on('click', '.k-in', balloon._treeClick)
-        .off('dblclick', '.k-in').on('dblclick', '.k-in', balloon._treeDblclick);
-    }
+    $fs_browser_tree
+      .off('click', '.k-in').on('click', '.k-in', balloon._treeClick)
+      .off('dblclick', '.k-in').on('dblclick', '.k-in', balloon._treeDblclick);
 
     balloon.displayQuota();
 
