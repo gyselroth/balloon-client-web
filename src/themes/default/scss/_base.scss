@@ -3,6 +3,7 @@ body,
 #fs-namespace {
   height: 100%;
   position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
 svg,
