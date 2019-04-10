@@ -464,6 +464,8 @@ var balloon = {
     balloon.createDatasource();
     balloon.initCrumb();
 
+    balloon._initSwipeEvents();
+
     $(".fs-action-element").unbind('click').click(balloon.doAction);
     $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
 
@@ -9276,6 +9278,52 @@ var balloon = {
       return balloon.toggle_fs_browser_action_hooks[key]();
     });
   },
+
+  _initSwipeEvents: function() {
+    var $fs_browser_top_bar = $('#fs-browser-top-bar');
+    var threshhold = $fs_browser_top_bar.width() / 4;
+    var direction;
+    var x0;
+
+    function unify(e) {
+      return e.changedTouches ? e.changedTouches[0] : e;
+    }
+
+    function touchstart(e) {
+      x0 = unify(e).clientX;
+    }
+
+    function touchemove(e) {
+      e.preventDefault();
+
+      if(direction === undefined) {
+        direction = (unify(e).clientX - x0) > 0  ? 'right' : 'left';
+      }
+    }
+
+    function touchend(e) {
+      var xDiff = unify(e).clientX - x0;
+
+      switch(direction) {
+      case 'left':
+        if(xDiff * -1 > threshhold) {
+          $('#fs-browser-layout').addClass('fs-content-visible');
+        }
+        break;
+      case 'right':
+        if(xDiff > threshhold) {
+          $('#fs-menu-left').addClass('fs-menu-left-open');
+        }
+        break;
+      }
+
+      direction = undefined;
+    };
+
+    $fs_browser_top_bar.off('touchstart').on('touchstart', touchstart);
+    $fs_browser_top_bar.off('touchmove').on('touchmove', touchemove);
+    $fs_browser_top_bar.off('touchend').on('touchend', touchend);
+  }
 };
 
 import './app.js';
