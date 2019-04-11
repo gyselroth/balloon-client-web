@@ -35,6 +35,12 @@ $sidePadding: 50px;
 
   dl {
     @include accordion($sidePadding, false);
+
+    dt {
+      .gr-icon {
+        right: 50px;
+      }
+    }
   }
 
   #fs-profile-window-quota {
@@ -182,6 +188,17 @@ $sidePadding: 50px;
           input[type='password'] {
             width: calc(100% - #{$labelWidth + 15px});
           }
+        }
+      }
+    }
+}
+
+@media screen and (min-width: $breakpointWindowFullscreen + 1px) {
+  #fs-profile-window {
+    dl {
+      dt {
+        .gr-icon {
+          right: 20px;
         }
       }
     }
