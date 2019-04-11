@@ -144,8 +144,6 @@ $sidePadding: 50px;
   }
 
   #fs-profile-window-google-authenticator {
-    @include clearfix;
-
     p {
       margin-bottom: 20px;
 
@@ -160,14 +158,13 @@ $sidePadding: 50px;
     }
 
     #fs-profile-window-google-authenticator-buttons {
-      float: left;
-      width: calc(100%-200px);
+      width: 100%;
     }
 
     #fs-profile-window-google-authenticator-code {
-      float: right;
       width: 200px;
       height: 200px;
+      margin-top: 20px;
     }
   }
 }
@@ -191,6 +188,21 @@ $sidePadding: 50px;
         }
       }
     }
+
+    #fs-profile-window-google-authenticator {
+      @include clearfix;
+
+      #fs-profile-window-google-authenticator-buttons {
+        float: left;
+        width: calc(100% - 200px);
+      }
+
+      #fs-profile-window-google-authenticator-code {
+        float: right;
+        margin-top: 0;
+      }
+    }
+  }
 }
 
 @media screen and (min-width: $breakpointWindowFullscreen + 1px) {
