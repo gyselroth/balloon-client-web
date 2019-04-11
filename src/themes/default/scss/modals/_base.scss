@@ -22,28 +22,17 @@
   }
 
   .fs-window-form {
-    $labelWidth: 100px;
-    $labelMarginRight: 15px;
-
-    @include clearfix;
-
     padding-top: 30px;
-
-    label,
-    input {
-      float: left;
-    }
 
     label {
       padding: 0;
-      width: $labelWidth;
+      width: 100%;
       line-height: 45px;
-      margin-right: $labelMarginRight;
       margin-bottom: 10px;
     }
 
     input[type=text],input[type=password] {
-      width: calc(100% - #{$labelWidth + $labelMarginRight});
+      width: 100%;
 
       font-size: $fontSizeParagraph;
       font-weight: $fontWeightParagraph;
@@ -189,6 +178,30 @@
       width: calc(100% + #{2 * $sidePadding};
       margin-left: $sidePadding * -1;
       margin-right: $sidePadding * -1;
+    }
+  }
+
+  @media only screen and (min-width: $breakpointWindowFormsFloat) {
+    .fs-window-form {
+      $labelWidth: 100px;
+      $labelMarginRight: 15px;
+
+      @include clearfix;
+
+      label,
+      input {
+        float: left;
+      }
+
+      label {
+        width: $labelWidth;
+        margin-right: $labelMarginRight;
+
+      }
+
+      input[type=text],input[type=password] {
+        width: calc(100% - #{$labelWidth + $labelMarginRight});
+      }
     }
   }
 

@@ -6,7 +6,7 @@ $sidePadding: 50px;
 
 .fs-profile-window {
 
-  width: 800px  ;
+  width: 800px;
 
   & > div.k-header {
     padding: 0 $sidePadding;
@@ -137,24 +137,6 @@ $sidePadding: 50px;
     }
   }
 
-  #fs-profile-window-change-password {
-    .fs-window-form {
-      $labelWidth: 150px;
-
-      & > div {
-        @include clearfix;
-
-        label {
-          width: $labelWidth;
-        }
-
-        input[type='password'] {
-          width: calc(100% - #{$labelWidth + 15px});
-        }
-      }
-    }
-  }
-
   #fs-profile-window-google-authenticator {
     @include clearfix;
 
@@ -181,8 +163,28 @@ $sidePadding: 50px;
       width: 200px;
       height: 200px;
     }
+  }
+}
 
+@media only screen and (min-width: $breakpointWindowFormsFloat) {
+  #fs-profile-window {
+    #fs-profile-window-change-password {
+      .fs-window-form {
+        $labelWidth: 150px;
 
+        & > div {
+          @include clearfix;
+
+          label {
+            width: $labelWidth;
+          }
+
+          input[type='password'] {
+            width: calc(100% - #{$labelWidth + 15px});
+          }
+        }
+      }
+    }
   }
 }
 
