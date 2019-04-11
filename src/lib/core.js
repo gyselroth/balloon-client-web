@@ -5863,9 +5863,9 @@ var balloon = {
 
         $fs_share_link.val(window.location.origin+'/share/'+node.sharelink_token);
         $fs_share_link.unbind('click').bind('click', function() {
-          this.select();
-          document.execCommand('copy');
-          this.selectionEnd = this.selectionStart;
+
+          balloon.copyToClipboard($(this).val());
+
           balloon.showSnackbar({message: 'view.share_link.link_copied'});
         });
 
@@ -7730,12 +7730,7 @@ var balloon = {
    * @return void
    */
   _copyPermaLink: function(id) {
-    var tmpEl = document.createElement('textarea');
-    tmpEl.value = balloon._buildPermaLink(id, false);
-    document.body.appendChild(tmpEl);
-    tmpEl.select();
-    document.execCommand('copy');
-    document.body.removeChild(tmpEl);
+    balloon.copyToClipboard(balloon._buildPermaLink(id, false));
 
     balloon.showSnackbar({message: 'view.share_link.link_copied'});
   },
@@ -9319,6 +9314,40 @@ var balloon = {
     $fs_browser_top_bar.off('touchstart').on('touchstart', touchstart);
     $fs_browser_top_bar.off('touchmove').on('touchmove', touchemove);
     $fs_browser_top_bar.off('touchend').on('touchend', touchend);
+  },
+
+  /**
+   * Copies a value to clipboard
+   *
+   * @param string value value to copy
+   * @return void
+   */
+  copyToClipboard: function(value) {
+    var tmpEl = document.createElement('textarea');
+
+    document.body.appendChild(tmpEl);
+
+    tmpEl.contentEditable = true;
+    tmpEl.readOnly = false;
+    tmpEl.value = value;
+
+    var range = document.createRange();
+    range.selectNodeContents(tmpEl);
+
+    var s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(range);
+
+    var userAgent = window.navigator.userAgent;
+    if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i)) {
+      tmpEl.setSelectionRange(0, 999999);
+    } else {
+      tmpEl.select();
+    }
+
+    document.execCommand('copy');
+
+    document.body.removeChild(tmpEl);
   }
 };
 
