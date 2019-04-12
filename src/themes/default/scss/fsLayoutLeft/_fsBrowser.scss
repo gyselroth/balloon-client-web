@@ -61,7 +61,13 @@
   }
 
   .fs-browser-column-checkbox {
-    @include checkbox($checkboxWidth);
+    margin: -15px -17px -15px -14px;
+    padding: 15px 17px 15px 14px;
+
+    span {
+      @include checkbox($checkboxWidth);
+      display: block;
+    }
   }
 
   #fs-browser-header {
@@ -84,7 +90,7 @@
     }
 
     .fs-browser-column-name {
-      width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
+      width: calc(100% - #{$iconWidth + $checkboxWidth + 2px});
     }
 
     .fs-browser-column-size,
@@ -95,20 +101,31 @@
     }
 
     #fs-browser-header-checkbox {
-      width: $checkboxWidth;
-      height: $checkboxWidth;
-      border: 1px solid $colorMediumGrey;
-      border-radius: 2px;
       cursor: pointer;
+      display: inline-block;
+
+      padding: 15px 16px 15px 15px;
+
+      span {
+        display: block;
+        width: $checkboxWidth;
+        height: $checkboxWidth;
+        border: 1px solid $colorMediumGrey;
+        border-radius: 2px;
+      }
 
       &.fs-browser-header-checkbox-checked {
-        @include checkboxChecked;
+        span {
+          @include checkboxChecked;
 
-        background-size: 20px;
+          background-size: 20px;
+        }
       }
 
       &.fs-browser-header-checkbox-undetermined {
-        @include checkboxUndetermined;
+        span {
+          @include checkboxUndetermined;
+        }
       }
     }
 
@@ -319,9 +336,11 @@
           padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
 
           .fs-browser-column-checkbox {
-            @include checkboxChecked;
+            span {
+              @include checkboxChecked;
 
-            background-size: 20px;
+              background-size: 20px;
+            }
           }
         }
       }
@@ -410,7 +429,7 @@
       }
 
       .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
+        width: calc(100% - #{$iconWidth + $sizeWidth + $checkboxWidth + 2px});
       }
     }
 
@@ -441,7 +460,7 @@
       }
 
       .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+        width: calc(100% - #{$iconWidth + $changedWidth + $sizeWidth + $checkboxWidth + 2px});
       }
     }
 
@@ -468,7 +487,7 @@
       }
 
       .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
+        width: calc(100% - #{$iconWidth + $checkboxWidth + 2px});
       }
     }
 
@@ -502,7 +521,7 @@
           }
 
           .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth});
+            width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth + 2px});
           }
         }
       }
@@ -516,7 +535,7 @@
       }
 
       .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
+        width: calc(100% - #{$iconWidth + $sizeWidth + $checkboxWidth + 2px});
       }
     }
 
@@ -547,7 +566,7 @@
       }
 
       .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
+        width: calc(100% - #{$iconWidth + $changedWidth + $sizeWidth + $checkboxWidth + 2px});
       }
     }
 
