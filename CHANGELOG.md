@@ -1,8 +1,9 @@
-## 3.1.0-beta4
+## 3.1.0
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Fri Apr 12 15:33:34 CEST 2019
 
 * [FIX] Avoid wrongly positioned upload manager #153
+
 
 ## 3.1.0-beta3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
