@@ -22,7 +22,8 @@
       background-color: $colorBrightGrey;
 
       .k-link {
-        font-size: 15px;
+        font-size: $fontSizeParagraph;
+        font-weight: $fontWeightParagraph;
         line-height: 28px !important;
         height: 28px !important;
         margin-top: 0;
@@ -67,7 +68,7 @@
       th,
       td {
         padding: 2px 6px 2px 2px;
-        font-size: 13px;
+        font-size: $fontSizeParagraphSmall;
         line-height: 26px;
         color: $colorDarkGrey;
         text-align: center;
@@ -93,7 +94,7 @@
           border-radius: 2px;
 
           &.k-link {
-            font-size: 13px;
+            font-size: $fontSizeParagraphSmall;
             line-height: 26px;
           }
         }

@@ -30,7 +30,12 @@ $sidePadding: 50px;
 }
 
 #fs-profile-window {
+  $lineHeight: 30px;
   display: none;
+
+  dl {
+    @include accordion($sidePadding, false);
+  }
 
   #fs-profile-window-quota {
     position: relative;
@@ -51,9 +56,9 @@ $sidePadding: 50px;
         th,
         td {
           width: 170px;
-          font-size: 15px;
-          line-height: 30px;
-          font-weight: normal;
+          font-size: $fontSizeParagraph;
+          line-height: $lineHeight;
+          font-weight: $fontWeightParagraph;
           text-align: left;
           color: $colorDarkGrey;
           text-align: left;
@@ -75,7 +80,7 @@ $sidePadding: 50px;
           &:before {
             display: block;
             position: absolute;
-            top: 12.5px;
+            top: 14px;
             left: 0;
             content: "";
             background-color: $usedColor;
@@ -118,9 +123,9 @@ $sidePadding: 50px;
       td {
         color: $colorMediumGrey;
         width: 110px;
-        font-size: 15px;
-        font-weight: normal;
-        line-height: 30px;
+        font-size: $fontSizeParagraph;
+        font-weight: $fontWeightParagraph;
+        line-height: $lineHeight;
         text-align: left;
       }
 
@@ -130,6 +135,54 @@ $sidePadding: 50px;
         width: 346px;
       }
     }
+  }
+
+  #fs-profile-window-change-password {
+    .fs-window-form {
+      $labelWidth: 150px;
+
+      & > div {
+        @include clearfix;
+
+        label {
+          width: $labelWidth;
+        }
+
+        input[type='password'] {
+          width: calc(100% - #{$labelWidth + 15px});
+        }
+      }
+    }
+  }
+
+  #fs-profile-window-google-authenticator {
+    @include clearfix;
+
+    p {
+      margin-bottom: 20px;
+
+      a {
+        color: $colorActiveBlue;
+
+        &:hover {
+          text-decoration: underline;
+          color: $colorHoverBlue;
+        }
+      }
+    }
+
+    #fs-profile-window-google-authenticator-buttons {
+      float: left;
+      width: calc(100%-200px);
+    }
+
+    #fs-profile-window-google-authenticator-code {
+      float: right;
+      width: 200px;
+      height: 200px;
+    }
+
+
   }
 }
 

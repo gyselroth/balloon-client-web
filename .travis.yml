@@ -1,7 +1,7 @@
 dist: trusty
 sudo: false
 language: node_js
-node_js: '7'
+node_js: '8'
 os:
 - linux
 notifications:
@@ -12,8 +12,8 @@ before_install:
 - if [ "$version" == "" ]; then version=$TRAVIS_BUILD_NUMBER; fi;
 script: make VERSION=$version deb tar
 before_deploy:
-- if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; else export
-  deb_distribution=stable; fi;
+- if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; docker_tag=latest-unstable; else export
+  deb_distribution=stable; docker_tag=latest; fi;
 - if [[ "$TRAVIS_BRANCH" == "master" ]]; then export deb_distribution=nightly; fi;
 - export date=$(date +%Y-%m-%d)
 - cp packaging/debian/bintray.json bintray.json
@@ -39,8 +39,12 @@ deploy:
   key:
     secure: dqYiouXasiWqN2J+OeZGVnyNkpP3In3+WL55OctHYdJJmUACxlfc4yislhtYZVLNJB3BP2GI/HXpgmGDMjP/X8qaFsup8FnHGge/3k/S8TEUP5NneFaGXXfWKi3yac0cYvO1FOi1B2rp50XvXco2ydg9ETD8ZSPzMiVysP3/iAzTeyAVvjkOIGUMNYH4XKVfuVg4ba6qeHGa3/GdIwF5OvDdj9T58cPjN7LHIUjDE1xEFtzgs4R0vclKfIJglOVHWmv2a6nOi9CQfaiVi6evGhHSoO9G25ragR1Nsiluijx/ASjPuTiG7ZU/1p7VlsKv5HVTVi/7ARtJZAkg9LjFp8T2DeWuA5kzt2v8rNU18bouSMZu49NGky4l0S4qJsYtB1Nof+Ti2tEBfifv1v//Ey5gRFVfLWPzJ7td55xm3JN5KynPIoIuW9XcgkLIlCZyGSsuxggqPnIUzGS79yybps1UQH6VrN2Hn94kO7aLrRahe61EkvgqUB6WYOM35OyaGinvVM+FIGeWWxtDXRzYLLoxxq6AP4CczSgSt3nUcdVVnwRg0m0vz/IKwg4SG4XEsLBleCNe8FJkdC8VN3mQyww1kgyxpxumE9WgebXFPBxRILqS+zcD33X0Rc5hrKy7A5fm0bfvFqMut+H+kvNlzVHtf0/gVd3h+p46pF2sr08=
 after_deploy:
-- "if [ \"$TRAVIS_TAG\" != \"\" ]; then curl -s -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' -H 'Travis-API-Version: 3' -H \"Authorization: token $TRAVIS_API_TOKEN\" -d '{\"request\":{\"message\":\"trigger build\", \"branch\":\"master\", \"config\":{\"env\":{\"REPOSITORY\": \"'\"$deb_distribution\"'\", \"VERSION\":\"'\"$version\"'\"}}}}' \"https://api.travis-ci.org/repo/gyselroth%2Fballoon-docker-web/requests\"; fi"
+  - test "$TRAVIS_TAG" != "" && version=${TRAVIS_TAG:1};
+  - test "$TRAVIS_TAG" != "" && docker build -t gyselroth/balloon-web:$version .
+  - test "$TRAVIS_TAG" != "" && docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - test "$TRAVIS_TAG" != "" && docker tag gyselroth/balloon-web:$version gyselroth/balloon-web:$docker_tag
+  - test "$TRAVIS_TAG" != "" && docker push gyselroth/balloon-web:$version
+  - test "$TRAVIS_TAG" != "" && docker push gyselroth/balloon-web:$docker_tag
 env:
   global:
   - secure: m13MizT1AcfECjdbtO7HkyNU4fNti73FhsAJu88DIY2k97zERfZWybABEcCZYShGByuwJJpi4Gr23G2QIBKb9zDDAGXYJw9BjN3lbCT8SGIu/eEBUi3FZRR0p/sjA3Re9pQuSGHxBZwUouPsUHyyugdLij5/8s0oJBPaWYRv/HWfd862d4y9pV8VpG+2EUEqC2oDWRvRQdFRTNu7/XgSKj/7Xf3Rz0BBFT0jEMb4x11R+9QctqRqDK85WsZEwquTrHOkvs9j50Ojim1DZ/AuPWicv1KYT1aMjeTWkhcZjFQ15tfuKhKj872fA7ohd8Qqp2ygGk88pU+2w0WyeiwHbp8GHtNHOQqO8B7kXqslo2ZXZs36nKP6E/n7Lw37MeJOgW6Py2QIx/1VNRv9tpybTq3CzgxXa2A8uw1gdjwH0kdmJZ/AM+oDq5lq4RjgVx4Ne4bcQpwe0p19AhtdO9P5kjdNPor6UgBmx6IFoyiaBcrrHYbZue7IfPL83BkXuPu07oocFB558kcQ+TV+8RuHhID7Kg+slsWaRwIxia1AUEWNEAjLfVgoXkHzCdTtdvS5HPGvKTz8a62yfQqYCFeCn6Ioi4mPTtYRLsnynuZoktYe3oSzJcqz3T/RKcinOxjTxJ5DJUSgkhbruPaImEwweJS87pwe5SlMMX18xjVNVUo=
-

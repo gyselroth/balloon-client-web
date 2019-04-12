@@ -3,8 +3,13 @@
 
   margin-top: 16px;
   height: $buttonHeight;
+  width: 345px;
 
   li {
     @include icon-button-small($buttonHeight, $buttonHeight);
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }

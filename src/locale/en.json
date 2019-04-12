@@ -5,13 +5,16 @@
     "password": "Password",
     "login": "Login",
     "logout": "Logout",
+    "code": "Code",
+    "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
     "help": "Hilfe",
     "error": {
       "server": "The balloon server reports an ongoing incident, please try it again later.",
-      "basic": "Wrong username or password given.",
+      "credentials": "Wrong username or password given.",
+      "code": "Invalid code provided.",
       "oidc": "There was an error authenticate you via the choosen identity provider."
     }
   },
@@ -22,12 +25,29 @@
     "quota_used": "Used Storage",
     "quota_unlimited": "Unlimited",
     "user": "User",
+    "nav": {
+      "overview": "Overview",
+      "change-password": "Change password",
+      "google-authenticator": "Two factor authentication"
+    },
     "attribute": {
       "id": "User Id",
       "created": "Created",
       "username": "Username",
       "name": "Name",
       "mail": "E-mail"
+    },
+    "google-authenticator": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "confirm": {
+        "activate": "Do you really want to activate multi factor authentication? After the activation the login will only be possible using the google authenticator app.",
+        "deactivate": "Do you really want to deactivate multi factor authentication?"
+      },
+      "hint": {
+        "inactive": "In order to activate multi factor authentication, you need a smartphone and the app <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=en\" target=\"blank\">Google Authenticator</a>. After activating multi factor authentication a QR code, which you need to scan with the app, will be displayed. Attention, after the activation the login will only be possible using the google authenticator app.",
+        "active": "Multi factor authentication is enabled."
+      }
     }
   },
   "nav": {
@@ -44,7 +64,8 @@
       "cut": "Cut",
       "paste": "Paste",
       "filter": "Filter",
-      "rename": "Rename"
+      "rename": "Rename",
+      "perma-link": "Copy permalink"
     },
     "view": {
       "preview": "Preview",
@@ -68,6 +89,10 @@
     "results": "Searchresults",
     "reset_filter": "Reset",
     "apply_filter": "Apply",
+    "mode": {
+      "fulltext": "Fulltext",
+      "nodename": "Filename"
+    },
     "filter": {
       "color": "Color",
       "tags": "Tags",
@@ -155,7 +180,8 @@
         "copyright": "Copyright",
         "path": "Path",
         "coordinate": "Coordinate",
-        "author": "Author"
+        "author": "Author",
+        "perma-link": "Permalink"
       },
       "data": {
         "size": "%s (%s Bytes)",
@@ -261,6 +287,12 @@
     },
     "events": {
       "show_all": "Show all events"
+    },
+    "change-password": {
+      "password": "Password",
+      "password-repeat": "Repeat password",
+      "password-old": "Current password",
+      "success": "The password has been changed"
     }
   },
   "error": {

@@ -1,4 +1,4 @@
-var fileExtIconMap = {
+var mimeFileExtMap = {
   "application/pdf": "pdf",
   "application/msaccesscab": "accdc",
   "application/x-csh": "csh",
@@ -51,4 +51,17 @@ var fileExtIconMap = {
   "audio/wav": "wav"
 };
 
-export default fileExtIconMap;
+//create file extension to mime map
+var fileExtMimeMap = {};
+var mime;
+for(mime in mimeFileExtMap) {
+  var ext = mimeFileExtMap[mime];
+
+  if(fileExtMimeMap[ext] === undefined) {
+    fileExtMimeMap[ext] = [mime];
+  } else {
+    fileExtMimeMap[ext].push(mime);
+  }
+}
+
+export {fileExtMimeMap, mimeFileExtMap}

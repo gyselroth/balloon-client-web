@@ -24,30 +24,10 @@
     select {
       float: left;
       width: calc(100% - #{$buttonSize + $buttonMarginLeft});
-
       height: $buttonSize;
-      box-sizing: border-box;
-      border: 1px solid $colorLightGrey;
-      border-radius: 4px;
-      background-color: $colorWhite;
-      padding: 0 10px;
-      font-size: 15px;
-      line-height: 30px;
-      color: $colorMediumGrey;
-
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-
-      &::-ms-extend {
-        display: none;
-      }
     }
 
     .gr-i-expand {
-      position: absolute;
-      color: $colorMediumGrey;
-      top: 3px;
       right: $buttonSize + $buttonMarginLeft;
     }
 

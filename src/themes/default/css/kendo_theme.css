@@ -1002,7 +1002,7 @@ th.k-header * {
 
 .k-filter-menu.k-group {
     background-color: #F0F0F0;
-    font-size: 13px !important;
+    font-size: 14px !important;
     white-space: nowrap;
     border-radius: 0 0 5px 5px;
 }
@@ -1052,7 +1052,7 @@ th.k-header * {
 /** kendo form elements **/
 
 .k-input[type="text"] {
-    font-size: 13px;
+    font-size: 14px;
 }
 
 

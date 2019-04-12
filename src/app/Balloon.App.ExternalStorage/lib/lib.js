@@ -8,6 +8,7 @@
 import $ from "jquery";
 import balloonWindow from '../../../lib/widget-balloon-window.js';
 import i18next from 'i18next';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 import css from '../styles/style.scss';
 
 var app = {
@@ -38,9 +39,12 @@ var app = {
     $div.html(
       '<div class="error-message"></div>'+
       '<div>'+
-        '<select>'+
-          '<option value="smb">'+i18next.t('app.externalstorage.smb_share')+'</option>'+
-        '</select>'+
+        '<div class="fs-external-storage-select">'+
+          '<select>'+
+            '<option value="smb">'+i18next.t('app.externalstorage.smb_share')+'</option>'+
+          '</select>'+
+          '<svg class="gr-icon gr-i-expand"><use xlink:href="'+iconsSvg+'#expand"></use></svg>'+
+        '</div>'+
         '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
@@ -223,6 +227,7 @@ var app = {
           break;
 
           default:
+            app.balloon.displayError(error);
         }
       },
       success: function(data) {

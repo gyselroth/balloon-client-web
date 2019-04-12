@@ -122,7 +122,10 @@ var app = {
         app.$contentMessagesCount.html(body.total).show();
         app.$contentMessagesDropdown.addClass('has-messages');
 
-        var messages = body.data;
+        var messages = body.data.sort((a, b) => {
+          //newer messages should be on top
+          return (new Date(b.created))-(new Date(a.created));
+        });
 
         for(var i=0; i<messages.length; i++) {
           var meta;

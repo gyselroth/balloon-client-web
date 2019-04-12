@@ -8,8 +8,8 @@
     span.fs-share-hint-owner-only {
       float: left;
       line-height: $consumerItemSize;
-      font-size: 13px;
-      font-weight: 300;
+      font-size: $fontSizeParagraphSmall;
+      font-weight: $fontWeightParagraphSmall;
       color: $colorMediumGrey;
     }
 
@@ -61,7 +61,8 @@
             color: $colorWhite;
             background-color: $colorDarkGrey;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: $fontSizeParagraphSmall;
+            font-weight: $fontWeightParagraphSmall;
             line-height: 16px;
             text-align: center;
             padding: 5px 10px;

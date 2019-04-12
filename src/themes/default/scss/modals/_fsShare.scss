@@ -30,29 +30,25 @@ $sidePadding: 30px;
   padding-bottom: 30px;
 
   #fs-share-window-content {
-    .fs-hint {
-      color: $colorMediumGrey;
-      font-size: 13px;
-      line-height: 18px;
-    }
-
     h2 {
-      font-size: 15px;
-      line-height: 20px;
+      font-size: $fontSizeParagraphBold;
+      line-height: $lineHeightParagraphBold;
+      font-weight: $fontWeightParagraphBold;
       color: $colorDarkGrey;
       margin: 19px 0 8px;
     }
 
     input[type="text"],
     input.k-input[type="text"] {
-      font-size: 15px;
-      padding: 13px 15px 14px;
+      font-size: $fontSizeParagraph;
+      font-weight: $fontWeightParagraph;
+      padding: 12px 15px 13px;
       height: auto;
 
       &:focus {
         border-color: $colorActiveBlue;
         border-width: 2px;
-        padding: 12px 14px 13px;
+        padding: 11px 14px 12px;
       }
     }
 
@@ -64,7 +60,7 @@ $sidePadding: 30px;
         cursor: pointer;
 
         .fs-share-window-selected-privilege-label {
-          font-size: 13px;
+          font-size: $fontSizeParagraphSmall;
           line-height: 14px;
           vertical-align: middle;
           margin-right: 2px;
@@ -113,7 +109,8 @@ $sidePadding: 30px;
 
         & > li {
           color: $colorDarkGrey;
-          font-size: 15px;
+          font-size: $fontSizeParagraph;
+          font-weight: $fontWeightParagraph;
           line-height: 30px;
           margin: 0;
           padding-left: 30px;
@@ -152,7 +149,6 @@ $sidePadding: 30px;
 
       a {
         color: $colorActiveBlue;
-        font-size: 13px;
         line-height: 38px;
         cursor: pointer;
 
@@ -164,31 +160,12 @@ $sidePadding: 30px;
     }
 
     #fs-share-window-remove {
-      @include clearfix;
-      position: relative;
-      margin-top: 20px;
-      color: $colorMediumGrey;
-
-      .gr-icon {
-        position: absolute;
-        top: 0;
-        left: -3px;
-      }
-
       .fs-hint {
-        padding-left: 25px;
-        margin-bottom: 20px;
         max-width: 460px;
-        float: left;
       }
 
       input {
         float: right;
-      }
-
-      hr {
-        margin-top: 0;
-        margin-bottom: 0;
       }
     }
 
@@ -245,7 +222,6 @@ ul.fs-share-window-privileges {
     label {
       display: block;
       color: $colorMediumGrey;
-      font-size: 13px;
       line-height: 40px;
       padding: 0 39px;
       cursor: pointer;

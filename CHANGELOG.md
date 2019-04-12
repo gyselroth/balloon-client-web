@@ -1,3 +1,49 @@
+## 3.1.0
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Apr 12 15:33:34 CEST 2019
+
+* [FIX] Avoid wrongly positioned upload manager #153
+
+
+## 3.1.0-beta3
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Apr 02 15:25:43 CEST 2019
+
+* [FIX] search summary attributes are now displayed correctly
+* [CHANGE] Renew access_token for token login #151
+* [FIX] Handle expired auth tokens #145
+
+
+## 3.1.0-beta2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Mar 29 16:32:43 CET 2019
+
+* [FIX] Display "InvalidEncryptionKey" message when adding external storage #142
+* [FIX] Display multi factor if authenticated via internal Idp #141
+* [FIX] fixed multi auth trigger if relogin is executed #141
+* [CHANGE] Make it possible to enable/disable apps #147
+* [FIX] loggedin user avatar gets loaded correctly
+
+
+## 3.1.0-beta1
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Thu Mar 21 12:25:01 CET 2019
+
+* [CHANGE] Add hint to share link settings #134
+* [FIX] File does not get uploaded #139
+* [FEATURE] Upload directories by drag and drop #11
+* [FEATURE] Support for two factor auth and token authentication #141
+* [CHANGE] Newer notifications should be on top #113
+* [FEATURE] Nice URL's and easy way to share balloon url's #83
+* [FEATURE] gui for special filtered folders #10
+* [FIX] Uncaught TypeError when navigation away from deep links #122
+* [CHANGE] If a sso oidc provider is called directly the login window must not be shown #72
+* [CHANGE] Modals should be closable by clicking the greyed out area #50
+* [CHANGE] BalloonWindow keydown #67
+* [FEATURE] Choose between fulltextsearch and name only search #69
+* [FEATURE] Change password #116
+
+
 ## 3.0.9
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Jan 22 14:34:01 CET 2019

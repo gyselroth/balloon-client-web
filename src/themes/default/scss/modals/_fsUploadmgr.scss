@@ -29,15 +29,9 @@ $sidePadding: 50px;
   padding-bottom: 31px;
 
   h2 {
-    font-size: 15px;
+    font-size: $fontSizeParagraphBold;
+    font-weight: $fontWeightParagraphBold;
     line-height: 30px;
-    font-weight: 700;
-
-    .hint {
-      color: $colorMediumGrey;
-      font-size: 13px;
-      font-weight: 300;
-    }
   }
 
   .fs-uploadmgr-progress {
@@ -51,9 +45,9 @@ $sidePadding: 50px;
       top: 6px;
       left: 0;
       color: $colorMediumGrey;
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 20px;
+      font-size: $fontSizeParagraph;
+      font-weight: $fontWeightParagraph;
+      line-height: $lineHeightParagraph;
 
       white-space: nowrap;
       overflow-x: hidden;
@@ -106,7 +100,8 @@ $sidePadding: 50px;
         width: auto;
         border: none;
         color: $colorMediumGrey;
-        font-size: 24px;
+        font-size: $fontSizeHeadline;
+        font-weight: 300;
         line-height: 30px;
 
         .k-progress-status {
@@ -142,8 +137,8 @@ $sidePadding: 50px;
   }
 
   #fs-uploadmgr-files {
-    font-size: 15px;
-    font-weight: 300;
+    font-size: $fontSizeParagraph;
+    font-weight: $fontWeightParagraph;
     line-height: 30px;
     color: $colorMediumGrey;
     margin-top: 11px;
@@ -205,8 +200,8 @@ $sidePadding: 50px;
   #fs-uploadmgr-transfer {
     position: relative;
     width: 630px;
-    font-size: 15px;
-    font-weight: 300;
+    font-size: $fontSizeParagraph;
+    font-weight: $fontWeightParagraph;
     line-height: 30px;
     color: $colorMediumGrey;
 

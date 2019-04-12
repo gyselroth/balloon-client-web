@@ -5,13 +5,16 @@
     "password": "Passwort",
     "login": "Login",
     "logout": "Logout",
+    "code": "Code",
+    "multi_factor_auth": "Dieses Konto ist mit multi factor authentication geschützt. Bitte gib den Code vom google authenticator ein:",
     "events": "Events",
     "profile": "Profil",
     "settings": "Einstellungen",
     "help": "Hilfe",
     "error": {
       "server": "Der balloon-Server meldet aktuell eine Störung, bitte versuche es später erneut.",
-      "basic": "Der Benutzername oder das Passwort ist falsch.",
+      "credentials": "Der Benutzername oder das Passwort ist falsch.",
+      "code": "Der Code ist ungültig.",
       "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider."
     }
   },
@@ -22,12 +25,29 @@
     "quota_used": "Benutzter Speicherplatz",
     "quota_unlimited": "Unlimitiert",
     "user": "Benutzer",
+    "nav": {
+      "overview": "Übersicht",
+      "change-password": "Passwort ändern",
+      "google-authenticator": "Multi-Faktor-Authentisierung"
+    },
     "attribute": {
       "id": "Benutzer-ID",
       "created": "Erstellt",
       "username": "Benutzername",
       "name": "Name",
       "mail": "E-Mail"
+    },
+    "google-authenticator": {
+      "activate": "Aktivieren",
+      "deactivate": "Deaktivieren",
+      "confirm": {
+        "activate": "Bist du sicher, dass du Multi-Faktor-Authentisierung aktivieren willst? Nach Aktivierung ist der Zugang nur noch mithilfe der Google Authenticator App möglich.",
+        "deactivate": "Bist du sicher, dass du Multi-Faktor-Authentisierung deaktivieren willst?"
+      },
+      "hint": {
+        "inactive": "Um Multi-Faktor-Authentisierung nutzen zu können benötigst du ein Smartphone und die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a>. Nach dem Aktivieren wird dir einmalig ein QR Code angezeigt, welchen du mit der App scannen musst. Achtung: Nach Aktivierung von Multi-Faktor-Authentisierung ist der Zugang nur noch mit dieser App möglich.",
+        "active": "Multi-Faktor-Authentisierung ist aktiv."
+      }
     }
   },
   "nav": {
@@ -44,7 +64,8 @@
       "cut": "Ausschneiden",
       "paste": "Einfügen",
       "filter": "Filter",
-      "rename": "Umbenennen"
+      "rename": "Umbenennen",
+      "perma-link": "Perma Link kopieren"
     },
     "view": {
       "preview": "Vorschau",
@@ -68,6 +89,10 @@
     "results": "Suchresultate",
     "reset_filter": "Zurücksetzen",
     "apply_filter": "Anwenden",
+    "mode": {
+      "fulltext": "Volltext",
+      "nodename": "Dateiname"
+    },
     "filter": {
       "color": "Farbe",
       "tags": "Tags",
@@ -155,7 +180,8 @@
         "copyright": "Copyright",
         "path": "Pfad",
         "coordinate": "Koordinaten",
-        "author": "Autor"
+        "author": "Autor",
+        "perma-link": "Perma Link"
       },
       "data": {
         "size": "%s (%s Bytes)",
@@ -262,6 +288,12 @@
     },
     "events": {
       "show_all": "Alle Events anzeigen"
+    },
+    "change-password": {
+      "password": "Passwort",
+      "password-repeat": "Passwort wiederholen",
+      "password-old": "Bisheriges Passwort",
+      "success": "Das Passwort wurde geändert"
     }
   },
   "error": {
