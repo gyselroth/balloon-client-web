@@ -1477,7 +1477,7 @@ var balloon = {
           break;
 
         case 'checkbox':
-          var $checkbox = $('<div class="fs-browser-column fs-browser-column-checkbox">&nbsp;</div>');
+          var $checkbox = $('<div class="fs-browser-column fs-browser-column-checkbox"><span>&nbsp;</span></div>');
 
           $checkbox.on('click', function(event) {
             event.stopPropagation();
