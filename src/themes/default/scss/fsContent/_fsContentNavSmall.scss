@@ -18,12 +18,7 @@
     padding: 16px $fsContentSidePaddingS 18px;
 
     &.disabled {
-      cursor: default;
-      color: $colorLightGrey;
-
-      .gr-i-arrowhead-e {
-        color: $colorLightGrey;
-      }
+      display: none;
     }
 
     .gr-icon {
