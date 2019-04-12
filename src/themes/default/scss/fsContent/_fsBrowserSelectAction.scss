@@ -1,20 +1,54 @@
 #fs-browser-select-action {
-  $buttonHeight: 30px;
+  $buttonHeightS: 40px;
+  $buttonHeightM: 30px;
 
-  margin-top: 16px;
-  margin-bottom: 20px;
-  height: $buttonHeight;
-  width: 345px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  margin: 16px -10px 10px;
+  padding-bottom: 10px;
+  height: $buttonHeightS;
+  width: auto;
 
   li {
-    @include icon-button-small($buttonHeight, $buttonHeight);
+    @include icon-button-small($buttonHeightS, $buttonHeightS);
+
+    margin-right: 8px;
+
+    &:first-child {
+      margin-left: 10px;
+    }
 
     &:last-child {
       margin-right: 0;
     }
+
+    &.fs-action-disabled {
+      display: none;
+    }
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {
-    margin-bottom: 0;
+    margin: 16px 0 0 0;
+    padding-bottom: 0;
+
+    width: 345px;
+    height: $buttonHeightM;
+
+    li {
+      width: $buttonHeightM;
+      height: $buttonHeightM;
+      margin-right: 13px;
+
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &.fs-action-disabled {
+        display: inline-block;
+      }
+    }
   }
 }
