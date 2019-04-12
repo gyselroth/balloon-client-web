@@ -4,7 +4,9 @@
 @import './fsLayoutLeft/fsBrowser';
 
 #fs-layout-left {
-  background-color: $colorBrightGrey;
+  $backgroundColor: $colorBrightGrey;
+
+  background-color: $backgroundColor;
   padding: 0;
   overflow-x: hidden;
   overflow-y: auto;
@@ -12,7 +14,7 @@
 
   #fs-layout-left-header {
     @include clearfix;
-    margin: 30px 0 20px 0;
+    margin: 0 0 20px 0;
   }
 
   #fs-layout-left-container {
@@ -29,6 +31,8 @@
     @include clearfix;
 
     margin: auto;
+    padding-top: 30px;
+    box-sizing: border-box;
 
     width: 100%;
     max-width: 960px;
@@ -41,6 +45,46 @@
       line-height: $lineHeightParagraph;
       color: $colorDarkGrey;
       margin-top: 36px;
+    }
+  }
+
+  $widthPannel: 400px;
+  $paddingLeftM: 90px;
+  $paddingRightM: 30px;
+  $paddingLeftS: 10px;
+  $paddingRightS: 10px;
+
+
+  @media only screen and (min-height: $breakpointFixedTreeHeader) {
+    #fs-layout-left-inner {
+      padding-top: 105px;
+    }
+
+    #fs-layout-left-header {
+      position: fixed;
+      top: 60px;
+      left: $paddingLeftS;
+
+      background-color: $backgroundColor;
+      padding-bottom: 20px;
+      padding-top: 30px;
+      margin-bottom: 0;
+      width: calc(100% - #{$paddingLeftS + $paddingRightS});
+      z-index: 11;
+    }
+  }
+
+  @media only screen and (min-height: $breakpointFixedTreeHeader) and (min-width: $breakpointMenuVisible) {
+    #fs-layout-left-header {
+      width: calc(100% - #{$paddingLeftM + $paddingRightM});
+      left: $paddingLeftM;
+      transition: width 0.3s ease-in-out;
+    }
+  }
+
+  @media only screen and (min-height: $breakpointFixedTreeHeader) and (min-width: $breakpointPannelVisible) {
+    #fs-layout-left-header {
+      width: calc(100% - #{$paddingLeftM + $paddingRightM + $widthPannel});
     }
   }
 }
