@@ -1,43 +1,37 @@
 
 #fs-browser-layout {
   position: absolute;
-  top: 0;
-  bottom: 0;
   left: 0;
-  right: 0;
+  top: $headerHeight;
   overflow: hidden;
-  padding-top: $headerHeight;
   z-index: 10;
 
-  #fs-layout-left {
-    width: 100%;
-  }
-
-  #fs-content {
-    width: 100%;
-  }
+  height: calc(100% - #{$headerHeight});
+  width: 100%;
 
   #fs-layout-left,
   #fs-content {
+    width: 100%;
     transition: width 0.3s ease-in-out;
   }
 
   @media screen and (max-width: #{$breakpointPannelVisible - 1px}) {
-
-
-    &.fs-content-visible {
+    .fs-content-mobile-animating &,
+    .fs-content-mobile-more &,
+    .fs-content-mobile-detail & {
       z-index: 17;
     }
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {
-    $pannelWidth: 400px;
+    right: 0 !important;
+
     #fs-layout-left {
-      width: calc(100% - #{$pannelWidth});
+      width: calc(100% - #{$pannelWidthM});
     }
 
     #fs-content {
-      width: $pannelWidth;
+      width: $pannelWidthM;
     }
   }
 }

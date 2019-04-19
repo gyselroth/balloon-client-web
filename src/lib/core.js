@@ -342,6 +342,7 @@ var balloon = {
         var $view_list = $('#fs-events ul');
         $view_list.children().remove();
 
+        balloon._event_limit = false;
         var req = balloon.displayEvents($view_list, node, {skip: 0, limit: 3})
 
 
@@ -374,6 +375,19 @@ var balloon = {
    */
   toggle_fs_browser_action_hooks: {},
 
+  /**
+   * The different possible states of fs-content overlays in mobile
+   *
+   * @var array
+   */
+  fs_content_mobile_states: ['fs-content-mobile-menu', 'fs-content-mobile-more', 'fs-content-mobile-detail'],
+
+  /**
+   * Current state of fs-content overlays in mobile
+   *
+   * @var array
+   */
+  fs_content_mobile_current_state: 0,
 
   /**
    * Generates a uuid v4.
@@ -1652,20 +1666,29 @@ var balloon = {
       }
     });
 
-    $('#fs-content-nav-small li').off('click').not('.disabled').click(function() {
-      var action = $(this).attr('id').substr(15);
-
-      if($('#fs-content-view-wrap').hasClass('active-mobile') === false || balloon.getViewName() != action) {
-        balloon.switchView(action, true);
-      }
-    });
-
-    $('#fs-content-view-header .fs-content-view-close').off('click').click(function(event) {
+    $('#fs-content-nav-small li').off('click').not('.disabled').click(function(event) {
       event.stopPropagation();
       event.preventDefault();
 
-      $('#fs-content-view-wrap').removeClass('active-mobile').addClass('inactive-mobile');
+      var action = $(this).attr('id').substr(15);
+      balloon.switchView(action, true);
+      balloon.fsContentMobileNext();
+    });
+
+    $('.fs-content-view-back').off('click').click(function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+
       $('#fs-content-view dd.active').removeClass('active');
+
+      balloon.fsContentMobilePrev();
+    });
+
+    $('#fs-content-nav-small-more li').off('click').on('click', function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+
+      balloon.fsContentMobileNext();
     });
   },
 
@@ -3012,13 +3035,13 @@ var balloon = {
    * @return void
    */
   switchView: function(view, visibleMobile) {
-    $('#fs-content-view-wrap').removeClass('active-mobile').removeClass('inactive-mobile');
+    $('#fs-content-view-wrap').removeClass('mobile-overlay-in-from-right').removeClass('mobile-overlay-out-to-right');
     $('#fs-content-view').find('dt,dd').removeClass('active');
     var $title = $('#fs-content-view-title-'+view).addClass(['active']);
     $title.next().addClass('active');
 
     if(visibleMobile) {
-      $('#fs-content-view-wrap').addClass('active-mobile');
+      $('#fs-content-view-wrap').addClass('mobile-overlay-in-from-right');
     }
 
     var viewConfig = balloon._getViewConfig(view);
@@ -7586,33 +7609,23 @@ var balloon = {
    * @return  void
    */
   displayName: function(node) {
-    var $fs_prop_name = $('#fs-properties-name div:first-child');
-    var $fs_content_view_header_filename = $('#fs-content-view-header-filename');
+    var $fs_content_nodename = $('.fs-content-nodename');
 
-    var $field = $fs_prop_name.find('.fs-value');
-    var $field_header = $fs_content_view_header_filename.find('.fs-value');
+    $fs_content_nodename.find('span').remove();
+    $fs_content_nodename.find('input').remove();
 
-    if($field.length === 0) {
-      $field = $('<span class="fs-value"></span>')
-      $fs_prop_name.append($field);
-    }
+    $fs_content_nodename.append('<span class="fs-value"></span>');
+    var $field = $fs_content_nodename.find('.fs-value');
 
     var ext = balloon.getFileExtension(node);
     var name = node.name;
 
-    $fs_prop_name.find('.fs-ext').remove();
-    $fs_prop_name.find('input').remove();
-    $fs_content_view_header_filename.find('.fs-ext').remove();
-
     if(ext != null && node.directory == false) {
-      $fs_prop_name.append('<span class="fs-ext">('+ext+')</span>');
-      $fs_content_view_header_filename.append('<span class="fs-ext">('+ext+')</span>');
+      $fs_content_nodename.append('<span class="fs-ext">('+ext+')</span>');
       var filename = name.substr(0, name.length-ext.length-1);
       $field.html(filename);
-      $field_header.html(filename);
     } else {
       $field.html(name);
-      $field_header.html(name);
     }
   },
 
@@ -8426,10 +8439,11 @@ var balloon = {
         break;
 
       case 'view-bar':
-        $('#fs-content-view-wrap').removeClass('active-mobile').removeClass('inactive-mobile');
+        $('#fs-content-view-wrap').removeClass('mobile-overlay-in-from-right').removeClass('mobile-overlay-out-to-right');
         $('#fs-content-view').find('dt,dd').addClass('disabled').removeClass('active');
         $('#fs-content-nav-small li').addClass('disabled');
         $('#fs-content-view dt').unbind('click');
+        $('#fs-content-view-small dt').unbind('click');
         $('#fs-properties-name span').html('');
         break;
 
@@ -9294,16 +9308,16 @@ var balloon = {
 
     function touchend(e) {
       var xDiff = unify(e).clientX - x0;
-
+      var $fs_menu_left = $('#fs-menu-left');
       switch(direction) {
       case 'left':
         if(xDiff * -1 > threshhold) {
-          $('#fs-browser-layout').addClass('fs-content-visible');
+          $fs_menu_left.removeClass('fs-menu-left-open');
         }
         break;
       case 'right':
         if(xDiff > threshhold) {
-          $('#fs-menu-left').addClass('fs-menu-left-open');
+          $fs_menu_left.addClass('fs-menu-left-open');
         }
         break;
       }
@@ -9348,7 +9362,35 @@ var balloon = {
     document.execCommand('copy');
 
     document.body.removeChild(tmpEl);
-  }
+  },
+
+  fsContentMobileNext: function() {
+    var $body = $('body');
+    if(balloon.fs_content_mobile_current_state < balloon.fs_content_mobile_states.length-1) {
+      $body.addClass('fs-content-mobile-animating');
+      $body.removeClass(balloon.fs_content_mobile_states[balloon.fs_content_mobile_current_state]);
+      balloon.fs_content_mobile_current_state ++;
+      $body.addClass(balloon.fs_content_mobile_states[balloon.fs_content_mobile_current_state]);
+
+      window.setTimeout(function() {
+        $body.removeClass('fs-content-mobile-animating');
+      }, 250);
+    }
+  },
+
+  fsContentMobilePrev: function() {
+    var $body = $('body');
+    if(balloon.fs_content_mobile_current_state > 0) {
+      $body.addClass('fs-content-mobile-animating');
+      $body.removeClass(balloon.fs_content_mobile_states[balloon.fs_content_mobile_current_state]);
+      balloon.fs_content_mobile_current_state --;
+      $body.addClass(balloon.fs_content_mobile_states[balloon.fs_content_mobile_current_state]);
+
+      window.setTimeout(function() {
+        $body.removeClass('fs-content-mobile-animating');
+      }, 250);
+    }
+  },
 };
 
 import './app.js';

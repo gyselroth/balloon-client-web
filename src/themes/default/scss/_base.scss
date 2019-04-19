@@ -1,9 +1,15 @@
 html,
 body,
 #fs-namespace {
-  height: 100%;
-  position: relative;
+  @include fs-content-mobile-overlay;
+
+  right: 0;
   -webkit-overflow-scrolling: touch;
+
+  .fs-content-mobile-more &,
+  .fs-content-mobile-detail & {
+    @include fs-content-mobile-overlay-left;
+  }
 }
 
 svg,

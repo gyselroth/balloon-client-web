@@ -508,7 +508,7 @@
     }
   }
 
-  @media screen and (min-width: #{$breakpointMetaVisible + 400px}) {
+  @media screen and (min-width: #{$breakpointMetaVisible + $pannelWidthM}) {
     #fs-browser-tree {
       $metaPaddingSmallScreen: 25px;
 
@@ -528,7 +528,7 @@
     }
   }
 
-  @media screen and (min-width: #{$breakpointSizeVisible + 400px}) {
+  @media screen and (min-width: #{$breakpointSizeVisible + $pannelWidthM}) {
     #fs-browser-header {
       .fs-browser-column-size {
         display: inline-block;
@@ -559,7 +559,7 @@
     }
   }
 
-  @media screen and (min-width: #{$breakpointChangedVisible + 400px}) {
+  @media screen and (min-width: #{$breakpointChangedVisible + $pannelWidthM}) {
     #fs-browser-header {
       .fs-browser-column-changed {
         display: inline-block;

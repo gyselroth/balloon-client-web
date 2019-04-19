@@ -1,28 +1,28 @@
-$fsContentSidePaddingM: 30px;
-$fsContentSidePaddingS: 10px;
-
 @import './fsContent/fsBrowserSelectAction';
 @import './fsContent/fsPropertiesName';
 @import './fsContent/fsContentView';
-@import './fsContent/fsContentNavSmall';
+@import './fsContent/fsContentNavSmallWrap';
+@import './fsContent/fsContentNavSmallMore';
 
 #fs-content {
+  @include shadow-default;
   position: absolute;
   left: 0;
   bottom: 0;
   border-top: 1px solid $colorBrightGrey;
   background-color: $colorWhite;
-  height: 100%;
+  height: auto;
   overflow: hidden;
   display: none;
   z-index: 17;
 
   #fs-content-close {
-    @include icon-button(24px);
+    @include icon-button(28px);
 
     position: absolute;
-    top: 20px;
-    right: 6px;
+    top: 16px;
+    right: 16px;
+    padding: 2px;
     color: $colorMediumGrey;
   }
 
@@ -31,7 +31,7 @@ $fsContentSidePaddingS: 10px;
     overflow: hidden;
     border-bottom: 1px solid $colorBrightGrey;
     box-sizing: border-box;
-    padding: 42px $fsContentSidePaddingS 0;
+    padding: 47px $fsContentSidePaddingS 0;
   }
 
   .fs-content-visible & {
@@ -42,9 +42,10 @@ $fsContentSidePaddingS: 10px;
     left: auto;
     bottom: auto;
     right: 0;
-    top: $headerHeight;
-    height: calc(100% - #{$headerHeight});
+    top: 0;
+    height: 100%;
     display: block;
+    box-shadow: none;
 
     #fs-content-close {
       display: none;

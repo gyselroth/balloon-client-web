@@ -329,7 +329,7 @@
                     </div>
 
                     <div id="fs-properties-name">
-                        <div>
+                        <div class="fs-content-nodename">
                             <span class="fs-value"></span>
                             <span class="fs-ext"></span>
                         </div>
@@ -341,206 +341,227 @@
                         </svg>
                     </a>
 
-                    <ul id="fs-browser-select-action">
-                        <li id="fs-action-download" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.download">
-                            <svg class="gr-icon gr-i-download"><use xlink:href="<%= iconsSvg %>#download"></use></svg>
-                        </li>
-                        <li id="fs-action-delete" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.delete">
-                            <svg class="gr-icon gr-i-trash"><use xlink:href="<%= iconsSvg %>#trash"></use></svg>
-                        </li>
-                        <li id="fs-action-restore" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.restore">
-                            <svg class="gr-icon gr-i-restore-trash"><use xlink:href="<%= iconsSvg %>#restore-trash"></use></svg>
-                        </li>
-                        <li id="fs-action-copy" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.copy">
-                            <svg class="gr-icon gr-i-copy"><use xlink:href="<%= iconsSvg %>#copy"></use></svg>
-                        </li>
-                        <li id="fs-action-cut" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.cut">
-                            <svg class="gr-icon gr-i-cut"><use xlink:href="<%= iconsSvg %>#cut"></use></svg>
-                        </li>
-                        <li id="fs-action-paste" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.paste">
-                            <div id="fs-action-paste-count" class="fs-tiny-button-count"></div>
-                            <svg class="gr-icon gr-i-paste"><use xlink:href="<%= iconsSvg %>#paste"></use></svg>
-                        </li>
-                        <li id="fs-action-rename" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.rename">
-                            <svg class="gr-icon gr-i-text-edit"><use xlink:href="<%= iconsSvg %>#text-edit"></use></svg>
-                        </li>
-                        <li id="fs-action-perma-link" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.perma-link">
-                            <svg class="gr-icon gr-i-hyperlink"><use xlink:href="<%= iconsSvg %>#hyperlink"></use></svg>
+                    <div id="fs-browser-select-action">
+                        <ul>
+                            <li id="fs-action-download" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.download">
+                                <svg class="gr-icon gr-i-download"><use xlink:href="<%= iconsSvg %>#download"></use></svg>
+                            </li>
+                            <li id="fs-action-delete" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.delete">
+                                <svg class="gr-icon gr-i-trash"><use xlink:href="<%= iconsSvg %>#trash"></use></svg>
+                            </li>
+                            <li id="fs-action-restore" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.restore">
+                                <svg class="gr-icon gr-i-restore-trash"><use xlink:href="<%= iconsSvg %>#restore-trash"></use></svg>
+                            </li>
+                            <li id="fs-action-copy" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.copy">
+                                <svg class="gr-icon gr-i-copy"><use xlink:href="<%= iconsSvg %>#copy"></use></svg>
+                            </li>
+                            <li id="fs-action-cut" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.cut">
+                                <svg class="gr-icon gr-i-cut"><use xlink:href="<%= iconsSvg %>#cut"></use></svg>
+                            </li>
+                            <li id="fs-action-paste" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.paste">
+                                <div id="fs-action-paste-count" class="fs-tiny-button-count"></div>
+                                <svg class="gr-icon gr-i-paste"><use xlink:href="<%= iconsSvg %>#paste"></use></svg>
+                            </li>
+                            <li id="fs-action-rename" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.rename">
+                                <svg class="gr-icon gr-i-text-edit"><use xlink:href="<%= iconsSvg %>#text-edit"></use></svg>
+                            </li>
+                            <li id="fs-action-perma-link" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.perma-link">
+                                <svg class="gr-icon gr-i-hyperlink"><use xlink:href="<%= iconsSvg %>#hyperlink"></use></svg>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <ul id="fs-content-nav-small-more" class="fs-content-nav-small">
+                        <li id="fs-content-nav-share-link" class="">
+                            <span data-i18n="nav.view.more"></span>
+                            <svg viewBox="0 0 24 24" class="gr-icon gr-i-arrowhead-e"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-e"></use></svg>
                         </li>
                     </ul>
-
-                    <ul id="fs-content-nav-small"></ul>
-
-                    <div id="fs-content-view-wrap">
-                        <div id="fs-content-view-header">
-                            <a role="button" href="#" class="fs-content-view-close">
-                                <svg class="gr-icon gr-i-arrowhead-w"><use xlink:href="<%= iconsSvg %>#arrowhead-w"></use></svg>
-                            </a>
-                            <div id="fs-content-view-header-filename">
-                                <span class="fs-value"></span>
-                                <span class="fs-ext"></span>
-                            </div>
-                        </div>
-                        <dl id="fs-content-view">
-                            <dd id="fs-preview">
-                                <div id="fs-preview-thumb">
-                                    <div></div>
-                                </div>
-
-                                <div id="fs-preview-properties">
-                                    <div id="fs-properties-meta-tags" class="fs-preview-property">
-                                        <div id="fs-properties-meta-tags-input">
-                                            <div class="fs-preview-label" data-i18n="view.prop.head.tags"></div>
-                                            <div id="fs-preview-add-tag">
-                                                <input type="text" name="add_tag"/>
-                                            </div>
-                                            <div id="fs-preview-add-tag-button">
-                                                <div class="fs-add">
-                                                    <svg viewBox="0 0 24 24" class="gr-icon gr-i-plus"><use xlink:href="<%= iconsSvg %>#plus"></use></svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="fs-properties-meta-tags-tags">
-                                            <ul class="tag-list"></ul>
-                                        </div>
-                                    </div>
-
-                                    <div id="fs-properties-meta-color" class="fs-preview-property">
-                                        <div class="fs-preview-label" data-i18n="view.prop.head.color_tag"></div>
-                                        <ul>
-                                            <li class="fs-color-magenta"></li>
-                                            <li class="fs-color-purple"></li>
-                                            <li class="fs-color-blue"></li>
-                                            <li class="fs-color-green"></li>
-                                            <li class="fs-color-yellow"></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </dd>
-                            <dd id="fs-share-link">
-                                <div class="fs-button-wrap fs-share-link-button-wrap">
-                                    <button id="fs-share-link-create" class="fs-button-primary" data-i18n="view.share_link.create"></button>
-                                    <button id="fs-share-link-edit" class="fs-button-primary" data-i18n="view.share_link.edit"></button>
-                                    <button id="fs-share-link-delete" data-i18n="view.share_link.delete"></button>
-                                </div>
-                            </dd>
-                            <dd id="fs-share">
-                                <div class="fs-button-wrap fs-share-button-wrap">
-                                    <button id="fs-share-create" class="fs-button-primary" data-i18n="view.share.create"></button>
-                                    <button id="fs-share-edit" class="fs-button-primary" data-i18n="view.share.edit"></button>
-                                    <button id="fs-share-delete" data-i18n="view.share.delete"></button>
-                                </div>
-                                <div id="fs-share-consumers">
-                                    <h6 data-i18n="view.share.access_rights"></h6>
-                                    <ul></ul>
-                                    <span class="fs-share-hint-owner-only" data-i18n="view.share.owner_only"></span>
-                                </div>
-                            </dd>
-                            <dd id="fs-metadata">
-                                <table class="fs-metadata-group">
-                                    <tbody>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.deleted"></th>
-                                            <td id="fs-metadata-deleted"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.created"></th>
-                                            <td id="fs-metadata-created"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.changed"></th>
-                                            <td id="fs-metadata-changed"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.size"></th>
-                                            <td id="fs-metadata-size"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr>
-                                            <th data-i18n="view.prop.head.path"></th>
-                                            <td id="fs-metadata-path"><span class="fs-value"></span></td>
-                                        </tr>
-                                    </tbody>
-
-                                    <tbody>
-                                        <tr class="fs-searchable fs-metadata-fileonly">
-                                            <th data-i18n="view.prop.head.version"></th>
-                                            <td id="fs-metadata-version"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr class="fs-searchable fs-metadata-fileonly">
-                                            <th data-i18n="view.prop.head.hash"></th>
-                                            <td id="fs-metadata-hash"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.mime"></th>
-                                            <td id="fs-metadata-mime"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.id"></th>
-                                            <td id="fs-metadata-id"><span class="fs-value"></span></td>
-                                        </tr>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.share"></th>
-                                            <td id="fs-metadata-share">
-                                                <svg class="gr-icon gr-i-folder-shared" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#folder-shared"></use></svg>
-                                                <span class="fs-value"></span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-
-                                    <tbody>
-                                        <tr class="fs-searchable">
-                                            <th data-i18n="view.prop.head.perma-link">Perma Link:</th>
-                                            <td id="fs-metadata-perma-link"><span class="fs-value">#share/5c657e011421d10012585f16</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </dd>
-                            <dd id="fs-history">
-                                <ul></ul>
-                                <div id="fs-history-actions">
-                                    <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
-                                    <button class="fs-button-small" id="fs-history-all" data-i18n="view.history.show_all" />
-                                </div>
-                            </dd>
-                            <dd id="fs-events">
-                                <ul></ul>
-                                <button class="fs-button-small" id="fs-events-all" data-i18n="view.events.show_all" />
-                            </dd>
-                            <dd id="fs-properties">
-                                <fieldset class="fs-properties-group">
-                                    <div>
-                                        <label for="fs-properties-description" data-i18n="view.prop.head.description"></label>
-                                        <textarea id="fs-properties-description"></textarea>
-                                    </div>
-                                    <div>
-                                        <label for="fs-properties-copyright" data-i18n="view.prop.head.copyright"></label>
-                                        <input id="fs-properties-copyright" type="text"/>
-                                    </div>
-                                    <div>
-                                        <label for="fs-properties-author" data-i18n="view.prop.head.author"></label>
-                                        <input id="fs-properties-author" type="text"/>
-                                    </div>
-                                    <div>
-                                        <label for="fs-properties-license" data-i18n="view.prop.head.license"></label>
-                                        <input id="fs-properties-license" type="text"/>
-                                    </div>
-                                </fieldset>
-
-                                <div class="fs-properties-group">
-                                    <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
-                                    <label for="fs-readonly" data-i18n="view.properties.readonly"></label>
-                                </div>
-                                <div class="fs-properties-group" id="fs-properties-destroy-date">
-                                    <div class="fs-properties-label" data-i18n="view.properties.destroy_date"></div>
-                                    <div id="fs-properties-destroy-date-preview"></div>
-                                    <button id="fs-properties-destroy-date-set" class="fs-button-small" data-i18n="view.properties.set_destroy_date"></button>
-                                    <button id="fs-properties-destroy-date-edit" class="fs-button-small" data-i18n="view.properties.edit_destroy_date"></button>
-                                </div>
-                            </dd>
-                        </dl>
-                    </div>
                 </div>
             </div>
+        </div>
+
+
+        <div id="fs-content-nav-small-wrap">
+            <div id="fs-content-nav-small-header" class="fs-content-overlay-header">
+                <a role="button" href="#" class="fs-content-view-back">
+                    <svg class="gr-icon  gr-i-arrow-w"><use xlink:href="<%= iconsSvg %>#arrow-w"></use></svg>
+                </a>
+                <div class="fs-content-nodename">
+                    <span class="fs-value"></span>
+                    <span class="fs-ext"></span>
+                </div>
+            </div>
+            <ul id="fs-content-nav-small" class="fs-content-nav-small"></ul>
+        </div>
+
+        <div id="fs-content-view-wrap">
+            <div id="fs-content-view-header" class="fs-content-overlay-header">
+                <a role="button" href="#" class="fs-content-view-back">
+                    <svg class="gr-icon  gr-i-arrow-w"><use xlink:href="<%= iconsSvg %>#arrow-w"></use></svg>
+                </a>
+                <div class="fs-content-nodename">
+                    <span class="fs-value"></span>
+                    <span class="fs-ext"></span>
+                </div>
+            </div>
+            <dl id="fs-content-view">
+                <dd id="fs-preview">
+                    <div id="fs-preview-thumb">
+                        <div></div>
+                    </div>
+
+                    <div id="fs-preview-properties">
+                        <div id="fs-properties-meta-tags" class="fs-preview-property">
+                            <div id="fs-properties-meta-tags-input">
+                                <div class="fs-preview-label" data-i18n="view.prop.head.tags"></div>
+                                <div id="fs-preview-add-tag">
+                                    <input type="text" name="add_tag"/>
+                                </div>
+                                <div id="fs-preview-add-tag-button">
+                                    <div class="fs-add">
+                                        <svg viewBox="0 0 24 24" class="gr-icon gr-i-plus"><use xlink:href="<%= iconsSvg %>#plus"></use></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="fs-properties-meta-tags-tags">
+                                <ul class="tag-list"></ul>
+                            </div>
+                        </div>
+
+                        <div id="fs-properties-meta-color" class="fs-preview-property">
+                            <div class="fs-preview-label" data-i18n="view.prop.head.color_tag"></div>
+                            <ul>
+                                <li class="fs-color-magenta"></li>
+                                <li class="fs-color-purple"></li>
+                                <li class="fs-color-blue"></li>
+                                <li class="fs-color-green"></li>
+                                <li class="fs-color-yellow"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </dd>
+                <dd id="fs-share-link">
+                    <div class="fs-button-wrap fs-share-link-button-wrap">
+                        <button id="fs-share-link-create" class="fs-button-primary" data-i18n="view.share_link.create"></button>
+                        <button id="fs-share-link-edit" class="fs-button-primary" data-i18n="view.share_link.edit"></button>
+                        <button id="fs-share-link-delete" data-i18n="view.share_link.delete"></button>
+                    </div>
+                </dd>
+                <dd id="fs-share">
+                    <div class="fs-button-wrap fs-share-button-wrap">
+                        <button id="fs-share-create" class="fs-button-primary" data-i18n="view.share.create"></button>
+                        <button id="fs-share-edit" class="fs-button-primary" data-i18n="view.share.edit"></button>
+                        <button id="fs-share-delete" data-i18n="view.share.delete"></button>
+                    </div>
+                    <div id="fs-share-consumers">
+                        <h6 data-i18n="view.share.access_rights"></h6>
+                        <ul></ul>
+                        <span class="fs-share-hint-owner-only" data-i18n="view.share.owner_only"></span>
+                    </div>
+                </dd>
+                <dd id="fs-metadata">
+                    <table class="fs-metadata-group">
+                        <tbody>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.deleted"></th>
+                                <td id="fs-metadata-deleted"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.created"></th>
+                                <td id="fs-metadata-created"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.changed"></th>
+                                <td id="fs-metadata-changed"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.size"></th>
+                                <td id="fs-metadata-size"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr>
+                                <th data-i18n="view.prop.head.path"></th>
+                                <td id="fs-metadata-path"><span class="fs-value"></span></td>
+                            </tr>
+                        </tbody>
+
+                        <tbody>
+                            <tr class="fs-searchable fs-metadata-fileonly">
+                                <th data-i18n="view.prop.head.version"></th>
+                                <td id="fs-metadata-version"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable fs-metadata-fileonly">
+                                <th data-i18n="view.prop.head.hash"></th>
+                                <td id="fs-metadata-hash"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.mime"></th>
+                                <td id="fs-metadata-mime"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.id"></th>
+                                <td id="fs-metadata-id"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.share"></th>
+                                <td id="fs-metadata-share">
+                                    <svg class="gr-icon gr-i-folder-shared" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#folder-shared"></use></svg>
+                                    <span class="fs-value"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.perma-link">Perma Link:</th>
+                                <td id="fs-metadata-perma-link"><span class="fs-value">#share/5c657e011421d10012585f16</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </dd>
+                <dd id="fs-history">
+                    <ul></ul>
+                    <div id="fs-history-actions">
+                        <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                        <button class="fs-button-small" id="fs-history-all" data-i18n="view.history.show_all" />
+                    </div>
+                </dd>
+                <dd id="fs-events">
+                    <ul></ul>
+                    <button class="fs-button-small" id="fs-events-all" data-i18n="view.events.show_all" />
+                </dd>
+                <dd id="fs-properties">
+                    <fieldset class="fs-properties-group">
+                        <div>
+                            <label for="fs-properties-description" data-i18n="view.prop.head.description"></label>
+                            <textarea id="fs-properties-description"></textarea>
+                        </div>
+                        <div>
+                            <label for="fs-properties-copyright" data-i18n="view.prop.head.copyright"></label>
+                            <input id="fs-properties-copyright" type="text"/>
+                        </div>
+                        <div>
+                            <label for="fs-properties-author" data-i18n="view.prop.head.author"></label>
+                            <input id="fs-properties-author" type="text"/>
+                        </div>
+                        <div>
+                            <label for="fs-properties-license" data-i18n="view.prop.head.license"></label>
+                            <input id="fs-properties-license" type="text"/>
+                        </div>
+                    </fieldset>
+
+                    <div class="fs-properties-group">
+                        <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
+                        <label for="fs-readonly" data-i18n="view.properties.readonly"></label>
+                    </div>
+                    <div class="fs-properties-group" id="fs-properties-destroy-date">
+                        <div class="fs-properties-label" data-i18n="view.properties.destroy_date"></div>
+                        <div id="fs-properties-destroy-date-preview"></div>
+                        <button id="fs-properties-destroy-date-set" class="fs-button-small" data-i18n="view.properties.set_destroy_date"></button>
+                        <button id="fs-properties-destroy-date-edit" class="fs-button-small" data-i18n="view.properties.edit_destroy_date"></button>
+                    </div>
+                </dd>
+            </dl>
         </div>
 
         <div id="fs-upload-progress">

@@ -1,11 +1,10 @@
 #fs-browser-summary,
-#fs-properties-name,
-#fs-content-view-header {
+#fs-properties-name {
   $extWidth: 53px;
   $extMargin: 3px;
 
   @include clearfix;
-  @include font-paragraph-small-bold;
+  @include font-paragraph-bold;
 
   position: relative;
 
@@ -43,8 +42,6 @@
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {
-    @include font-paragraph-bold;
-
     div:first-child {
       line-height: 20px;
 
@@ -64,9 +61,9 @@
 #fs-browser-summary,
 #fs-properties-name {
   position: absolute;
-  top: 22px;
-  left: 10px;
-  width: calc(100% - 44px);
+  top: 25px;
+  left: 20px;
+  width: calc(100% - #{$fsContentSidePaddingM * 2 + 45px});
 
   @media screen and (min-width: $breakpointPannelVisible) {
     position: relative;
@@ -80,41 +77,4 @@
   color: $colorMediumGrey;
   font-weight: 400;
   display: none;
-}
-
-#fs-content-view-header {
-  position: relative;
-  padding: 20px 20px 20px 44px;
-
-  .fs-content-view-close {
-    display: block;
-    position: absolute;
-    top: 18px;
-    left: 15px;
-    width: 24px;
-    height: 24px;
-
-    color: $colorMediumGrey;
-  }
-
-  .fs-value,
-  .fs-ext {
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .fs-value {
-    text-overflow: ellipsis;
-    max-width: calc(100% - 50px);
-
-    &:last-child {
-      max-width: 100%;
-    }
-  }
-
-  .fs-ext {
-    text-transform: uppercase;
-  }
-
 }
