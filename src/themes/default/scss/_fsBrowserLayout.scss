@@ -15,14 +15,6 @@
     transition: width 0.3s ease-in-out;
   }
 
-  @media screen and (max-width: #{$breakpointPannelVisible - 1px}) {
-    .fs-content-mobile-animating &,
-    .fs-content-mobile-more &,
-    .fs-content-mobile-detail & {
-      z-index: 17;
-    }
-  }
-
   @media screen and (min-width: $breakpointPannelVisible) {
     right: 0 !important;
 
