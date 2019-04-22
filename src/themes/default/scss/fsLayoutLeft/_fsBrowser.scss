@@ -19,8 +19,26 @@
   $breakpointSizeVisible: 720px;
   $breakpointChangedVisible: 875px;
 
+  $fsContentHeightMultiselectS: 144px;
+  $fsContentHeightSelectS: 200px;
+
+  $bottomPadding: 90px;
+  $fsActionRefreshBottom: 30px;
+
   position: relative;
-  padding-bottom: 90px;
+  padding-bottom: $bottomPadding;
+
+  .fs-content-paste-active & {
+    padding-bottom: #{$bottomPadding + $fsContentHeightMultiselectS};
+  }
+
+  .fs-content-multiselect-active & {
+    padding-bottom: #{$bottomPadding + $fsContentHeightMultiselectS};
+  }
+
+  .fs-content-select-active & {
+    padding-bottom: #{$bottomPadding + $fsContentHeightSelectS};
+  }
 
   .fs-browser-column {
     display: inline-block;
@@ -394,11 +412,23 @@
     background-color: $colorWhite;
     color: $colorActiveBlue;
     border-radius: 4px;
-    bottom: 30px;
+    bottom: $fsActionRefreshBottom;
     right: 0;
 
     &:hover {
       color: $colorHoverBlue;
+    }
+
+    .fs-content-paste-active & {
+      bottom: #{$fsActionRefreshBottom + $fsContentHeightMultiselectS};
+    }
+
+    .fs-content-multiselect-active & {
+      bottom: #{$fsActionRefreshBottom + $fsContentHeightMultiselectS};
+    }
+
+    .fs-content-select-active & {
+      bottom: #{$fsActionRefreshBottom + $fsContentHeightSelectS};
     }
   }
 
@@ -480,6 +510,8 @@
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {
+    padding-bottom: #{$bottomPadding} !important;
+
     #fs-browser-header {
       .fs-browser-column-changed,
       .fs-browser-column-size {
@@ -505,6 +537,10 @@
           }
         }
       }
+    }
+
+    #fs-action-refresh {
+      bottom: #{$fsActionRefreshBottom} !important;
     }
   }
 
