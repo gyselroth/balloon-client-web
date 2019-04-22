@@ -659,7 +659,11 @@ var balloon = {
     $('#fs-content-close').off('click').click(function(event) {
       event.preventDefault();
       event.stopPropagation();
-      $('body').removeClass('fs-content-select-active fs-content-multiselect-active fs-content-paste-active');
+      balloon.deselectAll();
+      balloon._updateCheckAllState();
+      balloon._updateFsContentSelectedState();
+      balloon.selected_action = {nodes: null, command: null, collection: null};
+      $('body').removeClass('fs-content-paste-active');
     });
 
     $('#fs-crumb-back').off('click').on('click', function(event) {
