@@ -34,7 +34,9 @@
     padding: 47px $fsContentSidePaddingS 0;
   }
 
-  .fs-content-visible & {
+  .fs-content-paste-active &,
+  .fs-content-select-active &,
+  .fs-content-multiselect-active & {
     display: block;
   }
 

@@ -518,14 +518,19 @@ var balloon = {
 
     if(balloon.isTouchDevice()) {
       $fs_browser_tree
-        .off('touchstart', '.k-in').on('touchstart', '.k-in', balloon._treeTouch)
         .off('touchend', '.k-in').on('touchend', '.k-in', balloon._treeTouchEnd)
         .off('touchmove', '.k-in').on('touchmove', '.k-in', balloon._treeTouchMove);
     }
 
-    $fs_browser_tree
-      .off('click', '.k-in').on('click', '.k-in', balloon._treeClick)
-      .off('dblclick', '.k-in').on('dblclick', '.k-in', balloon._treeDblclick);
+    if(balloon.isMobileViewPort()) {
+      $fs_browser_tree
+        .off('click', '.k-in').on('click', '.k-in', balloon._treeDblclick);
+    } else {
+      $fs_browser_tree
+        .off('click', '.k-in').on('click', '.k-in', balloon._treeClick)
+        .off('dblclick', '.k-in').on('dblclick', '.k-in', balloon._treeDblclick);
+    }
+
 
     balloon.displayQuota();
 
@@ -648,12 +653,13 @@ var balloon = {
       }
 
       balloon._updateCheckAllState();
+      balloon._updateFsContentSelectedState();
     });
 
     $('#fs-content-close').off('click').click(function(event) {
       event.preventDefault();
       event.stopPropagation();
-      $('#fs-browser-layout').removeClass('fs-content-visible');
+      $('body').removeClass('fs-content-select-active fs-content-multiselect-active fs-content-paste-active');
     });
 
     for(let i=1; i<=25; i++) {
@@ -1541,6 +1547,7 @@ var balloon = {
 
             balloon._updateCheckAllState();
             balloon.pushState();
+            balloon._updateFsContentSelectedState();
           });
 
           $node_el.append($checkbox);
@@ -1577,9 +1584,26 @@ var balloon = {
     }
 
     balloon._updateCheckAllState();
+    balloon._updateFsContentSelectedState();
     balloon.fileUpload(balloon.getCurrentCollectionId(), $('#fs-layout-left'));
   },
 
+
+  _updateFsContentSelectedState: function() {
+    var currentCollectionId = balloon.getCurrentCollectionId();
+
+    $('body').removeClass('fs-content-multiselect-active fs-content-select-active');
+
+    if(balloon.isMultiSelect()) {
+      if(balloon.multiselect.length === 1) {
+        $('body').addClass('fs-content-select-active');
+      } else {
+        $('body').addClass('fs-content-multiselect-active');
+      }
+    } else if(balloon.last && balloon.last.id !== currentCollectionId && balloon.isSystemNode(balloon.last) === false) {
+      $('body').addClass('fs-content-select-active');
+    }
+  },
 
   /**
    * Kendo tree: select event
@@ -1653,7 +1677,6 @@ var balloon = {
     balloon.showView(views);
     balloon.switchView(view);
     $('#fs-properties-name').show();
-
 
     balloon.updatePannel(true);
 
@@ -1862,7 +1885,7 @@ var balloon = {
 
       //remove current collection from selection
       selected = selected.filter(function(node) {
-        return  node.id !== collection;
+        return node !== null && node.id !== collection;
       });
 
       for(var node in selected) {
@@ -3291,40 +3314,6 @@ var balloon = {
     balloon.touch_move = true;
   },
 
-
-  /**
-   * Tree touch start on tree node
-   *
-   * @param   object e
-   * @return  void
-   */
-  _treeTouch: function(e) {
-    var id = $(e.target).attr('fs-id');
-
-    if(!id) {
-      id = $(e.target).parents('[role="treeitem"]').attr('fs-id');
-    }
-
-    if(id === '_FOLDERUP') {
-      return balloon._folderUp();
-    }
-
-    balloon.touch_move = false;
-    balloon.long_touch = false;
-
-    if(balloon.lock_touch_timer){
-      return;
-    }
-
-    balloon.touch_timer = setTimeout(function(){
-      if(balloon.touch_move !== true) {
-        setTimeout(balloon._treeLongtouch(e), 50);
-      }
-    }, 650);
-    balloon.lock_touch_timer = true;
-  },
-
-
   /**
    * touch end from a tree node
    *
@@ -3332,58 +3321,12 @@ var balloon = {
    * @return  void
    */
   _treeTouchEnd: function(e) {
-    if(balloon.touch_move === true)  {
-      clearTimeout(balloon.touch_timer);
-      balloon.lock_touch_timer = false;
-      return;
+    if(balloon.touch_move) {
+      e.preventDefault();
     }
 
-    if(balloon.touch_timer) {
-      clearTimeout(balloon.touch_timer);
-      balloon.lock_touch_timer = false;
-    }
-
-    if(!balloon.long_touch) {
-      //call dblclick with a timeout of 50ms, otherwise balloon._treeSelect() would be fired after
-      setTimeout(function(){
-        balloon._treeDblclick(e);
-      }, 50);
-    }
+    balloon.touch_move = false;
   },
-
-
-  /**
-   * Long toch event on a tree node
-   *
-   * @param  object e
-   * @return void
-   */
-  _treeLongtouch: function(e) {
-    balloon.long_touch = true;
-    var $node = $(e.target).parents('li'),
-      $k_tree = $('#fs-browser-tree').data('kendoTreeView');
-
-    //need to fire balloon._treeSelect() since select() would not be fired when _treeLongtouch is called
-    $k_tree.select($node);
-    $k_tree.trigger('select', {node: $node});
-
-    balloon.long_touch = true;
-    //TODO pixtron - should pannel really open here?
-    balloon.updatePannel(true);
-
-    if(!balloon.isSystemNode(balloon.last)) {
-      $('#fs-browser-tree').find('.k-in').removeClass('k-state-selected');
-
-      if(balloon.isMultiSelect()) {
-        balloon.multiSelect(balloon.getCurrentNode());
-      } else {
-        balloon.multiSelect(balloon.getCurrentNode());
-      }
-
-      balloon.pushState();
-    }
-  },
-
 
   /**
    * treeview select click event (triggered after select())
@@ -3396,14 +3339,6 @@ var balloon = {
       return;
     }
     var $target = $(e.target);
-
-    if(
-      ($target.hasClass('fs-browser-column-icon') || $target.parents().hasClass('fs-browser-column-icon'))
-      && $target.parents('[role="treeitem"]').hasClass('fs-folderup') === false
-    ) {
-      //show panel on tree icon click, but not for _FOLDERUP items
-      $('#fs-browser-layout').addClass('fs-content-visible');
-    }
 
     balloon.previous_clicked_id = balloon.last_clicked_id;
     balloon.last_clicked_id = $target.attr('fs-id') || $target.parents('[fs-id]').attr('fs-id');
@@ -3555,6 +3490,8 @@ var balloon = {
       //this was a "double click" on two different nodes
       return;
     }
+
+    $('body').removeClass('fs-content-multiselect-active fs-content-select-active');
 
     if(balloon.last.directory === true) {
       balloon.resetDom('selected');
@@ -6679,7 +6616,7 @@ var balloon = {
         balloon.resetDom('multiselect');
       },
       success: function(data) {
-        $('#fs-browser-layout').removeClass('fs-content-visible');
+        $('body').removeClass('fs-content-select-active fs-content-multiselect-active');
 
         var count = 1;
         if(node instanceof Array) {
@@ -8092,6 +8029,10 @@ var balloon = {
     var i;
     for(i=0; i<elements.length; i++) {
       $('#fs-action-'+elements[i]).addClass('fs-action-disabled');
+
+      if(elements[i] == 'paste') {
+        $('body').removeClass('fs-content-paste-active');
+      }
     }
   },
 
@@ -8112,6 +8053,10 @@ var balloon = {
     var i;
     for(i=0; i<elements.length; i++) {
       $('#fs-action-'+elements[i]).removeClass('fs-action-disabled');
+
+      if(elements[i] == 'paste') {
+        $('body').addClass('fs-content-paste-active');
+      }
     }
   },
 
