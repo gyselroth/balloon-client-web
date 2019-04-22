@@ -662,6 +662,11 @@ var balloon = {
       $('body').removeClass('fs-content-select-active fs-content-multiselect-active fs-content-paste-active');
     });
 
+    $('#fs-crumb-back').off('click').on('click', function(event) {
+      balloon._folderUp();
+      balloon.last = null;
+    });
+
     for(let i=1; i<=25; i++) {
       this.addHint("hint.hint_"+i);
     }
@@ -3704,12 +3709,15 @@ var balloon = {
               }
 
               if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.data.id !== null && operation.id !== null) {
+                $('#fs-crumb').addClass('is-child');
                 pool.data.unshift({
                   id: '_FOLDERUP',
                   name: i18next.t('tree.folderup'),
                   directory: true,
                   spriteCssClass: 'gr-i-arrow-w',
                 });
+              } else {
+                $('#fs-crumb').removeClass('is-child');
               }
 
               balloon.datasource._raw_data = pool.data;

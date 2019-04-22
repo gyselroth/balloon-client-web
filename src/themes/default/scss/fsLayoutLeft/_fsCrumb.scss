@@ -1,12 +1,33 @@
 #fs-crumb {
-  width: calc(100% - 150px);
+  @include clearfix;
+
+  width: calc(100% - 100px);
   display: block;
   float: left;
   margin: 15px 0 8px 0;
 
+  #fs-crumb-back {
+    $buttonSize: 30px;
+
+    @include icon-button($buttonSize);
+
+    display: none;
+    color: $colorActiveBlue;
+    cursor: pointer;
+    float: left;
+    margin: -1px 16px 0 0;
+  }
+
+  &.is-child #fs-crumb-back {
+    display: block;
+  }
+
   ul {
+    float: left;
+    width: calc(100% - 62px);
+
     li {
-      display: none;
+      display: none !important;
       color: $colorMediumGrey;
       width: auto;
       height: 17px;
@@ -31,7 +52,7 @@
       }
 
       &:last-child {
-        display: inline-block;
+        display: inline-block !important;
         color: $colorDarkGrey;
         width: auto;
         height: 27px;
@@ -51,7 +72,7 @@
       }
 
       @media screen and (min-width: $breakpointBreadcrumb) {
-        display: inline-block;
+        display: inline-block !important;
 
         &:last-child {
           @include font-headline;
@@ -59,6 +80,17 @@
           line-height: 27px;
         }
       }
+    }
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    #fs-crumb-back {
+      display: none !important;
+    }
+
+    ul {
+      float: none;
+      width: auto;
     }
   }
 }

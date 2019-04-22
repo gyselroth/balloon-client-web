@@ -390,6 +390,7 @@
       }
 
       &.fs-folderup {
+        display: none;
         margin-bottom: 20px;
 
         .k-in {
@@ -562,7 +563,12 @@
             width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth + 2px});
           }
         }
+
+        &.fs-folderup {
+          display: block;
+        }
       }
+
     }
   }
 
