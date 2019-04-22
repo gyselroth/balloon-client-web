@@ -406,14 +406,15 @@
   }
 
   #fs-action-refresh {
-    @include icon-button(30px, 30px);
+    $buttonSize: 30px;
+    @include icon-button($buttonSize, $buttonSize);
 
     position: absolute;
     background-color: $colorWhite;
     color: $colorActiveBlue;
     border-radius: 4px;
     bottom: $fsActionRefreshBottom;
-    right: 0;
+    right: calc(50% - #{$buttonSize/2});
 
     &:hover {
       color: $colorHoverBlue;
@@ -541,6 +542,7 @@
 
     #fs-action-refresh {
       bottom: #{$fsActionRefreshBottom} !important;
+      right: 0;
     }
   }
 
