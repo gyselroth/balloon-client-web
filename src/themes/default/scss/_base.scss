@@ -10,6 +10,10 @@ body,
   .fs-content-mobile-detail & {
     @include fs-content-mobile-overlay-left;
   }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    right: 0 !important;
+  }
 }
 
 svg,
