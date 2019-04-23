@@ -26,9 +26,6 @@
     dt {
       display: none;
 
-      margin: 0 -1*$fsContentSidePaddingM 0;
-      padding: 16px $fsContentSidePaddingM 18px;
-
       &.active {
         display: block;
 
@@ -96,6 +93,8 @@
         display: block;
         position: relative;
         cursor: pointer;
+        margin: 0 -1*$fsContentSidePaddingM 0;
+        padding: 16px $fsContentSidePaddingM 18px;
 
         .gr-icon {
           display: block;
