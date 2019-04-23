@@ -37,7 +37,7 @@
 
       @include clearfix;
 
-      max-width: calc(100% - #{$iconSize + $iconMargin});
+      width: calc(100% - #{$iconSize + $iconMargin});
       margin-left: $iconMargin;
       float: left;
       display: block;
