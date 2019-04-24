@@ -6188,7 +6188,7 @@ var balloon = {
       url += "&download=true";
       $iframe.attr('src', url).load(url);
     } else {
-      window.location.href = url;
+      window.open(url, '_blank');
     }
   },
 
