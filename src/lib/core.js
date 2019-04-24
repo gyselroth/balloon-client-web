@@ -481,6 +481,24 @@ var balloon = {
     balloon._initSwipeEvents();
 
     $(".fs-action-element").unbind('click').click(balloon.doAction);
+    $('#fs-browser-action-mobile').off('click').on('click', function() {
+      if($('#fs-browser-action').hasClass('fs-browser-action-mobile-open')) {
+        $('#fs-browser-action').removeClass('fs-browser-action-mobile-open');
+        $(document).off('click.fs-browser-action-mobile');
+      } else {
+        $('#fs-browser-action').addClass('fs-browser-action-mobile-open');
+
+        $(document).off('click.fs-browser-action-mobile').on('click.fs-browser-action-mobile', function(event){
+          var $target = $(event.target);
+
+          if($target.attr('id') === 'fs-browser-action' || $target.parents('#fs-browser-action').length > 0) return;
+
+          $('#fs-browser-action').removeClass('fs-browser-action-mobile-open');
+        });
+      }
+
+    });
+
     $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
 
     $(document).unbind('drop').on('drop', function(e) {
@@ -840,9 +858,11 @@ var balloon = {
   initAddFileMenu() {
     var i;
     var $menu = $('#fs-action-add-select ul');
+    var $menuMobile = $('#fs-action-add-select-mobile ul');
     var keys = Object.keys(balloon.add_file_menu_items);
 
     $menu.empty();
+    $menuMobile.empty();
 
     for(i=0; i<keys.length; i++) {
       var item = balloon.add_file_menu_items[keys[i]];
@@ -858,6 +878,17 @@ var balloon = {
       );
 
       $menu.append($item);
+
+      var $itemMobile = $(
+        '<li data-type=' + item.name + ' title="' + label + '">'+
+            '<span> ' + label + '</span>'+
+            '<svg class="gr-icon gr-i-arrowhead-e">'+
+              '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="'+iconsSvg+'#arrowhead-e">'+
+            '</svg>'+
+        '</li>'
+      );
+
+      $menuMobile.append($itemMobile);
     }
   },
 
@@ -4721,25 +4752,37 @@ var balloon = {
    * Add node
    */
   addNode: function() {
+    var $select = $('#fs-action-add-select');
+    var $selectMobile = $('#fs-action-add-select-mobile');
+    var $spike = $select.find('.fs-action-dropdown-spike');
+
+    $('#fs-browser-action').removeClass('fs-browser-action-mobile-open');
+
     $('body').off('click').on('click', function(e){
       var $target = $(e.target);
 
       if($target.attr('id') != "fs-action-add") {
-        $('#fs-action-add-select').hide();
+        $select.removeClass('is-open');
       }
     });
 
-    var $select = $('#fs-action-add-select');
-    var $spike = $select.find('.fs-action-dropdown-spike');
-
-    $select.show();
+    $select.addClass('is-open');
+    $selectMobile.addClass('is-open');
 
     var spikeLeft = ($(this).offset().left + $(this).width() / 2) - $select.offset().left - ($spike.outerWidth() / 2);
     $spike.css('left', spikeLeft+'px');
 
-    $select.off('click', 'li').on('click', 'li', function() {
+    function actionClicked() {
       var type = $(this).attr('data-type');
       balloon.handleAddNode(type);
+      $selectMobile.removeClass('is-open');
+    }
+
+    $select.off('click', 'li').on('click', 'li', actionClicked);
+    $selectMobile.off('click', 'li').on('click', 'li', actionClicked);
+
+    $selectMobile.find('button').off('click').on('click', function() {
+      $selectMobile.removeClass('is-open');
     });
   },
 
