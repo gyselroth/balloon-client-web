@@ -7721,6 +7721,15 @@ var balloon = {
           $icon.replaceWith('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="'+iconsSvg+'#' + iconId + '"></use></svg>');
         }
         break;
+      case 'mount':
+        var $fs_metadata_mount = $('#fs-metadata-mount');
+
+        value = i18next.t('view.prop.head.mount_value', node.mount.share, node.mount.username, node.mount.adapter, node.mount.host, node.mount.workgroup);
+
+        $field = $fs_metadata_mount.find('.fs-value');
+        $fs_metadata_mount.parent().show();
+
+        break;
       default:
         if($field.length != 0 && prop !== 'access' && prop != 'shareowner') {
           value = node[prop];
@@ -8415,6 +8424,7 @@ var balloon = {
         $(".fs-metadata-fileonly").hide();
         $("#fs-metadata-node").hide();
         $('#fs-metadata-share').parent().hide();
+        $('#fs-metadata-mount').parent().hide();
         break;
 
       case 'properties':

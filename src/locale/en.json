@@ -182,7 +182,9 @@
         "path": "Path",
         "coordinate": "Coordinate",
         "author": "Author",
-        "perma-link": "Permalink"
+        "perma-link": "Permalink",
+        "mount": "Mount",
+        "mount_value": "%s (%s@%s://%s) [%s]"
       },
       "data": {
         "size": "%s (%s Bytes)",

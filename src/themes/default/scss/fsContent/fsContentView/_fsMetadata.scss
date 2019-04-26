@@ -67,7 +67,8 @@
         z-index: 1;
       }
 
-      &#fs-metadata-share {
+      &#fs-metadata-share,
+      &#fs-metadata-mount {
         @include clearfix;
 
         .fs-value {

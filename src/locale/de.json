@@ -182,7 +182,9 @@
         "path": "Pfad",
         "coordinate": "Koordinaten",
         "author": "Autor",
-        "perma-link": "Perma Link"
+        "perma-link": "Perma Link",
+        "mount": "Externer Speicher",
+        "mount_value": "%s (%s@%s://%s) [%s]"
       },
       "data": {
         "size": "%s (%s Bytes)",
