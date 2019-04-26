@@ -2376,13 +2376,16 @@ var balloon = {
   _displayUserProfileGoogleAuthenticator: function() {
     var $view = $('#fs-profile-window-google-authenticator');
     var $buttons = $view.find('#fs-profile-window-google-authenticator-buttons');
-    var $code = $view.find('#fs-profile-window-google-authenticator-code');
+    var $code = $view.find('#fs-profile-window-google-authenticator-qr');
+    var $secret = $view.find('#fs-profile-window-google-authenticator-secret');
     var $hintInactive = $view.find('#fs-profile-window-google-authenticator-hint-incative').hide();
     var $hintActive = $view.find('#fs-profile-window-google-authenticator-hint-active').hide();
     var $btnActivate = $buttons.find('input[name="activate"]').hide();
     var $btnDeactivate = $buttons.find('input[name="deactivate"]').hide();
 
     $code.find('canvas').remove();
+    $secret.html('');
+    $secret.off('click');
 
     if(login.user.multi_factor_auth === false) {
       $btnActivate.show();
@@ -2427,6 +2430,15 @@ var balloon = {
             var qrCode = new qrcode($code[0]);
             qrCode.generate(body.multi_factor_uri, qrCodeSetting);
 
+            var secret = body.multi_factor_uri.match(/secret=([A-Z0-9]*)&/)[1];
+            $secret.html(secret);
+
+            $secret.on('click', function() {
+              balloon.copyToClipboard(secret);
+
+              balloon.showSnackbar({message: 'profile.google-authenticator.secret_copied'});
+            });
+
             $btnDeactivate.show();
           }
         });
@@ -2445,6 +2457,8 @@ var balloon = {
 
         $btnDeactivate.hide();
         $code.find('canvas').remove();
+        $secret.html('');
+        $secret.off('click');
 
         balloon.xmlHttpRequest({
           url: balloon.base+'/users/' + login.user.id,

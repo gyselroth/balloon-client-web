@@ -40,6 +40,7 @@
     "google-authenticator": {
       "activate": "Aktivieren",
       "deactivate": "Deaktivieren",
+      "secret_copied": "Der code wurde in die Zwischenablage kopiert",
       "confirm": {
         "activate": "Bist du sicher, dass du Multi-Faktor-Authentisierung aktivieren willst? Nach Aktivierung ist der Zugang nur noch mithilfe der Google Authenticator App möglich.",
         "deactivate": "Bist du sicher, dass du Multi-Faktor-Authentisierung deaktivieren willst?"

@@ -40,6 +40,7 @@
     "google-authenticator": {
       "activate": "Activate",
       "deactivate": "Deactivate",
+      "secret_copied": "The code has been copied to the clipboard",
       "confirm": {
         "activate": "Do you really want to activate multi factor authentication? After the activation the login will only be possible using the google authenticator app.",
         "deactivate": "Do you really want to deactivate multi factor authentication?"

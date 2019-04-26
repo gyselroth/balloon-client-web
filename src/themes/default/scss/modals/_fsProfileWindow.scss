@@ -166,6 +166,11 @@ $sidePadding: 50px;
       height: 200px;
       margin-top: 20px;
     }
+
+    #fs-profile-window-google-authenticator-secret {
+      color: $colorActiveBlue;
+      cursor: pointer;
+    }
   }
 }
 
