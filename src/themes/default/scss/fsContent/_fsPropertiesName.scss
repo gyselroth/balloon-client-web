@@ -32,13 +32,6 @@
         max-width: $extWidth;
       }
     }
-
-    input {
-      position: absolute;
-      left: -4px;
-      top: -5px;
-      width: calc(100% - 60px);
-    }
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {

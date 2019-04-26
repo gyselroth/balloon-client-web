@@ -431,5 +431,8 @@
       "txt": "Neues Text-Dokument"
     },
     "name": "Name"
+  },
+  "misc": {
+    "rename_node": "Datei umbenennen"
   }
 }

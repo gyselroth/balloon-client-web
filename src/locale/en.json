@@ -430,5 +430,8 @@
       "txt": "New Text Document"
     },
     "name": "Name"
+  },
+  "misc": {
+    "rename_node": "Rename file"
   }
 }

@@ -44,7 +44,7 @@
 .k-overlay {
   opacity: 1 !important;
   filter: none !important;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: $overlayBackgroundColor;
 
   &.bln-overlay-clickable {
     cursor: pointer;

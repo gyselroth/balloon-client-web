@@ -4002,20 +4002,26 @@ var balloon = {
 
     var node = balloon.getSelected(),
       $target,
-      $input = $('<input class="fs-filename-rename" type="text" value="'+ node.name +'" />');
-
+      $input;
 
     if(balloon.isMobileViewPort()) {
-      $target = $('#fs-properties-name div');
+      $input = balloon._initRenameMobile(node);
     } else {
+      $input = $('<input class="fs-filename-rename" type="text" value="'+ node.name +'" />')
+
       $target = $('#fs-browser').find('li[fs-id='+node.id+']').find('.fs-browser-column-name');
+
+      balloon.rename_original = $target.html();
+
+      $target.html($input);
+
+      $input.focusout(function(e) {
+        balloon._rename();
+      });
     }
 
     balloon.rename_node = node;
     balloon.rename_input = $input;
-    balloon.rename_original = $target.html();
-
-    $target.html($input);
 
     $input.focus();
 
@@ -4026,10 +4032,6 @@ var balloon = {
       var length = node.name.length - ext.length - 1;
       $input[0].setSelectionRange(0, length);
     }
-
-    $input.focusout(function(e) {
-      balloon._rename();
-    });
 
     $input.keyup(function(e) {
       e.stopImmediatePropagation();
@@ -4042,16 +4044,47 @@ var balloon = {
   },
 
   /**
+   * Inits the mobile rename view
+   *
+   * @param object node
+   * @return $input input element containing the node name
+   */
+  _initRenameMobile: function(node) {
+    var $fs_rename_mobile = $('#fs-rename-mobile');
+    $fs_rename_mobile.addClass('is-open');
+    //wrapping $(find()[0]) is necessary that $input.focus() works
+    var $input = $($fs_rename_mobile.find('input')[0]).val(node.name);
+
+    $fs_rename_mobile.find('input[name="cancel"], #fs-rename-mobile-close').off('click').on('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      balloon._resetRenameView();
+    });
+
+    $fs_rename_mobile.find('input[name="save"]').off('click').on('click', function() {
+      event.preventDefault();
+      event.stopPropagation();
+
+      balloon._rename();
+    });
+
+    return $input;
+  },
+
+  /**
    * Reset normal fs-value-name view
    *
    * @return void
    */
-  _resetRenameView: function(){
+  _resetRenameView: function() {
+    $('#fs-rename-mobile').removeClass('is-open');
+
     if(balloon.rename_input && balloon.rename_original) {
       balloon.rename_input.parent().append(balloon.rename_original);
     }
 
-    if(balloon.rename_input) {
+    if(balloon.rename_input && !balloon.isMobileViewPort()) {
       balloon.rename_input.remove();
     }
 
@@ -4103,6 +4136,7 @@ var balloon = {
 
         if(typeof(newNode) === 'object') {
           newNode.spriteCssClass = balloon.getSpriteClass(node);
+          if(balloon.isMobileViewPort()) balloon._resetRenameView();
           balloon.displayName(newNode);
         }
 
