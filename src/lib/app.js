@@ -46,7 +46,11 @@ var app = {
   },
 
   render: function() {
-    for (const [name, app] of Object.entries(this.apps)) {
+    var keys = Object.keys(this.apps);
+    for(var i=0; i<keys.length; i++) {
+      var name = keys[i];
+      var app = this.apps[name];
+
       if(app.enabled === true && map[name]['render']) {
         map[name].render();
       }
@@ -54,7 +58,11 @@ var app = {
   },
 
   preInit: function(core) {
-    for (const [name, app] of Object.entries(this.apps)) {
+    var keys = Object.keys(this.apps);
+    for(var i=0; i<keys.length; i++) {
+      var name = keys[i];
+      var app = this.apps[name];
+
       if(app.enabled === true && map[name]['preInit']) {
         map[name].preInit(core);
       }
@@ -62,7 +70,11 @@ var app = {
   },
 
   postInit: function(core) {
-    for (const [name, app] of Object.entries(this.apps)) {
+    var keys = Object.keys(this.apps);
+    for(var i=0; i<keys.length; i++) {
+      var name = keys[i];
+      var app = this.apps[name];
+
       if(app.enabled === true && map[name]['postInit']) {
         map[name].postInit(core);
       }
