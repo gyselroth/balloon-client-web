@@ -1,3 +1,10 @@
+## 3.2.x
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+* [FEATURE] Display mount information #73
+
+
 ## 3.1.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**:
