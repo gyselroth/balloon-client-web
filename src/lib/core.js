@@ -2866,7 +2866,7 @@ var balloon = {
       balloon.promptConfirm(msg, [
         {
           action: 'rename',
-          params: [e.data.node.id, e.data.previous.name]
+          params: [e.data.node.id, e.data.previous.name, true]
         }, successAction
       ]);
       break;
@@ -4185,10 +4185,11 @@ var balloon = {
    *
    * @param   object node
    * @param   string new_name
+   * @param   boolean suppressUndo
    * @return  void
    */
-  rename: function(node, new_name) {
-    balloon.xmlHttpRequest({
+  rename: function(node, new_name, suppressUndo) {
+    var options = {
       url: balloon.base+'/nodes?id='+balloon.id(node),
       type: 'PATCH',
       dataType: 'json',
@@ -4212,7 +4213,24 @@ var balloon = {
         balloon._resetRenameView();
         balloon.displayError(response);
       }
-    });
+    }
+
+    if(suppressUndo !== true) {
+      options.snackbar = {
+        message: 'snackbar.node_renamed',
+        values: {
+          old_name: node.name,
+          new_name: new_name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.rename(response, node.name, true);
+        }
+      };
+    }
+
+
+    balloon.xmlHttpRequest(options);
   },
 
 
