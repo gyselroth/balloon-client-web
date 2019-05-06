@@ -1010,7 +1010,7 @@ var balloon = {
         show  = options.suppressSnackbar !== true && (valid.indexOf(options.type) > -1);
 
       if(show && jqXHR.status.toString().substr(0, 1) === '2') {
-        balloon.showSnackbar((options.snackbar || {}));
+        balloon.showSnackbar((options.snackbar || {}), jqXHR.responseJSON);
       }
 
       if(complete !== undefined) {
@@ -1040,7 +1040,7 @@ var balloon = {
    * @param object options
    * @return void
    */
-  showSnackbar: function(options) {
+  showSnackbar: function(options, response) {
     var options = options || {};
     var $snackbar = $('#fs-snackbar');
 
@@ -1058,7 +1058,7 @@ var balloon = {
     if(iconAction) $iconWrap.addClass('has-action');
 
     $iconWrap.off('click').on('click', function() {
-      if(iconAction) iconAction();
+      if(iconAction) iconAction(response);
     });
 
     var i18nextOptions = $.extend(values, {'interpolation': {'escapeValue': false}});
@@ -1374,7 +1374,25 @@ var balloon = {
       }
     }
 
-    balloon.move(balloon.getSelected(src), dest);
+    var source = balloon.getSelected(src);
+    var parentId = balloon.getCurrentCollectionId();
+
+    if(!Array.isArray(source)) {
+      source = [source];
+    }
+
+    var moveSrc = [];
+
+    for(var i=0; i<source.length; i++) {
+      var src = source[i];
+      moveSrc.push({
+        id: src.id,
+        name: src.name,
+        parent: parentId
+      });
+    }
+
+    balloon.move(moveSrc, dest);
     balloon.deselectAll();
   },
 
@@ -6925,7 +6943,17 @@ var balloon = {
           count: Array.isArray(source) ? source.length : 1,
           dest: destName
         },
-        //icon: 'undo'
+        icon: 'undo',
+        iconAction: function(response) {
+          switch(action) {
+          case 'clone':
+            balloon._undoClone(source, response);
+            break;
+          case 'move':
+            balloon._undoMove(source, destination, conflict);
+            break;
+          }
+        }
       },
       data: {
         id: balloon.id(source),
@@ -6968,6 +6996,103 @@ var balloon = {
           balloon.displayError(data);
         }
       }
+    });
+  },
+
+  /**
+   * undo a move issued by balloon.move
+   *
+   * params are the same as passed to balloon.move()
+   *
+   * @param   string|object|array source (moved elements)
+   * @param   string|object|array destination (the destination where source(s) have been moved to)
+   * @param   int conflict
+   * @return  void
+   */
+  _undoMove: function(source, destination, conflict, clone) {
+    var requests = [];
+
+    if(!Array.isArray(source)) {
+      source = [source];
+    }
+
+    for(var i=0; i<source.length; i++) {
+      var src = source[i];
+
+      var request = balloon.xmlHttpRequest({
+        url: balloon.base+'/nodes/move',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          id: balloon.id(src),
+          destid: balloon.id(src.parent),
+          conflict: conflict
+        },
+        complete: function() {
+          balloon.resetDom('multiselect');
+          balloon.deselectAll();
+        },
+        error: function(data) {
+          balloon.displayError(data);
+        }
+      });
+
+      requests.push(request);
+    }
+
+    $.when.apply($, requests).always(function() {
+      balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+    });
+  },
+
+  /**
+   * undo a clone issued by balloon.move
+   *
+   *
+   * @param   string|object|array source (source elements)
+   * @param   object response (response from clone call)
+   * @return  void
+   */
+  _undoClone: function(source, response) {
+    var requests = [];
+
+    if(!Array.isArray(source)) {
+      source = [source];
+    }
+
+    for(var i=0; i<source.length; i++) {
+      var src = source[i];
+      var clone;
+
+      if(source.length > 1) {
+        var id = balloon.id(src);
+        clone = response[id].data;
+      } else {
+        clone = response;
+      }
+
+      var request = balloon.xmlHttpRequest({
+        url: balloon.base+'/nodes',
+        type: 'DELETE',
+        dataType: 'json',
+        data: {
+          id: balloon.id(clone),
+          force: true,
+        },
+        complete: function() {
+          balloon.resetDom('multiselect');
+          balloon.deselectAll();
+        },
+        error: function(data) {
+          balloon.displayError(data);
+        }
+      });
+
+      requests.push(request);
+    }
+
+    $.when.apply($, requests).always(function() {
+      balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
     });
   },
 
