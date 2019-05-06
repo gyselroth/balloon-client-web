@@ -3,6 +3,7 @@
 **Date**:
 
 * [FEATURE] Display mount information #73
+* [CHANGE] Implement paged node listing #133
 
 
 ## 3.1.1

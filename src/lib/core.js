@@ -3716,78 +3716,15 @@ var balloon = {
           }
 
           operation.data.limit = 1000;
+          operation.data.offset = 0;
 
-          balloon.xmlHttpRequest({
-            url: balloon.datasource._url,
-            type: 'GET',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify(operation.data),
-            processData: false,
-            success: function(pool, msg, http) {
+          balloon._readDataSource(operation).done(function(data) {
+            var pool = {
+              data: data,
+              count: data.length
+            };
 
-              if(balloon.datasource._ds_params.action == '_FOLDERDOWN') {
-                balloon.addCrumbRegister(balloon.getCurrentNode());
-              } else if(balloon.datasource._ds_params.action == '_FOLDERUP') {
-                var crumbs = balloon.getCrumb().find('li').filter(':hidden').get()/*.reverse()*/;
-                crumbs = crumbs.slice(-1);
-                $(crumbs).show();
-                balloon.getCrumb().find('li:last-child').remove();
-
-                if(balloon.getCrumb().find('li').get().length <= 5) {
-                  balloon.getCrumb().find('li.removed').remove();
-                }
-              }
-
-              if(balloon.datasource._ds_params.nostate !== true && balloon.getCurrentNode() !== null) {
-                balloon.pushState();
-              }
-              balloon.datasource._ds_params.nostate = false;
-
-
-              var depth = balloon.getFolderDepth(),
-                param_col = balloon.getURLParam('collection');
-
-              if(pool.count == 0 && depth == 1 && param_col  === null) {
-                $('#fs-browser-fresh').show();
-              } else {
-                $('#fs-browser-fresh').hide();
-              }
-
-              if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.data.id !== null && operation.id !== null) {
-                $('#fs-crumb').addClass('is-child');
-                pool.data.unshift({
-                  id: '_FOLDERUP',
-                  name: i18next.t('tree.folderup'),
-                  directory: true,
-                  spriteCssClass: 'gr-i-arrow-w',
-                });
-              } else {
-                $('#fs-crumb').removeClass('is-child');
-              }
-
-              balloon.datasource._raw_data = pool.data;
-              var sorted = balloon._sortDatasource(
-                balloon._filterDatasource(pool.data, balloon.tree.filter),
-                balloon.tree.sort.field,
-                balloon.tree.sort.dir
-              );
-              balloon._rebuildTree(sorted, operation)
-            },
-            error: function(e) {
-              if(balloon.datasource._raw_data === undefined) {
-                operation.success([]);
-              } else {
-                balloon._sortDatasource(
-                  balloon._filterDatasource(balloon.datasource._raw_data, balloon.tree.filter),
-                  balloon.tree.sort.field,
-                  balloon.tree.sort.dir,
-                  operation
-                );
-              }
-
-              balloon.displayError(e);
-            },
+            balloon._dataSourceSuccess(pool, operation);
           });
         }
       },
@@ -3798,6 +3735,104 @@ var balloon = {
         }
       },
     });
+  },
+
+  _readDataSource: function(operation) {
+    var $d = $.Deferred();
+
+    balloon.xmlHttpRequest({
+      url: balloon.datasource._url,
+      type: 'GET',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify(operation.data),
+      processData: false,
+      success: function(pool, msg, http) {
+        if(pool._links.next) {
+          operation.data.offset = operation.data.offset + operation.data.limit;
+
+          balloon._readDataSource(operation)
+            .done(function(data) {
+              var combined = pool.data.concat(data);
+
+              $d.resolve(combined);
+            })
+            .fail(function(e) {
+              $d.reject(e);
+            });
+        } else {
+          $d.resolve(pool.data);
+        }
+      },
+      error: function(e) {
+        if(balloon.datasource._raw_data === undefined) {
+          operation.success([]);
+        } else {
+          balloon._sortDatasource(
+            balloon._filterDatasource(balloon.datasource._raw_data, balloon.tree.filter),
+            balloon.tree.sort.field,
+            balloon.tree.sort.dir,
+            operation
+          );
+        }
+
+        balloon.displayError(e);
+
+        $d.reject(e);
+      },
+    });
+
+    return $d;
+  },
+
+  _dataSourceSuccess: function(pool, operation) {
+    if(balloon.datasource._ds_params.action == '_FOLDERDOWN') {
+      balloon.addCrumbRegister(balloon.getCurrentNode());
+    } else if(balloon.datasource._ds_params.action == '_FOLDERUP') {
+      var crumbs = balloon.getCrumb().find('li').filter(':hidden').get()/*.reverse()*/;
+      crumbs = crumbs.slice(-1);
+      $(crumbs).show();
+      balloon.getCrumb().find('li:last-child').remove();
+
+      if(balloon.getCrumb().find('li').get().length <= 5) {
+        balloon.getCrumb().find('li.removed').remove();
+      }
+    }
+
+    if(balloon.datasource._ds_params.nostate !== true && balloon.getCurrentNode() !== null) {
+      balloon.pushState();
+    }
+    balloon.datasource._ds_params.nostate = false;
+
+
+    var depth = balloon.getFolderDepth(),
+      param_col = balloon.getURLParam('collection');
+
+    if(pool.count == 0 && depth == 1 && param_col  === null) {
+      $('#fs-browser-fresh').show();
+    } else {
+      $('#fs-browser-fresh').hide();
+    }
+
+    if(depth != 1 && balloon.isSearch() === false || 'id' in operation.data && operation.data.id !== null && operation.id !== null) {
+      $('#fs-crumb').addClass('is-child');
+      pool.data.unshift({
+        id: '_FOLDERUP',
+        name: i18next.t('tree.folderup'),
+        directory: true,
+        spriteCssClass: 'gr-i-arrow-w',
+      });
+    } else {
+      $('#fs-crumb').removeClass('is-child');
+    }
+
+    balloon.datasource._raw_data = pool.data;
+    var sorted = balloon._sortDatasource(
+      balloon._filterDatasource(pool.data, balloon.tree.filter),
+      balloon.tree.sort.field,
+      balloon.tree.sort.dir
+    );
+    balloon._rebuildTree(sorted, operation);
   },
 
 
