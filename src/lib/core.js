@@ -4930,6 +4930,16 @@ var balloon = {
     balloon.xmlHttpRequest({
       url: balloon.base+'/files?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
       type: 'PUT',
+      snackbar: {
+        message: 'snackbar.file_created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.remove(response, true, true);
+        }
+      },
       complete: function(jqXHR, textStatus) {
         switch(textStatus) {
         case 'success':
