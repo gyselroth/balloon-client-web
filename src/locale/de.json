@@ -430,7 +430,7 @@
     "node_deleted": "{{count}} Element wurde in den <b>Papierkorb</b> verschoben.",
     "node_deleted_plural": "{{count}} Elemente wurden in den <b>Papierkorb</b> verschoben.",
     "collection_created": "Der Ordner <b>{{name}}</b> wurde erstellt.",
-    "file_created": "Die Date <b>{{name}}</b> wurde erstellt."
+    "file_created": "Die Datei <b>{{name}}</b> wurde erstellt."
   },
   "new_node": {
     "title": {
