@@ -6747,7 +6747,7 @@ var balloon = {
 
     node = balloon.id(node);
 
-    balloon.xmlHttpRequest({
+    var options = {
       url: balloon.base+'/nodes?ignore_flag='+ignore_flag+'&force='+force+'&'+balloon.param('id', node),
       type: 'DELETE',
       dataType: 'json',
@@ -6783,7 +6783,24 @@ var balloon = {
           balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         }
       },
-    });
+    };
+
+    if(force === false) {
+      //node has been deleted to trash, and therefore is undoable
+
+      options.snackbar = {
+        message: 'snackbar.node_deleted',
+        values: {
+          count: Array.isArray(node) ? node.length : 1
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.undelete(node);
+        }
+      };
+    }
+
+    balloon.xmlHttpRequest(options);
   },
 
 

@@ -426,7 +426,9 @@
     "node_moved": "{{count}} Element wurde nach <b>{{dest}}</b> verschoben.",
     "node_moved_plural": "{{count}} Elemente wurden nach <b>{{dest}}</b> verschoben.",
     "node_moved_folderup": "{{count}} Element wurde <b>in den übergeordneten Ordner</b> verschoben.",
-    "node_moved_folderup_plural": "{{count}} Elemente wurden <b>in den übergeordneten Ordner</b> verschoben."
+    "node_moved_folderup_plural": "{{count}} Elemente wurden <b>in den übergeordneten Ordner</b> verschoben.",
+    "node_deleted": "{{count}} Element wurde in den <b>Papierkorb</b> verschoben.",
+    "node_deleted_plural": "{{count}} Elemente wurden in den <b>Papierkorb</b> verschoben."
   },
   "new_node": {
     "title": {

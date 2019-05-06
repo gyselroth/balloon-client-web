@@ -425,7 +425,9 @@
     "node_moved": "{{count}} Element has been moved to <b>{{dest}}</b>.",
     "node_moved_plural": "{{count}} Elements have been moved to <b>{{dest}}</b>.",
     "node_moved_folderup": "{{count}} Element has been moved to <b>the parent folder</b>.",
-    "node_moved_folderup_plural": "{{count}} Elements have been moved to <b>the parent folder</b>."
+    "node_moved_folderup_plural": "{{count}} Elements have been moved to <b>the parent folder</b>.",
+    "node_deleted": "{{count}} Element has been moved to <b>Trash</b>.",
+    "node_deleted_plural": "{{count}} Elemente have been moved to <b>Trash</b>."
   },
   "new_node": {
     "title": {
