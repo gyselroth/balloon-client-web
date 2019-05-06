@@ -8848,6 +8848,19 @@ var balloon = {
 
     $.extend(true, reqOptions, options || {});
 
+    if(reqOptions.suppressSnackbar !== true) {
+      reqOptions.snackbar = {
+        message: 'snackbar.collection_created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.remove(response, true, true);
+        }
+      };
+    }
+
     balloon.xmlHttpRequest(reqOptions);
 
     return $d;
