@@ -3725,9 +3725,6 @@ var balloon = {
             data: JSON.stringify(operation.data),
             processData: false,
             success: function(pool, msg, http) {
-              /*for(var node in pool.data) {
-                pool.data[node].spriteCssClass = balloon.getSpriteClass(pool.data[node]);
-              }*/
 
               if(balloon.datasource._ds_params.action == '_FOLDERDOWN') {
                 balloon.addCrumbRegister(balloon.getCurrentNode());
