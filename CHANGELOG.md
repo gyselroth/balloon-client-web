@@ -9,7 +9,7 @@
 
 ## 3.1.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Mo Apr 29 10:20:11 CEST 2019
 
 * [FIX] uncaught error in IE11 #155
 
