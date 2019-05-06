@@ -6937,11 +6937,6 @@ var balloon = {
         balloon.deselectAll();
       },
       success: function(data) {
-        var count = 1;
-        if(source instanceof Array) {
-          count = source.length;
-        }
-
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
       error: function(data) {
