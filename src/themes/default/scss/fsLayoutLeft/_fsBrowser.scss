@@ -538,6 +538,9 @@
             width: calc(100% - #{$iconWidth + $checkboxWidth});
           }
         }
+        &.fs-folderup {
+          display: block;
+        }
       }
     }
 
@@ -563,12 +566,7 @@
             width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth + 2px});
           }
         }
-
-        &.fs-folderup {
-          display: block;
-        }
       }
-
     }
   }
 
