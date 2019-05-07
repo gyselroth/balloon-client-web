@@ -434,7 +434,8 @@
     "node_undeleted": "{{count}} element has been recovered.",
     "node_undeleted_plural": "{{count}} elements have been recovered.",
     "file_saved": "The file <b>{{name}}</b> has been saved.",
-    "share_added": "The collection <b>{{name}}</b> has been shared."
+    "share_added": "The collection <b>{{name}}</b> has been shared.",
+    "share_updated": "The share for the collection <b>{{name}}</b> has been updated."
   },
   "new_node": {
     "title": {

@@ -5184,18 +5184,6 @@ var balloon = {
       $k_win.close();
     });
 
-    $fs_share_win_create.off('click').on('click', function() {
-      if(balloon._saveShare(acl, node)) {
-        $k_win.close();
-      }
-    });
-
-    $fs_share_win_save.off('click').on('click', function() {
-      if(balloon._saveShare(acl, node)) {
-        $k_win.close();
-      }
-    });
-
     $fs_share_win_cancel.off('click').on('click', function() {
       $k_win.close();
     });
@@ -5213,10 +5201,18 @@ var balloon = {
     var $share_consumer_search = $fs_share_win.find('input[name=share_consumer_search]');
     var $share_name = $fs_share_win.find('input[name=share_name]');
     var $privilegeSelectorTrigger = $fs_share_win.find('#fs-share-window-search-role .fs-share-window-selected-privilege');
-
+    var $saveBtns = $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]');
     balloon._setToggleConsumersVisibility(acl);
 
-    $fs_share_win.find('.fs-window-secondary-actions input[type="submit"]').prop('disabled', ($share_name.val() === '' || acl.length === 0));
+    $saveBtns.prop('disabled', ($share_name.val() === '' || acl.length === 0));
+
+    var oldAcl = $.extend(true, [], acl);
+
+    $saveBtns.off('click').on('click', function() {
+      if(balloon._saveShare(acl, node, oldAcl)) {
+        $fs_share_win.data('kendoBalloonWindow').close();
+      }
+    });
 
     $share_name.off('change').on('change', function() {
       if($(this).val() !== '') {
@@ -5667,9 +5663,10 @@ var balloon = {
    *
    * @param  Array acl
    * @param  object node
+   * @param  Array oldAcl
    * @return object
    */
-  _saveShare: function(acl, node) {
+  _saveShare: function(acl, node, oldAcl) {
     var $share_name = $('#fs-share-window input[name=share_name]');
 
     if($share_name.val() === '') {
@@ -5679,7 +5676,7 @@ var balloon = {
       $('#fs-share-window input[name=share_consumer_search]').focus();
       return false;
     } else {
-      balloon._shareCollection(node, acl, $share_name.val());
+      balloon._shareCollection(node, acl, $share_name.val(), oldAcl);
       return true;
     }
   },
@@ -5726,9 +5723,10 @@ var balloon = {
    * @param   object node
    * @param   array acl
    * @param   string name
+   * @param   array oldAcl
    * @return  void
    */
-  _shareCollection: function(node, acl, name) {
+  _shareCollection: function(node, acl, name, oldAcl) {
     var url = balloon.base+'/collections/share?id='+balloon.id(node);
 
     var options = {
@@ -5748,7 +5746,7 @@ var balloon = {
       },
     };
 
-    if(node.shared !== true) {
+    if(oldAcl.length === 0) {
       options.snackbar = {
         message: 'snackbar.share_added',
         values: {
@@ -5757,6 +5755,18 @@ var balloon = {
         icon: 'undo',
         iconAction: function(response) {
           balloon._deleteShare(node)
+        }
+      };
+    } else {
+      options.snackbar = {
+        message: 'snackbar.share_updated',
+        values: {
+          name: node.name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          var oldName = node.sharename || node.name;
+          balloon._shareCollection(response, oldAcl, oldName, acl);
         }
       };
     }
