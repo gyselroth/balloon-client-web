@@ -183,6 +183,16 @@ var app = {
       url: this.balloon.base+'/files?name='+name+'&'+this.balloon.param('collection', this.balloon.getCurrentCollectionId()),
       type: 'PUT',
       data: url,
+      snackbar: {
+        message: 'app.burl.snackbar.file_created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          app.balloon.remove(response, true, true);
+        }
+      },
       success: function(data) {
         this.balloon.refreshTree('/collections/children', {id: this.balloon.getCurrentCollectionId()});
         app.balloon.added_rename = data.id;
