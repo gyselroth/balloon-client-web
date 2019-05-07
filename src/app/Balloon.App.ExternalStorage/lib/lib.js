@@ -188,7 +188,7 @@ var app = {
         },
         icon: 'undo',
         iconAction: function(response) {
-          app.balloon.remove(response, true, true);
+          app.balloon.remove(response);
         }
       },
       data: {
