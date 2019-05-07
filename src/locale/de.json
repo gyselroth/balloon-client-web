@@ -431,7 +431,7 @@
     "node_deleted_plural": "{{count}} Elemente wurden in den <b>Papierkorb</b> verschoben.",
     "collection_created": "Der Ordner <b>{{name}}</b> wurde erstellt.",
     "file_created": "Die Datei <b>{{name}}</b> wurde erstellt.",
-    "node_renamed": "Der node <b>{{old_name}}</b> wurde nach <b>{{new_name}}</b> umbenannt.",
+    "node_renamed": "Das Element <b>{{old_name}}</b> wurde nach <b>{{new_name}}</b> umbenannt.",
     "node_undeleted": "{{count}} Element wurde wiederhergestellt.",
     "node_undeleted_plural": "{{count}} Elemente wurde wiederhergestellt."
   },
