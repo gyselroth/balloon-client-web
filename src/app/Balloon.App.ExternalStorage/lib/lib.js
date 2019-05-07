@@ -181,6 +181,16 @@ var app = {
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/collections',
       type: 'POST',
+      snackbar: {
+        message: 'app.externalstorage.snackbar.created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          app.balloon.remove(response, true, true);
+        }
+      },
       data: {
         name: name,
         id: app.balloon.getCurrentCollectionId(),

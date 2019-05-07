@@ -13,6 +13,9 @@
         "invalid_share": "Die Freigabe auf dem Server kann nicht gefunden werden. Bitte kontrolliere deine Eingabe.",
         "invalid_credentials": "Die Authentifizierung ist fehlgeschlagen. Bitte kontrolliere deine Eingabe."
       },
+      "snackbar": {
+        "created": "Der Externe Speicher <b>{{name}}</b> wurde erstellt."
+      },
       "hint": "Es ist möglich externen Speicher in balloon zu verbinden. So kannst du Daten auf diesem Speicher direkt oder via balloon bearbeiten. Bis jetzt wird nur SMB/CIFS unterstützt. Externer Speicher ist als {icon-folder-storage} sichtbar. Externer Speicher kann auch via balloon geteilt werden."
     }
   }
