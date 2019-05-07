@@ -289,11 +289,19 @@ var app = {
   addOfficeFile: function(name, type) {
     var $d = $.Deferred();
 
-    name = encodeURI(name);
-
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/documents?type='+type+'&name='+name+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
+      url: app.balloon.base+'/office/documents?type='+type+'&name='+encodeURI(name)+'&'+app.balloon.param('collection', app.balloon.getCurrentCollectionId()),
       type: 'POST',
+      snackbar: {
+        message: 'app.office.snackbar.' + type + '_created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          app.balloon.remove(response, true, true);
+        }
+      },
       complete: function(jqXHR, textStatus) {
         $('#fs-new-file').remove();
 
