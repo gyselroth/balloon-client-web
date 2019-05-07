@@ -7367,11 +7367,28 @@ var balloon = {
         },
         icon: 'undo',
         iconAction: function(response) {
-          balloon.restoreVersion(node.id, node.version);
+          balloon.restoreVersion(node.id, node.version, response.version);
         }
       },
       success: function(data) {
         balloon.resetDom('edit');
+
+        if(balloon.last && balloon.last.id === data.id) {
+          balloon.last = data;
+        }
+
+        switch(balloon.getURLParam('view')) {
+        case 'history':
+          balloon.displayHistoryView();
+
+          if($('#fs-history-window').is(':visible')) {
+            balloon.displayHistoryWindow(node);
+          }
+          break;
+        case 'events':
+          balloon.switchView('events');
+          break;
+        }
       }
     });
   },
@@ -7790,7 +7807,7 @@ var balloon = {
         $submit.off('click').on('click', function(){
           var version = $fs_history.find('input[name=version]:checked').val();
           if(version !== undefined) {
-            balloon.restoreVersion(node, version);
+            balloon.restoreVersion(node.id, version, node.version);
           }
         });
       }
@@ -7820,7 +7837,7 @@ var balloon = {
           $fs_history_win.find('input[name="apply"]').off('click').on('click', function(){
             var version = $fs_history_win.find('input[name=version]:checked').val();
             if(version !== undefined) {
-              balloon.restoreVersion(node, version);
+              balloon.restoreVersion(node.id, version, node.version);
             }
           });
 
@@ -7837,17 +7854,32 @@ var balloon = {
    *
    * @param   string|object node
    * @param   int version
+   * @param   int prevVersion
    * @return  void
    */
-  restoreVersion: function(node, version) {
-    balloon.xmlHttpRequest({
+  restoreVersion: function(node, version, prevVersion) {
+    var options = {
       url: balloon.base+'/files/restore?id='+balloon.id(node),
       type: 'POST',
       dataType: 'json',
       data: {
         version: version
       },
+      snackbar: {
+        message: 'snackbar.restore_file',
+        values: {
+          version: version
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.restoreVersion(node, prevVersion, version);
+        }
+      },
       success: function(data) {
+        if(balloon.last && balloon.last.id === data.id) {
+          balloon.last = data;
+        }
+
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.displayHistoryView();
 
@@ -7855,7 +7887,14 @@ var balloon = {
           balloon.displayHistoryWindow(node);
         }
       }
-    });
+    };
+
+    if(prevVersion === undefined) {
+      delete options.snackbar.icon;
+      delete options.snackbar.iconAction;
+    }
+
+    balloon.xmlHttpRequest(options);
   },
 
 

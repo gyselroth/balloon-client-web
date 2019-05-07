@@ -436,7 +436,8 @@
     "node_undeleted_plural": "{{count}} Elemente wurde wiederhergestellt.",
     "file_saved": "Die Datei <b>{{name}}</b> wurde gespeichert.",
     "share_added": "Der Ordner <b>{{name}}</b> wurde freigegeben.",
-    "share_updated": "Die Freigabe für den Ordner <b>{{name}}</b> wurde angepasst."
+    "share_updated": "Die Freigabe für den Ordner <b>{{name}}</b> wurde angepasst.",
+    "restore_file": "Die Version <b>{{version}}</b> wurde wiederhergestellt."
   },
   "new_node": {
     "title": {
