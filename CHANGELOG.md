@@ -6,6 +6,7 @@
 * [CHANGE] Implement paged node listing #133
 * [FEATURE] Undo move/clone via snackbar #42
 * [FIX] Undo event "addCollectionShare" #157
+* [FEATURE] Various snackbar undo actions #62
 
 ## 3.1.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
