@@ -59,6 +59,9 @@
             "years": "Jahre"
           }
         }
+      },
+      "snackbar": {
+        "created": "Der Intelligente Ordner <b>{{name}}</b> wurde erstellt."
       }
     }
   }
