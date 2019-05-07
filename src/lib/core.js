@@ -2821,8 +2821,8 @@ var balloon = {
       var msg  = i18next.t('events.prompt.unshare', e.data.node.name);
       balloon.promptConfirm(msg, [
         {
-          action: '_shareCollection',
-          params: [e.data.node, {options: {shared: false}}]
+          action: '_deleteShare',
+          params: [e.data.node]
         }, successAction
       ]);
       break;
