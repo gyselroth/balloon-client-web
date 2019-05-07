@@ -15,7 +15,7 @@
     color: $colorActiveBlue;
     cursor: pointer;
     float: left;
-    margin: -1px 16px 0 0;
+    margin: -2px 16px 0 0;
   }
 
   &.is-child #fs-crumb-back {
@@ -83,7 +83,7 @@
     }
   }
 
-  @media screen and (min-width: $breakpointPannelVisible) {
+  @media screen and (min-width: $breakpointBreadcrumb) {
     margin: 15px 0 8px 0;
 
     #fs-crumb-back {

@@ -434,6 +434,16 @@
     }
   }
 
+  @media screen and (min-width: $breakpointBreadcrumb) {
+    #fs-browser-tree {
+      .k-item {
+        &.fs-folderup {
+          display: block;
+        }
+      }
+    }
+  }
+
   @media screen and (min-width: $breakpointMetaVisible) {
     #fs-browser-tree {
       $metaPaddingSmallScreen: 25px;
@@ -537,9 +547,6 @@
           .fs-browser-column-name {
             width: calc(100% - #{$iconWidth + $checkboxWidth});
           }
-        }
-        &.fs-folderup {
-          display: block;
         }
       }
     }
