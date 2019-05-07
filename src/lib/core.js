@@ -5731,7 +5731,7 @@ var balloon = {
   _shareCollection: function(node, acl, name) {
     var url = balloon.base+'/collections/share?id='+balloon.id(node);
 
-    balloon.xmlHttpRequest({
+    var options = {
       url: url,
       type: 'POST',
       dataType: 'json',
@@ -5746,7 +5746,22 @@ var balloon = {
           balloon.switchView('share');
         }
       },
-    });
+    };
+
+    if(node.shared !== true) {
+      options.snackbar = {
+        message: 'snackbar.share_added',
+        values: {
+          name: node.name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon._deleteShare(node)
+        }
+      };
+    }
+
+    balloon.xmlHttpRequest(options);
   },
 
   /**

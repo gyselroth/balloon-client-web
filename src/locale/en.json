@@ -433,7 +433,8 @@
     "node_renamed": "The element <b>{{old_name}}</b> has been renamed to <b>{{new_name}}</b>.",
     "node_undeleted": "{{count}} element has been recovered.",
     "node_undeleted_plural": "{{count}} elements have been recovered.",
-    "file_saved": "The file <b>{{name}}</b> has been saved."
+    "file_saved": "The file <b>{{name}}</b> has been saved.",
+    "share_added": "The collection <b>{{name}}</b> has been shared."
   },
   "new_node": {
     "title": {
