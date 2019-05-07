@@ -433,7 +433,8 @@
     "file_created": "Die Datei <b>{{name}}</b> wurde erstellt.",
     "node_renamed": "Das Element <b>{{old_name}}</b> wurde nach <b>{{new_name}}</b> umbenannt.",
     "node_undeleted": "{{count}} Element wurde wiederhergestellt.",
-    "node_undeleted_plural": "{{count}} Elemente wurde wiederhergestellt."
+    "node_undeleted_plural": "{{count}} Elemente wurde wiederhergestellt.",
+    "file_saved": "Die Datei <b>{{name}}</b> wurde gespeichert."
   },
   "new_node": {
     "title": {

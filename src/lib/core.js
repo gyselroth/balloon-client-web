@@ -7335,6 +7335,16 @@ var balloon = {
       url: balloon.base+'/files?id='+balloon.id(node),
       type: 'PUT',
       data: content,
+      snackbar: {
+        message: 'snackbar.file_saved',
+        values: {
+          name: node.name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.restoreVersion(node.id, node.version);
+        }
+      },
       success: function(data) {
         balloon.resetDom('edit');
       }
