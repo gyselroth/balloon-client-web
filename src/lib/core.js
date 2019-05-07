@@ -6896,6 +6896,16 @@ var balloon = {
         conflict: conflict
       },
       dataType: 'json',
+      snackbar: {
+        message: 'snackbar.node_undeleted',
+        values: {
+          count: Array.isArray(node) ? node.length : 1
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.remove(node);
+        }
+      },
       complete: function() {
         balloon.resetDom('multiselect');
       },
