@@ -7288,44 +7288,11 @@ var balloon = {
           title: winTitle,
           resizable: false,
           modal: true,
-          keydown: function(e) {
-            if(e.originalEvent.keyCode !== 27) {
-              return;
-            }
+          close: function(e) {
+            if(e.userTriggered && data != $textarea.val()) {
+              //user tries to close window with unsaved changes
+              e.preventDefault();
 
-            if(data == $textarea.val()) {
-              $k_display.close();
-              return;
-            }
-
-            e.stopImmediatePropagation();
-            var msg  = i18next.t('prompt.close_save_file', node.name);
-            balloon.promptConfirm(msg, function(){
-              balloon.saveFile(node, $textarea.val());
-              $k_display.close();
-            });
-
-            $("#fs-prompt-window").find('input[name=cancel]').unbind('click').bind('click', function(){
-              $("#fs-prompt-window").data('kendoBalloonWindow').close();
-              $k_display.close();
-            });
-          },
-          open: function(e) {
-            setTimeout(function(){
-              e.sender.wrapper.find('textarea').focus();
-            }, 600);
-
-            e.sender.wrapper.find('textarea').unbind('change').bind('change',function(){
-              data = $textarea.val();
-            });
-
-            $(this.wrapper).find('.gr-i-close').unbind('click.fix').bind('click.fix', function(e){
-              e.stopImmediatePropagation();
-
-              if(data == $textarea.val()) {
-                $k_display.close();
-                return;
-              }
               var msg  = i18next.t('prompt.close_save_file', node.name);
               balloon.promptConfirm(msg, function(){
                 balloon.saveFile(node, $textarea.val());
@@ -7336,6 +7303,15 @@ var balloon = {
                 $("#fs-prompt-window").data('kendoBalloonWindow').close();
                 $k_display.close();
               });
+            }
+          },
+          open: function(e) {
+            setTimeout(function(){
+              e.sender.wrapper.find('textarea').focus();
+            }, 600);
+
+            e.sender.wrapper.find('textarea').unbind('change').bind('change',function(){
+              data = $textarea.val();
             });
           }
         }).data("kendoBalloonWindow").center().open();
