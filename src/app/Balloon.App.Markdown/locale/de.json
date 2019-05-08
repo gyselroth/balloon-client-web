@@ -1,7 +1,13 @@
 {
   "app": {
     "markdown": {
+      "markdownFile": "Markdown-Dokument"
+    }
+  },
 
+  "new_node": {
+    "title": {
+      "md": "Neues Markdown-Dokument"
     }
   }
 }
