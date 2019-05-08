@@ -22,6 +22,7 @@
     "kendo-ui-core": "^2018.3.1219",
     "merge-jsons-webpack-plugin": "^1.0.18",
     "qrcode.es": "^1.0.0",
+    "simplemde": "^1.11.2",
     "ubuntu-fontface": "^0.1.13",
     "uglifyjs-webpack-plugin": "^2.1.1"
   },
