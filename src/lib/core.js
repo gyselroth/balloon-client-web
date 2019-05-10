@@ -245,6 +245,17 @@ var balloon = {
       callback: function() {
         balloon.displayHelpWindow();
       }
+    },
+    'search': {
+      name: 'search-trigger-mobile',
+      label: 'nav.action.search',
+      icon: 'search',
+      hasDropDown: false,
+      hasCount: false,
+      callback: function() {
+        $('#fs-search').addClass('fs-search-mobile-visible');
+        $('#fs-search-input').focus();
+      }
     }
   },
 
@@ -8772,6 +8783,7 @@ var balloon = {
 
         $fs_search
           .removeClass('fs-search-focused')
+          .removeClass('fs-search-mobile-visible')
           .removeClass('fs-search-filtered')
           .removeClass('fs-search-mode-dropdown-open');
 
