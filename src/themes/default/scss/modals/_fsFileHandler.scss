@@ -1,0 +1,18 @@
+$sidePadding: 60px;
+
+#fs-file-handler-window {
+  /*display: none;*/
+  width: 440px + (2 * $sidePadding);
+  padding-bottom: 40px;
+  padding-top: 13px;
+
+  li {
+    border: solid 1px #CCC;
+    margin: 10px 0;
+    padding: 10px;
+
+    .active {
+      border-color: #f90;
+    }
+  }
+}

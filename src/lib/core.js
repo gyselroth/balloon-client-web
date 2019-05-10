@@ -181,6 +181,13 @@ var balloon = {
   preview_file_handlers: {},
 
   /**
+   * File handlers
+   *
+   * @var array
+   */
+  file_handlers: [],
+
+  /**
    * Menu handlers
    *
    * @var object
@@ -2986,32 +2993,79 @@ var balloon = {
   },
 
   /**
-   * Add preview handler
+   * Add file handler
    *
-   * @param function
+   * @param string ext
+   * @param function handler
+   * @param object context
    */
-  addPreviewHandler: function(name, handler) {
-    balloon.preview_file_handlers[name] = handler;
+  addFileHandler: function(ext, handler, context) {
+    balloon.file_handlers.push({
+      ext: ext,
+      handler: handler,
+      context: context,
+    });
   },
 
   /**
-   * Get preview handler
+   * Open file
    *
-   * @param object node
+   * @var object node
    */
-  getPreviewHandler(node) {
-    var i;
-    var handlerFn;
-    var keys = Object.keys(balloon.preview_file_handlers);
+  openFile: function(node) {
+    var ext = this.getFileExtension(node);
+    var result = [];
 
-    for(i=0; i<keys.length; i++) {
-      var handler = balloon.preview_file_handlers[keys[i]];
-      handlerFn = handler(node);
-
-      if(handlerFn) break;
+    for(let handler of this.file_handlers) {
+      if(handler.ext === ext) {
+        result.push(handler);
+      }
     }
 
-    return handlerFn;
+    if(result.length === 0) {
+      console.log("no handler");
+    } else if(result.length === 1) {
+      result[0].handler(node, result[0].context);
+    } else {
+      balloon.chooseFileHandler(node, result);
+    }
+  },
+
+  /**
+   * Choose file handler
+   *
+   * @param object node
+   * @param array handlers
+   */
+  chooseFileHandler: function(node, handlers) {
+    var $div = $('#fs-file-handler-window');
+    $div.find('li').remove();
+    var $ul = $div.find('ul');
+
+    var $k_display = $div.kendoBalloonWindow({
+      resizable: false,
+      title: 'Choose file handler',
+      modal: false,
+      draggable: false,
+      open: function(e) {
+        for(let i=0; i < handlers.length; i++) {
+          $ul.append('<li data-handler="'+i+'">HANDLER</li>');
+        }
+      }
+    }).data('kendoBalloonWindow').center();
+
+    $ul.find('li:first-child').addClass('active');
+
+    $ul.off('click').on('click', 'li', function() {
+      $ul.find('li').removeClass('active');
+      $(this).toggleClass('active');
+    });
+
+    $div.find('input[type=submit]').off('click').on('click', function() {
+      let handler = handlers[$ul.find('li.active').attr('data-handler')];
+      $k_display.close();
+      handler.handler(node, handler.context);
+    });
   },
 
   /**
@@ -3569,8 +3623,6 @@ var balloon = {
       balloon.resetDom('selected');
     }
 
-    var previewHandler = balloon.getPreviewHandler(balloon.last);
-
     if(balloon.last !== null && balloon.last.directory) {
       balloon.updatePannel(false);
 
@@ -3586,7 +3638,12 @@ var balloon = {
         ['selected','metadata','preview','multiselect','view-bar',
           'history','share','share-link']
       );
-    } else if(previewHandler) {
+    }
+
+    balloon.openFile(balloon.last);
+
+    /*
+    else if(previewHandler) {
       previewHandler(balloon.last);
     } else if(balloon.isEditable(balloon.last.mime)) {
       balloon.editFile(balloon.getCurrentNode());
@@ -3594,7 +3651,7 @@ var balloon = {
       balloon.displayFile(balloon.getCurrentNode());
     } else {
       balloon.downloadNode(balloon.getCurrentNode());
-    }
+    }*/
 
     balloon.pushState();
   },
@@ -8186,14 +8243,7 @@ var balloon = {
         $fs_preview.removeClass('fs-loader');
 
         $fs_preview.find('*').unbind('click').bind('click', function() {
-          var previewHandler = balloon.getPreviewHandler(node);
-          if(previewHandler) {
-            previewHandler(node);
-          } else if(balloon.isViewable(node.mime)) {
-            balloon.displayFile(node);
-          } else {
-            balloon.downloadNode(node);
-          }
+          balloon.openFile(node);
         });
       },
       success: function(data) {

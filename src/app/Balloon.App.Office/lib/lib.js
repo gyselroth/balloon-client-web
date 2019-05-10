@@ -11,14 +11,51 @@ import css from '../styles/style.scss';
 
 var app = {
   id: 'Balloon.App.Office',
+  wopiHosts: [],
+  handlers: [],
 
   OFFICE_EXTENSIONS: ['csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'],
 
   render: function() {
   },
 
+  refreshWopiHosts: function() {
+    app.balloon.xmlHttpRequest({
+      url: app.balloon.base+'/office/hosts',
+      success: function(data) {
+        app.wopiHosts = data.data;
+        console.log(app.wopiHosts);
+
+        for(let host of app.wopiHosts) {
+          for(let zone of app.toArray(host.discovery['net-zone'])) {
+            if(zone['@attributes'].name === 'external-https' || zone['@attributes'].name === 'external-http') {
+              for(let wopiApp of app.toArray(zone.app)) {
+                for(let action of app.toArray(wopiApp.action)) {
+                  if(action['@attributes'].name === 'edit') {
+                    app.balloon.addFileHandler(action['@attributes'].ext, app.fileHandler, {
+                      url: action['@attributes'].urlsrc,
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  },
+
+  toArray: function(haystack) {
+      if(Array.isArray(haystack)) {
+        return haystack;
+      }
+
+      return [haystack];
+  },
+
   preInit: function(core)  {
     this.balloon = core;
+    this.refreshWopiHosts();
 
     var callback = function(type) {
       return core.showNewNode(type, app.addOfficeFile);
@@ -29,133 +66,31 @@ var app = {
     app.balloon.addNew('pptx', 'app.office.powerpoint_document', 'file-powerpoint', callback);
 
     app.balloon.addPreviewHandler('office', this._handlePreview);
+
+    console.log(app.wopiHosts)
+
   },
 
-  edit: function(node) {
+  fileHandler: function(node, context) {
     $('#fs-edit-office').remove();
 
-    app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/documents?id='+app.balloon.id(node),
-      success: function(doc) {
-        if(doc.session.length === 0) {
-          app.newSession(node, doc);
-        } else {
-          if(doc.session.length === 1) {
-            app.promptSingleSessionJoin(node, doc, doc.session[0]);
-          } else {
-            app.promptSelectSessionJoin(node, doc);
-          }
-        }
-      }
-    });
-  },
-
-  promptSelectSessionJoin: function(node, doc) {
-    $("#fs-office-join-prompt").remove();
-
-    var msg = i18next.t('app.office.session.prompt.message_select', node.name);
-    msg += '<ul>';
-    for(var i in doc.session) {
-      msg += '<li><input type="radio" name="session" value="'+doc.session[i].id+'"/>'
-              +i18next.t('app.office.session.prompt.message_select_by_user', doc.session[i].user.name, app.balloon.timeSince(new Date((doc.session[i].created*1000))))+'</li>';
-    }
-    msg += '</ul>';
-
-    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.session.prompt.title')+'">'
-            +'<div id="fs-office-join-prompt-content" class="fs-prompt-window-content">'+msg+'</div>'
-            +'<div class="fs-window-secondary-actions">'
-            +'    <input type="button" tabindex="2" name="new" value="'+i18next.t('app.office.session.prompt.new')+'"/>'
-            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'" class="fs-button-primary" />'
-            +'</div>'
-        +'</div>');
-
-    $("#fs-namespace").append($div);
-    $div.find('input[name=session]:first').attr('checked', true);
-
-    $div.find('input[name=join]').unbind('click').click(function(e) {
-      e.stopImmediatePropagation();
-      $div.data('kendoBalloonWindow').close();
-      app.joinSession(node, doc, $div.find('input[name=session]:checked').val());
-    });
-
-    app.sessionPrompt($div, node, doc);
-  },
-
-  sessionPrompt: function($div, node, doc)    {
-    var $k_prompt = $div.kendoBalloonWindow({
-      title: $div.attr('title'),
-      resizable: false,
-      modal: true,
-      activate: function() {
-        setTimeout(function() {
-          $div.find('input[name=join]').focus()
-        },200);
-      }
-    }).data("kendoBalloonWindow").center().open();
-
-    $div.unbind('keydown').keydown(function(e) {
-      if(e.keyCode === 27) {
-        e.stopImmediatePropagation();
-        $k_prompt.close();
-      }
-    });
-
-    $div.find('input[name=new]').unbind('click').click(function(e) {
-      e.stopImmediatePropagation();
-      $k_prompt.close();
-      app.newSession(node, doc);
-    });
-  },
-
-  promptSingleSessionJoin: function(node, doc, session) {
-    $("#fs-office-join-prompt").remove();
-    var $div = $('<div id="fs-office-join-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.session.prompt.title')+'">'
-            +'<div id="fs-office-join-prompt" fs-prompt-window-content>'+i18next.t('app.office.session.prompt.message_one', node.name, session.user.name, app.balloon.timeSince(new Date((session.created*1000))))+'</div>'
-            +'<div class="fs-window-secondary-actions">'
-            +'    <input type="button" tabindex="2" name="new" value="'+i18next.t('app.office.session.prompt.new')+'"/>'
-            +'    <input type="button" tabindex="1" name="join" value="'+i18next.t('app.office.session.prompt.join')+'" class="fs-button-primary"/>'
-            +'</div>'
-        +'</div>');
-    $("#fs-namespace").append($div);
-
-    $div.find('input[name=join]').unbind('click').click(function(e) {
-      e.stopImmediatePropagation();
-      $div.data('kendoBalloonWindow').close();
-      app.joinSession(node, doc, session.id);
-    });
-
-    app.sessionPrompt($div, node, doc);
-  },
-
-  newSession: function(node, doc) {
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/office/sessions?id='+app.balloon.id(node),
       type: 'POST',
       success: function(session) {
-        app.initLibreOffice(node, doc, session);
+        app.wopiClient(node, session, context);
       }
     });
   },
 
-  joinSession: function(node, doc, session_id) {
-    app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/sessions/join?id='+session_id,
-      type: 'POST',
-      success: function(session) {
-        session.id = session_id;
-        app.initLibreOffice(node, doc, session);
-      }
-    });
-  },
-
-  initLibreOffice: function(node, doc, session) {
+  wopiClient: function(node, session, context) {
     var $div = $('<div id="fs-edit-office"></div>');
     $('body').append($div);
 
     var $k_display = $div.kendoBalloonWindow({
       resizable: false,
       title: node.name,
-      modal: true,
+      modal: false,
       draggable: false,
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
@@ -165,34 +100,29 @@ var app = {
         e.stopImmediatePropagation();
         var msg  = i18next.t('app.office.close_edit_file', node.name);
         app.balloon.promptConfirm(msg, function(){
-          app.balloon.xmlHttpRequest({
-            url: app.balloon.base+'/office/sessions?id='+session.id+'&access_token='+session.access_token,
-            type: 'DELETE',
-            error: function(){},
-            complete: function() {
-              $k_display.close();
-              $div.remove();
-            }
-          });
+           $k_display.close();
+           $div.remove();
         });
       },
       open: function(e) {
-        app.showStartupPrompt();
-
         $('#fs-edit-office_wnd_title').html(
           $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
         );
 
-        var src = session.wopi_url+app.balloon.base+'/office/wopi/document/'+session.id,
-          src = encodeURIComponent(src),
-          url = doc.loleaflet+'?WOPISrc='+src+'&title='+node.name+'&lang='+i18next.language+'&closebutton=0&revisionhistory=0';
+        //var src = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port+app.balloon.base+'/office/wopi/files/'+session.file;
+        var src = window.location.protocol + '//' + '10.242.2.8' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.file;
+        src = encodeURIComponent(src);
+        var url = context.url+'&WOPISrc='+src;
+        console.log(src,url);
+
+        //url = 'https://oos.mbazh.ch/wv/wordviewerframe.aspx?WOPISrc=http%3A%2F%2F10.242.2.8:8084%2Fapi%2Fv2%2Foffice%2Fwopi%2Ffiles%2F'+session.file+'&ui=en-us&new=1';
 
         $div.append(
           '<form method="post" action="'+url+'" target="loleafletframe">'+
                     '<input type="hidden" name="access_token" value="'+session.access_token+'"/>'+
-                    '<input type="hidden" name="access_token_ttl" value="'+session.access_token_ttl+'"/>'+
+                    //'<input type="hidden" name="access_token_ttl" value="'+session.ttl+'"/>'+
                   '</form>'+
-                  '<iframe style="width: 100%; height: calc(100% - 40px);" name="loleafletframe"/>'
+                  '<iframe style="width: 100%; height: 100%;" name="loleafletframe"/>'
         );
 
         $div.find('form').submit();
@@ -201,70 +131,12 @@ var app = {
           e.stopImmediatePropagation();
           var msg  = i18next.t('app.office.close_edit_file', node.name);
           app.balloon.promptConfirm(msg, function(){
-            app.balloon.xmlHttpRequest({
-              url: app.balloon.base+'/office/sessions?id='+session.id+'&access_token='+session.access_token,
-              type: 'DELETE',
-              error: function(){},
-              complete: function() {
-                $k_display.close();
-                $div.remove();
-              }
-            });
+             $k_display.close();
+             $div.remove();
           });
         });
       }
     }).data("kendoBalloonWindow").center().maximize();
-  },
-
-  showStartupPrompt: function(e) {
-    if(localStorage.app_office_hide_prompt == "true") {
-      return;
-    }
-
-    $("#fs-libreoffice-prompt").remove();
-
-    var $div = $('<div id="fs-libreoffice-prompt" class="fs-prompt-window-inner" title="'+i18next.t('app.office.startup_prompt.title')+'">'
-            +'<div id="fs-libreoffice-prompt-content" class="fs-prompt-window-content">'+i18next.t('app.office.startup_prompt.message')+'</div>'
-            +'<div class="fs-window-secondary-actions">'
-            +'    <input type="button" tabindex="2" name="hide" value="'+i18next.t('app.office.startup_prompt.dont_show_again')+'" />'
-            +'    <input type="button" tabindex="1" name="close" value="'+i18next.t('app.office.startup_prompt.close')+'" class="fs-button-primary" />'
-            +'</div>'
-        +'</div>');
-
-    $("#fs-namespace").append($div);
-
-    var $k_prompt = $div.kendoBalloonWindow({
-      title: $div.attr('title'),
-      resizable: false,
-      modal: true,
-      activate: function() {
-        setTimeout(function() {
-          $div.find('input[name=close]').focus()
-        },200);
-      }
-    }).data("kendoBalloonWindow");
-
-    setTimeout(function(){
-      $k_prompt.center().open();
-    }, 700);
-
-    $div.unbind('keydown').keydown(function(e) {
-      if(e.keyCode === 27) {
-        e.stopImmediatePropagation();
-        $k_prompt.close();
-      }
-    });
-
-    $div.find('input[name=close]').unbind('click').click(function(e) {
-      e.stopImmediatePropagation();
-      $k_prompt.close();
-    });
-
-    $div.find('input[name=hide]').unbind('click').click(function(e) {
-      localStorage.app_office_hide_prompt = true;
-      e.stopImmediatePropagation();
-      $k_prompt.close();
-    });
   },
 
   /**
