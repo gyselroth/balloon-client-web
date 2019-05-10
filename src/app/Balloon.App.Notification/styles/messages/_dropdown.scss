@@ -1,4 +1,5 @@
-$breakpointIncreasePadding: $breakpointPannelVisible;
+$breakpointNotificationsL: 550px;
+$breakpointNotificationsXL: $breakpointPannelVisible;
 
 @import './dropdown-header';
 @import './dropdown-messages';
@@ -35,7 +36,7 @@ Styles for "message center"
           }
         }
 
-        @media screen and (min-width: $breakpointMenuVisible) {
+        @media screen and (min-width: $breakpointNotificationsL) {
           #fs-notifications-dropdown-wrap {
             max-width: calc(100vw - 107px);
             right: -52px;
@@ -46,7 +47,7 @@ Styles for "message center"
           }
         }
 
-        @media screen and (min-width: $breakpointIncreasePadding) {
+        @media screen and (min-width: $breakpointNotificationsXL) {
           #fs-notifications-dropdown-wrap {
             #fs-notifications-dropdown {
               padding: 37px 56px 40px;
