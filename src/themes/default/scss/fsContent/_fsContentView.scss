@@ -53,7 +53,7 @@
         }
 
         max-height: calc(100% - 55px);
-        overflow: scroll;
+        overflow: auto;
       }
 
       &.disabled {
