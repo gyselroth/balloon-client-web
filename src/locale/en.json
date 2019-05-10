@@ -163,8 +163,8 @@
   "view": {
     "prop": {
       "head": {
-        "mime": "Mime:",
-        "id": "ID:",
+        "mime": "Mime",
+        "id": "ID",
         "contains": "Contains",
         "changed": "Changed",
         "deleted": "Deleted",

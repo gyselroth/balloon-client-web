@@ -163,8 +163,8 @@
   "view": {
     "prop": {
       "head": {
-        "mime": "Dateityp:",
-        "id": "ID:",
+        "mime": "Dateityp",
+        "id": "ID",
         "contains": "Enthält",
         "changed": "Geändert",
         "deleted": "Gelöscht",
