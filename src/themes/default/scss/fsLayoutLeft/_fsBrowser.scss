@@ -434,7 +434,7 @@
     }
   }
 
-  @media screen and (min-width: $breakpointBreadcrumb) {
+  @media screen and (min-width: $breakpointBreadcrumbM) {
     #fs-browser-tree {
       .k-item {
         &.fs-folderup {
