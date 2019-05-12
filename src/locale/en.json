@@ -65,6 +65,7 @@
       "cut": "Cut",
       "paste": "Paste",
       "filter": "Filter",
+      "sorting": "Sorting",
       "rename": "Rename",
       "perma-link": "Copy permalink"
     },
@@ -124,6 +125,14 @@
         "deleted": "Deleted",
         "shares": "Shares",
         "hidden": "Hidden"
+    },
+    "sorting": {
+      "name_asc": "Name ascending",
+      "name_desc": "Name descending",
+      "size_asc": "Size ascending",
+      "size_desc": "Size descending",
+      "changed_asc": "Changed ascending",
+      "changed_desc": "Changed descending"
     },
     "open_folder": "Open folder",
     "folder": "Folder",

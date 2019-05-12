@@ -510,7 +510,11 @@ var balloon = {
 
     });
 
-    $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
+    $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(function(event) {
+      var field = $(this).attr('id').substr(18);
+
+      balloon._sortTree(field);
+    });
 
     $(document).unbind('drop').on('drop', function(e) {
       e.stopPropagation();
@@ -3902,28 +3906,29 @@ var balloon = {
   /**
    * Sort tree (click callback)
    *
+   * @param string field field to sort by
+   * @param string dir (optional) sort direction
    * @return void
    */
-  _sortTree: function() {
-    var field = $(this).attr('id').substr(18);
+  _sortTree: function(field, dir) {
+    var $fs_browser_header = $('#fs-browser-header');
 
-    $('#fs-browser-header').find('span').empty();
-
-    var dir;
-
-    if(balloon.tree.sort.field == field) {
-      if(balloon.tree.sort.dir == 'asc') {
-        dir = 'desc';
+    if(dir === undefined) {
+      if(balloon.tree.sort.field == field) {
+        dir = balloon.tree.sort.dir == 'asc' ? 'desc' : 'asc';
       } else {
         dir = 'asc';
       }
-    } else {
-      dir = 'asc';
     }
+
+    $fs_browser_header.find('.fs-browser-column-sortable span').empty();
 
     var iconId = dir === 'asc' ? 'expand' : 'collapse';
 
-    $(this).find('span').append('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="'+iconsSvg+'#' + iconId + '"></use></svg>');
+    $fs_browser_header.find('.fs-browser-column-' + field + ' span').append('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="'+iconsSvg+'#' + iconId + '"></use></svg>');
+
+    $('#fs-sorting-' + field + '-' + dir).prop('checked', true);
+    $('#fs-action-sorting').html(i18next.t('tree.sorting.' + field + '_' + dir));
 
     balloon.sortTree(field, dir);
   },
@@ -8605,6 +8610,28 @@ var balloon = {
       })
 
       $select.show().off('change', 'input[type=checkbox]').on('change', 'input[type=checkbox]', balloon._filterTree);
+      break;
+
+    case 'sorting':
+      var $select = $('#fs-action-sorting-select');
+
+      if($select.is(':visible')) {
+        $select.hide();
+        return;
+      }
+
+      $(document).off('click.action-sorting').on('click.action-sorting', function(e){
+        var $target = $(e.target);
+
+        if($target.attr('id') != "fs-action-sorting") {
+          $select.hide();
+        }
+      })
+
+      $select.show().off('change', 'input[type=radio]').on('change', 'input[type=radio]', function(event) {
+        var values = $(this).val().split(':');
+        balloon._sortTree(values[0], values[1]);
+      });
       break;
 
     case 'rename':

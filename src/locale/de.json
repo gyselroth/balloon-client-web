@@ -65,6 +65,7 @@
       "cut": "Ausschneiden",
       "paste": "Einfügen",
       "filter": "Filter",
+      "sorting": "Sortierung",
       "rename": "Umbenennen",
       "perma-link": "Perma Link kopieren"
     },
@@ -124,6 +125,14 @@
         "deleted": "Gelöscht",
         "shares": "Freigaben",
         "hidden": "Versteckt"
+    },
+    "sorting": {
+      "name_asc": "Name aufsteigend",
+      "name_desc": "Name absteigend",
+      "size_asc": "Grösse aufsteigend",
+      "size_desc": "Grösse absteigend",
+      "changed_asc": "Geändert aufsteigend",
+      "changed_desc": "Geändert absteigend"
     },
     "open_folder": "Ordner öffnen",
     "folder": "Ordner",

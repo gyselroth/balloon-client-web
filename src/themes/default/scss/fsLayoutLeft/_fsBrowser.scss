@@ -7,7 +7,7 @@
 
   $iconWidth: 26px;
   $metaWidth: 120px;
-  $sizeWidth: 110px;
+  $sizeWidth: 115px;
   $changedWidth: 150px;
   $checkboxWidth: 18px;
 
@@ -88,9 +88,7 @@
   }
 
   #fs-browser-header {
-    border: 1px solid $headerBorderColor;
-    border-radius: $border-radius;
-    padding: 0 17px 0 12px;
+    padding: 0;
     margin-bottom: 20px;
     position: relative;
 
@@ -109,18 +107,10 @@
       }
     }
 
-    .fs-browser-column-icon {
-      padding-top: 2px;
-    }
-
-    .fs-browser-column-name {
-      width: calc(100% - #{$iconWidth + $checkboxWidth + 2px});
-    }
-
+    .fs-browser-column-icon,
+    .fs-browser-column-name,
     .fs-browser-column-size,
     .fs-browser-column-changed {
-      border-left: 1px dotted $headerBorderColor;
-      padding-left: $columnPaddingLeftRight - 1px;
       display: none;
     }
 
@@ -129,6 +119,10 @@
       display: inline-block;
 
       padding: 5px 16px 5px 15px;
+
+      position: absolute;
+      top: 15px;
+      right: 19px;
 
       span {
         display: block;
@@ -153,19 +147,13 @@
       }
     }
 
-    .fs-browser-column-icon {
-      .gr-icon {
-        $iconSize: 13px;
-
-        position: relative;
-        top: 0;
-        left: 3px;
-        width: $iconSize;
-        height: $iconSize;
-      }
+    #fs-browser-action-sorting {
+      padding: 2px 0;
+      margin-left: -2px;
     }
 
-    #fs-action-filter {
+    #fs-action-filter,
+    #fs-action-sorting {
       position: absolute;
       left: 0;
       top: 0;
@@ -174,7 +162,14 @@
       cursor: pointer;
     }
 
-    #fs-action-filter-select {
+    #fs-action-sorting {
+      width: auto;
+      padding-left: 100%;
+      white-space: nowrap;
+    }
+
+    #fs-action-filter-select,
+    #fs-action-sorting-select {
       @include dropdown(140px, 34px);
 
       left: -1px;
@@ -187,7 +182,8 @@
       .bln-dropdown-content {
         padding: 8px 0;
 
-        input[type="checkbox"] {
+        input[type="checkbox"],
+        input[type="radio"] {
           & + label {
             padding-left: 36px;
             vertical-align: text-top;
@@ -218,6 +214,36 @@
         }
       }
     }
+
+    #fs-action-sorting-select {
+      width: 200px;
+
+      .bln-dropdown-spike {
+        right: 170px;
+      }
+
+      .bln-dropdown-content {
+        li {
+          position: relative;
+        }
+
+        input[type="radio"] {
+          position: absolute;
+          top: 7px;
+          left: 8px;
+          display: inline-block;
+
+          & + label {
+            cursor: pointer;
+
+            &:before {
+              display: none !important;
+            }
+          }
+        }
+      }
+    }
+
   }
 
   #fs-browser-tree {
@@ -479,17 +505,6 @@
   @media screen and (min-width: $breakpointPannelVisible) {
     padding-bottom: #{$bottomPadding} !important;
 
-    #fs-browser-header {
-      .fs-browser-column-changed,
-      .fs-browser-column-size {
-        display: none;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth + $checkboxWidth + 2px});
-      }
-    }
-
     #fs-browser-tree {
       .k-item {
         .k-in {
@@ -533,16 +548,52 @@
   }
 
   @media screen and (min-width: #{$breakpointSizeChangedVisible + $pannelWidthM + 100px}) {
-//TODO pixtron - switch here from two lines to one
-
     #fs-browser-header {
+      border: 1px solid $headerBorderColor;
+      border-radius: $border-radius;
+      padding: 0 17px 0 12px;
+
+
+      .fs-browser-column-icon,
+      .fs-browser-column-name,
       .fs-browser-column-size,
       .fs-browser-column-changed {
         display: inline-block;
       }
 
+      .fs-browser-column-icon {
+        padding-top: 2px;
+
+        .gr-icon {
+          $iconSize: 13px;
+
+          position: relative;
+          top: 0;
+          left: 3px;
+          width: $iconSize;
+          height: $iconSize;
+        }
+      }
+
       .fs-browser-column-name {
         width: calc(100% - #{$iconWidth + $changedWidth + $sizeWidth + $checkboxWidth + 2px});
+      }
+
+      .fs-browser-column-size,
+      .fs-browser-column-changed {
+        border-left: 1px dotted $headerBorderColor;
+        padding-left: $columnPaddingLeftRight - 1px;
+      }
+
+      #fs-browser-action-sorting,
+      #fs-action-sorting-select {
+        display: none !important;
+      }
+
+      #fs-browser-header-checkbox {
+        position: relative;
+        top: auto;
+        right: auto;
       }
     }
 
