@@ -1538,10 +1538,9 @@ var balloon = {
           }
 
           if(balloon.id(node) !== '_FOLDERUP') {
+            var sizeAndChanged = balloon.nodeSize(node) + ', ' + balloon.timeSince(new Date(node.changed), true);
             $name_el.append($(
-              '<p class="fs-browser-column-name-size-changed">' +
-              balloon.nodeSize(node) + ', ' + balloon.timeSince(new Date(node.changed), true)+
-              '</p>'
+              '<p class="fs-browser-column-name-size-changed" title="' + sizeAndChanged + '">' + sizeAndChanged + '</p>'
             ));
           }
 
