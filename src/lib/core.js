@@ -1537,11 +1537,13 @@ var balloon = {
             $name_el = $('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name+'</span></div>');
           }
 
-          $name_el.append($(
-            '<p class="fs-browser-column-name-size-changed">' +
+          if(balloon.id(node) !== '_FOLDERUP') {
+            $name_el.append($(
+              '<p class="fs-browser-column-name-size-changed">' +
               balloon.nodeSize(node) + ', ' + balloon.timeSince(new Date(node.changed), true)+
-            '</p>'
-          ));
+              '</p>'
+            ));
+          }
 
           if(balloon.isSearch() && balloon.id(node) !== '_FOLDERUP') {
             var path = node.path.split('/').slice(1, -1);

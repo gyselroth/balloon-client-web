@@ -429,17 +429,6 @@
 
       &.fs-folderup {
         display: none;
-        margin-bottom: 20px;
-
-        .k-in {
-          .fs-browser-column-icon {
-            color: $colorActiveBlue;
-          }
-
-          .fs-browser-column-name {
-            color: $colorMediumGrey;
-          }
-        }
       }
     }
   }
@@ -477,6 +466,22 @@
       .k-item {
         &.fs-folderup {
           display: block;
+          margin-bottom: 20px;
+
+          .k-in {
+            .fs-browser-column-icon {
+              color: $colorActiveBlue;
+            }
+
+            .fs-browser-column-name {
+              color: $colorMediumGrey;
+              line-height: $lineHeight;
+
+              .fs-name {
+                margin-top: 0;
+              }
+            }
+          }
         }
       }
     }
