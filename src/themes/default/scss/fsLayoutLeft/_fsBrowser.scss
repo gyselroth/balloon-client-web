@@ -1,9 +1,9 @@
 #fs-browser {
   $headerHeight: 28px; //height of the header
   $headerBorderColor: $colorLightGrey;
-  $nodeHeight: 50px; //height of a single node
+  $nodeHeight: 54px; //height of a single node
 
-  $lineHeight: 30px;
+  $lineHeight: 46px;
 
   $iconWidth: 26px;
   $metaWidth: 120px;
@@ -15,9 +15,8 @@
 
   $border-radius: 4px;
 
-  $breakpointMetaVisible: 659px;
-  $breakpointSizeVisible: 720px;
-  $breakpointChangedVisible: 875px;
+  $breakpointMetaVisible: 414px;
+  $breakpointSizeChangedVisible: 750px;
 
   $fsContentHeightMultiselectS: 144px;
   $fsContentHeightSelectS: 200px;
@@ -67,7 +66,7 @@
     width: $iconWidth;
     height: $lineHeight;
     margin: 0;
-    padding: 3px 0;
+    padding: 7px 0;
   }
 
   .fs-browser-column-changed {
@@ -96,15 +95,22 @@
     position: relative;
 
     .fs-browser-column {
-      $paddingTopBottom: ($headerHeight - $lineHeight) / 2;
+      $paddingTopBottom: 0;
 
       position: relative;
+      line-height: 30px;
+      height: 30px;
       padding-top: $paddingTopBottom;
       padding-bottom: $paddingTopBottom;
+
       div {
         display: inline-block;
         width: auto;
       }
+    }
+
+    .fs-browser-column-icon {
+      padding-top: 2px;
     }
 
     .fs-browser-column-name {
@@ -122,7 +128,7 @@
       cursor: pointer;
       display: inline-block;
 
-      padding: 15px 16px 15px 15px;
+      padding: 5px 16px 5px 15px;
 
       span {
         display: block;
@@ -249,12 +255,24 @@
         .fs-browser-column-name {
           width: calc(100% - #{$iconWidth + $checkboxWidth});
           height: $lineHeight;
+          line-height: 17px;
           color: $colorDarkGrey;
           font-size: $fontSizeParagraph;
           font-weight: $fontWeightParagraph;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
+
+          .fs-name {
+            margin-top: 5px;
+            display: inline-block;
+          }
+
+          & > p {
+            line-height: 14px;
+            margin-top: 2px;
+            color: $colorMediumGrey;
+          }
 
           .fs-ext {
             text-transform: uppercase;
@@ -268,6 +286,10 @@
             margin-top: 0;
             margin-left: -7px;
             border: 1px solid $colorLightGrey;
+          }
+
+          .fs-browser-column-name-path {
+            display: none;
           }
         }
 
@@ -290,6 +312,10 @@
 
           .fs-node-state {
             height: 24px;
+          }
+
+          .gr-icon {
+            display: block;
           }
 
           .fs-color-tag {
@@ -316,20 +342,6 @@
           }
         }
 
-        &.fs-browser-search-item {
-          .fs-browser-column-name {
-            height: 33px;
-            margin-top: -2px;
-            margin-bottom: -1px;
-            line-height: 17px;
-
-            & > p {
-              line-height: 14px;
-              margin-top: 2px;
-              color: $colorMediumGrey;
-            }
-          }
-        }
       }
 
       &:hover {
@@ -464,63 +476,6 @@
     }
   }
 
-  @media screen and (min-width: $breakpointSizeVisible) {
-    #fs-browser-header {
-      .fs-browser-column-size {
-        display: inline-block;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth + $sizeWidth + $checkboxWidth + 2px});
-      }
-    }
-
-    #fs-browser-tree {
-      .k-item {
-        .k-in {
-          .fs-browser-column-meta {
-            padding-right: 0;
-            width: $metaWidth;
-          }
-
-          .fs-browser-column-size {
-            display: inline-block;
-          }
-
-          .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
-          }
-        }
-      }
-    }
-  }
-
-  @media screen and (min-width: $breakpointChangedVisible) {
-    #fs-browser-header {
-      .fs-browser-column-changed {
-        display: inline-block;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth + $changedWidth + $sizeWidth + $checkboxWidth + 2px});
-      }
-    }
-
-    #fs-browser-tree {
-      .k-item {
-        .k-in {
-          .fs-browser-column-changed {
-            display: inline-block;
-          }
-
-          .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
-          }
-        }
-      }
-    }
-  }
-
   @media screen and (min-width: $breakpointPannelVisible) {
     padding-bottom: #{$bottomPadding} !important;
 
@@ -557,7 +512,7 @@
     }
   }
 
-  @media screen and (min-width: #{$breakpointMetaVisible + $pannelWidthM}) {
+  @media screen and (min-width: #{$breakpointMetaVisible + $pannelWidthM + 100px}) {
     #fs-browser-tree {
       $metaPaddingSmallScreen: 25px;
 
@@ -577,39 +532,11 @@
     }
   }
 
-  @media screen and (min-width: #{$breakpointSizeVisible + $pannelWidthM}) {
+  @media screen and (min-width: #{$breakpointSizeChangedVisible + $pannelWidthM + 100px}) {
+//TODO pixtron - switch here from two lines to one
+
     #fs-browser-header {
-      .fs-browser-column-size {
-        display: inline-block;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth + $sizeWidth + $checkboxWidth + 2px});
-      }
-    }
-
-    #fs-browser-tree {
-      .k-item {
-        .k-in {
-          .fs-browser-column-meta {
-            padding-right: 0;
-            width: $metaWidth;
-          }
-
-          .fs-browser-column-size {
-            display: inline-block;
-          }
-
-          .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
-          }
-        }
-      }
-    }
-  }
-
-  @media screen and (min-width: #{$breakpointChangedVisible + $pannelWidthM}) {
-    #fs-browser-header {
+      .fs-browser-column-size,
       .fs-browser-column-changed {
         display: inline-block;
       }
@@ -622,12 +549,48 @@
     #fs-browser-tree {
       .k-item {
         .k-in {
+          .fs-browser-column-meta {
+            padding-right: 0;
+            width: $metaWidth;
+          }
+
+          .fs-browser-column-size,
           .fs-browser-column-changed {
             display: inline-block;
           }
 
           .fs-browser-column-name {
             width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
+
+            line-height: $lineHeight;
+
+            .fs-name {
+              margin-top: 0;
+            }
+
+            .fs-browser-column-name-size-changed {
+              display: none !important;
+            }
+
+            .fs-browser-column-name-path {
+              display: block;
+            }
+          }
+
+          &.fs-browser-search-item {
+            .fs-browser-column-name {
+              line-height: 17px;
+
+              .fs-name {
+                margin-top: 5px;
+              }
+
+              & > p {
+                line-height: 14px;
+                margin-top: 2px;
+                color: $colorMediumGrey;
+              }
+            }
           }
         }
       }

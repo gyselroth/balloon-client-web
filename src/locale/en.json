@@ -154,7 +154,19 @@
     "minute": "{{count}} minute",
     "minute_plural": "{{count}} minutes",
     "second": "{{count}} second",
-    "second_plural": "{{count}} seconds"
+    "second_plural": "{{count}} seconds",
+    "year_ago": "one year ago",
+    "year_ago_plural": "{{count}} years ago",
+    "month_ago": "one month ago",
+    "month_ago_plural": "{{count}} months ago",
+    "day_ago": "one day ago",
+    "day_ago_plural": "{{count}} days ago",
+    "hour_ago": "one hour ago",
+    "hour_ago_plural": "{{count}} hours ago",
+    "minute_ago": "one minute ago",
+    "minute_ago_plural": "{{count}} minutes ago",
+    "second_ago": "one second ago",
+    "second_ago_plural": "{{count}} seconds ago"
   },
   "button": {
     "save": "Save",

@@ -1478,13 +1478,7 @@ var balloon = {
           break;
 
         case 'size':
-          var size = '';
-          if(node.directory) {
-            size = i18next.t('view.prop.data.childcount', {count: node.size})
-          } else {
-            size = balloon.getReadableFileSizeString(node.size || 0);
-          }
-
+          var size = balloon.nodeSize(node);
           $node_el.append('<div class="fs-browser-column fs-browser-column-size">'+size+'</div>');
           break;
 
@@ -1539,6 +1533,12 @@ var balloon = {
             $name_el = $('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name+'</span></div>');
           }
 
+          $name_el.append($(
+            '<p class="fs-browser-column-name-size-changed">' +
+              balloon.nodeSize(node) + ', ' + balloon.timeSince(new Date(node.changed), true)+
+            '</p>'
+          ));
+
           if(balloon.isSearch() && balloon.id(node) !== '_FOLDERUP') {
             var path = node.path.split('/').slice(1, -1);
             if(path.length === 0) path = [''];
@@ -1548,7 +1548,7 @@ var balloon = {
               path.unshift('...');
             }
 
-            var $path_el = $('<p></p>');
+            var $path_el = $('<p class="fs-browser-column-name-path"></p>');
 
             path.forEach(function(item) {
               $path_el.append('<span> / </span><span>' + item + '</span>');
@@ -7562,12 +7562,29 @@ var balloon = {
 
 
   /**
+   * Get a nodes size as a human readable string
+   *
+   * @param   object node
+   * @return  string
+   */
+  nodeSize: function(node) {
+    var size = '';
+    if(node.directory) {
+      size = i18next.t('view.prop.data.childcount', {count: node.size})
+    } else {
+      size = balloon.getReadableFileSizeString(node.size || 0);
+    }
+
+    return size;
+  },
+
+  /**
    * Get time since
    *
    * @param   Date date
    * @return  string
    */
-  timeSince: function(date) {
+  timeSince: function(date, includeAgo) {
     var seconds = Math.floor((new Date() - date) / 1000);
 
     if(seconds < -1) {
@@ -7577,23 +7594,23 @@ var balloon = {
     var interval = Math.floor(seconds / 31536000);
 
     if (interval >= 1) {
-      return i18next.t('time.year', {count: interval});
+      return i18next.t(includeAgo ? 'time.year_ago' : 'time.year', {count: interval});
     }
     interval = Math.floor(seconds / 2592000);
     if (interval >= 1) {
-      return i18next.t('time.month', {count: interval});
+      return i18next.t(includeAgo ? 'time.month_ago' : 'time.month', {count: interval});
     }
     interval = Math.floor(seconds / 86400);
     if (interval >= 1) {
-      return i18next.t('time.day', {count: interval});
+      return i18next.t(includeAgo ? 'time.day_ago' : 'time.day', {count: interval});
     }
     interval = Math.floor(seconds / 3600);
     if (interval >= 1) {
-      return i18next.t('time.hour', {count: interval});
+      return i18next.t(includeAgo ? 'time.hour_ago' : 'time.hour', {count: interval});
     }
     interval = Math.floor(seconds / 60);
     if (interval >= 1) {
-      return i18next.t('time.minute', {count: interval});
+      return i18next.t(includeAgo ? 'time.minute_ago' : 'time.minute', {count: interval});
     }
 
     seconds = Math.round(seconds);

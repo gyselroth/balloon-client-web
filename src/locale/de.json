@@ -154,7 +154,19 @@
     "minute": "{{count}} Minute",
     "minute_plural": "{{count}} Minuten",
     "second": "{{count}} Sekunde",
-    "second_plural": "{{count}} Sekunden"
+    "second_plural": "{{count}} Sekunden",
+    "year_ago": "vor einem Jahr",
+    "year_ago_plural": "vor {{count}} Jahren",
+    "month_ago": "vor einem Monat",
+    "month_ago_plural": "vor {{count}} Monaten",
+    "day_ago": "vor einem Tag",
+    "day_ago_plural": "vor {{count}} Tagen",
+    "hour_ago": "vor einer Stunde",
+    "hour_ago_plural": "vor {{count}} Stunden",
+    "minute_ago": "vor einer Minute",
+    "minute_ago_plural": "vor {{count}} Minuten",
+    "second_ago": "vor einer Sekunde",
+    "second_ago_plural": "vor {{count}} Sekunden"
   },
   "button": {
     "save": "Speichern",
