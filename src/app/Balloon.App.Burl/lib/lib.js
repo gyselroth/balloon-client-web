@@ -30,34 +30,12 @@ var app = {
     this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-language';
     this.balloon.mimeFileExtMap['application/vnd.balloon.burl'] = app.BURL_EXTENSION;
 
-    this.balloon.addPreviewHandler('burl', this._handlePreview);
+    app.balloon.addFileHandler({
+      app: 'balloon burl',
+      ext: 'burl',
+      handler: app.handleBurl
+    });
   },
-
-  /**
-   * Checks if "preview" for a given node can be handled by this app.
-   * If it can handle it, return a handler to preview the file
-   *
-   * @param   string mime
-   * @return  void|function
-   */
-  _handlePreview: function(node) {
-    if (app.isBurlFile(node)) {
-      return function(node) {
-        app.handleBurl(node);
-      }
-    }
-  },
-
-  /**
-   * Check if file is .burl
-   *
-   * @param   object node
-   * @return  bool
-   */
-  isBurlFile: function(node) {
-    return this.BURL_EXTENSION === this.balloon.getFileExtension(node);
-  },
-
 
   addBurl: function() {
     var $d = $.Deferred();

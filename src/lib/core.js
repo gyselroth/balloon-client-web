@@ -700,6 +700,18 @@ var balloon = {
       this.addHint("hint.hint_"+i);
     }
 
+    balloon.addFileHandler({
+      app: 'balloon file editor',
+      test: balloon.isEditable,
+      handler: balloon.editFile
+    });
+
+    balloon.addFileHandler({
+      app: 'balloon file viewer',
+      test: balloon.isViewable,
+      handler: balloon.displayFile
+    });
+
     balloon.showHint()
     balloon.initialized = true;
     app.postInit(this);
@@ -2995,16 +3007,13 @@ var balloon = {
   /**
    * Add file handler
    *
-   * @param string ext
+   * @param string app
+   * @param string|function ext
    * @param function handler
    * @param object context
    */
-  addFileHandler: function(ext, handler, context) {
-    balloon.file_handlers.push({
-      ext: ext,
-      handler: handler,
-      context: context,
-    });
+  addFileHandler: function(handler) {
+    balloon.file_handlers.push(handler);
   },
 
   /**
@@ -3017,15 +3026,25 @@ var balloon = {
     var result = [];
 
     for(let handler of this.file_handlers) {
-      if(handler.ext === ext) {
+      if(typeof handler.test === 'function' && handler.test(node) === true || handler.ext === ext) {
         result.push(handler);
       }
     }
 
+    let defaultApps = {};
+    if(localStorage.defaultApps) {
+      defaultApps = JSON.parse(localStorage.defaultApps);
+    }
+
     if(result.length === 0) {
-      console.log("no handler");
+      balloon.promptConfirm(i18next.t('tree.no_handler_found', node.name), function() {
+        balloon.downloadNode(node);
+      });
     } else if(result.length === 1) {
       result[0].handler(node, result[0].context);
+    } else if(defaultApps[ext] && result[defaultApps[ext]]) {
+      let handler = result[defaultApps[ext]];
+      handler.handler(node, handler.context);
     } else {
       balloon.chooseFileHandler(node, result);
     }
@@ -3044,15 +3063,23 @@ var balloon = {
 
     var $k_display = $div.kendoBalloonWindow({
       resizable: false,
-      title: 'Choose file handler',
-      modal: false,
+      title: i18next.t('tree.choose_handler'),
+      modal: true,
       draggable: false,
       open: function(e) {
+        $div.find('div:first-child').html(i18next.t('tree.choose_handler_text', node.name));
+
         for(let i=0; i < handlers.length; i++) {
-          $ul.append('<li data-handler="'+i+'">HANDLER</li>');
+          let img = '';
+
+          if(handlers[i].appIcon) {
+            img = '<img src="'+handlers[i].appIcon+'" alt="" />';
+          }
+
+          $ul.append('<li data-handler="'+i+'">'+img+handlers[i].app+'</li>');
         }
       }
-    }).data('kendoBalloonWindow').center();
+    }).data('kendoBalloonWindow').center().open();
 
     $ul.find('li:first-child').addClass('active');
 
@@ -3061,11 +3088,36 @@ var balloon = {
       $(this).toggleClass('active');
     });
 
+    $div.find('input[type=button]').off('click').on('click', function() {
+      $k_display.close();
+    });
+
+    var $checkbox = $div.find('.checkbox').removeClass('active');
+
     $div.find('input[type=submit]').off('click').on('click', function() {
-      let handler = handlers[$ul.find('li.active').attr('data-handler')];
+      let index = $ul.find('li.active').attr('data-handler');
+      let handler = handlers[index];
       $k_display.close();
       handler.handler(node, handler.context);
+
+      if($checkbox.hasClass('active')) {
+        let defaultApps = {};
+        if(localStorage.defaultApps) {
+          defaultApps = JSON.parse(localStorage.defaultApps);
+        }
+
+        defaultApps[handler.ext || balloon.getFileExtension(node)] = index;
+
+        localStorage.defaultApps = JSON.stringify(defaultApps);
+      }
     });
+
+    $checkbox.off('click').on('click', function() {
+      $(this).toggleClass('active');
+    });
+  },
+
+  /**
   },
 
   /**
@@ -3172,7 +3224,6 @@ var balloon = {
     if(menu === 'search') {
       title = i18next.t('menu.' + menu);
     }
-
 
     $('#fs-crumb-search').html(title);
   },
@@ -3638,21 +3689,11 @@ var balloon = {
         ['selected','metadata','preview','multiselect','view-bar',
           'history','share','share-link']
       );
+
+      return;
     }
 
     balloon.openFile(balloon.last);
-
-    /*
-    else if(previewHandler) {
-      previewHandler(balloon.last);
-    } else if(balloon.isEditable(balloon.last.mime)) {
-      balloon.editFile(balloon.getCurrentNode());
-    } else if(balloon.isViewable(balloon.last.mime)) {
-      balloon.displayFile(balloon.getCurrentNode());
-    } else {
-      balloon.downloadNode(balloon.getCurrentNode());
-    }*/
-
     balloon.pushState();
   },
 
@@ -7261,9 +7302,9 @@ var balloon = {
         if(node.filter) {
           if(node.shared === true && node.reference === true) {
             return 'gr-i-folder-filter-received';
-          }          else if(node.shared === true) {
+          } else if(node.shared === true) {
             return 'gr-i-folder-filter-shared';
-          }          else {
+          } else {
             return 'gr-i-folder-filter';
           }
         } else if(node.mount) {
@@ -7509,7 +7550,7 @@ var balloon = {
     var data = balloon.datasource._pristineData;
 
     for(var i=++index; i<=data.length; i++) {
-      if(i in data && data[i].mime && balloon.isViewable(data[i].mime)) {
+      if(i in data && data[i].mime && balloon.isViewable(data[i])) {
         $('#fs-display-right').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i]);
         });
@@ -7520,7 +7561,7 @@ var balloon = {
     index = data.indexOf(node) ;
 
     for(var i2=--index; i2!=-1; i2--) {
-      if(i2 in data && data[i2].mime && balloon.isViewable(data[i2].mime)) {
+      if(i2 in data && data[i2].mime && balloon.isViewable(data[i2])) {
         $('#fs-display-left').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i2]);
         });
@@ -7661,10 +7702,13 @@ var balloon = {
   /**
    * Check if can edit a file via browser
    *
-   * @param   string mime
+   * @param   object node
    * @return  bool
    */
-  isEditable: function(mime) {
+  isEditable: function(node) {
+ console.log(node);
+    let mime = node.mime;
+
     if(balloon.isMobileViewPort()) {
       return false;
     }
@@ -7687,10 +7731,13 @@ var balloon = {
   /**
    * Check if we can display the file live
    *
-   * @param   string
+   * @param   object node
    * @return  bool
    */
-  isViewable: function(mime) {
+  isViewable: function(node) {
+ console.log(node);
+    let mime = node.mime;
+
     if(balloon.isMobileViewPort()) {
       return false;
     }

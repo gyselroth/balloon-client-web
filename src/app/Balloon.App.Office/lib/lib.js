@@ -13,8 +13,7 @@ var app = {
   id: 'Balloon.App.Office',
   wopiHosts: [],
   handlers: [],
-
-  OFFICE_EXTENSIONS: ['csv', 'odt','ott','ott','docx','doc','dot','rtf','xls','xlsx','xlt','ods','ots','ppt','pptx','odp','otp','potm'],
+  supported: [],
 
   render: function() {
   },
@@ -24,16 +23,23 @@ var app = {
       url: app.balloon.base+'/office/hosts',
       success: function(data) {
         app.wopiHosts = data.data;
-        console.log(app.wopiHosts);
 
         for(let host of app.wopiHosts) {
           for(let zone of app.toArray(host.discovery['net-zone'])) {
             if(zone['@attributes'].name === 'external-https' || zone['@attributes'].name === 'external-http') {
               for(let wopiApp of app.toArray(zone.app)) {
                 for(let action of app.toArray(wopiApp.action)) {
-                  if(action['@attributes'].name === 'edit') {
-                    app.balloon.addFileHandler(action['@attributes'].ext, app.fileHandler, {
-                      url: action['@attributes'].urlsrc,
+                  if(app.supported.indexOf(host.name+'-'+action['@attributes'].ext) ===  -1) {
+                    app.supported.push(host.name+'-'+action['@attributes'].ext);
+
+                    app.balloon.addFileHandler({
+                      app: host.name+' - '+wopiApp['@attributes'].name,
+                      appIcon: wopiApp['@attributes'].favIconUrl,
+                      ext: action['@attributes'].ext,
+                      handler: app.fileHandler,
+                      context: {
+                        url: action['@attributes'].urlsrc,
+                      }
                     });
                   }
                 }
@@ -64,11 +70,6 @@ var app = {
     app.balloon.addNew('docx', 'app.office.word_document', 'file-word', callback);
     app.balloon.addNew('xlsx', 'app.office.excel_document', 'file-excel', callback);
     app.balloon.addNew('pptx', 'app.office.powerpoint_document', 'file-powerpoint', callback);
-
-    app.balloon.addPreviewHandler('office', this._handlePreview);
-
-    console.log(app.wopiHosts)
-
   },
 
   fileHandler: function(node, context) {
@@ -110,19 +111,17 @@ var app = {
         );
 
         //var src = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port+app.balloon.base+'/office/wopi/files/'+session.file;
-        var src = window.location.protocol + '//' + '10.242.2.8' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.file;
+        var src = window.location.protocol + '//' + '10.242.2.13' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.file;
         src = encodeURIComponent(src);
         var url = context.url+'&WOPISrc='+src;
         console.log(src,url);
 
-        //url = 'https://oos.mbazh.ch/wv/wordviewerframe.aspx?WOPISrc=http%3A%2F%2F10.242.2.8:8084%2Fapi%2Fv2%2Foffice%2Fwopi%2Ffiles%2F'+session.file+'&ui=en-us&new=1';
-
         $div.append(
           '<form method="post" action="'+url+'" target="loleafletframe">'+
-                    '<input type="hidden" name="access_token" value="'+session.access_token+'"/>'+
-                    //'<input type="hidden" name="access_token_ttl" value="'+session.ttl+'"/>'+
-                  '</form>'+
-                  '<iframe style="width: 100%; height: 100%;" name="loleafletframe"/>'
+             '<input type="hidden" name="access_token" value="'+session.access_token+'"/>'+
+             '<input type="hidden" name="access_token_ttl" value="'+session.ttl+'"/>'+
+          '</form>'+
+          '<iframe style="width: 100%; height: 100%;" name="loleafletframe"/>'
         );
 
         $div.find('form').submit();
