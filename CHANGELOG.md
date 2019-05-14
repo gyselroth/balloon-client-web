@@ -1,9 +1,14 @@
+## 3.1.3
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue May 14 16:37:12 CEST 2019
+
+* [CHANGE] Reverted v3.1.2, changed prompt to notify a manager that he will loose access after unshare
+
 ## 3.1.2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Mon May 13 15:31:14 CEST 2019
 
 * [FIX] Reload new node if unshare a collection as a share manager
-
 
 ## 3.1.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
