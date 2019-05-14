@@ -213,6 +213,8 @@ var login = {
           }
         });
       }
+    } else {
+      login.checkAuth();
     }
   },
 
@@ -587,6 +589,8 @@ var login = {
 
     $('#login').hide();
     $('#fs-namespace').show();
+
+    $(document).off('keydown.password');
 
     balloon.init();
   },
