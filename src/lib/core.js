@@ -5502,7 +5502,12 @@ var balloon = {
    * @return void
    */
   deleteShare: function(node) {
-    var msg = i18next.t('view.share.prompt_remove_share', node.name);
+    if(node.shareowner.id === login.user.id) {
+      var msg = i18next.t('view.share.prompt_remove_share_owner', node.name);
+    } else {
+      var msg = i18next.t('view.share.prompt_remove_share_manager', node.name, node.shareowner.name);
+    }
+
     balloon.promptConfirm(msg, '_deleteShare', [node]);
   },
 
@@ -5522,15 +5527,13 @@ var balloon = {
       statusCode: {
         204: function(e) {
           balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-          balloon.last.shared = false;
-          if(balloon.id(node) == balloon.id(balloon.last)) {
-            balloon.switchView('share');
+
+          if(node.shareowner.id === login.user.id) {
+            balloon.last.shared = false;
+            if(balloon.id(node) == balloon.id(balloon.last)) {
+              balloon.switchView('share');
+            }
           }
-        },
-        200: function(data) {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-          balloon.last = data;
-          balloon.switchView('share');
         }
       },
     });
@@ -5555,10 +5558,11 @@ var balloon = {
         acl: acl,
         name: name
       },
-      success: function() {
+      success: function(data) {
         node.shared = true;
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         if(balloon.id(node) == balloon.id(balloon.last)) {
+          balloon.last.shareowner = data.shareowner;
           balloon.switchView('share');
         }
       },
