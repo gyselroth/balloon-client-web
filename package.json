@@ -21,6 +21,7 @@
     "js-base64": "^2.5.1",
     "kendo-ui-core": "^2018.3.1219",
     "merge-jsons-webpack-plugin": "^1.0.18",
+    "mobile-pull-to-refresh": "^0.2.1",
     "qrcode.es": "^1.0.0",
     "ubuntu-fontface": "^0.1.13",
     "uglifyjs-webpack-plugin": "^2.1.1"

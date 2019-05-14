@@ -22,7 +22,10 @@
   $fsContentHeightSelectS: 200px;
 
   $bottomPadding: 90px;
-  $fsActionRefreshBottom: 30px;
+
+  $fsActionRefreshTop: 30px;
+  $fsActionRefreshButtonSize: 30px;
+
 
   position: relative;
   padding-bottom: $bottomPadding;
@@ -436,30 +439,28 @@
   }
 
   #fs-action-refresh {
-    $buttonSize: 30px;
-    @include icon-button($buttonSize, $buttonSize);
+    @include icon-button($fsActionRefreshButtonSize, $fsActionRefreshButtonSize);
 
-    position: absolute;
     background-color: $colorWhite;
     color: $colorActiveBlue;
     border-radius: 4px;
-    bottom: $fsActionRefreshBottom;
-    right: calc(50% - #{$buttonSize/2});
+    top: $fsActionRefreshTop;
+    left: calc(50% - #{$fsActionRefreshButtonSize/2});
 
     &:hover {
       color: $colorHoverBlue;
     }
 
     .fs-content-paste-active & {
-      bottom: #{$fsActionRefreshBottom + $fsContentHeightMultiselectS};
+      top: #{$fsActionRefreshTop + $fsContentHeightMultiselectS};
     }
 
     .fs-content-multiselect-active & {
-      bottom: #{$fsActionRefreshBottom + $fsContentHeightMultiselectS};
+      top: #{$fsActionRefreshTop + $fsContentHeightMultiselectS};
     }
 
     .fs-content-select-active & {
-      bottom: #{$fsActionRefreshBottom + $fsContentHeightSelectS};
+      top: #{$fsActionRefreshTop + $fsContentHeightSelectS};
     }
   }
 
@@ -529,8 +530,8 @@
     }
 
     #fs-action-refresh {
-      bottom: #{$fsActionRefreshBottom} !important;
-      right: 0;
+      top: #{$fsActionRefreshTop} !important;
+      left: calc(100% - #{$fsActionRefreshButtonSize});
     }
   }
 

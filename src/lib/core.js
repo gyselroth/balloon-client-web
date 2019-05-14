@@ -21,6 +21,9 @@ import fileExtIconMap from './file-ext-icon-map.js';
 import {mimeFileExtMap} from './mime-file-ext-map.js';
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
+import pullToRefresh from 'mobile-pull-to-refresh'
+import ptrAnimatesIos from 'mobile-pull-to-refresh/dist/styles/ios/animates'
+
 window.$ = $;
 $.ajaxSetup({
   beforeSend:function(jqXHR,settings){
@@ -708,7 +711,26 @@ var balloon = {
       this.addHint("hint.hint_"+i);
     }
 
-    balloon.showHint()
+    pullToRefresh({
+      container: document.getElementById('fs-browser'),
+      scrollable: document.getElementById('fs-layout-left'),
+      animates: ptrAnimatesIos,
+
+      refresh: function() {
+        var currentCollectionId = balloon.getCurrentCollectionId();
+
+        if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
+          return $.Deferred().resolve().promise();
+        } else if(currentCollectionId === null) {
+          return balloon.menuLeftAction(balloon.getCurrentMenu());
+        } else {
+          return balloon.refreshTree('/collections/children', {id: currentCollectionId});
+        }
+      }
+    });
+
+    balloon.showHint();
+
     balloon.initialized = true;
     app.postInit(this);
   },
