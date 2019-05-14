@@ -5718,6 +5718,11 @@ var balloon = {
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share');
           }
+        },
+        200: function(data) {
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.last = data;
+          balloon.switchView('share');
         }
       },
     });
