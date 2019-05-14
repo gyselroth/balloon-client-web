@@ -3114,6 +3114,9 @@ var balloon = {
       return $.Deferred().resolve().promise();
     }
 
+    $('#fs-menu-left').removeClass('fs-menu-left-open');
+    $('#fs-menu-left-toggl').removeClass('fs-menu-left-open');
+
     if(action in balloon.menu_left_items) {
       $d = balloon.menu_left_items[action].callback();
     } else {
