@@ -76,7 +76,7 @@ var app = {
     $('#fs-edit-office').remove();
 
     app.balloon.xmlHttpRequest({
-      url: app.balloon.base+'/office/sessions?id='+app.balloon.id(node),
+      url: app.balloon.base+'/files/'+app.balloon.id(node)+'/tokens',
       type: 'POST',
       success: function(session) {
         app.wopiClient(node, session, context);
@@ -111,10 +111,9 @@ var app = {
         );
 
         //var src = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port+app.balloon.base+'/office/wopi/files/'+session.file;
-        var src = window.location.protocol + '//' + '10.242.2.13' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.file;
+        var src = window.location.protocol + '//' + '10.242.2.13' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.node;
         src = encodeURIComponent(src);
-        var url = context.url+'&WOPISrc='+src;
-        console.log(src,url);
+        var url = app.parseUrl(context.url, src, node);
 
         $div.append(
           '<form method="post" action="'+url+'" target="loleafletframe">'+
@@ -138,23 +137,15 @@ var app = {
     }).data("kendoBalloonWindow").center().maximize();
   },
 
-  /**
-   * Check if file is a supported office file
-   *
-   * @param   object node
-   * @return  bool
-   */
-  isOfficeFile: function(node) {
-    return this.OFFICE_EXTENSIONS.indexOf(this.balloon.getFileExtension(node)) > -1;
-  },
+  parseUrl: function(url, src, node) {
+    let result = url.substring(0, url.indexOf('?'));
+    result += '?WOPISrc='+src;
 
-  _handlePreview: function(node) {
-    if(app.isOfficeFile(node) && !app.balloon.isMobileViewPort()) {
-      return function(node) {
-        app.edit(node);
-        app.balloon.pushState();
-      }
+    if(node.size === 0) {
+      result += '&new=1';
     }
+
+    return result;
   },
 
   addOfficeFile: function(name, type) {
