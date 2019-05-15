@@ -153,6 +153,24 @@ var balloon = {
   },
 
   /**
+   * Available search modes
+   *
+   * @var object
+   */
+  search_modes: {
+    'nodename': {
+      label: 'search.mode.nodename',
+      buildQuery: function(value, filters) {
+        return balloon._buildQueryNodename(value, filters);
+      },
+      executeQuery: function(query) {
+        balloon.refreshTree('/nodes', {query: query});
+        return true;
+      }
+    }
+  },
+
+  /**
    * Add file menu
    *
    * @var object
@@ -574,6 +592,7 @@ var balloon = {
     var $fs_search_input = $fs_search.find('#fs-search-input');
     var $fs_search_filter_toggle = $fs_search.find('#fs-search-toggle-filter');
     var $fs_search_mode_toggle = $fs_search.find('#fs-search-mode-toggle');
+    var $fs_search_mode_dropdown_ul = $fs_search.find('#fs-search-mode-dropdown ul');
 
     $fs_search_input.off('focus').on('focus', function() {
       $fs_search.addClass('fs-search-focused');
@@ -618,30 +637,55 @@ var balloon = {
       }
     });
 
-    function toggleSearchMode() {
-      $fs_search.toggleClass('fs-search-mode-dropdown-open');
-      $(document).off('click.fs-search-mode-toggle');
+    var searchModes = Object.keys(balloon.search_modes);
+    if(searchModes.length <= 1) {
+      $fs_search_mode_toggle.hide();
+    } else {
+      $fs_search_mode_toggle.show();
 
-      if($fs_search.hasClass('fs-search-mode-dropdown-open')) {
-        $(document).on('click.fs-search-mode-toggle', function(event){
-          var $target = $(event.target);
-          var parentId = 'fs-search-mode-toggle';
+      function toggleSearchMode() {
+        $fs_search.toggleClass('fs-search-mode-dropdown-open');
+        $(document).off('click.fs-search-mode-toggle');
 
-          if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
+        if($fs_search.hasClass('fs-search-mode-dropdown-open')) {
+          $(document).on('click.fs-search-mode-toggle', function(event){
+            var $target = $(event.target);
+            var parentId = 'fs-search-mode-toggle';
 
-          toggleSearchMode();
-        });
+            if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
+
+            toggleSearchMode();
+          });
+        }
       }
+
+      $fs_search_mode_toggle.off('click').on('click', toggleSearchMode);
+
+      $fs_search_mode_dropdown_ul.empty();
+
+      var i;
+      for(i=0; i<searchModes.length; i++) {
+
+        var mode = searchModes[i];
+        var modeConfig = balloon.search_modes[mode];
+
+        $fs_search_mode_dropdown_ul.append(
+          '<li title="' + i18next.t(modeConfig.label) + '">'+
+            '<input type="radio" name="fs-search-mode" value="' + mode + '" id="fs-search-mode-' + mode + '"'+ (i===0 ? ' checked="checked"' : '')+' />'+
+            '<label for="fs-search-mode-' + mode + '">' + i18next.t(modeConfig.label) + '</label>'+
+          '</li>'
+        );
+      }
+
+      $('input[name="fs-search-mode"]').off('change').change(function() {
+        var value = $(this).val();
+        $fs_search_mode_toggle.find('span').contents().last().replaceWith(i18next.t(balloon.search_modes[value].label));
+        $fs_search.removeClass('fs-search-mode-dropdown-open');
+        balloon.advancedSearch();
+        $fs_search_input.focus();
+      });
+
     }
-
-    $fs_search_mode_toggle.off('click').on('click', toggleSearchMode);
-
-    $('input[name="fs-search-mode"]').off('change').change(function() {
-      $fs_search_mode_toggle.find('span').contents().last().replaceWith(i18next.t('search.mode.' + this.value));
-      $fs_search.removeClass('fs-search-mode-dropdown-open');
-      balloon.advancedSearch();
-      $fs_search_input.focus();
-    });
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
       e.preventDefault();
@@ -6525,11 +6569,8 @@ var balloon = {
 
     var query = balloon.buildQuery(content, filters);
 
-    if(query === undefined) {
+    if(query === undefined || !balloon.executeQuery(query)) {
       balloon.datasource.data([]);
-      return;
-    } else {
-      balloon.refreshTree('/nodes', {query: query});
     }
   },
 
@@ -6542,6 +6583,39 @@ var balloon = {
    * @return  object
    */
   buildQuery: function(value, filters) {
+    var mode = $('input[name="fs-search-mode"]:checked').val();
+
+    if(balloon.search_modes && balloon.search_modes[mode] && balloon.search_modes[mode].buildQuery) {
+      return balloon.search_modes[mode].buildQuery(value, filters);
+    }
+
+    return undefined;
+  },
+
+  /**
+   * execute query
+   *
+   * @param   object query
+   * @return  object
+   */
+  executeQuery: function(query) {
+    var mode = $('input[name="fs-search-mode"]:checked').val();
+
+    if(balloon.search_modes && balloon.search_modes[mode] && balloon.search_modes[mode].executeQuery) {
+      return balloon.search_modes[mode].executeQuery(query);
+    }
+
+    return false;
+  },
+
+  /**
+   * build query for nodename mode
+   *
+   * @param   string value
+   * @param   object filters
+   * @return  object
+   */
+  _buildQueryNodename: function(value, filters) {
     var queryParts = [];
 
     if(value) {
@@ -6587,7 +6661,6 @@ var balloon = {
 
     return {'$and': queryParts};
   },
-
 
   /**
    * Check if search window is active
@@ -8765,8 +8838,10 @@ var balloon = {
           .removeClass('fs-search-filtered')
           .removeClass('fs-search-mode-dropdown-open');
 
-        $fs_search.find('#fs-search-mode-toggle span').contents().last().replaceWith(i18next.t('search.mode.nodename'));
-        $fs_search.find('#fs-search-mode-nodename').prop('checked', true);
+        var modes = Object.keys(balloon.search_modes);
+
+        $fs_search.find('#fs-search-mode-toggle span').contents().last().replaceWith(i18next.t(balloon.search_modes[modes[0]].label));
+        $fs_search.find('#fs-search-mode-'+ modes[0]).prop('checked', true);
 
         $fs_search_input.val('');
         break;

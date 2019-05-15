@@ -93,7 +93,6 @@
     "reset_filter": "Reset",
     "apply_filter": "Apply",
     "mode": {
-      "fulltext": "Fulltext",
       "nodename": "Filename"
     },
     "filter": {

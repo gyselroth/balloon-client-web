@@ -1,0 +1,7 @@
+{
+  "app": {
+    "elasticsearch": {
+      "fulltext": "Fulltext"
+    }
+  }
+}
