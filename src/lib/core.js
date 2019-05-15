@@ -5418,6 +5418,7 @@ var balloon = {
       dataTextField: "name",
       filter: "contains",
       highlightFirst: true,
+      template: '<svg class="gr-icon gr-i-#: icon #"><use xlink:href="'+iconsSvg+'\\##: icon #"></use></svg><span>#: name #</span>',
       noDataTemplate: i18next.t('error.autocomplete.no_user_groups_found'),
       dataSource: new kendo.data.DataSource({
         serverFiltering: true,
@@ -5454,6 +5455,7 @@ var balloon = {
                 success: function(data) {
                   for(var i in data.data) {
                     data.data[i].type = 'group';
+                    data.data[i].icon = 'group';
                     data.data[i].role = $.extend({}, data.data[i]);
                   }
 
@@ -5490,6 +5492,7 @@ var balloon = {
               success: function(data) {
                 for(var i in data.data) {
                   data.data[i].type = 'user';
+                  data.data[i].icon = 'person';
                   data.data[i].role = $.extend({}, data.data[i]);
                 }
 
