@@ -6355,9 +6355,10 @@ var balloon = {
   /**
    * Extended search popup
    *
+   * @param object filters initialy selected filters (eg: {tags: ['tag1', 'tag2']})
    * @return  void
    */
-  advancedSearch: function() {
+  advancedSearch: function(filters) {
     balloon.resetDom(['breadcrumb-search']);
     $('#fs-crumb-home-list').hide();
     $('#fs-browser-header .fs-browser-column-icon').children().hide();
@@ -6386,7 +6387,14 @@ var balloon = {
 
         for(var i in colors) {
           if(balloon.isValidColor(colors[i]._id)) {
-            children.push('<li data-item="'+colors[i]._id+'" class="fs-color-'+colors[i]._id+'"></li>');
+            var color = colors[i]._id;
+            var classes = ['fs-color-'+color];
+
+            if(filters && filters.color && filters.color.includes(color)) {
+              classes.push('fs-search-filter-selected');
+            }
+
+            children.push('<li data-item="'+color+'" class="'+classes.join(' ')+'"></li>');
           }
         }
 
@@ -6399,7 +6407,14 @@ var balloon = {
           children = [];
 
         for(var i in tags) {
-          children.push('<li data-item="'+tags[i]._id+'" >'+tags[i]._id+' ('+tags[i].sum+')</li>');
+          var classes = [];
+          var tag = tags[i]._id;
+
+          if(filters && filters.tags && filters.tags.includes(tag)) {
+            classes.push('fs-search-filter-selected');
+          }
+
+          children.push('<li data-item="'+tag+'" class="'+classes.join(' ')+'">'+tag+' ('+tags[i].sum+')</li>');
         }
 
         if(children.length >= 1) {
@@ -6409,14 +6424,22 @@ var balloon = {
         var $mime_list = $('#fs-search-filter-mime').find('div:first'),
           mimes = body['mime'],
           children = [];
+
         for(var i in mimes) {
-          var ext = balloon.mapMimeToExtension(mimes[i]._id);
+          var mime = mimes[i]._id;
+          var ext = balloon.mapMimeToExtension(mime);
 
           var spriteClass = ext !== false ? balloon.getSpriteClass(ext) : 'gr-i-file';
+
+          var classes = [];
+
+          if(filters && filters.mime && filters.mime.includes(mime)) {
+            classes.push('fs-search-filter-selected');
+          }
           children.push(
-            '<li data-item="'+mimes[i]._id+'">'+
+            '<li data-item="'+mime+'" class="'+classes.join(' ')+'">'+
               '<svg class="gr-icon  ' + spriteClass + '"><use xlink:href="'+iconsSvg+'#' + spriteClass.replace('gr-i-', '') + '"></use></svg>'+
-              '<div>['+mimes[i]._id+']</div></li>'
+              '<div>['+mime+']</div></li>'
           );
         }
 
@@ -6612,36 +6635,6 @@ var balloon = {
     }
 
     return query;
-  },
-
-
-  /**
-   * Search node
-   *
-   * @param   string search_query
-   * @return  void
-   */
-  search: function(search_query) {
-    //TODO pixtron - is this method still needed?
-    var value = search_query, query;
-    if(value == '') {
-      return balloon.resetSearch();
-    }
-
-    if(typeof(search_query) === 'object') {
-      query = search_query;
-    } else {
-      query = balloon.buildQuery(search_query);
-    }
-
-    $('#fs-search').show();
-    $('#fs-action-search').find('input:text').val(search_query);
-
-    if(query === undefined) {
-      return;
-    }
-
-    balloon.refreshTree('/files/search', {query: query});
   },
 
 
@@ -8290,11 +8283,10 @@ var balloon = {
         return;
       }
 
-      //TODO pixtron search - fix advanced search
-      balloon.advancedSearch();
-      var value = 'meta.tags:'+$(this).find('.tag-name').text();
-      //TODO pixtron search - why advancedSearch and search?
-      balloon.search(value);
+      balloon.resetSearchFilter(['tags', 'color', 'mime']);
+      $('#fs-search-input').val('');
+
+      balloon.advancedSearch({tags: [$(this).find('.tag-name').text()]});
     });
 
     $fs_prop_tags_parent.find('input[name=add_tag]').unbind('keyup').on('keyup', function(e) {
