@@ -6498,64 +6498,39 @@ var balloon = {
    * @return void
    */
   buildExtendedSearchQuery: function() {
-    var must = [];
+    var filters = {tags: [], color:[], mime: []};
 
-    var should1 = [];
-    $('#fs-search-filter-mime').find('li.fs-search-filter-selected').each(function(){
-      should1.push({
-        'query_string': {
-          'query': '(mime:"'+$(this).attr('data-item')+'")'
-        }
-      });
-    });
-
-    if(should1.length > 0) must.push({bool: {should: should1}});
-
-    var should2 = [];
     $('#fs-search-filter-tags').find('li.fs-search-filter-selected').each(function(){
-      should2.push({
-        term: {
-          'meta.tags': $(this).attr('data-item')
-        }
-      });
+      filters.tags.push($(this).attr('data-item'));
     });
 
-    if(should2.length > 0) must.push({bool: {should: should2}});
+    $('#fs-search-filter-mime').find('li.fs-search-filter-selected').each(function(){
+      filters.mime.push($(this).attr('data-item'));
+    });
 
-    var should3 = [];
     $('#fs-search-filter-color').find('li.fs-search-filter-selected').each(function(){
-      should3.push({
-        match: {
-          'meta.color': $(this).attr('data-item')
-        }
-      });
+      filters.color.push($(this).attr('data-item'));
     });
-
-    if(should3.length > 0) must.push({bool: {should: should3}});
 
     var content = $('#fs-search-input').val();
-    var query   = balloon.buildQuery(content, must);
+    if(content.length < 3) content = undefined;
+
     $('.fs-search-reset-button').show();
 
-    if(should1.length > 0 || should2.length > 0 || should3.length > 0) {
+    if(filters.tags.length > 0 || filters.color.length > 0 || filters.mime.length > 0) {
       $('#fs-search').addClass('fs-search-filtered');
     } else {
       $('#fs-search').removeClass('fs-search-filtered');
     }
 
-    if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
-      query = undefined;
-    }
+    var query = balloon.buildQuery(content, filters);
 
-    if(query == undefined) {
+    if(query === undefined) {
       balloon.datasource.data([]);
       return;
-    } else if(query.useV2nodes) {
-      balloon.refreshTree('/nodes', {query: query.query});
     } else {
-      balloon.refreshTree('/files/search', {query: query});
+      balloon.refreshTree('/nodes', {query: query});
     }
-
   },
 
 
@@ -6563,78 +6538,54 @@ var balloon = {
    * build query
    *
    * @param   string value
-   * @param   object filter
+   * @param   object filters
    * @return  object
    */
-  buildQuery: function(value, filter) {
-    var a = value.split(':');
-    var attr, type;
-    var mode = $('input[name="fs-search-mode"]:checked').val();
+  buildQuery: function(value, filters) {
+    var queryParts = [];
 
-    if(a.length > 1) {
-      attr  = a[0];
-      value = a[1];
+    if(value) {
+      queryParts.push({'name': {$regex:value, $options:'i'} });
     }
 
-    if(filter && filter.length === 0) {
-      filter = undefined;
+    if(filters && filters.tags && filters.tags.length > 0) {
+      var $or = [];
+      var i;
+
+      for(i=0; i<filters.tags.length; i++) {
+        $or.push({'meta.tags': filters.tags[i]});
+      }
+
+      queryParts.push({'$or': $or});
     }
 
-    var query = {
-      body: {
-        from: 0,
-        size: 500,
-        query: {bool: {}}
+    if(filters && filters.color && filters.color.length > 0) {
+      var $or = [];
+      var i;
+
+      for(i=0; i<filters.color.length; i++) {
+        $or.push({'meta.color': filters.color[i]});
       }
-    };
 
-    if(attr == undefined && value == "" && filter !== undefined) {
-      query.body.query.bool.must = filter;
-    } else if(attr == undefined) {
-      if(filter === undefined && mode !== 'fulltext') {
-        query = {
-          useV2nodes: true,
-          query: {'name': {$regex:value, $options:'i'} },
-        };
-      } else {
-        var should = [{
-          match: {
-            name: {
-              query:value,
-              minimum_should_match: "90%"
-            }
-          }
-        }];
-
-        if(mode === 'fulltext') {
-          should.push({
-            match: {
-              "content.content": {
-                query:value,
-                minimum_should_match: "90%"
-              }
-            }
-          });
-        }
-
-        if(filter === undefined) {
-          query.body.query.bool.should = should;
-        } else {
-          query.body.query.bool.should = should;
-          query.body.query.bool.minimum_should_match = 1;
-          query.body.query.bool.must = filter;
-        }
-      }
-    } else{
-      query.body.query.bool = {must:{term:{}}};
-      query.body.query.bool.must.term[attr] = value;
-
-      if(filter !== undefined) {
-        query.body.query.bool.must = filter;
-      }
+      queryParts.push({'$or': $or});
     }
 
-    return query;
+    if(filters && filters.mime && filters.mime.length > 0) {
+      var $or = [];
+      var i;
+
+      for(i=0; i<filters.mime.length; i++) {
+        $or.push({'mime': filters.mime[i]});
+      }
+
+      queryParts.push({'$or': $or});
+    }
+
+    if(queryParts.length === 0) return undefined;
+
+    if(queryParts.length === 1) return queryParts[0];
+
+    return {'$and': queryParts};
   },
 
 
