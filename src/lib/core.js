@@ -6355,10 +6355,9 @@ var balloon = {
   /**
    * Extended search popup
    *
-   * @param   object e
    * @return  void
    */
-  advancedSearch: function(e) {
+  advancedSearch: function() {
     balloon.resetDom(['breadcrumb-search']);
     $('#fs-crumb-home-list').hide();
     $('#fs-browser-header .fs-browser-column-icon').children().hide();
