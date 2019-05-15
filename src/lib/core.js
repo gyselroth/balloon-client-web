@@ -3825,7 +3825,7 @@ var balloon = {
               $d.resolve(combined);
             })
             .fail(function(e) {
-              $d.reject(e);
+              $d.resolve([]);
             });
         } else {
           $d.resolve(pool.data);
@@ -3845,7 +3845,7 @@ var balloon = {
 
         balloon.displayError(e);
 
-        $d.reject(e);
+        $d.resolve([]);
       },
     });
 
