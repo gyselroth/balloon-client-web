@@ -1708,10 +1708,13 @@ var balloon = {
    * @return  void
    */
   _treeSelect: function(e) {
-    $('.k-in').removeClass('fs-rename');
-
     var id   = $(e.node).attr('data-uid'),
-      node = balloon.datasource.getByUid(id)._childrenOptions.data;
+      dataSourceNode = balloon.datasource.getByUid(id),
+      node;
+
+    if(!dataSourceNode) return;
+
+    node = dataSourceNode._childrenOptions.data;
 
     if(balloon.id(node) === balloon.id(balloon.last)) {
       balloon.last = node;
@@ -1876,6 +1879,11 @@ var balloon = {
     var collection =  balloon.getCurrentCollectionId();
     var node = balloon.getCurrentNode();
 
+    if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
+      //Do not reload tree - if in search mode
+      return $.Deferred().resolve().promise();
+    }
+
     if(!collection) {
       return balloon.menuLeftAction(menu, true).then(function() {
         if(node) {
@@ -1898,7 +1906,7 @@ var balloon = {
   scrollToNode: function(node) {
     var $node = $('li[fs-id="' + balloon.id(node) + '"]');
 
-    if(!$node) return;
+    if(!$node || $node.length === 0) return;
 
     $('#fs-layout-left').animate({
       scrollTop: ($node.offset().top - 70)
@@ -5971,7 +5979,12 @@ var balloon = {
           var shareLinkRequest = balloon.xmlHttpRequest({
             type: 'POST',
             url: balloon.base+'/nodes/share-link',
-            data: data
+            data: data,
+            statusCode: {
+              200: function(data) {
+                balloon.last = data;
+              }
+            }
           });
 
           $.when(shareLinkRequest, destroyRequest).done(function() {
