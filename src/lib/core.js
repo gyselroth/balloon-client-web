@@ -3650,25 +3650,6 @@ var balloon = {
 
 
   /**
-   * Keyup in search (when a char was entered)
-   *
-   * @param   object e
-   * @return  void
-   */
-  _searchKeyup: function(e){
-    //TODO pixtron search - is this still needed?
-    return;
-    var $that = $(this);
-    $('.fs-search-reset-button').show();
-
-    if(e.keyCode == 13) {
-      balloon.search($(this).val());
-      return;
-    }
-  },
-
-
-  /**
    * When the reset button in the searchbar is clicked
    *
    * @param   object e
