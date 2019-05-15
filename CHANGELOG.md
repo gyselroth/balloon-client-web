@@ -8,6 +8,7 @@
 * [FIX] Undo event "addCollectionShare" #157
 * [FEATURE] Various snackbar undo actions #62
 * [FIX] prompt user to save unsaved changes in text file #159
+* [FIX] Not visible if a resource is a user or group in share dropdown #168
 
 
 ## 3.1.2
