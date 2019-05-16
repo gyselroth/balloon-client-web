@@ -3633,6 +3633,9 @@ var balloon = {
     if(id !== null) {
       params.id = id;
       balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
+    } else if(balloon.isSearchResult()) {
+      balloon.resetDom('breadcrumb-search');
+      return balloon.buildExtendedSearchQuery();
     } else {
       balloon.menuLeftAction(balloon.getCurrentMenu());
     }
