@@ -34,8 +34,7 @@ var app = {
    * @return  boolean
    */
   executeQuery: function(query) {
-    app.balloon.refreshTree('/files/search', {query: query});
-    return true;
+    return app.balloon.refreshTree('/files/search', {query: query});
   },
 
   /**

@@ -164,8 +164,7 @@ var balloon = {
         return balloon._buildQueryNodename(value, filters);
       },
       executeQuery: function(query) {
-        balloon.refreshTree('/nodes', {query: query});
-        return true;
+        return balloon.refreshTree('/nodes', {query: query});
       }
     }
   },
@@ -1923,12 +1922,9 @@ var balloon = {
     var collection =  balloon.getCurrentCollectionId();
     var node = balloon.getCurrentNode();
 
-    if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
-      //Do not reload tree - if in search mode
-      return $.Deferred().resolve().promise();
-    }
-
-    if(!collection) {
+    if(balloon.isSearch() && collection === null) {
+      return balloon.buildExtendedSearchQuery();
+    } else if(!collection) {
       return balloon.menuLeftAction(menu, true).then(function() {
         if(node) {
           balloon.last = node;
@@ -6569,9 +6565,12 @@ var balloon = {
 
     var query = balloon.buildQuery(content, filters);
 
-    if(query === undefined || !balloon.executeQuery(query)) {
+    if(query === undefined) {
       balloon.datasource.data([]);
+      return;
     }
+
+    return balloon.executeQuery(query);
   },
 
 
@@ -6603,9 +6602,11 @@ var balloon = {
 
     if(balloon.search_modes && balloon.search_modes[mode] && balloon.search_modes[mode].executeQuery) {
       return balloon.search_modes[mode].executeQuery(query);
+    } else {
+      balloon.datasource.data([]);
+      return $.Deferred().resolve().promise();
     }
 
-    return false;
   },
 
   /**
