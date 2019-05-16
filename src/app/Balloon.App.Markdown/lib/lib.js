@@ -145,6 +145,7 @@ var app = {
       element: this.$windowHtml.find('textarea')[0],
       autofocus: true,
       toolbar: ['bold', 'italic', '|', 'heading-1', 'heading-2', 'heading-3', '|', 'code', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', '|', 'preview', '|', 'guide'],
+      spellChecker: false,
       shortcuts: {
         'toggleSideBySide': null,
         'toggleFullScreen': null,
