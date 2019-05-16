@@ -766,13 +766,7 @@ var balloon = {
       refresh: function() {
         var currentCollectionId = balloon.getCurrentCollectionId();
 
-        if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
-          return $.Deferred().resolve().promise();
-        } else if(currentCollectionId === null) {
-          return balloon.menuLeftAction(balloon.getCurrentMenu());
-        } else {
-          return balloon.refreshTree('/collections/children', {id: currentCollectionId});
-        }
+        return balloon.reloadTree();
       }
     });
 
@@ -4244,6 +4238,7 @@ var balloon = {
           balloon.displayName(newNode);
         }
 
+        //rename can only be initialized from "cloud" therefore it is not necessary to use reloadTree here
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.rename_node = null;
       },
@@ -4655,7 +4650,10 @@ var balloon = {
 
       if($that.hasClass('removed')) return;
 
-      if(id === '') {
+      if(balloon.isSearchResult() && id === '') {
+        balloon.resetDom('breadcrumb-search');
+        return balloon.buildExtendedSearchQuery();
+      } else if(id === '') {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
         balloon.refreshTree('/collections/children', {id: id}, null, {action: false});
@@ -4955,6 +4953,7 @@ var balloon = {
       $d.done(function(node) {
         balloon.added = node.id;
 
+        //as handleAddNode can only be executed from within cloud:root and child collections no need for reloadTree here
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
           balloon.scrollToNode(node);
         });
@@ -5749,14 +5748,14 @@ var balloon = {
       dataType: 'json',
       statusCode: {
         204: function(e) {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.reloadTree();
           balloon.last.shared = false;
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share');
           }
         },
         200: function(data) {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.reloadTree();
           balloon.last = data;
           balloon.switchView('share');
         }
@@ -5786,7 +5785,7 @@ var balloon = {
       },
       success: function() {
         node.shared = true;
-        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.reloadTree();
         if(balloon.id(node) == balloon.id(balloon.last)) {
           balloon.switchView('share');
         }
@@ -6858,7 +6857,7 @@ var balloon = {
       dataType: 'json',
       beforeSend: function() {
         balloon.resetDom(['selected', 'metadata', 'preview', 'multiselect',
-          'view-bar', 'history', 'share', 'share-link', 'search', 'events']);
+          'view-bar', 'history', 'share', 'share-link', 'events']);
 
         var $tree = $('#fs-browser-tree').find('ul');
 
@@ -6881,12 +6880,7 @@ var balloon = {
           count = node.length;
         }
         balloon.displayQuota();
-
-        if(balloon.getCurrentCollectionId() === null) {
-          balloon.menuLeftAction(balloon.getCurrentMenu());
-        } else {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        }
+        balloon.reloadTree();
       },
     };
 
@@ -6989,11 +6983,7 @@ var balloon = {
       success: function(data) {
         balloon.displayQuota();
 
-        if(balloon.getCurrentCollectionId() === null) {
-          balloon.menuLeftAction(balloon.getCurrentMenu());
-        } else {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        }
+        balloon.reloadTree();
       },
       error: function(response) {
         var data = balloon.parseError(response);
@@ -7097,6 +7087,7 @@ var balloon = {
         balloon.deselectAll();
       },
       success: function(data) {
+        //move can only be executed in cloud:root and child collections, therefore no need for reloatTree
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
       error: function(data) {
@@ -7173,6 +7164,7 @@ var balloon = {
     }
 
     $.when.apply($, requests).always(function() {
+      //undoMove can only be executed in cloud:root and child collections, therefore no need for reloatTree
       balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
     });
   },
@@ -7224,6 +7216,7 @@ var balloon = {
     }
 
     $.when.apply($, requests).always(function() {
+      //undoClone can only be executed in cloud:root and child collections, therefore no need for reloatTree
       balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
     });
   },
@@ -7925,7 +7918,7 @@ var balloon = {
           balloon.last = data;
         }
 
-        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.reloadTree();
         balloon.displayHistoryView();
 
         if($('#fs-history-window').is(':visible')) {
@@ -8584,6 +8577,7 @@ var balloon = {
       break;
     case 'refresh':
       balloon.displayQuota();
+      //refresh is not available on search results, therefore no need for reloadTree
       if(balloon.getCurrentCollectionId() === null) {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
@@ -8872,6 +8866,7 @@ var balloon = {
         $fs_search.find('#fs-search-mode-'+ modes[0]).prop('checked', true);
 
         $fs_search_input.val('');
+        $('#fs-crumb-search').data('is-search-result', false);
         break;
 
       case 'history':
