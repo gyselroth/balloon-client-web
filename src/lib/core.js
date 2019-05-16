@@ -1926,7 +1926,7 @@ var balloon = {
     var collection =  balloon.getCurrentCollectionId();
     var node = balloon.getCurrentNode();
 
-    if(balloon.isSearch() && collection === null) {
+    if(balloon.isSearchResult() && collection === null) {
       return balloon.buildExtendedSearchQuery();
     } else if(!collection) {
       return balloon.menuLeftAction(menu, true).then(function() {
@@ -6681,12 +6681,22 @@ var balloon = {
   },
 
   /**
-   * Check if search window is active
+   * Check if search breadcrumb is visible
    *
    * @return bool
    */
   isSearch: function() {
     return $('#fs-crumb-search-list').is(':visible');
+  },
+
+
+  /**
+   * Check if tree displays a search result
+   *
+   * @return bool
+   */
+  isSearchResult: function() {
+    return $('#fs-crumb-search').data('is-search-result') === true;
   },
 
 
