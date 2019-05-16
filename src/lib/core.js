@@ -599,6 +599,8 @@ var balloon = {
       if($('#fs-search-filter').data('initialized') !== true) {
         //populate filters before opening
         balloon.advancedSearch();
+      } else {
+        balloon.initSearchResultBreadCrumb();
       }
     });
 
@@ -618,6 +620,8 @@ var balloon = {
       if($('#fs-search-filter').data('initialized') !== true) {
         //populate filters before opening
         balloon.advancedSearch();
+      } else {
+        balloon.initSearchResultBreadCrumb();
       }
 
       $('#fs-search-filter').toggle();
@@ -6399,12 +6403,7 @@ var balloon = {
    * @return  void
    */
   advancedSearch: function(filters) {
-    balloon.resetDom(['breadcrumb-search']);
-    $('#fs-crumb-home-list').hide();
-    $('#fs-browser-header .fs-browser-column-icon').children().hide();
-    $('#fs-crumb-search-list').show();
-
-    $('#fs-crumb-search').find('li:first-child').html(i18next.t('search.results'));
+    balloon.initSearchResultBreadCrumb();
 
     var $fs_search = $('#fs-search');
     var $fs_search_input = $fs_search.find('#fs-search-input');
@@ -6514,6 +6513,24 @@ var balloon = {
         balloon.buildExtendedSearchQuery();
       },
     });
+  },
+
+  /**
+   * Initializes the search breadcrumb
+   *
+   * @param object filters initialy selected filters (eg: {tags: ['tag1', 'tag2']})
+   * @return  void
+   */
+  initSearchResultBreadCrumb: function() {
+    balloon.resetDom(['breadcrumb-search']);
+    $('#fs-crumb-home-list').hide();
+    $('#fs-browser-header .fs-browser-column-icon').children().hide();
+    $('#fs-crumb-search-list').show();
+
+    $('#fs-crumb-search').find('li:first-child').html(i18next.t('search.results'));
+    $('#fs-crumb-search').data('is-search-result', true);
+
+    balloon.datasource.data([]);
   },
 
   /**
@@ -8907,6 +8924,7 @@ var balloon = {
         var $crumb = $('#fs-crumb-search-list');
         $crumb.find('li').remove();
         $crumb.append('<li id="fs-crumb-search" fs-id="">'+i18next.t('search.results')+'</li>');
+        $('#fs-crumb-search').data('is-search-result', false);
         break;
 
       case 'shortcuts':
