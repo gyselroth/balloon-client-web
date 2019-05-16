@@ -7288,6 +7288,7 @@ var balloon = {
           title: winTitle,
           resizable: false,
           modal: true,
+          draggable: false,
           keydown: function(e) {
             if(e.originalEvent.keyCode !== 27) {
               return;
@@ -7338,7 +7339,7 @@ var balloon = {
               });
             });
           }
-        }).data("kendoBalloonWindow").center().open();
+        }).data("kendoBalloonWindow").center().open().maximize();
       }
     });
 

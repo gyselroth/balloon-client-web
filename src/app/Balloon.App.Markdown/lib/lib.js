@@ -97,6 +97,7 @@ var app = {
           title: winTitle,
           resizable: false,
           modal: true,
+          draggable: false,
           close: function(e) {
             if(e.userTriggered && app._editorCancel() === false) {
               e.preventDefault();
@@ -105,7 +106,7 @@ var app = {
           open: function(e) {
             app.editor.simplemde.value(app.editor.data);
           }
-        }).data("kendoBalloonWindow").center().open();
+        }).data("kendoBalloonWindow").center().open().maximize();
       }
     });
 
