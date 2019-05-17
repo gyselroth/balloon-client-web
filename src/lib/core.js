@@ -1886,7 +1886,6 @@ var balloon = {
     }, 1000);
   },
 
-
   /**
    * Build breadcrumb with parents
    *
@@ -5213,9 +5212,9 @@ var balloon = {
    *
    * @return bool
    */
-  showShare: function() {
+  showShare: function(node) {
     var acl = [];
-    var node = balloon.getCurrentNode();
+    node = node || balloon.getCurrentNode();
 
     if(!node || !node.directory) return;
 

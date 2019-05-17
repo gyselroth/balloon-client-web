@@ -110,20 +110,21 @@ var app = {
           $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
         );
 
-        //var src = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port+app.balloon.base+'/office/wopi/files/'+session.file;
-        var src = window.location.protocol + '//' + '10.242.2.13' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.node;
+        var src = window.location.protocol + '//' + window.location.hostname + ':' + window.location.port+app.balloon.base+'/office/wopi/files/'+session.file;
+        //var src = window.location.protocol + '//' + '10.242.2.8' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.node;
         src = encodeURIComponent(src);
         var url = app.parseUrl(context.url, src, node);
 
         $div.append(
-          '<form method="post" action="'+url+'" target="loleafletframe">'+
+          '<form method="post" action="'+url+'" target="office">'+
              '<input type="hidden" name="access_token" value="'+session.access_token+'"/>'+
              '<input type="hidden" name="access_token_ttl" value="'+session.ttl+'"/>'+
           '</form>'+
-          '<iframe style="width: 100%; height: 100%;" name="loleafletframe"/>'
+          '<iframe style="width: 100%; height: 100%;" name="office"/>'
         );
 
         $div.find('form').submit();
+        app.eventHandler(node);
 
         $(this.wrapper).find('.k-i-close').unbind('click.fix').bind('click.fix', function(e){
           e.stopImmediatePropagation();
@@ -135,6 +136,34 @@ var app = {
         });
       }
     }).data("kendoBalloonWindow").center().maximize();
+  },
+
+  eventHandler: function(node) {
+    $(window).off('message').on('message', function(e) {
+      var msg = JSON.parse(e.originalEvent.data);
+      var msgId = msg.MessageId;
+      var msgData = msg.Values;
+
+      switch(msgId) {
+        case 'File_Rename':
+          $('#fs-edit-office_wnd_title').html(msgData.NewName+'.'+app.balloon.getFileExtension(node));
+        break;
+
+        case 'UI_FileVersions':
+          app.balloon.displayHistoryWindow(node)
+        break;
+
+        case 'UI_Sharing':
+          app.balloon.xmlHttpRequest({
+            url: app.balloon.base+'/nodes/'+app.balloon.getCurrentCollectionId(),
+            type: 'GET',
+            success: function(node) {
+              app.balloon.showShare(node);
+            },
+          });
+        break;
+      }
+    });
   },
 
   parseUrl: function(url, src, node) {
