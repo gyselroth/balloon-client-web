@@ -105,6 +105,8 @@ var app = {
             }
           },
           open: function(e) {
+            app.editor.simplemde.value(app.editor.data);
+
             if(app.editor.data.length > 0) {
               app._togglePreview(true);
             } else {
