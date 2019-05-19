@@ -8,6 +8,7 @@
 import $ from "jquery";
 import i18next from 'i18next';
 import SimpleMDE from 'simplemde';
+import marked from 'marked';
 import balloonWindow from '../../../lib/widget-balloon-window.js';
 import css from '../styles/style.scss';
 
@@ -127,7 +128,7 @@ var app = {
   _togglePreview: function(forcePreview) {
     if(forcePreview || app.$windowHtml.hasClass('preview-active') === false) {
       app.$windowHtml.find('#app-markdown-edit-live-preview-content')
-        .html(app.editor.simplemde.markdown(app.editor.data));
+        .html(app._renderMarkdown(app.editor.data));
       app.$windowHtml.addClass('preview-active');
       app.$windowHtml.find('#app-markdown-edit-preview-button-wrapper input[name="edit"]')
         .off('click').on('click', function(event) {
@@ -181,11 +182,39 @@ var app = {
       autofocus: true,
       toolbar: ['bold', 'italic', '|', 'heading-1', 'heading-2', 'heading-3', '|', 'code', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', '|', 'preview', '|', 'guide'],
       spellChecker: false,
+      previewRender: app._renderMarkdown,
       shortcuts: {
         'toggleSideBySide': null,
         'toggleFullScreen': null,
       },
     });
+  },
+
+  /**
+   * Renders given markup to html
+   *
+   * @return string rendered html
+   */
+  _renderMarkdown: function(markdown) {
+    var markedOptions  = {};
+
+    var renderer = new marked.Renderer();
+    var linkRenderer = renderer.link;
+
+    renderer.link = function(href, title, text) {
+      var html = linkRenderer.call(renderer, href, title, text);
+      if(/^mailto:/.test(href) === false) {
+        return html.replace(/^<a /, '<a target="_blank" ');
+      } else {
+        return html;
+      }
+    }
+
+    markedOptions.renderer = renderer;
+
+    marked.setOptions(markedOptions);
+
+    return marked(markdown);
   },
 
   /**
