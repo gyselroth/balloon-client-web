@@ -1,6 +1,7 @@
 @import '../../../themes/default/scss/includes/colors.scss';
 
-.CodeMirror .editor-preview {
+.CodeMirror .editor-preview,
+#app-markdown-edit-live-preview {
   background-color: $colorWhite;
 
   h1 {

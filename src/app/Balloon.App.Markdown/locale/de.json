@@ -1,7 +1,8 @@
 {
   "app": {
     "markdown": {
-      "markdownFile": "Markdown-Dokument"
+      "markdownFile": "Markdown-Dokument",
+      "edit": "Bearbeiten"
     }
   },
 

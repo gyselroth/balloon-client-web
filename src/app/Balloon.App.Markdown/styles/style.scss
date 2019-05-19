@@ -1,5 +1,33 @@
 @import '../../../../node_modules/codemirror/lib/codemirror.css';
 
+#app-markdown-edit-live {
+  #app-markdown-edit-live-editor {
+    display: block;
+    height: 100%;
+  }
+
+  #app-markdown-edit-live-preview {
+    display: none;
+  }
+
+  &.preview-active {
+    #app-markdown-edit-live-editor {
+      display: none;
+    }
+
+    #app-markdown-edit-live-preview {
+      display: block;
+      height: 100%;
+
+      #app-markdown-edit-live-preview-content {
+        height: calc(100% - 77px);
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+    }
+  }
+}
+
 .CodeMirror {
     height: calc(100% - 51px - 77px - 22px - 29px);
     border: 1px solid #ddd;

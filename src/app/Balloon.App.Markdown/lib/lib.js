@@ -104,15 +104,42 @@ var app = {
             }
           },
           open: function(e) {
-            app.editor.simplemde.value(app.editor.data);
+            if(app.editor.data.length > 0) {
+              app._togglePreview(true);
+            } else {
+              app._togglePreview(false);
+            }
           }
-        }).data("kendoBalloonWindow").center().open().maximize();
+        }).data("kendoBalloonWindow").center().maximize();
       }
     });
 
     app.$windowHtml.find('input[type=submit]').off('click').on('click', function(e) {
       app._editorSave();
     });
+  },
+
+  /**
+   * Toglgle the preview view
+   *
+   * @return void
+   */
+  _togglePreview: function(forcePreview) {
+    if(forcePreview || app.$windowHtml.hasClass('preview-active') === false) {
+      app.$windowHtml.find('#app-markdown-edit-live-preview-content')
+        .html(app.editor.simplemde.markdown(app.editor.data));
+      app.$windowHtml.addClass('preview-active');
+      app.$windowHtml.find('#app-markdown-edit-preview-button-wrapper input[name="edit"]')
+        .off('click').on('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+
+          app._togglePreview();
+        });
+    } else {
+      app.$windowHtml.removeClass('preview-active');
+      app.editor.simplemde.value(app.editor.data);
+    }
   },
 
   /**
@@ -131,10 +158,18 @@ var app = {
     $('#app-markdown-edit-live').remove();
 
     this.$windowHtml = $(
-      '<div id="app-markdown-edit-live">'+
-          '<textarea></textarea>'+
-          '<div id="fs-prompt-window-button-wrapper" class="fs-window-secondary-actions">'+
-              '<input type="submit" class="fs-button-primary" data-i18n="[value]button.save" />'+
+      '<div id="app-markdown-edit-live" class="preview-active">'+
+          '<div id="app-markdown-edit-live-editor">'+
+            '<textarea></textarea>'+
+            '<div id="app-markdown-edit-editor-button-wrapper" class="fs-window-secondary-actions">'+
+                '<input type="submit" class="fs-button-primary" name="save" value="'+ i18next.t('button.save') +'" />'+
+            '</div>'+
+          '</div>'+
+          '<div id="app-markdown-edit-live-preview">'+
+            '<div id="app-markdown-edit-live-preview-content"></div>'+
+            '<div id="app-markdown-edit-preview-button-wrapper" class="fs-window-secondary-actions">'+
+                '<input type="submit" class="fs-button-primary" name="edit" value="'+ i18next.t('app.markdown.edit') +'"/>'+
+            '</div>'+
           '</div>'+
       '</div>'
     );
