@@ -7,6 +7,8 @@
     "logout": "Logout",
     "code": "Code",
     "multi_factor_auth": "Dieses Konto ist mit multi factor authentication geschützt. Bitte gib den Code vom google authenticator ein:",
+    "dont_remind_webauthn": "Nicht mehr danach fragen.",
+    "setup_webauthn": "Du kannst Passwörter nicht leider? Wir auch nicht. Dein Gerät unterstützt eine Form von passwortloser Authentifzierung und kann jetzt eingerichtet werden oder später in den Benutzereinstellungen.",
     "events": "Events",
     "profile": "Profil",
     "settings": "Einstellungen",
@@ -15,7 +17,9 @@
       "server": "Der balloon-Server meldet aktuell eine Störung, bitte versuche es später erneut.",
       "credentials": "Der Benutzername oder das Passwort ist falsch.",
       "code": "Der Code ist ungültig.",
-      "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider."
+      "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider.",
+      "webauthn_setup": "Ein Fehler ist aufgetreten bei der Einrichtung der passwortloser Authentifzierung. Du kannst diesen Schritt ignorieren oder es nocheinmal versuchen.",
+      "webauthn": "Ein Fehler ist aufgetreten bei der passwortloser Authentifzierung. Du kannst Benutzername/Passwort eingeben oder es nocheinmal versuchen."
     }
   },
   "profile": {
@@ -142,7 +146,11 @@
     "error": {
       "folder_exists": "Ein Ordner mit dem Name %s existiert bereits."
     },
-    "folderup": "Zurück"
+    "folderup": "Zurück",
+    "choose_handler": "Wähle eine App",
+    "choose_handler_text": "Mit welcher App soll die Datei %s geöffnet werden?",
+    "choose_handler_remember": "Diesen Dateityp immer mit dieser App öffnen.",
+    "no_handler_found": "Es wurde keine App gefunden welche die Datei %s öffnen kann. Möchtest du die Datei herunterladen?"
   },
   "user": {
     "disk_space": "Speicherplatz:",
@@ -178,7 +186,10 @@
   },
   "button": {
     "save": "Speichern",
-    "cancel": "Abbrechen"
+    "setup": "Einrichten",
+    "ignore": "Ignorieren",
+    "cancel": "Abbrechen",
+    "open": "Öffnen"
   },
   "view": {
     "prop": {

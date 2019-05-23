@@ -7,6 +7,8 @@
     "logout": "Logout",
     "code": "Code",
     "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
+    "dont_remind_webauthn": "Do not ask me again.",
+    "setup_webauthn": "Do you hate passwords? We too. Your device is compatible to use a form of passwordless authentication. You may setup this now or at any time in the user settings.",
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
@@ -15,7 +17,9 @@
       "server": "The balloon server reports an ongoing incident, please try it again later.",
       "credentials": "Wrong username or password given.",
       "code": "Invalid code provided.",
-      "oidc": "There was an error authenticate you via the choosen identity provider."
+      "oidc": "There was an error authenticate you via the choosen identity provider.",
+      "webauthn_setup": "There was an error to setup passwordless authentication. You may proceed by ignoring this step or try again.",
+      "webauthn": "There was an error to auhenticate using passwordless authentication. You may process by using username/password or try again."
     }
   },
   "profile": {
@@ -142,7 +146,11 @@
     "error": {
       "folder_exists": "A folder named %s does already exists."
     },
-    "folderup": "Back"
+    "folderup": "Back",
+    "choose_handler": "Choose app",
+    "choose_handler_text": "Choose an app to open file file %s",
+    "choose_handler_remember": "Always open this file type with the choosen app.",
+    "no_handler_found": "There was no app found which can open %s. Would you like to download the file instead?"
   },
   "user": {
     "disk_space": "Disk space:",
@@ -178,7 +186,10 @@
   },
   "button": {
     "save": "Save",
-    "cancel": "Cancel"
+    "setup": "Setup",
+    "ignore": "Ignore",
+    "cancel": "Cancel",
+    "open": "Open"
   },
   "view": {
     "prop": {

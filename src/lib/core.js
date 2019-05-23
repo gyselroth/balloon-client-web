@@ -201,6 +201,13 @@ var balloon = {
   preview_file_handlers: {},
 
   /**
+   * File handlers
+   *
+   * @var array
+   */
+  file_handlers: [],
+
+  /**
    * Menu handlers
    *
    * @var object
@@ -758,6 +765,20 @@ var balloon = {
       this.addHint("hint.hint_"+i);
     }
 
+    balloon.addFileHandler({
+      app: 'balloon file editor',
+      test: balloon.isEditable,
+      handler: balloon.editFile
+    });
+
+    balloon.addFileHandler({
+      app: 'balloon file viewer',
+      test: balloon.isViewable,
+      handler: balloon.displayFile
+    });
+
+    balloon.showHint()
+
     pullToRefresh({
       container: document.getElementById('fs-browser'),
       scrollable: document.getElementById('fs-layout-left'),
@@ -769,8 +790,6 @@ var balloon = {
         return balloon.reloadTree();
       }
     });
-
-    balloon.showHint();
 
     balloon.initialized = true;
     app.postInit(this);
@@ -1951,7 +1970,6 @@ var balloon = {
     }, 1000);
   },
 
-
   /**
    * Build breadcrumb with parents
    *
@@ -3070,32 +3088,119 @@ var balloon = {
   },
 
   /**
-   * Add preview handler
+   * Add file handler
    *
-   * @param function
+   * @param string app
+   * @param string|function ext
+   * @param function handler
+   * @param object context
    */
-  addPreviewHandler: function(name, handler) {
-    balloon.preview_file_handlers[name] = handler;
+  addFileHandler: function(handler) {
+    balloon.file_handlers.push(handler);
   },
 
   /**
-   * Get preview handler
+   * Open file
    *
-   * @param object node
+   * @var object node
    */
-  getPreviewHandler(node) {
-    var i;
-    var handlerFn;
-    var keys = Object.keys(balloon.preview_file_handlers);
+  openFile: function(node) {
+    var ext = this.getFileExtension(node);
+    var result = [];
 
-    for(i=0; i<keys.length; i++) {
-      var handler = balloon.preview_file_handlers[keys[i]];
-      handlerFn = handler(node);
-
-      if(handlerFn) break;
+    for(let handler of this.file_handlers) {
+      if(typeof handler.test === 'function' && handler.test(node) === true || handler.ext === ext) {
+        result.push(handler);
+      }
     }
 
-    return handlerFn;
+    let defaultApps = {};
+    if(localStorage.defaultApps) {
+      defaultApps = JSON.parse(localStorage.defaultApps);
+    }
+
+    if(result.length === 0) {
+      balloon.promptConfirm(i18next.t('tree.no_handler_found', node.name), function() {
+        balloon.downloadNode(node);
+      });
+    } else if(result.length === 1) {
+      result[0].handler(node, result[0].context);
+    } else if(defaultApps[ext] && result[defaultApps[ext]]) {
+      let handler = result[defaultApps[ext]];
+      handler.handler(node, handler.context);
+    } else {
+      balloon.chooseFileHandler(node, result);
+    }
+  },
+
+  /**
+   * Choose file handler
+   *
+   * @param object node
+   * @param array handlers
+   */
+  chooseFileHandler: function(node, handlers) {
+    var $div = $('#fs-file-handler-window');
+    $div.find('li').remove();
+    var $ul = $div.find('ul');
+
+    var $k_display = $div.kendoBalloonWindow({
+      resizable: false,
+      title: i18next.t('tree.choose_handler'),
+      modal: true,
+      draggable: false,
+      open: function(e) {
+        $div.find('div:first-child').html(i18next.t('tree.choose_handler_text', node.name));
+
+        for(let i=0; i < handlers.length; i++) {
+          let img = '';
+
+          if(handlers[i].appIcon) {
+            img = '<img src="'+handlers[i].appIcon+'" alt="" />';
+          }
+
+          $ul.append('<li data-handler="'+i+'">'+img+handlers[i].app+'</li>');
+        }
+      }
+    }).data('kendoBalloonWindow').center().open();
+
+    $ul.find('li:first-child').addClass('active');
+
+    $ul.off('click').on('click', 'li', function() {
+      $ul.find('li').removeClass('active');
+      $(this).toggleClass('active');
+    });
+
+    $div.find('input[type=button]').off('click').on('click', function() {
+      $k_display.close();
+    });
+
+    var $checkbox = $div.find('.checkbox').removeClass('active');
+
+    $div.find('input[type=submit]').off('click').on('click', function() {
+      let index = $ul.find('li.active').attr('data-handler');
+      let handler = handlers[index];
+      $k_display.close();
+      handler.handler(node, handler.context);
+
+      if($checkbox.hasClass('active')) {
+        let defaultApps = {};
+        if(localStorage.defaultApps) {
+          defaultApps = JSON.parse(localStorage.defaultApps);
+        }
+
+        defaultApps[handler.ext || balloon.getFileExtension(node)] = index;
+
+        localStorage.defaultApps = JSON.stringify(defaultApps);
+      }
+    });
+
+    $checkbox.off('click').on('click', function() {
+      $(this).toggleClass('active');
+    });
+  },
+
+  /**
   },
 
   /**
@@ -3205,7 +3310,6 @@ var balloon = {
     if(menu === 'search') {
       title = i18next.t('menu.' + menu);
     }
-
 
     $('#fs-crumb-search').html(title);
   },
@@ -3659,8 +3763,6 @@ var balloon = {
       balloon.resetDom('selected');
     }
 
-    var previewHandler = balloon.getPreviewHandler(balloon.last);
-
     if(balloon.last !== null && balloon.last.directory) {
       balloon.updatePannel(false);
 
@@ -3676,16 +3778,11 @@ var balloon = {
         ['selected','metadata','preview','multiselect','view-bar',
           'history','share','share-link']
       );
-    } else if(previewHandler) {
-      previewHandler(balloon.last);
-    } else if(balloon.isEditable(balloon.last.mime)) {
-      balloon.editFile(balloon.getCurrentNode());
-    } else if(balloon.isViewable(balloon.last.mime)) {
-      balloon.displayFile(balloon.getCurrentNode());
-    } else {
-      balloon.downloadNode(balloon.getCurrentNode());
+
+      return;
     }
 
+    balloon.openFile(balloon.last);
     balloon.pushState();
   },
 
@@ -5156,9 +5253,9 @@ var balloon = {
    *
    * @return bool
    */
-  showShare: function() {
+  showShare: function(node) {
     var acl = [];
-    var node = balloon.getCurrentNode();
+    node = node || balloon.getCurrentNode();
 
     if(!node || !node.directory) return;
 
@@ -7252,9 +7349,9 @@ var balloon = {
         if(node.filter) {
           if(node.shared === true && node.reference === true) {
             return 'gr-i-folder-filter-received';
-          }          else if(node.shared === true) {
+          } else if(node.shared === true) {
             return 'gr-i-folder-filter-shared';
-          }          else {
+          } else {
             return 'gr-i-folder-filter';
           }
         } else if(node.mount) {
@@ -7336,11 +7433,21 @@ var balloon = {
           title: winTitle,
           resizable: false,
           modal: true,
+          draggable: false,
+          keydown: function(e) {
+            if(e.originalEvent.keyCode !== 27) {
+              return;
+            }
+
+            if(data == $textarea.val()) {
+              $k_display.close();
+              return;
+            }
+          },
           close: function(e) {
             if(e.userTriggered && data != $textarea.val()) {
               //user tries to close window with unsaved changes
               e.preventDefault();
-
               var msg  = i18next.t('prompt.close_save_file', node.name);
               balloon.promptConfirm(msg, function(){
                 balloon.saveFile(node, $textarea.val());
@@ -7362,7 +7469,7 @@ var balloon = {
               data = $textarea.val();
             });
           }
-        }).data("kendoBalloonWindow").center().open();
+        }).data("kendoBalloonWindow").center().open().maximize();
       }
     });
 
@@ -7493,7 +7600,7 @@ var balloon = {
     var data = balloon.datasource._pristineData;
 
     for(var i=++index; i<=data.length; i++) {
-      if(i in data && data[i].mime && balloon.isViewable(data[i].mime)) {
+      if(i in data && data[i].mime && balloon.isViewable(data[i])) {
         $('#fs-display-right').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i]);
         });
@@ -7504,7 +7611,7 @@ var balloon = {
     index = data.indexOf(node) ;
 
     for(var i2=--index; i2!=-1; i2--) {
-      if(i2 in data && data[i2].mime && balloon.isViewable(data[i2].mime)) {
+      if(i2 in data && data[i2].mime && balloon.isViewable(data[i2])) {
         $('#fs-display-left').show().unbind('click').bind('click', function(){
           balloon.displayFile(data[i2]);
         });
@@ -7662,10 +7769,13 @@ var balloon = {
   /**
    * Check if can edit a file via browser
    *
-   * @param   string mime
+   * @param   object node
    * @return  bool
    */
-  isEditable: function(mime) {
+  isEditable: function(node) {
+ console.log(node);
+    let mime = node.mime;
+
     if(balloon.isMobileViewPort()) {
       return false;
     }
@@ -7688,10 +7798,13 @@ var balloon = {
   /**
    * Check if we can display the file live
    *
-   * @param   string
+   * @param   object node
    * @return  bool
    */
-  isViewable: function(mime) {
+  isViewable: function(node) {
+ console.log(node);
+    let mime = node.mime;
+
     if(balloon.isMobileViewPort()) {
       return false;
     }
@@ -8266,14 +8379,7 @@ var balloon = {
         $fs_preview.removeClass('fs-loader');
 
         $fs_preview.find('*').unbind('click').bind('click', function() {
-          var previewHandler = balloon.getPreviewHandler(node);
-          if(previewHandler) {
-            previewHandler(node);
-          } else if(balloon.isViewable(node.mime)) {
-            balloon.displayFile(node);
-          } else {
-            balloon.downloadNode(node);
-          }
+          balloon.openFile(node);
         });
       },
       success: function(data) {
@@ -9705,8 +9811,9 @@ var balloon = {
   },
 
   _initSwipeEvents: function() {
-    var $fs_browser_top_bar = $('#fs-browser-top-bar');
-    var threshhold = $fs_browser_top_bar.width() / 4;
+    var $fs_swipe_bar = $('#fs-swipe-bar');
+    var $fs_menu_left = $('#fs-menu-left');
+    var threshhold = $fs_swipe_bar.width() / 4;
     var direction;
     var x0;
 
@@ -9728,7 +9835,6 @@ var balloon = {
 
     function touchend(e) {
       var xDiff = unify(e).clientX - x0;
-      var $fs_menu_left = $('#fs-menu-left');
       switch(direction) {
       case 'left':
         if(xDiff * -1 > threshhold) {
@@ -9745,9 +9851,13 @@ var balloon = {
       direction = undefined;
     };
 
-    $fs_browser_top_bar.off('touchstart').on('touchstart', touchstart);
-    $fs_browser_top_bar.off('touchmove').on('touchmove', touchemove);
-    $fs_browser_top_bar.off('touchend').on('touchend', touchend);
+    $fs_swipe_bar.off('touchstart').on('touchstart', touchstart);
+    $fs_swipe_bar.off('touchmove').on('touchmove', touchemove);
+    $fs_swipe_bar.off('touchend').on('touchend', touchend);
+
+    $fs_menu_left.off('touchstart').on('touchstart', touchstart);
+    $fs_menu_left.off('touchmove').on('touchmove', touchemove);
+    $fs_menu_left.off('touchend').on('touchend', touchend);
   },
 
   /**

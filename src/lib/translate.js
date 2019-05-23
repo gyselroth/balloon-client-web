@@ -48,7 +48,7 @@ var translate = {
     var locales = [
       ['en',  'English'],
       ['en-US', 'English (USA)'],
-      ['en-AU', 'English (Australia'],
+      ['en-AU', 'English (Australia)'],
       ['en-GB', 'English (UK)'],
       ['de',  'Deutsch'],
       ['de-CH', 'Deutsch (Schweiz)'],
@@ -92,7 +92,7 @@ var translate = {
           prefix: 'i18next_res_',
           expirationTime: 60*60*120
         },
-        fallbackLng: translate.config.default_lang,
+        fallbackLng: translate.config.defaultLang,
         backend: {
           ajax: translate.load,
           loadPath: function(lng,ns){

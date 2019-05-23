@@ -5,7 +5,8 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
+const WebpackPwaManifest = require('webpack-pwa-manifest');
+const {GenerateSW} = require('workbox-webpack-plugin');
 var gitRevisionPlugin = new GitRevisionPlugin();
 
 var isDev = process.env.NODE_ENV !== 'production';
@@ -84,6 +85,31 @@ module.exports = {
         collapseWhitespace: true,
         preserveLineBreaks: false,
       }
+    }),
+    new WebpackPwaManifest({
+      name: 'balloon',
+      short_name: 'balloon',
+      description: 'Client for balloon',
+      background_color: '#ffffff',
+      theme_color: '#ff00ff',
+      crossorigin: null,
+      orientation: 'portrait-primary',
+      display: 'fullscreen',
+      ios: true,
+      publicPath: null,
+      start_url: '/',
+      icons: [
+        {
+          src: 'src/themes/default/img/icon_512x512.png',
+          sizes: [96, 128, 192, 256, 384, 512],
+          ios: true
+        }
+      ]
+    }),
+    new GenerateSW({
+      importWorkboxFrom: 'local',
+      clientsClaim: true,
+      skipWaiting: true
     }),
     new webpack.DefinePlugin({
       'process.env.VERSION': JSON.stringify(process.env.VERSION || gitRevisionPlugin.version()),

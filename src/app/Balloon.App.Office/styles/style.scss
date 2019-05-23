@@ -1,16 +1,8 @@
-#fs-libreoffice-prompt {
-  display: none;
+#fs-edit-office {
+  padding: 15px 20px;
 }
 
-#fs-office-join-prompt {
-  .fs-prompt-window-content {
-    ul {
-      margin-top: 10px;
-
-      input[type="radio"] {
-        display: inline-block;
-        margin-right: 5px;
-      }
-    }
-  }
+#fs-edit-office li {
+  box-shadow: 0 2px 25px 0 rgba(77,75,89,0.24);
+  border: 2px solid #39a5ff;
 }
