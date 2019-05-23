@@ -7315,11 +7315,21 @@ var balloon = {
           title: winTitle,
           resizable: false,
           modal: true,
+          draggable: false,
+          keydown: function(e) {
+            if(e.originalEvent.keyCode !== 27) {
+              return;
+            }
+
+            if(data == $textarea.val()) {
+              $k_display.close();
+              return;
+            }
+          },
           close: function(e) {
             if(e.userTriggered && data != $textarea.val()) {
               //user tries to close window with unsaved changes
               e.preventDefault();
-
               var msg  = i18next.t('prompt.close_save_file', node.name);
               balloon.promptConfirm(msg, function(){
                 balloon.saveFile(node, $textarea.val());
@@ -7341,7 +7351,7 @@ var balloon = {
               data = $textarea.val();
             });
           }
-        }).data("kendoBalloonWindow").center().open();
+        }).data("kendoBalloonWindow").center().open().maximize();
       }
     });
 
