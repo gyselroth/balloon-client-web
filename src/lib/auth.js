@@ -357,6 +357,7 @@ var login = {
     var $username_input = $login.find('input[name=username]');
     var $password_input = $login.find('input[name=password]');
     window.location.hash = '';
+    $('#login-recaptcha').html('');
 
     $.ajax({
       type: 'GET',
@@ -501,6 +502,7 @@ var login = {
         xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
       },
       complete: function(response) {
+        $('#login-recaptcha').html('');
         login.verifyTokenIdentity(response, username, password, false)
       }
     }).always(function() {
@@ -508,7 +510,7 @@ var login = {
     });
   },
 
-  displayCaptcha: function() {
+  displayRecaptcha: function() {
     $.getScript('https://www.google.com/recaptcha/api.js', function() {
       $('.g-recaptcha').attr('data-sitekey', login.recaptchaKey);
     });
