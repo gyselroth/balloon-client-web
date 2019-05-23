@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title data-i18n="title"></title>
+
     <style>
         #fs-spinner,
         #fs-snackbar {
@@ -133,6 +134,9 @@
                       <p data-i18n="login.multi_factor_auth"></p>
                       <input type="text" name="code" autocomplete="off" data-i18n="[placeholder]login.code"/>
                   </div>
+
+                  <div id="login-recaptcha" class="g-recaptcha"></div>
+
                   <div class="login-select">
                       <select id="login-locale"></select>
                       <svg class="gr-icon gr-i-expand"><use xlink:href="<%= iconsSvg %>#expand"></use></svg>
@@ -1110,6 +1114,16 @@
             <div class="fs-window-secondary-actions">
                 <input type="button" tabindex="2" data-i18n="[value]button.cancel" />
                 <input type="submit" tabindex="1" name="share" data-i18n="[value]button.save" class="fs-button-primary" />
+            </div>
+        </div>
+
+        <div id="fs-file-handler-window">
+            <div data-i18n="tree.choose_handler_text"></div>
+            <ul></ul>
+            <div><span class="checkbox"></span> <span data-i18n="tree.choose_handler_remember"></span></div>
+            <div class="fs-window-secondary-actions">
+                <input type="button" tabindex="2" data-i18n="[value]button.cancel" />
+                <input type="submit" tabindex="1" name="open" data-i18n="[value]button.open" class="fs-button-primary" />
             </div>
         </div>
 

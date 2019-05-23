@@ -27,8 +27,11 @@ var login = {
   handler: null,
   mayHideLoader: true,
   internalIdp: true,
+  recaptchaKey: null,
 
   init: function(config) {
+    this.recaptchaKey = config.recaptchaKey;
+
     if(config && config.auth) {
       if(config.auth.credentials) {
         this.credentials = config.auth.credentials;
@@ -521,12 +524,18 @@ var login = {
     var $username_input = $login.find('input[name=username]');
     var $password_input = $login.find('input[name=password]');
     window.location.hash = '';
+    $('#login-recaptcha').html('');
 
     $.ajax({
       type: 'GET',
       dataType: 'json',
       url: '/api/auth',
       complete: function(response) {
+        if(response.responseJSON.error === 'Balloon\\App\\Recaptcha\\Exception\\InvalidRecaptchaToken') {
+          login.displayRecaptcha();
+          return;
+        }
+
         switch(response.status) {
         case 401:
         case 403:
@@ -565,7 +574,9 @@ var login = {
       case 400:
       case 401:
       case 403:
-        if(response.responseJSON.error === 'Balloon\\App\\Idp\\Exception\\MultiFactorAuthenticationRequired') {
+        if(response.responseJSON.error === 'Balloon\\App\\Recaptcha\\Exception\\InvalidRecaptchaToken') {
+          login.displayRecaptcha();
+        } else if(response.responseJSON.error === 'Balloon\\App\\Idp\\Exception\\MultiFactorAuthenticationRequired') {
           $username_input.hide();
           $password_input.hide();
           $login_mfa.show();
@@ -683,21 +694,37 @@ var login = {
     return $d;
   },
 
+  getRecaptchaString: function() {
+    var captcha = $('.g-recaptcha-response').val()
+    if(captcha) {
+      return '?g-recaptcha-response='+captcha;
+    }
+
+    return '';
+  },
+
   doTokenAuth: function(data, mfa) {
     var $spinner = $('#fs-spinner').show();
 
     $.ajax({
       type: 'POST',
       data: data,
-      url: '/api/v2/tokens',
+      url: '/api/v2/tokens'+login.getRecaptchaString(),
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
       },
       complete: function(response) {
         login.verifyTokenIdentity(response, data, mfa);
+        $('#login-recaptcha').html('');
       }
     }).always(function() {
       $spinner.hide();
+    });
+  },
+
+  displayRecaptcha: function() {
+    $.getScript('https://www.google.com/recaptcha/api.js', function() {
+      $('.g-recaptcha').attr('data-sitekey', login.recaptchaKey);
     });
   },
 
@@ -709,7 +736,7 @@ var login = {
       username: username,
       password: password,
       dataType: 'json',
-      url: '/api/basic-auth',
+      url: '/api/basic-auth'+login.getRecaptchaString(),
       complete: login.verifyBasicIdentity
     }).always(function() {
       $spinner.hide();

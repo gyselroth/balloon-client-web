@@ -6,6 +6,7 @@
 * [CHANGE] Implement paged node listing #133
 * [FEATURE] Undo move/clone via snackbar #42
 * [FIX] Undo event "addCollectionShare" #157
+* [FEATURE] Support for multiple office clients #149
 * [FEATURE] Various snackbar undo actions #62
 * [FIX] prompt user to save unsaved changes in text file #159
 * [FIX] Not visible if a resource is a user or group in share dropdown #168
@@ -13,6 +14,7 @@
 * [FIX] App aborts if received a server error #108
 * [FEATURE] Implement webauthn authentification #182
 * [FEATURE] Support for progressive web app (pwa) #82
+
 
 
 ## 3.1.2

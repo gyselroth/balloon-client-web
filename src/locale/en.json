@@ -147,7 +147,11 @@
     "error": {
       "folder_exists": "A folder named %s does already exists."
     },
-    "folderup": "Back"
+    "folderup": "Back",
+    "choose_handler": "Choose app",
+    "choose_handler_text": "Choose an app to open file file %s",
+    "choose_handler_remember": "Always open this file type with the choosen app.",
+    "no_handler_found": "There was no app found which can open %s. Would you like to download the file instead?"
   },
   "user": {
     "disk_space": "Disk space:",
@@ -185,7 +189,8 @@
     "save": "Save",
     "setup": "Setup",
     "ignore": "Ignore",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "open": "Open"
   },
   "view": {
     "prop": {

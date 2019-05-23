@@ -1,0 +1,126 @@
+@import '../../../themes/default/scss/includes/colors.scss';
+
+.CodeMirror .editor-preview,
+#app-markdown-edit-live-preview {
+  background-color: $colorWhite;
+
+  h1 {
+    font-size: 2em;
+    line-height: 2.4em;
+    margin: 1.2em 0 0.6em;
+  }
+
+  h2 {
+    font-size: 1.8em;
+    line-height: 2.2em;
+    margin: 1.1em 0 0.55em;
+  }
+
+  h3 {
+    font-size: 1.6em;
+    line-height: 2em;
+    margin: 1em 0 0.5em;
+  }
+
+  h4 {
+    font-size: 1.4em;
+    line-height: 1.8em;
+    margin: 0.9em 0 0.45em;
+  }
+
+  h5 {
+    font-size: 1.2em;
+    line-height: 1.6em;
+    margin: 0.8em 0 0.4em;
+  }
+
+  h6, p, ul, ol, pre, blockquote {
+    font-size: 1em;
+    line-height: 1.4em;
+    margin-top: 0.7em;
+    color: $colorDarkGrey;
+  }
+
+  h6 {
+    font-weight: bold;
+  }
+
+  ul {
+    padding-left: 1.3em;
+
+    li {
+      list-style-type: disc;
+      list-style-position: outside;
+    }
+  }
+
+  ol {
+    padding-left: 1.3em;
+
+    li {
+      list-style-type: decimal;
+      list-style-position: outside;
+    }
+  }
+
+  pre {
+    background-color: transparent;
+    padding: 0;
+    margin: 1.4em 0;
+
+    code {
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  blockquote {
+    font-style: italic;
+    color: $colorMediumGrey;
+
+    p {
+      display: inline;
+      color: inherit;
+    }
+
+    &:before,
+    &:after {
+      content: "\201E";
+      font-size: 1em;
+    }
+
+    &:after {
+      content: "\201C";
+      margin-left: -3px;
+    }
+  }
+
+  img {
+    width: auto;
+    max-width: 100%;
+    margin-top: 0.7em;
+  }
+
+  h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, img {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  code {
+    font-family: monospace;
+    background-color: $colorBrightGrey;
+    border-radius: 4px;
+    padding: 0.2em 0.4em;
+  }
+
+  a,
+  a:visited {
+    color: $colorActiveBlue;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

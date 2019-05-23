@@ -1,0 +1,14 @@
+{
+  "app": {
+    "markdown": {
+      "markdownFile": "Markdown Document",
+      "edit": "Edit"
+    }
+  },
+
+  "new_node": {
+    "title": {
+      "md": "New Markdown Document"
+    }
+  }
+}

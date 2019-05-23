@@ -92,7 +92,7 @@ var translate = {
           prefix: 'i18next_res_',
           expirationTime: 60*60*120
         },
-        fallbackLng: translate.config.default_lang,
+        fallbackLng: translate.config.defaultLang,
         backend: {
           ajax: translate.load,
           loadPath: function(lng,ns){
