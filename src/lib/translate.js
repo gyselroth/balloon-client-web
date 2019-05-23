@@ -48,7 +48,7 @@ var translate = {
     var locales = [
       ['en',  'English'],
       ['en-US', 'English (USA)'],
-      ['en-AU', 'English (Australia'],
+      ['en-AU', 'English (Australia)'],
       ['en-GB', 'English (UK)'],
       ['de',  'Deutsch'],
       ['de-CH', 'Deutsch (Schweiz)'],
