@@ -94,7 +94,7 @@ var app = {
       success: function (data) {
         app.editor.data = data;
 
-        app.editor.$k_window = app.$windowHtml.kendoBalloonWindow({
+        app.editor.k_window = app.$windowHtml.kendoBalloonWindow({
           title: winTitle,
           resizable: false,
           modal: true,
@@ -154,7 +154,7 @@ var app = {
     app.editor = {
       simplemde: null,
       data: '',
-      $k_window: null,
+      k_window: null,
       node: null
     };
 
@@ -259,7 +259,7 @@ var app = {
    * @return void
    */
   _closeEditorWindow: function() {
-    app.editor.$k_window.close();
+    app.editor.k_window.close();
     app.editor = {};
   }
 }

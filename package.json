@@ -28,8 +28,8 @@
     "uglifyjs-webpack-plugin": "^2.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
     "babel-loader": "^8.0.5",
     "css-loader": "^1.0.1",
     "eslint": "^4.19.1",
@@ -47,7 +47,7 @@
     "style-loader": "^0.23.1",
     "svgxuse": "^1.2.6",
     "url-loader": "^1.1.2",
-    "webpack": "^4.29.0",
+    "webpack": "^4.32.2",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1"
