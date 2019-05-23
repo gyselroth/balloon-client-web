@@ -3,9 +3,9 @@
   "defaultLang": "en",
   "recaptchaKey": null,
   "apps": {
-    "Balloon.App.Office": {""enabled": true, "config": {{},
-    "Balloon.App.Convert": {""enabled": true, "config": {}},
-    "Balloon.App.Notification": {""enabled": true, "config": {}},
+    "Balloon.App.Office": {"enabled": true, "config": {}},
+    "Balloon.App.Convert": {"enabled": true, "config": {}},
+    "Balloon.App.Notification": {"enabled": true, "config": {}},
     "Balloon.App.ClamAv": {"enabled": true, "config": {}},
     "Balloon.App.DesktopClient": {"enabled": true, "config": {}},
     "Balloon.App.Burl": {"enabled": true, "config": {}},

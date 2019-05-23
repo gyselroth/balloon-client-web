@@ -143,7 +143,11 @@
     "error": {
       "folder_exists": "Ein Ordner mit dem Name %s existiert bereits."
     },
-    "folderup": "Zurück"
+    "folderup": "Zurück",
+    "choose_handler": "Wähle eine App",
+    "choose_handler_text": "Mit welcher App soll die Datei %s geöffnet werden?",
+    "choose_handler_remember": "Diesen Dateityp immer mit dieser App öffnen.",
+    "no_handler_found": "Es wurde keine App gefunden welche die Datei %s öffnen kann. Möchtest du die Datei herunterladen?"
   },
   "user": {
     "disk_space": "Speicherplatz:",
@@ -179,7 +183,8 @@
   },
   "button": {
     "save": "Speichern",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "open": "Öffnen"
   },
   "view": {
     "prop": {

@@ -55,7 +55,7 @@ var app = {
       var app = this.apps[name];
 
       if(app.enabled === true && map[name]['render']) {
-        map[name].render();
+        map[name].render(app.config);
       }
     }
   },
