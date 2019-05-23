@@ -12,6 +12,9 @@
 * [FIX] Not visible if a resource is a user or group in share dropdown #168
 * [FIX] Share link from search context, no ui response #144
 * [FIX] App aborts if received a server error #108
+* [FEATURE] Implement webauthn authentification #182
+* [FEATURE] Support for progressive web app (pwa) #82
+
 
 
 ## 3.1.2

@@ -11,6 +11,10 @@ const {AuthorizationServiceConfiguration} = require('@openid/appauth/built/autho
 const {AuthorizationRequest} = require('@openid/appauth/built/authorization_request.js');
 const {AuthorizationNotifier} = require('@openid/appauth/built/authorization_request_handler.js');
 const {RedirectRequestHandler} = require('@openid/appauth/built/redirect_based_handler.js');
+import {WebAuthnApp} from 'webauthn-simple-app';
+import {
+    solveRegistrationChallenge
+} from '@webauthn/client';
 
 var login = {
   accessToken: undefined,
@@ -93,6 +97,117 @@ var login = {
     return obj;
   },
 
+  webauthnAuth: function() {
+    var userId = localStorage.getItem('userId');
+    var $webauth_error = $('#login-error-webauthn').hide();
+
+    if(userId === null) {
+      return;
+    }
+
+    login.xmlHttpRequest({
+      url: '/api/v2/users/'+userId+'/request-challenges?domain='+window.location.hostname,
+      type: 'POST',
+      error: function(e) {
+        $webauth_error.show();
+      },
+      success: function(resource) {
+        let publicKey = resource.key;
+        publicKey.challenge = Uint8Array.from(window.atob(publicKey.challenge), c=>c.charCodeAt(0));
+        publicKey.allowCredentials = publicKey.allowCredentials.map(function(data) {
+            return {
+                ...data,
+                'id': Uint8Array.from(atob(data.id), c=>c.charCodeAt(0))
+            };
+        });
+
+        navigator.credentials.get({publicKey}).then(data => {
+          let publicKeyCredential = {
+            id: data.id,
+            type: data.type,
+            rawId: login.arrayToBase64String(new Uint8Array(data.rawId)),
+            response: {
+              authenticatorData: login.arrayToBase64String(new Uint8Array(data.response.authenticatorData)),
+              clientDataJSON: login.arrayToBase64String(new Uint8Array(data.response.clientDataJSON)),
+              signature: login.arrayToBase64String(new Uint8Array(data.response.signature)),
+              userHandle: data.response.userHandle ? login.arrayToBase64String(new Uint8Array(data.response.userHandle)) : null
+            }
+          };
+
+          login.doTokenAuth({
+            grant_type: 'webauthn',
+            public_key: publicKeyCredential,
+            challenge: resource.id,
+            user: userId,
+          });
+        }).catch(e => {
+          $webauth_error.show();
+        });
+      }
+    });
+  },
+
+  arrayToBase64String: function(a) {
+    return btoa(String.fromCharCode(...a));
+  },
+
+  setupWebauthn: function() {
+     var $d = $.Deferred();
+
+    login.xmlHttpRequest({
+      url: '/api/v2/creation-challenges?domain='+window.location.hostname,
+      type: 'POST',
+      success: function(resource) {
+        let publicKey = resource.key;
+        alert(publicKey);
+        publicKey.challenge = Uint8Array.from(window.atob(publicKey.challenge), c=>c.charCodeAt(0));
+        publicKey.user.id = Uint8Array.from(window.atob(publicKey.user.id), c=>c.charCodeAt(0));
+
+        if (publicKey.excludeCredentials) {
+          publicKey.excludeCredentials = publicKey.excludeCredentials.map(function(data) {
+            return {
+              ...data,
+              'id': Uint8Array.from(window.atob(data.id), c=>c.charCodeAt(0))
+            };
+          });
+        }
+
+        navigator.credentials.create({publicKey}).then(function(data) {
+          let publicKeyCredential = {
+              id: data.id,
+              type: data.type,
+              rawId: login.arrayToBase64String(new Uint8Array(data.rawId)),
+              response: {
+                  clientDataJSON: login.arrayToBase64String(new Uint8Array(data.response.clientDataJSON)),
+                  attestationObject: login.arrayToBase64String(new Uint8Array(data.response.attestationObject))
+              }
+          };
+
+          login.xmlHttpRequest({
+            url: '/api/v2/devices?challenge='+resource.id,
+            data: publicKeyCredential,
+            type: 'POST',
+            success: function(publicKey) {
+              localStorage.setItem('webauthn', 'true');
+              $d.resolve();
+            },
+            error: function(e) {
+              $d.reject(e);
+            }
+          });
+        }).catch((e) => {
+          alert(e);
+          $d.reject(e);
+        });
+      },
+      error: function(e) {
+        $d.reject(e);
+      }
+    });
+
+    return $d;
+  },
+
   checkOidcAuth: function() {
     this.notifier = new AuthorizationNotifier();
     this.handler = new RedirectRequestHandler();
@@ -125,7 +240,7 @@ var login = {
       var $input_username = $login.find('input[name=username]').focus();
 
       $('#fs-namespace').hide();
-      $login.find('input[type=submit]').off('click').on('click', login.initUsernamePasswordAuth);
+      $login.find('input[type=submit]').off('click.login').on('click.login', login.initUsernamePasswordAuth);
 
       if(localStorage.username !== undefined) {
         $input_username.val(localStorage.username);
@@ -141,6 +256,11 @@ var login = {
         $login.find('.error-message').hide();
         login.initOidcAuth($(this).attr('alt'));
       });
+
+      if(localStorage.getItem('webauthn') === 'true') {
+        $('#login-webauthn').show().off('click').on('click', login.webauthnAuth);
+        login.webauthnAuth();
+      }
     };
 
     var options = {
@@ -237,6 +357,7 @@ var login = {
         case 200:
           login.user = response.responseJSON;
           localStorage.username = login.user.username;
+          localStorage.userId = login.user.id;
 
           if(login.user.namespace) {
             localStorage.namespace = login.user.namespace;
@@ -245,7 +366,6 @@ var login = {
           }
 
           login.updateFsIdentity();
-
           login.initBrowser();
           break;
 
@@ -267,6 +387,7 @@ var login = {
       success: function(body) {
         login.user = body;
         localStorage.username = login.user.username;
+        localStorage.userId = login.user.id;
 
         if(login.user.namespace) {
           localStorage.namespace = login.user.namespace;
@@ -391,7 +512,11 @@ var login = {
       return login.doBasicAuth(username, password);
     }
 
-    return login.doTokenAuth(username, password);
+    return login.doTokenAuth({
+      username: username,
+      password: password,
+      grant_type: 'password'
+    });
   },
 
   verifyBasicIdentity: function() {
@@ -437,7 +562,7 @@ var login = {
     });
   },
 
-  verifyTokenIdentity: function(response, username, password, mfa) {
+  verifyTokenIdentity: function(response, context, mfa) {
     var $login = $('#login');
     var $login_mfa = $('#login-mfa');
     var $username_input = $login.find('input[name=username]');
@@ -455,18 +580,19 @@ var login = {
           $username_input.hide();
           $password_input.hide();
           $login_mfa.show();
+          context.grant_type = context.grant_type +'_mfa';
 
           $login.find('input[type=submit]').focus().unbind('click').on('click', function() {
-            let code = $code_input.val();
+            context.code = $code_input.val();
             $code_input.val('');
-            login.doMultiFactorTokenAuth(username, password, code);
+            login.doTokenAuth(context, true);
           });
 
           $(document).off('keydown.token').on('keydown.token', function(e) {
             if(e.keyCode === 13) {
-              let code = $code_input.val();
+              context.code = $code_input.val();
               $code_input.val('');
-              login.doMultiFactorTokenAuth(username, password, code);
+              login.doTokenAuth(context, true);
             }
           });
         } else if(mfa === true) {
@@ -486,8 +612,7 @@ var login = {
         login.adapter = 'oidc';
         login.accessToken = response.responseJSON.access_token;
         login.refreshToken = response.responseJSON.refresh_token;
-        login.fetchIdentity();
-        login.initBrowser();
+        login.initApp();
         break;
 
       default:
@@ -495,6 +620,47 @@ var login = {
         $('#login-server-error').show();
         $('#login-body').hide();
       break;
+    }
+  },
+
+  initApp: function() {
+    if(localStorage.getItem('webauthn') === null && "credentials" in navigator) {
+      var $login_setup_mfa = $('#login-setup-webauthn').show();
+      var $webauthn_error = $('#login-webauthn-setup-error').hide();
+      var $login_basic =  $('#login-basic').hide();
+      var $login_oidc = $('#login-oidc').hide();
+      var $reminder = $login_setup_mfa.find('span[class=checkbox]').off('click').on('click', function() {
+        $(this).toggleClass('active');
+      });
+
+      $login_setup_mfa.find('input[type=submit]').off('click').on('click', function() {
+        if($(this).attr('name') === 'ignore') {
+          let reminder = $reminder.hasClass('active');
+          if(reminder === true) {
+            localStorage.setItem('webauthn', 'false');
+          }
+
+          login.fetchIdentity();
+          login.initBrowser();
+          $login_setup_mfa.hide();
+          $login_basic.show();
+          $login_oidc.show();
+          $webauthn_error.hide();
+        } else {
+          login.setupWebauthn().then(() => {
+            $login_setup_mfa.hide();
+            $login_basic.show();
+            $login_oidc.show();
+            login.fetchIdentity();
+            login.initBrowser();
+          }).catch(error => {
+            $webauthn_error.show();
+          });
+        }
+      });
+    } else {
+      login.fetchIdentity();
+      login.initBrowser();
     }
   },
 
@@ -528,29 +694,6 @@ var login = {
     return $d;
   },
 
-  doMultiFactorTokenAuth: function(username, password, code) {
-    var $spinner = $('#fs-spinner').show();
-
-    $.ajax({
-      type: 'POST',
-      data: {
-        username: username,
-        password: password,
-        code: code,
-        grant_type: 'password_mfa',
-      },
-      url: '/api/v2/tokens'+login.getRecaptchaString(),
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
-      },
-      complete: function(response) {
-        login.verifyTokenIdentity(response, username, password, true)
-      }
-    }).always(function() {
-      $spinner.hide();
-    });
-  },
-
   getRecaptchaString: function() {
     var captcha = $('.g-recaptcha-response').val()
     if(captcha) {
@@ -560,23 +703,19 @@ var login = {
     return '';
   },
 
-  doTokenAuth: function(username, password) {
+  doTokenAuth: function(data, mfa) {
     var $spinner = $('#fs-spinner').show();
 
     $.ajax({
       type: 'POST',
-      data: {
-        username: username,
-        password: password,
-        grant_type: 'password',
-      },
+      data: data,
       url: '/api/v2/tokens'+login.getRecaptchaString(),
       beforeSend: function (xhr) {
         xhr.setRequestHeader("Authorization", "Basic " + btoa('balloon-client-web:'));
       },
       complete: function(response) {
+        login.verifyTokenIdentity(response, data, mfa);
         $('#login-recaptcha').html('');
-        login.verifyTokenIdentity(response, username, password, false)
       }
     }).always(function() {
       $spinner.hide();

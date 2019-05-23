@@ -7,6 +7,8 @@
     "logout": "Logout",
     "code": "Code",
     "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
+    "dont_remind_webauthn": "Do not ask me again.",
+    "setup_webauthn": "Do you hate passwords? We too. Your device is compatible to use a form of passwordless authentication. You may setup this now or at any time in the user settings.",
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
@@ -15,7 +17,9 @@
       "server": "The balloon server reports an ongoing incident, please try it again later.",
       "credentials": "Wrong username or password given.",
       "code": "Invalid code provided.",
-      "oidc": "There was an error authenticate you via the choosen identity provider."
+      "oidc": "There was an error authenticate you via the choosen identity provider.",
+      "webauthn_setup": "There was an error to setup passwordless authentication. You may proceed by ignoring this step or try again.",
+      "webauthn": "There was an error to auhenticate using passwordless authentication. You may process by using username/password or try again."
     }
   },
   "profile": {
@@ -183,6 +187,8 @@
   },
   "button": {
     "save": "Save",
+    "setup": "Setup",
+    "ignore": "Ignore",
     "cancel": "Cancel",
     "open": "Open"
   },
