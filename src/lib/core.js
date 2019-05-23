@@ -9680,8 +9680,9 @@ var balloon = {
   },
 
   _initSwipeEvents: function() {
-    var $fs_browser_top_bar = $('#fs-browser-top-bar');
-    var threshhold = $fs_browser_top_bar.width() / 4;
+    var $fs_swipe_bar = $('#fs-swipe-bar');
+    var $fs_menu_left = $('#fs-menu-left');
+    var threshhold = $fs_swipe_bar.width() / 4;
     var direction;
     var x0;
 
@@ -9703,7 +9704,6 @@ var balloon = {
 
     function touchend(e) {
       var xDiff = unify(e).clientX - x0;
-      var $fs_menu_left = $('#fs-menu-left');
       switch(direction) {
       case 'left':
         if(xDiff * -1 > threshhold) {
@@ -9720,9 +9720,13 @@ var balloon = {
       direction = undefined;
     };
 
-    $fs_browser_top_bar.off('touchstart').on('touchstart', touchstart);
-    $fs_browser_top_bar.off('touchmove').on('touchmove', touchemove);
-    $fs_browser_top_bar.off('touchend').on('touchend', touchend);
+    $fs_swipe_bar.off('touchstart').on('touchstart', touchstart);
+    $fs_swipe_bar.off('touchmove').on('touchmove', touchemove);
+    $fs_swipe_bar.off('touchend').on('touchend', touchend);
+
+    $fs_menu_left.off('touchstart').on('touchstart', touchstart);
+    $fs_menu_left.off('touchmove').on('touchmove', touchemove);
+    $fs_menu_left.off('touchend').on('touchend', touchend);
   },
 
   /**

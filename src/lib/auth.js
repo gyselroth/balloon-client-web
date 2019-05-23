@@ -95,8 +95,8 @@ var login = {
   },
 
   webauthnAuth: function() {
-    let userId = localStorage.getItem('userId');
-    $webauth_error = $('#login-error-webauthn');
+    var userId = localStorage.getItem('userId');
+    var $webauth_error = $('#login-error-webauthn').hide();
 
     if(userId === null) {
       return;
@@ -105,7 +105,9 @@ var login = {
     login.xmlHttpRequest({
       url: '/api/v2/users/'+userId+'/request-challenges?domain='+window.location.hostname,
       type: 'POST',
-      error: function(e) {alert("err")},
+      error: function(e) {
+        $webauth_error.show();
+      },
       success: function(resource) {
         let publicKey = resource.key;
         publicKey.challenge = Uint8Array.from(window.atob(publicKey.challenge), c=>c.charCodeAt(0));
