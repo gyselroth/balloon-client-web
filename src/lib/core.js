@@ -153,6 +153,23 @@ var balloon = {
   },
 
   /**
+   * Available search modes
+   *
+   * @var object
+   */
+  search_modes: {
+    'nodename': {
+      label: 'search.mode.nodename',
+      buildQuery: function(value, filters) {
+        return balloon._buildQueryNodename(value, filters);
+      },
+      executeQuery: function(query) {
+        return balloon.refreshTree('/nodes', {query: query});
+      }
+    }
+  },
+
+  /**
    * Add file menu
    *
    * @var object
@@ -581,6 +598,7 @@ var balloon = {
     var $fs_search_input = $fs_search.find('#fs-search-input');
     var $fs_search_filter_toggle = $fs_search.find('#fs-search-toggle-filter');
     var $fs_search_mode_toggle = $fs_search.find('#fs-search-mode-toggle');
+    var $fs_search_mode_dropdown_ul = $fs_search.find('#fs-search-mode-dropdown ul');
 
     $fs_search_input.off('focus').on('focus', function() {
       $fs_search.addClass('fs-search-focused');
@@ -588,6 +606,8 @@ var balloon = {
       if($('#fs-search-filter').data('initialized') !== true) {
         //populate filters before opening
         balloon.advancedSearch();
+      } else {
+        balloon.initSearchResultBreadCrumb();
       }
     });
 
@@ -607,6 +627,8 @@ var balloon = {
       if($('#fs-search-filter').data('initialized') !== true) {
         //populate filters before opening
         balloon.advancedSearch();
+      } else {
+        balloon.initSearchResultBreadCrumb();
       }
 
       $('#fs-search-filter').toggle();
@@ -625,30 +647,55 @@ var balloon = {
       }
     });
 
-    function toggleSearchMode() {
-      $fs_search.toggleClass('fs-search-mode-dropdown-open');
-      $(document).off('click.fs-search-mode-toggle');
+    var searchModes = Object.keys(balloon.search_modes);
+    if(searchModes.length <= 1) {
+      $fs_search_mode_toggle.hide();
+    } else {
+      $fs_search_mode_toggle.show();
 
-      if($fs_search.hasClass('fs-search-mode-dropdown-open')) {
-        $(document).on('click.fs-search-mode-toggle', function(event){
-          var $target = $(event.target);
-          var parentId = 'fs-search-mode-toggle';
+      function toggleSearchMode() {
+        $fs_search.toggleClass('fs-search-mode-dropdown-open');
+        $(document).off('click.fs-search-mode-toggle');
 
-          if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
+        if($fs_search.hasClass('fs-search-mode-dropdown-open')) {
+          $(document).on('click.fs-search-mode-toggle', function(event){
+            var $target = $(event.target);
+            var parentId = 'fs-search-mode-toggle';
 
-          toggleSearchMode();
-        });
+            if($target.attr('id') === parentId || $target.parents('#'+parentId).length > 0) return;
+
+            toggleSearchMode();
+          });
+        }
       }
+
+      $fs_search_mode_toggle.off('click').on('click', toggleSearchMode);
+
+      $fs_search_mode_dropdown_ul.empty();
+
+      var i;
+      for(i=0; i<searchModes.length; i++) {
+
+        var mode = searchModes[i];
+        var modeConfig = balloon.search_modes[mode];
+
+        $fs_search_mode_dropdown_ul.append(
+          '<li title="' + i18next.t(modeConfig.label) + '">'+
+            '<input type="radio" name="fs-search-mode" value="' + mode + '" id="fs-search-mode-' + mode + '"'+ (i===0 ? ' checked="checked"' : '')+' />'+
+            '<label for="fs-search-mode-' + mode + '">' + i18next.t(modeConfig.label) + '</label>'+
+          '</li>'
+        );
+      }
+
+      $('input[name="fs-search-mode"]').off('change').change(function() {
+        var value = $(this).val();
+        $fs_search_mode_toggle.find('span').contents().last().replaceWith(i18next.t(balloon.search_modes[value].label));
+        $fs_search.removeClass('fs-search-mode-dropdown-open');
+        balloon.advancedSearch();
+        $fs_search_input.focus();
+      });
+
     }
-
-    $fs_search_mode_toggle.off('click').on('click', toggleSearchMode);
-
-    $('input[name="fs-search-mode"]').off('change').change(function() {
-      $fs_search_mode_toggle.find('span').contents().last().replaceWith(i18next.t('search.mode.' + this.value));
-      $fs_search.removeClass('fs-search-mode-dropdown-open');
-      balloon.advancedSearch();
-      $fs_search_input.focus();
-    });
 
     $('#fs-namespace').unbind('dragover').on('dragover', function(e) {
       e.preventDefault();
@@ -740,13 +787,7 @@ var balloon = {
       refresh: function() {
         var currentCollectionId = balloon.getCurrentCollectionId();
 
-        if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
-          return $.Deferred().resolve().promise();
-        } else if(currentCollectionId === null) {
-          return balloon.menuLeftAction(balloon.getCurrentMenu());
-        } else {
-          return balloon.refreshTree('/collections/children', {id: currentCollectionId});
-        }
+        return balloon.reloadTree();
       }
     });
 
@@ -1898,12 +1939,9 @@ var balloon = {
     var collection =  balloon.getCurrentCollectionId();
     var node = balloon.getCurrentNode();
 
-    if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
-      //Do not reload tree - if in search mode
-      return $.Deferred().resolve().promise();
-    }
-
-    if(!collection) {
+    if(balloon.isSearchResult() && collection === null) {
+      return balloon.buildExtendedSearchQuery();
+    } else if(!collection) {
       return balloon.menuLeftAction(menu, true).then(function() {
         if(node) {
           balloon.last = node;
@@ -3699,6 +3737,9 @@ var balloon = {
     if(id !== null) {
       params.id = id;
       balloon.refreshTree('/collections/children', params, null, {action: '_FOLDERUP'});
+    } else if(balloon.isSearchResult()) {
+      balloon.resetDom('breadcrumb-search');
+      return balloon.buildExtendedSearchQuery();
     } else {
       balloon.menuLeftAction(balloon.getCurrentMenu());
     }
@@ -3743,25 +3784,6 @@ var balloon = {
 
     balloon.openFile(balloon.last);
     balloon.pushState();
-  },
-
-
-  /**
-   * Keyup in search (when a char was entered)
-   *
-   * @param   object e
-   * @return  void
-   */
-  _searchKeyup: function(e){
-    //TODO pixtron search - is this still needed?
-    return;
-    var $that = $(this);
-    $('.fs-search-reset-button').show();
-
-    if(e.keyCode == 13) {
-      balloon.search($(this).val());
-      return;
-    }
   },
 
 
@@ -4316,6 +4338,7 @@ var balloon = {
           balloon.displayName(newNode);
         }
 
+        //rename can only be initialized from "cloud" therefore it is not necessary to use reloadTree here
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.rename_node = null;
       },
@@ -4727,7 +4750,10 @@ var balloon = {
 
       if($that.hasClass('removed')) return;
 
-      if(id === '') {
+      if(balloon.isSearchResult() && id === '') {
+        balloon.resetDom('breadcrumb-search');
+        return balloon.buildExtendedSearchQuery();
+      } else if(id === '') {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
         balloon.refreshTree('/collections/children', {id: id}, null, {action: false});
@@ -5027,6 +5053,7 @@ var balloon = {
       $d.done(function(node) {
         balloon.added = node.id;
 
+        //as handleAddNode can only be executed from within cloud:root and child collections no need for reloadTree here
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()}).then(function() {
           balloon.scrollToNode(node);
         });
@@ -5821,14 +5848,14 @@ var balloon = {
       dataType: 'json',
       statusCode: {
         204: function(e) {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.reloadTree();
           balloon.last.shared = false;
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share');
           }
         },
         200: function(data) {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.reloadTree();
           balloon.last = data;
           balloon.switchView('share');
         }
@@ -5858,7 +5885,7 @@ var balloon = {
       },
       success: function() {
         node.shared = true;
-        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.reloadTree();
         if(balloon.id(node) == balloon.id(balloon.last)) {
           balloon.switchView('share');
         }
@@ -6471,16 +6498,11 @@ var balloon = {
   /**
    * Extended search popup
    *
-   * @param   object e
+   * @param object filters initialy selected filters (eg: {tags: ['tag1', 'tag2']})
    * @return  void
    */
-  advancedSearch: function(e) {
-    balloon.resetDom(['breadcrumb-search']);
-    $('#fs-crumb-home-list').hide();
-    $('#fs-browser-header .fs-browser-column-icon').children().hide();
-    $('#fs-crumb-search-list').show();
-
-    $('#fs-crumb-search').find('li:first-child').html(i18next.t('search.results'));
+  advancedSearch: function(filters) {
+    balloon.initSearchResultBreadCrumb();
 
     var $fs_search = $('#fs-search');
     var $fs_search_input = $fs_search.find('#fs-search-input');
@@ -6503,7 +6525,14 @@ var balloon = {
 
         for(var i in colors) {
           if(balloon.isValidColor(colors[i]._id)) {
-            children.push('<li data-item="'+colors[i]._id+'" class="fs-color-'+colors[i]._id+'"></li>');
+            var color = colors[i]._id;
+            var classes = ['fs-color-'+color];
+
+            if(filters && filters.color && filters.color.includes(color)) {
+              classes.push('fs-search-filter-selected');
+            }
+
+            children.push('<li data-item="'+color+'" class="'+classes.join(' ')+'"></li>');
           }
         }
 
@@ -6516,7 +6545,14 @@ var balloon = {
           children = [];
 
         for(var i in tags) {
-          children.push('<li data-item="'+tags[i]._id+'" >'+tags[i]._id+' ('+tags[i].sum+')</li>');
+          var classes = [];
+          var tag = tags[i]._id;
+
+          if(filters && filters.tags && filters.tags.includes(tag)) {
+            classes.push('fs-search-filter-selected');
+          }
+
+          children.push('<li data-item="'+tag+'" class="'+classes.join(' ')+'">'+tag+' ('+tags[i].sum+')</li>');
         }
 
         if(children.length >= 1) {
@@ -6526,14 +6562,22 @@ var balloon = {
         var $mime_list = $('#fs-search-filter-mime').find('div:first'),
           mimes = body['mime'],
           children = [];
+
         for(var i in mimes) {
-          var ext = balloon.mapMimeToExtension(mimes[i]._id);
+          var mime = mimes[i]._id;
+          var ext = balloon.mapMimeToExtension(mime);
 
           var spriteClass = ext !== false ? balloon.getSpriteClass(ext) : 'gr-i-file';
+
+          var classes = [];
+
+          if(filters && filters.mime && filters.mime.includes(mime)) {
+            classes.push('fs-search-filter-selected');
+          }
           children.push(
-            '<li data-item="'+mimes[i]._id+'">'+
+            '<li data-item="'+mime+'" class="'+classes.join(' ')+'">'+
               '<svg class="gr-icon  ' + spriteClass + '"><use xlink:href="'+iconsSvg+'#' + spriteClass.replace('gr-i-', '') + '"></use></svg>'+
-              '<div>['+mimes[i]._id+']</div></li>'
+              '<div>['+mime+']</div></li>'
           );
         }
 
@@ -6571,6 +6615,24 @@ var balloon = {
   },
 
   /**
+   * Initializes the search breadcrumb
+   *
+   * @param object filters initialy selected filters (eg: {tags: ['tag1', 'tag2']})
+   * @return  void
+   */
+  initSearchResultBreadCrumb: function() {
+    balloon.resetDom(['breadcrumb-search']);
+    $('#fs-crumb-home-list').hide();
+    $('#fs-browser-header .fs-browser-column-icon').children().hide();
+    $('#fs-crumb-search-list').show();
+
+    $('#fs-crumb-search').find('li:first-child').html(i18next.t('search.results'));
+    $('#fs-crumb-search').data('is-search-result', true);
+
+    balloon.datasource.data([]);
+  },
+
+  /**
    * Resets given search filter
    *
    * @param string|array filters Filter(s) to reset
@@ -6592,64 +6654,39 @@ var balloon = {
    * @return void
    */
   buildExtendedSearchQuery: function() {
-    var must = [];
+    var filters = {tags: [], color:[], mime: []};
 
-    var should1 = [];
-    $('#fs-search-filter-mime').find('li.fs-search-filter-selected').each(function(){
-      should1.push({
-        'query_string': {
-          'query': '(mime:"'+$(this).attr('data-item')+'")'
-        }
-      });
-    });
-
-    if(should1.length > 0) must.push({bool: {should: should1}});
-
-    var should2 = [];
     $('#fs-search-filter-tags').find('li.fs-search-filter-selected').each(function(){
-      should2.push({
-        term: {
-          'meta.tags': $(this).attr('data-item')
-        }
-      });
+      filters.tags.push($(this).attr('data-item'));
     });
 
-    if(should2.length > 0) must.push({bool: {should: should2}});
+    $('#fs-search-filter-mime').find('li.fs-search-filter-selected').each(function(){
+      filters.mime.push($(this).attr('data-item'));
+    });
 
-    var should3 = [];
     $('#fs-search-filter-color').find('li.fs-search-filter-selected').each(function(){
-      should3.push({
-        match: {
-          'meta.color': $(this).attr('data-item')
-        }
-      });
+      filters.color.push($(this).attr('data-item'));
     });
-
-    if(should3.length > 0) must.push({bool: {should: should3}});
 
     var content = $('#fs-search-input').val();
-    var query   = balloon.buildQuery(content, must);
+    if(content.length < 3) content = undefined;
+
     $('.fs-search-reset-button').show();
 
-    if(should1.length > 0 || should2.length > 0 || should3.length > 0) {
+    if(filters.tags.length > 0 || filters.color.length > 0 || filters.mime.length > 0) {
       $('#fs-search').addClass('fs-search-filtered');
     } else {
       $('#fs-search').removeClass('fs-search-filtered');
     }
 
-    if(content.length < 3 && should1.length == 0 && should2.length == 0 && should3.length == 0) {
-      query = undefined;
-    }
+    var query = balloon.buildQuery(content, filters);
 
-    if(query == undefined) {
+    if(query === undefined) {
       balloon.datasource.data([]);
       return;
-    } else if(query.useV2nodes) {
-      balloon.refreshTree('/nodes', {query: query.query});
-    } else {
-      balloon.refreshTree('/files/search', {query: query});
     }
 
+    return balloon.executeQuery(query);
   },
 
 
@@ -6657,118 +6694,108 @@ var balloon = {
    * build query
    *
    * @param   string value
-   * @param   object filter
+   * @param   object filters
    * @return  object
    */
-  buildQuery: function(value, filter) {
-    var a = value.split(':');
-    var attr, type;
+  buildQuery: function(value, filters) {
     var mode = $('input[name="fs-search-mode"]:checked').val();
 
-    if(a.length > 1) {
-      attr  = a[0];
-      value = a[1];
+    if(balloon.search_modes && balloon.search_modes[mode] && balloon.search_modes[mode].buildQuery) {
+      return balloon.search_modes[mode].buildQuery(value, filters);
     }
 
-    if(filter && filter.length === 0) {
-      filter = undefined;
-    }
-
-    var query = {
-      body: {
-        from: 0,
-        size: 500,
-        query: {bool: {}}
-      }
-    };
-
-    if(attr == undefined && value == "" && filter !== undefined) {
-      query.body.query.bool.must = filter;
-    } else if(attr == undefined) {
-      if(filter === undefined && mode !== 'fulltext') {
-        query = {
-          useV2nodes: true,
-          query: {'name': {$regex:value, $options:'i'} },
-        };
-      } else {
-        var should = [{
-          match: {
-            name: {
-              query:value,
-              minimum_should_match: "90%"
-            }
-          }
-        }];
-
-        if(mode === 'fulltext') {
-          should.push({
-            match: {
-              "content.content": {
-                query:value,
-                minimum_should_match: "90%"
-              }
-            }
-          });
-        }
-
-        if(filter === undefined) {
-          query.body.query.bool.should = should;
-        } else {
-          query.body.query.bool.should = should;
-          query.body.query.bool.minimum_should_match = 1;
-          query.body.query.bool.must = filter;
-        }
-      }
-    } else{
-      query.body.query.bool = {must:{term:{}}};
-      query.body.query.bool.must.term[attr] = value;
-
-      if(filter !== undefined) {
-        query.body.query.bool.must = filter;
-      }
-    }
-
-    return query;
+    return undefined;
   },
 
-
   /**
-   * Search node
+   * execute query
    *
-   * @param   string search_query
-   * @return  void
+   * @param   object query
+   * @return  object
    */
-  search: function(search_query) {
-    //TODO pixtron - is this method still needed?
-    var value = search_query, query;
-    if(value == '') {
-      return balloon.resetSearch();
-    }
+  executeQuery: function(query) {
+    var mode = $('input[name="fs-search-mode"]:checked').val();
 
-    if(typeof(search_query) === 'object') {
-      query = search_query;
+    if(balloon.search_modes && balloon.search_modes[mode] && balloon.search_modes[mode].executeQuery) {
+      return balloon.search_modes[mode].executeQuery(query);
     } else {
-      query = balloon.buildQuery(search_query);
+      balloon.datasource.data([]);
+      return $.Deferred().resolve().promise();
     }
 
-    $('#fs-search').show();
-    $('#fs-action-search').find('input:text').val(search_query);
-
-    if(query === undefined) {
-      return;
-    }
-
-    balloon.refreshTree('/files/search', {query: query});
   },
 
+  /**
+   * build query for nodename mode
+   *
+   * @param   string value
+   * @param   object filters
+   * @return  object
+   */
+  _buildQueryNodename: function(value, filters) {
+    var queryParts = [];
+
+    if(value) {
+      queryParts.push({'name': {$regex:value, $options:'i'} });
+    }
+
+    if(filters && filters.tags && filters.tags.length > 0) {
+      var $or = [];
+      var i;
+
+      for(i=0; i<filters.tags.length; i++) {
+        $or.push({'meta.tags': filters.tags[i]});
+      }
+
+      queryParts.push({'$or': $or});
+    }
+
+    if(filters && filters.color && filters.color.length > 0) {
+      var $or = [];
+      var i;
+
+      for(i=0; i<filters.color.length; i++) {
+        $or.push({'meta.color': filters.color[i]});
+      }
+
+      queryParts.push({'$or': $or});
+    }
+
+    if(filters && filters.mime && filters.mime.length > 0) {
+      var $or = [];
+      var i;
+
+      for(i=0; i<filters.mime.length; i++) {
+        $or.push({'mime': filters.mime[i]});
+      }
+
+      queryParts.push({'$or': $or});
+    }
+
+    if(queryParts.length === 0) return undefined;
+
+    if(queryParts.length === 1) return queryParts[0];
+
+    return {'$and': queryParts};
+  },
 
   /**
-   * Check if search window is active
+   * Check if search breadcrumb is visible
    *
    * @return bool
    */
   isSearch: function() {
     return $('#fs-crumb-search-list').is(':visible');
+  },
+
+
+  /**
+   * Check if tree displays a search result
+   *
+   * @return bool
+   */
+  isSearchResult: function() {
+    return $('#fs-crumb-search').data('is-search-result') === true;
   },
 
 
@@ -6930,7 +6957,7 @@ var balloon = {
       dataType: 'json',
       beforeSend: function() {
         balloon.resetDom(['selected', 'metadata', 'preview', 'multiselect',
-          'view-bar', 'history', 'share', 'share-link', 'search', 'events']);
+          'view-bar', 'history', 'share', 'share-link', 'events']);
 
         var $tree = $('#fs-browser-tree').find('ul');
 
@@ -6953,12 +6980,7 @@ var balloon = {
           count = node.length;
         }
         balloon.displayQuota();
-
-        if(balloon.getCurrentCollectionId() === null) {
-          balloon.menuLeftAction(balloon.getCurrentMenu());
-        } else {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        }
+        balloon.reloadTree();
       },
     };
 
@@ -7061,11 +7083,7 @@ var balloon = {
       success: function(data) {
         balloon.displayQuota();
 
-        if(balloon.getCurrentCollectionId() === null) {
-          balloon.menuLeftAction(balloon.getCurrentMenu());
-        } else {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
-        }
+        balloon.reloadTree();
       },
       error: function(response) {
         var data = balloon.parseError(response);
@@ -7169,6 +7187,7 @@ var balloon = {
         balloon.deselectAll();
       },
       success: function(data) {
+        //move can only be executed in cloud:root and child collections, therefore no need for reloatTree
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
       error: function(data) {
@@ -7245,6 +7264,7 @@ var balloon = {
     }
 
     $.when.apply($, requests).always(function() {
+      //undoMove can only be executed in cloud:root and child collections, therefore no need for reloatTree
       balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
     });
   },
@@ -7296,6 +7316,7 @@ var balloon = {
     }
 
     $.when.apply($, requests).always(function() {
+      //undoClone can only be executed in cloud:root and child collections, therefore no need for reloatTree
       balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
     });
   },
@@ -8013,7 +8034,7 @@ var balloon = {
           balloon.last = data;
         }
 
-        balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+        balloon.reloadTree();
         balloon.displayHistoryView();
 
         if($('#fs-history-window').is(':visible')) {
@@ -8416,11 +8437,10 @@ var balloon = {
         return;
       }
 
-      //TODO pixtron search - fix advanced search
-      balloon.advancedSearch();
-      var value = 'meta.tags:'+$(this).find('.tag-name').text();
-      //TODO pixtron search - why advancedSearch and search?
-      balloon.search(value);
+      balloon.resetSearchFilter(['tags', 'color', 'mime']);
+      $('#fs-search-input').val('');
+
+      balloon.advancedSearch({tags: [$(this).find('.tag-name').text()]});
     });
 
     $fs_prop_tags_parent.find('input[name=add_tag]').unbind('keyup').on('keyup', function(e) {
@@ -8666,6 +8686,7 @@ var balloon = {
       break;
     case 'refresh':
       balloon.displayQuota();
+      //refresh is not available on search results, therefore no need for reloadTree
       if(balloon.getCurrentCollectionId() === null) {
         balloon.menuLeftAction(balloon.getCurrentMenu());
       } else {
@@ -8948,10 +8969,13 @@ var balloon = {
           .removeClass('fs-search-filtered')
           .removeClass('fs-search-mode-dropdown-open');
 
-        $fs_search.find('#fs-search-mode-toggle span').contents().last().replaceWith(i18next.t('search.mode.nodename'));
-        $fs_search.find('#fs-search-mode-nodename').prop('checked', true);
+        var modes = Object.keys(balloon.search_modes);
+
+        $fs_search.find('#fs-search-mode-toggle span').contents().last().replaceWith(i18next.t(balloon.search_modes[modes[0]].label));
+        $fs_search.find('#fs-search-mode-'+ modes[0]).prop('checked', true);
 
         $fs_search_input.val('');
+        $('#fs-crumb-search').data('is-search-result', false);
         break;
 
       case 'history':
@@ -9014,6 +9038,7 @@ var balloon = {
         var $crumb = $('#fs-crumb-search-list');
         $crumb.find('li').remove();
         $crumb.append('<li id="fs-crumb-search" fs-id="">'+i18next.t('search.results')+'</li>');
+        $('#fs-crumb-search').data('is-search-result', false);
         break;
 
       case 'shortcuts':
