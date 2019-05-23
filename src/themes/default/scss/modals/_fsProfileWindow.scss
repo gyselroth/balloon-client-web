@@ -326,3 +326,52 @@ $sidePadding: 50px;
     }
   }
 }
+
+@media only screen and (max-width: 455px) {
+  #fs-profile-window {
+    #fs-profile-window-quota {
+      #fs-profile-quota {
+        table {
+          th,
+          td {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding-left: 0;
+            line-height: 24px;
+          }
+
+          td {
+            margin-bottom: 12px;
+          }
+        }
+
+        #fs-profile-quota-left,
+        #fs-profile-quota-used {
+          th:before {
+            top: 10px;
+          }
+        }
+      }
+    }
+
+    #fs-profile-window-user {
+      #fs-profile-user {
+        table {
+          th,
+          td {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding-left: 0;
+            line-height: 24px;
+          }
+
+          td {
+            margin-bottom: 12px;
+          }
+        }
+      }
+    }
+  }
+}

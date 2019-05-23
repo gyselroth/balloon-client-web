@@ -1,6 +1,7 @@
 {
   "localScript": "/path/to/local_script.js",
-  "default_lang": "en",
+  "defaultLang": "en",
+  "recaptchaKey": null,
   "apps": {
     "Balloon.App.Office": {"enabled": true, "config": {}},
     "Balloon.App.Convert": {"enabled": true, "config": {}},

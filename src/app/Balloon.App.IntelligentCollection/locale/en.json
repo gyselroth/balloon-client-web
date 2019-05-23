@@ -60,6 +60,9 @@
             "years": "Years"
           }
         }
+      },
+      "snackbar": {
+        "created": "The intelligent folder <b>{{name}}</b> has been created."
       }
     }
   }

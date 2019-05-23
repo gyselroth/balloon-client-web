@@ -65,6 +65,7 @@
       "cut": "Cut",
       "paste": "Paste",
       "filter": "Filter",
+      "sorting": "Sorting",
       "rename": "Rename",
       "perma-link": "Copy permalink"
     },
@@ -125,6 +126,14 @@
         "shares": "Shares",
         "hidden": "Hidden"
     },
+    "sorting": {
+      "name_asc": "Name ascending",
+      "name_desc": "Name descending",
+      "size_asc": "Size ascending",
+      "size_desc": "Size descending",
+      "changed_asc": "Changed ascending",
+      "changed_desc": "Changed descending"
+    },
     "open_folder": "Open folder",
     "folder": "Folder",
     "txt_file": "Text Document",
@@ -158,7 +167,19 @@
     "minute": "{{count}} minute",
     "minute_plural": "{{count}} minutes",
     "second": "{{count}} second",
-    "second_plural": "{{count}} seconds"
+    "second_plural": "{{count}} seconds",
+    "year_ago": "one year ago",
+    "year_ago_plural": "{{count}} years ago",
+    "month_ago": "one month ago",
+    "month_ago_plural": "{{count}} months ago",
+    "day_ago": "one day ago",
+    "day_ago_plural": "{{count}} days ago",
+    "hour_ago": "one hour ago",
+    "hour_ago_plural": "{{count}} hours ago",
+    "minute_ago": "one minute ago",
+    "minute_ago_plural": "{{count}} minutes ago",
+    "second_ago": "one second ago",
+    "second_ago_plural": "{{count}} seconds ago"
   },
   "button": {
     "save": "Save",
@@ -168,8 +189,8 @@
   "view": {
     "prop": {
       "head": {
-        "mime": "Mime:",
-        "id": "ID:",
+        "mime": "Mime",
+        "id": "ID",
         "contains": "Contains",
         "changed": "Changed",
         "deleted": "Deleted",
@@ -440,7 +461,8 @@
     "node_undeleted_plural": "{{count}} elements have been recovered.",
     "file_saved": "The file <b>{{name}}</b> has been saved.",
     "share_added": "The collection <b>{{name}}</b> has been shared.",
-    "share_updated": "The share for the collection <b>{{name}}</b> has been updated."
+    "share_updated": "The share for the collection <b>{{name}}</b> has been updated.",
+    "restore_file": "The version <b>{{version}}</b> has been restored."
   },
   "new_node": {
     "title": {

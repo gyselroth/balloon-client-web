@@ -65,6 +65,7 @@
       "cut": "Ausschneiden",
       "paste": "Einfügen",
       "filter": "Filter",
+      "sorting": "Sortierung",
       "rename": "Umbenennen",
       "perma-link": "Perma Link kopieren"
     },
@@ -125,6 +126,14 @@
         "shares": "Freigaben",
         "hidden": "Versteckt"
     },
+    "sorting": {
+      "name_asc": "Name aufsteigend",
+      "name_desc": "Name absteigend",
+      "size_asc": "Grösse aufsteigend",
+      "size_desc": "Grösse absteigend",
+      "changed_asc": "Geändert aufsteigend",
+      "changed_desc": "Geändert absteigend"
+    },
     "open_folder": "Ordner öffnen",
     "folder": "Ordner",
     "txt_file": "Text-Dokument",
@@ -158,7 +167,19 @@
     "minute": "{{count}} Minute",
     "minute_plural": "{{count}} Minuten",
     "second": "{{count}} Sekunde",
-    "second_plural": "{{count}} Sekunden"
+    "second_plural": "{{count}} Sekunden",
+    "year_ago": "vor einem Jahr",
+    "year_ago_plural": "vor {{count}} Jahren",
+    "month_ago": "vor einem Monat",
+    "month_ago_plural": "vor {{count}} Monaten",
+    "day_ago": "vor einem Tag",
+    "day_ago_plural": "vor {{count}} Tagen",
+    "hour_ago": "vor einer Stunde",
+    "hour_ago_plural": "vor {{count}} Stunden",
+    "minute_ago": "vor einer Minute",
+    "minute_ago_plural": "vor {{count}} Minuten",
+    "second_ago": "vor einer Sekunde",
+    "second_ago_plural": "vor {{count}} Sekunden"
   },
   "button": {
     "save": "Speichern",
@@ -168,8 +189,8 @@
   "view": {
     "prop": {
       "head": {
-        "mime": "Dateityp:",
-        "id": "ID:",
+        "mime": "Dateityp",
+        "id": "ID",
         "contains": "Enthält",
         "changed": "Geändert",
         "deleted": "Gelöscht",
@@ -441,7 +462,8 @@
     "node_undeleted_plural": "{{count}} Elemente wurde wiederhergestellt.",
     "file_saved": "Die Datei <b>{{name}}</b> wurde gespeichert.",
     "share_added": "Der Ordner <b>{{name}}</b> wurde freigegeben.",
-    "share_updated": "Die Freigabe für den Ordner <b>{{name}}</b> wurde angepasst."
+    "share_updated": "Die Freigabe für den Ordner <b>{{name}}</b> wurde angepasst.",
+    "restore_file": "Die Version <b>{{version}}</b> wurde wiederhergestellt."
   },
   "new_node": {
     "title": {

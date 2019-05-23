@@ -208,6 +208,16 @@ var app = {
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(data),
+      snackbar: {
+        message: 'app.intelligentCollection.snackbar.created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          app.balloon.remove(response, true, true);
+        }
+      },
       success: function(data) {
         $d.resolve(data);
       }.bind(this),

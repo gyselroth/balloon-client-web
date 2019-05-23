@@ -94,4 +94,26 @@
       }
     }
   }
+
+  @media screen and (max-width: 390px) {
+    table {
+      display: block;
+
+      th,
+      td {
+        display: block;
+        padding-left: 0;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      th {
+        padding-bottom: 0;
+      }
+
+      td {
+        color: $colorDarkGrey;
+      }
+    }
+  }
 }

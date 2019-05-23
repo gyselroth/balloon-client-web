@@ -21,6 +21,9 @@ import fileExtIconMap from './file-ext-icon-map.js';
 import {mimeFileExtMap} from './mime-file-ext-map.js';
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
+import pullToRefresh from 'mobile-pull-to-refresh'
+import ptrAnimatesIos from 'mobile-pull-to-refresh/dist/styles/ios/animates'
+
 window.$ = $;
 $.ajaxSetup({
   beforeSend:function(jqXHR,settings){
@@ -251,6 +254,17 @@ var balloon = {
       hasCount: false,
       callback: function() {
         balloon.displayHelpWindow();
+      }
+    },
+    'search': {
+      name: 'search-trigger-mobile',
+      label: 'nav.action.search',
+      icon: 'search',
+      hasDropDown: false,
+      hasCount: false,
+      callback: function() {
+        $('#fs-search').addClass('fs-search-mobile-visible');
+        $('#fs-search-input').focus();
       }
     }
   },
@@ -506,7 +520,11 @@ var balloon = {
 
     });
 
-    $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(balloon._sortTree);
+    $("#fs-browser-header").find("> div.fs-browser-column-sortable").unbind('click').click(function(event) {
+      var field = $(this).attr('id').substr(18);
+
+      balloon._sortTree(field);
+    });
 
     $(document).unbind('drop').on('drop', function(e) {
       e.stopPropagation();
@@ -713,6 +731,25 @@ var balloon = {
     });
 
     balloon.showHint()
+
+    pullToRefresh({
+      container: document.getElementById('fs-browser'),
+      scrollable: document.getElementById('fs-layout-left'),
+      animates: ptrAnimatesIos,
+
+      refresh: function() {
+        var currentCollectionId = balloon.getCurrentCollectionId();
+
+        if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
+          return $.Deferred().resolve().promise();
+        } else if(currentCollectionId === null) {
+          return balloon.menuLeftAction(balloon.getCurrentMenu());
+        } else {
+          return balloon.refreshTree('/collections/children', {id: currentCollectionId});
+        }
+      }
+    });
+
     balloon.initialized = true;
     app.postInit(this);
   },
@@ -1486,13 +1523,7 @@ var balloon = {
           break;
 
         case 'size':
-          var size = '';
-          if(node.directory) {
-            size = i18next.t('view.prop.data.childcount', {count: node.size})
-          } else {
-            size = balloon.getReadableFileSizeString(node.size || 0);
-          }
-
+          var size = balloon.nodeSize(node);
           $node_el.append('<div class="fs-browser-column fs-browser-column-size">'+size+'</div>');
           break;
 
@@ -1547,6 +1578,13 @@ var balloon = {
             $name_el = $('<div class="fs-browser-column fs-browser-column-name"><span class="fs-name">'+node.name+'</span></div>');
           }
 
+          if(balloon.id(node) !== '_FOLDERUP') {
+            var sizeAndChanged = balloon.nodeSize(node) + ', ' + balloon.timeSince(new Date(node.changed), true);
+            $name_el.append($(
+              '<p class="fs-browser-column-name-size-changed" title="' + sizeAndChanged + '">' + sizeAndChanged + '</p>'
+            ));
+          }
+
           if(balloon.isSearch() && balloon.id(node) !== '_FOLDERUP') {
             var path = node.path.split('/').slice(1, -1);
             if(path.length === 0) path = [''];
@@ -1556,7 +1594,7 @@ var balloon = {
               path.unshift('...');
             }
 
-            var $path_el = $('<p></p>');
+            var $path_el = $('<p class="fs-browser-column-name-path"></p>');
 
             path.forEach(function(item) {
               $path_el.append('<span> / </span><span>' + item + '</span>');
@@ -1689,10 +1727,13 @@ var balloon = {
    * @return  void
    */
   _treeSelect: function(e) {
-    $('.k-in').removeClass('fs-rename');
-
     var id   = $(e.node).attr('data-uid'),
-      node = balloon.datasource.getByUid(id)._childrenOptions.data;
+      dataSourceNode = balloon.datasource.getByUid(id),
+      node;
+
+    if(!dataSourceNode) return;
+
+    node = dataSourceNode._childrenOptions.data;
 
     if(balloon.id(node) === balloon.id(balloon.last)) {
       balloon.last = node;
@@ -1857,6 +1898,11 @@ var balloon = {
     var collection =  balloon.getCurrentCollectionId();
     var node = balloon.getCurrentNode();
 
+    if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
+      //Do not reload tree - if in search mode
+      return $.Deferred().resolve().promise();
+    }
+
     if(!collection) {
       return balloon.menuLeftAction(menu, true).then(function() {
         if(node) {
@@ -1879,7 +1925,7 @@ var balloon = {
   scrollToNode: function(node) {
     var $node = $('li[fs-id="' + balloon.id(node) + '"]');
 
-    if(!$node) return;
+    if(!$node || $node.length === 0) return;
 
     $('#fs-layout-left').animate({
       scrollTop: ($node.offset().top - 70)
@@ -3203,6 +3249,9 @@ var balloon = {
       return $.Deferred().resolve().promise();
     }
 
+    $('#fs-menu-left').removeClass('fs-menu-left-open');
+    $('#fs-menu-left-toggl').removeClass('fs-menu-left-open');
+
     if(action in balloon.menu_left_items) {
       $d = balloon.menu_left_items[action].callback();
     } else {
@@ -3873,7 +3922,7 @@ var balloon = {
               $d.resolve(combined);
             })
             .fail(function(e) {
-              $d.reject(e);
+              $d.resolve([]);
             });
         } else {
           $d.resolve(pool.data);
@@ -3893,7 +3942,7 @@ var balloon = {
 
         balloon.displayError(e);
 
-        $d.reject(e);
+        $d.resolve([]);
       },
     });
 
@@ -3988,28 +4037,29 @@ var balloon = {
   /**
    * Sort tree (click callback)
    *
+   * @param string field field to sort by
+   * @param string dir (optional) sort direction
    * @return void
    */
-  _sortTree: function() {
-    var field = $(this).attr('id').substr(18);
+  _sortTree: function(field, dir) {
+    var $fs_browser_header = $('#fs-browser-header');
 
-    $('#fs-browser-header').find('span').empty();
-
-    var dir;
-
-    if(balloon.tree.sort.field == field) {
-      if(balloon.tree.sort.dir == 'asc') {
-        dir = 'desc';
+    if(dir === undefined) {
+      if(balloon.tree.sort.field == field) {
+        dir = balloon.tree.sort.dir == 'asc' ? 'desc' : 'asc';
       } else {
         dir = 'asc';
       }
-    } else {
-      dir = 'asc';
     }
+
+    $fs_browser_header.find('.fs-browser-column-sortable span').empty();
 
     var iconId = dir === 'asc' ? 'expand' : 'collapse';
 
-    $(this).find('span').append('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="'+iconsSvg+'#' + iconId + '"></use></svg>');
+    $fs_browser_header.find('.fs-browser-column-' + field + ' span').append('<svg class="gr-icon gr-i-' + iconId + '" viewBox="0 0 24 24"><use xlink:href="'+iconsSvg+'#' + iconId + '"></use></svg>');
+
+    $('#fs-sorting-' + field + '-' + dir).prop('checked', true);
+    $('#fs-action-sorting').html(i18next.t('tree.sorting.' + field + '_' + dir));
 
     balloon.sortTree(field, dir);
   },
@@ -4161,25 +4211,13 @@ var balloon = {
       return;
     }
 
-    var node = balloon.getSelected(),
-      $target,
-      $input;
+    var $fs_rename_window = $('#fs-rename-window');
+    $fs_rename_window.addClass('is-open');
 
-    if(balloon.isMobileViewPort()) {
-      $input = balloon._initRenameMobile(node);
-    } else {
-      $input = $('<input class="fs-filename-rename" type="text" value="'+ node.name +'" />')
+    var node = balloon.getSelected();
 
-      $target = $('#fs-browser').find('li[fs-id='+node.id+']').find('.fs-browser-column-name');
-
-      balloon.rename_original = $target.html();
-
-      $target.html($input);
-
-      $input.focusout(function(e) {
-        balloon._rename();
-      });
-    }
+    //wrapping $(find()[0]) is necessary that $input.focus() works
+    var $input = $($fs_rename_window.find('input')[0]).val(node.name);
 
     balloon.rename_node = node;
     balloon.rename_input = $input;
@@ -4202,35 +4240,20 @@ var balloon = {
         balloon._rename();
       }
     });
-  },
 
-  /**
-   * Inits the mobile rename view
-   *
-   * @param object node
-   * @return $input input element containing the node name
-   */
-  _initRenameMobile: function(node) {
-    var $fs_rename_mobile = $('#fs-rename-mobile');
-    $fs_rename_mobile.addClass('is-open');
-    //wrapping $(find()[0]) is necessary that $input.focus() works
-    var $input = $($fs_rename_mobile.find('input')[0]).val(node.name);
-
-    $fs_rename_mobile.find('input[name="cancel"], #fs-rename-mobile-close').off('click').on('click', function(event) {
+    $fs_rename_window.find('input[name="cancel"], #fs-rename-window-close').off('click').on('click', function(event) {
       event.preventDefault();
       event.stopPropagation();
 
       balloon._resetRenameView();
     });
 
-    $fs_rename_mobile.find('input[name="save"]').off('click').on('click', function() {
+    $fs_rename_window.find('input[name="save"]').off('click').on('click', function() {
       event.preventDefault();
       event.stopPropagation();
 
       balloon._rename();
     });
-
-    return $input;
   },
 
   /**
@@ -4239,18 +4262,9 @@ var balloon = {
    * @return void
    */
   _resetRenameView: function() {
-    $('#fs-rename-mobile').removeClass('is-open');
-
-    if(balloon.rename_input && balloon.rename_original) {
-      balloon.rename_input.parent().append(balloon.rename_original);
-    }
-
-    if(balloon.rename_input && !balloon.isMobileViewPort()) {
-      balloon.rename_input.remove();
-    }
+    $('#fs-rename-window').removeClass('is-open');
 
     balloon.rename_node = undefined;
-    balloon.rename_original = undefined;
     balloon.rename_input = null;
   },
 
@@ -4298,7 +4312,7 @@ var balloon = {
 
         if(typeof(newNode) === 'object') {
           newNode.spriteCssClass = balloon.getSpriteClass(node);
-          if(balloon.isMobileViewPort()) balloon._resetRenameView();
+          balloon._resetRenameView();
           balloon.displayName(newNode);
         }
 
@@ -5509,6 +5523,7 @@ var balloon = {
       dataTextField: "name",
       filter: "contains",
       highlightFirst: true,
+      template: '<svg class="gr-icon gr-i-#: icon #"><use xlink:href="'+iconsSvg+'\\##: icon #"></use></svg><span>#: name #</span>',
       noDataTemplate: i18next.t('error.autocomplete.no_user_groups_found'),
       dataSource: new kendo.data.DataSource({
         serverFiltering: true,
@@ -5545,6 +5560,7 @@ var balloon = {
                 success: function(data) {
                   for(var i in data.data) {
                     data.data[i].type = 'group';
+                    data.data[i].icon = 'group';
                     data.data[i].role = $.extend({}, data.data[i]);
                   }
 
@@ -5581,6 +5597,7 @@ var balloon = {
               success: function(data) {
                 for(var i in data.data) {
                   data.data[i].type = 'user';
+                  data.data[i].icon = 'person';
                   data.data[i].role = $.extend({}, data.data[i]);
                 }
 
@@ -5809,6 +5826,11 @@ var balloon = {
           if(balloon.id(node) == balloon.id(balloon.last)) {
             balloon.switchView('share');
           }
+        },
+        200: function(data) {
+          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.last = data;
+          balloon.switchView('share');
         }
       },
     });
@@ -6054,7 +6076,12 @@ var balloon = {
           var shareLinkRequest = balloon.xmlHttpRequest({
             type: 'POST',
             url: balloon.base+'/nodes/share-link',
-            data: data
+            data: data,
+            statusCode: {
+              200: function(data) {
+                balloon.last = data;
+              }
+            }
           });
 
           $.when(shareLinkRequest, destroyRequest).done(function() {
@@ -7385,6 +7412,7 @@ var balloon = {
           title: winTitle,
           resizable: false,
           modal: true,
+          draggable: false,
           keydown: function(e) {
             if(e.originalEvent.keyCode !== 27) {
               return;
@@ -7394,35 +7422,11 @@ var balloon = {
               $k_display.close();
               return;
             }
-
-            e.stopImmediatePropagation();
-            var msg  = i18next.t('prompt.close_save_file', node.name);
-            balloon.promptConfirm(msg, function(){
-              balloon.saveFile(node, $textarea.val());
-              $k_display.close();
-            });
-
-            $("#fs-prompt-window").find('input[name=cancel]').unbind('click').bind('click', function(){
-              $("#fs-prompt-window").data('kendoBalloonWindow').close();
-              $k_display.close();
-            });
           },
-          open: function(e) {
-            setTimeout(function(){
-              e.sender.wrapper.find('textarea').focus();
-            }, 600);
-
-            e.sender.wrapper.find('textarea').unbind('change').bind('change',function(){
-              data = $textarea.val();
-            });
-
-            $(this.wrapper).find('.gr-i-close').unbind('click.fix').bind('click.fix', function(e){
-              e.stopImmediatePropagation();
-
-              if(data == $textarea.val()) {
-                $k_display.close();
-                return;
-              }
+          close: function(e) {
+            if(e.userTriggered && data != $textarea.val()) {
+              //user tries to close window with unsaved changes
+              e.preventDefault();
               var msg  = i18next.t('prompt.close_save_file', node.name);
               balloon.promptConfirm(msg, function(){
                 balloon.saveFile(node, $textarea.val());
@@ -7433,9 +7437,18 @@ var balloon = {
                 $("#fs-prompt-window").data('kendoBalloonWindow').close();
                 $k_display.close();
               });
+            }
+          },
+          open: function(e) {
+            setTimeout(function(){
+              e.sender.wrapper.find('textarea').focus();
+            }, 600);
+
+            e.sender.wrapper.find('textarea').unbind('change').bind('change',function(){
+              data = $textarea.val();
             });
           }
-        }).data("kendoBalloonWindow").center().open();
+        }).data("kendoBalloonWindow").center().open().maximize();
       }
     });
 
@@ -7464,11 +7477,28 @@ var balloon = {
         },
         icon: 'undo',
         iconAction: function(response) {
-          balloon.restoreVersion(node.id, node.version);
+          balloon.restoreVersion(node.id, node.version, response.version);
         }
       },
       success: function(data) {
         balloon.resetDom('edit');
+
+        if(balloon.last && balloon.last.id === data.id) {
+          balloon.last = data;
+        }
+
+        switch(balloon.getURLParam('view')) {
+        case 'history':
+          balloon.displayHistoryView();
+
+          if($('#fs-history-window').is(':visible')) {
+            balloon.displayHistoryWindow(node);
+          }
+          break;
+        case 'events':
+          balloon.switchView('events');
+          break;
+        }
       }
     });
   },
@@ -7655,12 +7685,29 @@ var balloon = {
 
 
   /**
+   * Get a nodes size as a human readable string
+   *
+   * @param   object node
+   * @return  string
+   */
+  nodeSize: function(node) {
+    var size = '';
+    if(node.directory) {
+      size = i18next.t('view.prop.data.childcount', {count: node.size})
+    } else {
+      size = balloon.getReadableFileSizeString(node.size || 0);
+    }
+
+    return size;
+  },
+
+  /**
    * Get time since
    *
    * @param   Date date
    * @return  string
    */
-  timeSince: function(date) {
+  timeSince: function(date, includeAgo) {
     var seconds = Math.floor((new Date() - date) / 1000);
 
     if(seconds < -1) {
@@ -7670,23 +7717,23 @@ var balloon = {
     var interval = Math.floor(seconds / 31536000);
 
     if (interval >= 1) {
-      return i18next.t('time.year', {count: interval});
+      return i18next.t(includeAgo ? 'time.year_ago' : 'time.year', {count: interval});
     }
     interval = Math.floor(seconds / 2592000);
     if (interval >= 1) {
-      return i18next.t('time.month', {count: interval});
+      return i18next.t(includeAgo ? 'time.month_ago' : 'time.month', {count: interval});
     }
     interval = Math.floor(seconds / 86400);
     if (interval >= 1) {
-      return i18next.t('time.day', {count: interval});
+      return i18next.t(includeAgo ? 'time.day_ago' : 'time.day', {count: interval});
     }
     interval = Math.floor(seconds / 3600);
     if (interval >= 1) {
-      return i18next.t('time.hour', {count: interval});
+      return i18next.t(includeAgo ? 'time.hour_ago' : 'time.hour', {count: interval});
     }
     interval = Math.floor(seconds / 60);
     if (interval >= 1) {
-      return i18next.t('time.minute', {count: interval});
+      return i18next.t(includeAgo ? 'time.minute_ago' : 'time.minute', {count: interval});
     }
 
     seconds = Math.round(seconds);
@@ -7893,7 +7940,7 @@ var balloon = {
         $submit.off('click').on('click', function(){
           var version = $fs_history.find('input[name=version]:checked').val();
           if(version !== undefined) {
-            balloon.restoreVersion(node, version);
+            balloon.restoreVersion(node.id, version, node.version);
           }
         });
       }
@@ -7923,7 +7970,7 @@ var balloon = {
           $fs_history_win.find('input[name="apply"]').off('click').on('click', function(){
             var version = $fs_history_win.find('input[name=version]:checked').val();
             if(version !== undefined) {
-              balloon.restoreVersion(node, version);
+              balloon.restoreVersion(node.id, version, node.version);
             }
           });
 
@@ -7940,17 +7987,32 @@ var balloon = {
    *
    * @param   string|object node
    * @param   int version
+   * @param   int prevVersion
    * @return  void
    */
-  restoreVersion: function(node, version) {
-    balloon.xmlHttpRequest({
+  restoreVersion: function(node, version, prevVersion) {
+    var options = {
       url: balloon.base+'/files/restore?id='+balloon.id(node),
       type: 'POST',
       dataType: 'json',
       data: {
         version: version
       },
+      snackbar: {
+        message: 'snackbar.restore_file',
+        values: {
+          version: version
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          balloon.restoreVersion(node, prevVersion, version);
+        }
+      },
       success: function(data) {
+        if(balloon.last && balloon.last.id === data.id) {
+          balloon.last = data;
+        }
+
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
         balloon.displayHistoryView();
 
@@ -7958,7 +8020,14 @@ var balloon = {
           balloon.displayHistoryWindow(node);
         }
       }
-    });
+    };
+
+    if(prevVersion === undefined) {
+      delete options.snackbar.icon;
+      delete options.snackbar.iconAction;
+    }
+
+    balloon.xmlHttpRequest(options);
   },
 
 
@@ -8660,6 +8729,28 @@ var balloon = {
       $select.show().off('change', 'input[type=checkbox]').on('change', 'input[type=checkbox]', balloon._filterTree);
       break;
 
+    case 'sorting':
+      var $select = $('#fs-action-sorting-select');
+
+      if($select.is(':visible')) {
+        $select.hide();
+        return;
+      }
+
+      $(document).off('click.action-sorting').on('click.action-sorting', function(e){
+        var $target = $(e.target);
+
+        if($target.attr('id') != "fs-action-sorting") {
+          $select.hide();
+        }
+      })
+
+      $select.show().off('change', 'input[type=radio]').on('change', 'input[type=radio]', function(event) {
+        var values = $(this).val().split(':');
+        balloon._sortTree(values[0], values[1]);
+      });
+      break;
+
     case 'rename':
       balloon.initRename();
       break;
@@ -8853,6 +8944,7 @@ var balloon = {
 
         $fs_search
           .removeClass('fs-search-focused')
+          .removeClass('fs-search-mobile-visible')
           .removeClass('fs-search-filtered')
           .removeClass('fs-search-mode-dropdown-open');
 
