@@ -238,7 +238,7 @@
         <div id="fs-browser-layout">
             <div id="fs-layout-left">
                 <div id="fs-layout-left-container">
-                    <div id="fs-layout-left-inner">
+                    <div id="fs-layout-left-inner" >
                     <div id="fs-layout-left-header">
                         <div id="fs-crumb">
                             <div id="fs-crumb-back">
@@ -277,51 +277,106 @@
                         <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
                     </div>
 
-                    <div id="fs-browser">
-                        <div id="fs-browser-header">
-                            <div class="fs-browser-column fs-browser-column-icon" data-i18n="[title]nav.action.filter">
-                                <svg class="gr-icon gr-i-funnel" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#funnel"></use></svg>
-                                <div id="fs-action-filter" class="fs-action-element"></div>
-                            </div>
-                            <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-sortable fs-browser-column-name"><div data-i18n="tree.column.name"></div><span><svg class="gr-icon gr-i-expand" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#expand"></use></svg></span></div>
-                            <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-sortable fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
-                            <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-sortable fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
-                            <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-checkbox"><span></span></div>
 
-                            <div id="fs-action-filter-select" class="bln-dropdown">
-                                <span class="bln-dropdown-spike"></span>
-                                <ul class="bln-dropdown-content">
-                                    <li>
-                                        <input type="checkbox" name="directory" id="fs-filter-directory" checked>
-                                        <label for="fs-filter-directory" data-i18n="tree.filter.directories" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="file" id="fs-filter-file" checked>
-                                        <label for="fs-filter-file" data-i18n="tree.filter.files" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="share" id="fs-filter-share" checked>
-                                        <label for="fs-filter-share" data-i18n="tree.filter.shares" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="deleted" id="fs-filter-deleted">
-                                        <label for="fs-filter-deleted" data-i18n="tree.filter.deleted" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="hidden" id="fs-filter-hidden">
-                                        <label for="fs-filter-hidden" data-i18n="tree.filter.hidden" />
-                                    </li>
-                                </ul>
+                    <div id="fs-browser" class="pull-to-refresh-ios">
+                        <div class="pull-to-refresh-ios__spinner">
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                        </div>
+
+                        <div class="pull-to-refresh-ios__main">
+                            <div id="fs-browser-header">
+                                <div class="fs-browser-column" id="fs-browser-action-sorting" data-i18n="[title]nav.action.sort">
+                                    <svg class="gr-icon gr-i-sort-desc" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#sort-desc"></use></svg>
+                                    <div id="fs-action-sorting" class="fs-action-element" data-i18n="tree.sorting.name_asc"></div>
+                                </div>
+
+                                <div class="fs-browser-column fs-browser-column-icon" data-i18n="[title]nav.action.filter">
+                                    <svg class="gr-icon gr-i-funnel" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#funnel"></use></svg>
+                                    <div id="fs-action-filter" class="fs-action-element"></div>
+                                </div>
+                                <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-sortable fs-browser-column-name"><div data-i18n="tree.column.name"></div><span><svg class="gr-icon gr-i-expand" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#expand"></use></svg></span></div>
+                                <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-sortable fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
+                                <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-sortable fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
+                                <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-checkbox"><span></span></div>
+
+                                <div id="fs-action-filter-select" class="bln-dropdown">
+                                    <span class="bln-dropdown-spike"></span>
+                                    <ul class="bln-dropdown-content">
+                                        <li>
+                                            <input type="checkbox" name="directory" id="fs-filter-directory" checked>
+                                            <label for="fs-filter-directory" data-i18n="tree.filter.directories" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="file" id="fs-filter-file" checked>
+                                            <label for="fs-filter-file" data-i18n="tree.filter.files" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="share" id="fs-filter-share" checked>
+                                            <label for="fs-filter-share" data-i18n="tree.filter.shares" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="deleted" id="fs-filter-deleted">
+                                            <label for="fs-filter-deleted" data-i18n="tree.filter.deleted" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="hidden" id="fs-filter-hidden">
+                                            <label for="fs-filter-hidden" data-i18n="tree.filter.hidden" />
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div id="fs-action-sorting-select" class="bln-dropdown">
+                                    <span class="bln-dropdown-spike"></span>
+                                    <ul class="bln-dropdown-content">
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-name-asc" value="name:asc" checked />
+                                            <label for="fs-sorting-name-asc" data-i18n="tree.sorting.name_asc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-name-desc" value="name:desc" />
+                                            <label for="fs-sorting-name-desc" data-i18n="tree.sorting.name_desc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-size-asc" value="size:asc" />
+                                            <label for="fs-sorting-size-asc" data-i18n="tree.sorting.size_asc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-size-desc" value="size:desc"  />
+                                            <label for="fs-sorting-size-desc" data-i18n="tree.sorting.size_desc" />
+                                        </li>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-changed-asc" value="changed:asc"  />
+                                            <label for="fs-sorting-changed-asc" data-i18n="tree.sorting.changed_asc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-changed-desc" value="changed:desc"  />
+                                            <label for="fs-sorting-changed-desc" data-i18n="tree.sorting.changed_desc" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
+
+                            <div id="fs-browser-tree" class="pull-to-refresh-ios__main"></div>
+
+                            <div id="fs-action-refresh" class="fs-action-element" data-i18n="[title]nav.action.refresh">
+                                <svg class="gr-icon gr-i-refresh"><use xlink:href="<%= iconsSvg %>#refresh"></use></svg>
                             </div>
                         </div>
 
-                        <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
-
-                        <div id="fs-browser-tree"></div>
-
-                        <div id="fs-action-refresh" class="fs-action-element" data-i18n="[title]nav.action.refresh">
-                            <svg class="gr-icon gr-i-refresh"><use xlink:href="<%= iconsSvg %>#refresh"></use></svg>
-                        </div>
 
                         <div id="fs-upload"></div>
                     </div>
@@ -393,10 +448,10 @@
             <button data-i18n="button.cancel"></button>
         </div>
 
-        <div id="fs-rename-mobile">
-            <div id="fs-rename-mobile-content">
+        <div id="fs-rename-window">
+            <div id="fs-rename-window-content">
                 <h6 data-i18n="misc.rename_node"></h6>
-                <a id="fs-rename-mobile-close" href="#">
+                <a id="fs-rename-window-close" href="#">
                     <svg viewbox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg>
                 </a>
                 <hr />

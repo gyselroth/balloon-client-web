@@ -1,3 +1,4 @@
+$searchModeDropdownWidth: 220px;
 #fs-browser-top-bar {
   @include clearfix;
   position: relative;
@@ -47,7 +48,7 @@
 
     @include clearfix;
 
-    margin-left: 16px;
+    margin-left: 0;
     margin-top: ( $headerHeight - $logoHeight ) / 2;
 
     svg {
@@ -75,7 +76,9 @@
     $height: 36px;
 
     position: absolute;
-    top: 12px;
+    top: $headerHeight;
+    padding: 0 5px 10px 5px;
+    width: 100%;
     left: 0;
     right: 0;
 
@@ -83,22 +86,15 @@
     margin: auto;
     background-color: $colorWhite;
 
-    width: 400px;
     height: $height;
     transition: width 0.5s ease-in-out;
 
-    @media screen and (min-width: $breakpointSearchVisible) {
+    &.fs-search-mobile-visible {
       display: block;
     }
 
-    & > .gr-icon {
-      position: absolute;
-      color: $colorMediumGrey;
-    }
-
     .gr-i-search {
-      top: 6px;
-      left: 7px;
+      display: none;
     }
 
     #fs-search-reset {
@@ -106,7 +102,7 @@
       position: absolute;
       width: 30px;
       height: $height;
-      right: 37px;
+      right: 47px;
       top: 0;
       cursor: pointer;
 
@@ -125,7 +121,7 @@
       position: absolute;
       width: auto;
       height: $height;
-      right: 67px;
+      right: 77px;
       top: 0;
       cursor: pointer;
       color: $colorMediumGrey;
@@ -146,11 +142,10 @@
 
     #fs-search-mode-dropdown {
       display: none;
-      $dropdownWidth: 220px;
 
-      @include dropdown($dropdownWidth, 52px);
+      @include dropdown($searchModeDropdownWidth, 52px);
 
-      left: calc(100% - #{$dropdownWidth + 42px});
+      left: calc(100% - #{$searchModeDropdownWidth + 52px});
       top: 41px;
       display: none;
 
@@ -212,9 +207,9 @@
     }
 
     #fs-search-input {
-      padding: 6px 120px 6px 45px;
+      padding: 6px 120px 6px 12px;
       float: left;
-      width: calc(100% - 40px);
+      width: calc(100% - 50px);
       height: 100%;
 
       background-color: $colorWhite;
@@ -248,15 +243,10 @@
 
     &.fs-search-focused {
       #fs-search-input {
-        @include shadow-selected;
-        padding: 4px 120px 6px 44px;
+        padding: 5px 120px 5px 11px;
 
         border-width: 2px;
         border-color: $colorActiveBlue;
-      }
-
-      @media screen and (min-width: $breakpointSearchBig) {
-        width: 600px;
       }
     }
 
@@ -434,6 +424,73 @@
       width: $identityHeight;
       height: $identityHeight;
       cursor: pointer;
+    }
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    #fs-logo {
+      margin-left: 16px;
+    }
+
+    #fs-search {
+      display: block;
+      top: 12px;
+      width: 400px;
+      padding: 0;
+
+      & > .gr-icon {
+        position: absolute;
+        color: $colorMediumGrey;
+      }
+
+      .gr-i-search {
+        display: block;
+        top: 6px;
+        left: 7px;
+      }
+
+      #fs-search-input {
+        padding-left: 45px;
+        width: calc(100% - 40px);
+      }
+
+      &.fs-search-focused {
+        #fs-search-input {
+          @include shadow-selected;
+          padding-left: 44px;
+        }
+      }
+
+      #fs-search-reset {
+        right: 37px;
+      }
+
+      #fs-search-mode-toggle {
+        right: 67px;
+      }
+
+      #fs-search-mode-dropdown {
+        left: calc(100% - #{$searchModeDropdownWidth + 42px});
+      }
+    }
+
+    #fs-identity {
+      #fs-search-trigger-mobile {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointSearchBig) {
+    #fs-search {
+      display: block;
+      top: 12px;
+      width: 400px;
+      padding: 0;
+
+      &.fs-search-focused {
+        width: 600px;
+      }
     }
   }
 

@@ -7,10 +7,21 @@
 * [FEATURE] Undo move/clone via snackbar #42
 * [FIX] Undo event "addCollectionShare" #157
 * [FEATURE] Various snackbar undo actions #62
+* [FIX] prompt user to save unsaved changes in text file #159
+* [FIX] Not visible if a resource is a user or group in share dropdown #168
+* [FIX] Share link from search context, no ui response #144
+* [FIX] App aborts if received a server error #108
+
+## 3.1.2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Mon May 13 15:31:14 CEST 2019
+
+* [FIX] Reload new node if unshare a collection as a share manager
+
 
 ## 3.1.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Mo Apr 29 10:20:11 CEST 2019
+**Date**: Mon Apr 29 10:20:11 CEST 2019
 
 * [FIX] uncaught error in IE11 #155
 

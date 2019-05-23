@@ -1,4 +1,4 @@
-#fs-rename-mobile {
+#fs-rename-window {
   display: none;
 
   position: fixed;
@@ -13,7 +13,7 @@
     display: block;
   }
 
-  #fs-rename-mobile-content {
+  #fs-rename-window-content {
     $left: 20px;
     $sidePadding: 20px;
 
@@ -33,7 +33,7 @@
       margin-top: -2px;
     }
 
-    #fs-rename-mobile-close {
+    #fs-rename-window-close {
       @include icon-button(28px);
       position: absolute;
       top: 16px;
@@ -57,7 +57,7 @@
       width: calc(100% + #{2 * $sidePadding};
     }
 
-    #fs-rename-mobile-close + hr {
+    #fs-rename-window-close + hr {
       margin-top: 18px;
     }
 
@@ -89,4 +89,12 @@
     }
   }
 
+  @media screen and (min-width: $breakpointWindowFullscreen) {
+    #fs-rename-window-content {
+      $renameWidthL: 510px;
+      width: $renameWidthL;
+      left: calc(50% - #{$renameWidthL / 2});
+      top: calc(50% - 115px);
+    }
+  }
 }

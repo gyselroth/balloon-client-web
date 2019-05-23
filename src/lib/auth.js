@@ -213,6 +213,8 @@ var login = {
           }
         });
       }
+    } else {
+      login.checkAuth();
     }
   },
 
@@ -343,8 +345,16 @@ var login = {
     localStorage.lastIdpUrl = provider_url;
 
     AuthorizationServiceConfiguration.fetchFromIssuer(idp.providerUrl).then(configuration => {
-      var request = new AuthorizationRequest(
-        idp.clientId, idp.redirectUri, idp.scope, 'id_token token', undefined, {'nonce': Math.random().toString(36).slice(2)});
+      var config = {
+        client_id: idp.clientId,
+        redirect_uri: idp.redirectUri,
+        scope: idp.scope,
+        response_type: 'id_token token',
+        state: undefined,
+        extras: {nonce: Math.random().toString(36).slice(2)}
+      }
+
+      var request = new AuthorizationRequest(config);
 
       login.handler.performAuthorizationRequest(configuration, request);
     });
@@ -579,6 +589,8 @@ var login = {
 
     $('#login').hide();
     $('#fs-namespace').show();
+
+    $(document).off('keydown.password');
 
     balloon.init();
   },
