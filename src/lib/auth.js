@@ -156,6 +156,7 @@ var login = {
       type: 'POST',
       success: function(resource) {
         let publicKey = resource.key;
+        alert(publicKey);
         publicKey.challenge = Uint8Array.from(window.atob(publicKey.challenge), c=>c.charCodeAt(0));
         publicKey.user.id = Uint8Array.from(window.atob(publicKey.user.id), c=>c.charCodeAt(0));
 
@@ -192,6 +193,7 @@ var login = {
             }
           });
         }).catch((e) => {
+          alert(e);
           $d.reject(e);
         });
       },
@@ -567,6 +569,7 @@ var login = {
           $username_input.hide();
           $password_input.hide();
           $login_mfa.show();
+          context.grant_type = context.grant_type +'_mfa';
 
           $login.find('input[type=submit]').focus().unbind('click').on('click', function() {
             context.code = $code_input.val();
@@ -578,7 +581,7 @@ var login = {
             if(e.keyCode === 13) {
               context.code = $code_input.val();
               $code_input.val('');
-              loin.doTokenAuth(context, true);
+              login.doTokenAuth(context, true);
             }
           });
         } else if(mfa === true) {
