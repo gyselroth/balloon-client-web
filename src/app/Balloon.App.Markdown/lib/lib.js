@@ -38,32 +38,12 @@ var app = {
     this.balloon.fileExtIconMap[app.MARKDOWN_EXTENSION] = 'gr-i-file-text';
     this.balloon.mimeFileExtMap['text/markdown'] = app.MARKDOWN_EXTENSION;
 
-    this.balloon.addPreviewHandler('markdown', this._handlePreview);
-  },
-
-  /**
-   * Checks if "preview" for a given node can be handled by this app.
-   * If it can handle it, return a handler to preview the file
-   *
-   * @param   string mime
-   * @return  void|function
-   */
-  _handlePreview: function(node) {
-    if (app.isMarkdownFile(node)) {
-      return function(node) {
-        app.editMarkdownFile(node);
-      }
-    }
-  },
-
-  /**
-   * Check if file is .burl
-   *
-   * @param   object node
-   * @return  bool
-   */
-  isMarkdownFile: function(node) {
-    return this.MARKDOWN_EXTENSION === this.balloon.getFileExtension(node);
+    app.balloon.addFileHandler({
+      app: 'SimpleMDE Markdown Editor',
+      appIcon: null,
+      ext: 'md',
+      handler: app.editMarkdownFile
+    });
   },
 
   /**

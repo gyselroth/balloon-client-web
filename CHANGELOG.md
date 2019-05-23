@@ -14,7 +14,19 @@
 * [FIX] App aborts if received a server error #108
 * [FEATURE] Implement webauthn authentification #182
 * [FEATURE] Support for progressive web app (pwa) #82
-
+* [FIX] Various actions reload the tree, without respecting search results #78
+* [FIX] FOLDERUP in a search result ends in parent menu #177
+* [FIX] Search does not get correctly initialized #176
+* [FIX] reloadTree should work in search mode as well #173
+* [FEATURE] Refresh tree with scrolling down #162 
+* [FEATURE] swipe left menu from right to left to open #82
+* [FIX] Adding new node reloads root instead of current collection #158
+* [FEATURE] Full WOPI support and support for multiple file handler apps #149
+* [FEATURE] Implement recaptcha v2 ui #148
+* [CHANGE] NTH: Own app for elastic search #129
+* [FIX] Searching by tag resets search filter #126
+* [FEATURE] Implement all features from the desktop version into the mobile version #81
+* [FIX] Rename node: mouse usage on input field #63
 
 
 ## 3.1.2

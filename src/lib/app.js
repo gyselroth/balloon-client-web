@@ -39,7 +39,7 @@ var app = {
     'Balloon.App.Burl': {enabled: true, config: {}},
     'Balloon.App.ExternalStorage': {enabled: true, config: {}},
     'Balloon.App.IntelligentCollection': {enabled: true, config: {}},
-    'Balloon.App.Elasticsearch': {enabled: true, config: {}}
+    'Balloon.App.Elasticsearch': {enabled: true, config: {}},
     'Balloon.App.Markdown': {enabled: true, config: {}}
   },
 
