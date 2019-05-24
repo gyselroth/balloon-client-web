@@ -777,6 +777,18 @@ var balloon = {
       handler: balloon.displayFile
     });
 
+    balloon.addFileHandler({
+      app: 'balloon preview viewer',
+      test: function(node){return node.preview},
+      handler: balloon.openPreview
+    });
+
+    balloon.addFileHandler({
+      app: 'balloon file downloader',
+      test: function(node){return true;},
+      handler: balloon.downloadNode
+    });
+
     balloon.showHint()
 
     pullToRefresh({
@@ -7432,7 +7444,8 @@ var balloon = {
         var $k_display = $div.kendoBalloonWindow({
           title: winTitle,
           resizable: false,
-          modal: true,
+          modal: false,
+          fullscreen: true,
           draggable: false,
           keydown: function(e) {
             if(e.originalEvent.keyCode !== 27) {
@@ -7469,7 +7482,7 @@ var balloon = {
               data = $textarea.val();
             });
           }
-        }).data("kendoBalloonWindow").center().open().maximize();
+        }).data("kendoBalloonWindow").center().open();
       }
     });
 
@@ -8301,6 +8314,22 @@ var balloon = {
     });
   },
 
+  /**
+   * Open preview
+   */
+  openPreview: function(node) {
+    var $fs_preview_win = $('#fs-preview-window');
+    var $preview = $('#fs-preview-thumb').find('img');
+
+    var $k_preview_win = $fs_preview_win.kendoBalloonWindow({
+      title: node.name,
+      resizable: false,
+      modal: true,
+      open: function() {
+        $fs_preview_win.html($preview);
+      }
+    }).data('kendoBalloonWindow').center().open();
+  },
 
   /**
    * Display preview
@@ -9750,7 +9779,7 @@ var balloon = {
 
         var data = balloon.parseError(e);
         if(data === false || data.status != 403) {
-          balloon.displayError(response);
+          balloon.displayError(e);
         } else {
           if(data.code === 40) {
             var new_name = balloon.getCloneName(file.blob.name);

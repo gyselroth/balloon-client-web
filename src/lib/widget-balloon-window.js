@@ -31,6 +31,10 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
         }
       }
 
+      if(options.fullscreen === true) {
+        $parent.addClass('fs-fullscreen-window');
+      }
+
       this.title(options.title);
     },
 

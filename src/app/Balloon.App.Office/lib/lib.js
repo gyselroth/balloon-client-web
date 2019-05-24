@@ -93,6 +93,7 @@ var app = {
       title: node.name,
       modal: false,
       draggable: false,
+      fullscreen: true,
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
           return;
@@ -135,7 +136,7 @@ var app = {
           });
         });
       }
-    }).data("kendoBalloonWindow").center().maximize();
+    }).data("kendoBalloonWindow").center();
   },
 
   eventHandler: function(node) {

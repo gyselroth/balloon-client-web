@@ -12,7 +12,6 @@ import marked from 'marked';
 import balloonWindow from '../../../lib/widget-balloon-window.js';
 import css from '../styles/style.scss';
 
-
 var app = {
   id: 'Balloon.App.Markdown',
 
@@ -77,8 +76,9 @@ var app = {
         app.editor.k_window = app.$windowHtml.kendoBalloonWindow({
           title: winTitle,
           resizable: false,
-          modal: true,
+          modal: false,
           draggable: false,
+          fullscreen: true,
           close: function(e) {
             if(e.userTriggered && app._editorCancel() === false) {
               e.preventDefault();
@@ -93,7 +93,7 @@ var app = {
               app._togglePreview(false);
             }
           }
-        }).data("kendoBalloonWindow").center().maximize();
+        }).data("kendoBalloonWindow").center();
       }
     });
 
@@ -170,6 +170,17 @@ var app = {
         'toggleFullScreen': null,
       },
     });
+
+    var parent_node = app.balloon.getCurrentCollectionId();
+    var $fs_browser_tree = $('#fs-browser-tree');
+     this.$windowHtml.unbind('drop').on('drop', function(e) {
+       console.log(e);
+       $fs_browser_tree.removeClass('fs-file-dropable');
+       $fs_browser_tree.find('.fs-file-drop').removeClass('fs-file-drop');
+       $('#fs-upload').removeClass('fs-file-dropable');
+
+       app.balloon._handleFileSelect(e, parent_node);
+     });
   },
 
   /**
@@ -182,6 +193,7 @@ var app = {
 
     var renderer = new marked.Renderer();
     var linkRenderer = renderer.link;
+    var imageRenderer = renderer.image;
 
     renderer.link = function(href, title, text) {
       var html = linkRenderer.call(renderer, href, title, text);
@@ -190,6 +202,16 @@ var app = {
       } else {
         return html;
       }
+    }
+
+    renderer.image = function(href, title, text) {
+      var html = imageRenderer.call(renderer, href, title, text);
+      var url = app.balloon.base+'/files/content?id='+href;
+      if(typeof(app.balloon.login) === 'object' && app.balloon.login.getAccessToken()) {
+        url += '&access_token='+app.balloon.login.getAccessToken();
+      }
+
+      return '<img alt="'+title+'" src="'+url+'"/>';
     }
 
     markedOptions.renderer = renderer;
@@ -226,7 +248,7 @@ var app = {
     });
 
     $("#fs-prompt-window").find('input[name=cancel]').unbind('click').bind('click', function(){
-      $("#fs-prompt-window").data('kendoBalloonWindow').close();
+      $("#fs-prompt-window").data('kendoBalloonFullscreenWindow').close();
       app._closeEditorWindow();
     });
 
