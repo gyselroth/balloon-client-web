@@ -111,7 +111,7 @@ var app = {
           $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
         );
 
-        var src = window.location.protocol + '//' + window.location.hostname + +app.balloon.base+'/office/wopi/files/'+session.node;
+        var src = window.location.protocol + '//' + window.location.hostname + app.balloon.base+'/office/wopi/files/'+session.node;
         //var src = window.location.protocol + '//' + '10.242.2.8' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.node;
         src = encodeURIComponent(src);
         var url = app.parseUrl(context.url, src, node);
