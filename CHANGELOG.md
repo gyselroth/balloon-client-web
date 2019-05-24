@@ -27,6 +27,7 @@
 * [FIX] Searching by tag resets search filter #126
 * [FEATURE] Implement all features from the desktop version into the mobile version #81
 * [FIX] Rename node: mouse usage on input field #63
+* [FEATURE] New KendoBalloonFullscreenWindow #179
 
 
 ## 3.1.2
