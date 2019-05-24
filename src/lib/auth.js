@@ -159,7 +159,6 @@ var login = {
       type: 'POST',
       success: function(resource) {
         let publicKey = resource.key;
-        alert(publicKey);
         publicKey.challenge = Uint8Array.from(window.atob(publicKey.challenge), c=>c.charCodeAt(0));
         publicKey.user.id = Uint8Array.from(window.atob(publicKey.user.id), c=>c.charCodeAt(0));
 
@@ -196,7 +195,6 @@ var login = {
             }
           });
         }).catch((e) => {
-          alert(e);
           $d.reject(e);
         });
       },

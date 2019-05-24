@@ -7773,7 +7773,6 @@ var balloon = {
    * @return  bool
    */
   isEditable: function(node) {
- console.log(node);
     let mime = node.mime;
 
     if(balloon.isMobileViewPort()) {
@@ -7802,7 +7801,6 @@ var balloon = {
    * @return  bool
    */
   isViewable: function(node) {
- console.log(node);
     let mime = node.mime;
 
     if(balloon.isMobileViewPort()) {

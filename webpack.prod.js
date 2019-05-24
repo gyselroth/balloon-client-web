@@ -3,7 +3,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.common.js');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
-common.plugins.push(
+common.plugins.unshift(
   new FaviconsWebpackPlugin({
     logo: './themes/default/img/icon_blue.svg',
     prefix: 'icons-[hash]/',
@@ -26,6 +26,6 @@ common.plugins.push(
       windows: true
     }
   })
-)
+);
 
 module.exports = common;
