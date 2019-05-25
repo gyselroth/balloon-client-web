@@ -248,7 +248,7 @@ var app = {
     });
 
     $("#fs-prompt-window").find('input[name=cancel]').unbind('click').bind('click', function(){
-      $("#fs-prompt-window").data('kendoBalloonFullscreenWindow').close();
+      $("#fs-prompt-window").data('kendoBalloonWindow').close();
       app._closeEditorWindow();
     });
 
