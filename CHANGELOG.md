@@ -18,7 +18,7 @@
 * [FIX] FOLDERUP in a search result ends in parent menu #177
 * [FIX] Search does not get correctly initialized #176
 * [FIX] reloadTree should work in search mode as well #173
-* [FEATURE] Refresh tree with scrolling down #162 
+* [FEATURE] Refresh tree with scrolling down #162
 * [FEATURE] swipe left menu from right to left to open #82
 * [FIX] Adding new node reloads root instead of current collection #158
 * [FEATURE] Full WOPI support and support for multiple file handler apps #149
@@ -28,6 +28,7 @@
 * [FEATURE] Implement all features from the desktop version into the mobile version #81
 * [FIX] Rename node: mouse usage on input field #63
 * [FEATURE] New KendoBalloonFullscreenWindow #179
+* [FIX] File view close should be top right #170
 
 
 ## 3.1.2

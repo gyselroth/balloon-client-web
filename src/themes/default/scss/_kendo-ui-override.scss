@@ -59,5 +59,9 @@
   }
 }
 
+div.k-window-content {
+  z-index: auto;
+}
+
 @import './kendoUiOverride/date-and-time-picker';
 @import './kendoUiOverride/k-calendar';
