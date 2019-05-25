@@ -48,8 +48,8 @@ var app = {
         '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
-        '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="off" name="username" type="text"/>'+
-        '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
+        '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="current-username" name="username" type="text"/>'+
+        '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="current-password" name="password" type="password"/>'+
         '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
       '</div>'+
       '<div class="fs-window-secondary-actions">'+
