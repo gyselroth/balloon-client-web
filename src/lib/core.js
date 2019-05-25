@@ -5182,9 +5182,9 @@ var balloon = {
     var $fs_share_edit = $fs_share.find('#fs-share-edit');
     var $fs_share_delete = $fs_share.find('#fs-share-delete');
 
-    $fs_share_create.off('click').on('click', balloon.showShare);
+    $fs_share_create.off('click').on('click', balloon._onShowShare);
 
-    $fs_share_edit.off('click').on('click', balloon.showShare);
+    $fs_share_edit.off('click').on('click', balloon._onShowShare);
 
     $fs_share_delete.off('click').on('click', function() {
       balloon.deleteShare(node);
@@ -5229,7 +5229,7 @@ var balloon = {
     var $li_owner = $('<li class="avatar-user"></li>');
     $fs_share_consumers_ul.append($li_owner);
 
-    $fs_share_consumers_ul.off('click').on('click', balloon.showShare);
+    $fs_share_consumers_ul.off('click').on('click', balloon._onShowShare);
 
     balloon.displayAvatar($li_owner, login.user.id);
 
@@ -5261,13 +5261,24 @@ var balloon = {
   },
 
   /**
+   * Event handler wrapper for showShare
+   *
+   * @param object event
+   * @return void
+   */
+  _onShowShare: function(event) {
+    var node = balloon.getCurrentNode();
+    balloon.showShare(node);
+  },
+
+  /**
    * Shows popup for share creating/edting
    *
-   * @return bool
+   * @param object node
+   * @return void
    */
   showShare: function(node) {
     var acl = [];
-    node = node || balloon.getCurrentNode();
 
     if(!node || !node.directory) return;
 
