@@ -173,14 +173,14 @@ var app = {
 
     var parent_node = app.balloon.getCurrentCollectionId();
     var $fs_browser_tree = $('#fs-browser-tree');
-     this.$windowHtml.unbind('drop').on('drop', function(e) {
-       console.log(e);
-       $fs_browser_tree.removeClass('fs-file-dropable');
-       $fs_browser_tree.find('.fs-file-drop').removeClass('fs-file-drop');
-       $('#fs-upload').removeClass('fs-file-dropable');
 
-       app.balloon._handleFileSelect(e, parent_node);
-     });
+    this.$windowHtml.unbind('drop').on('drop', function(e) {
+      $fs_browser_tree.removeClass('fs-file-dropable');
+      $fs_browser_tree.find('.fs-file-drop').removeClass('fs-file-drop');
+      $('#fs-upload').removeClass('fs-file-dropable');
+
+      app.balloon._handleFileSelect(e, parent_node);
+    });
   },
 
   /**
