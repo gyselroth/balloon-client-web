@@ -206,12 +206,17 @@ var app = {
 
     renderer.image = function(href, title, text) {
       var html = imageRenderer.call(renderer, href, title, text);
-      var url = app.balloon.base+'/files/content?id='+href;
-      if(typeof(app.balloon.login) === 'object' && app.balloon.login.getAccessToken()) {
-        url += '&access_token='+app.balloon.login.getAccessToken();
-      }
 
-      return '<img alt="'+title+'" src="'+url+'"/>';
+      if(/^https?:\/\//.test(href) === true) {
+        return html;
+      } else {
+        var url = app.balloon.base+'/files/content?id='+href;
+        if(typeof(app.balloon.login) === 'object' && app.balloon.login.getAccessToken()) {
+          url += '&access_token='+app.balloon.login.getAccessToken();
+        }
+
+        return '<img alt="'+(title || text || '')+'" src="'+url+'" />';
+      }
     }
 
     markedOptions.renderer = renderer;
