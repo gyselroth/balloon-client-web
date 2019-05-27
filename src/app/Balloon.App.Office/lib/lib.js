@@ -112,7 +112,7 @@ var app = {
         );
 
         var src = window.location.protocol + '//' + window.location.hostname + app.balloon.base+'/office/wopi/files/'+session.node;
-        //var src = window.location.protocol + '//' + '10.242.2.11' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.node;
+        //var src = window.location.protocol + '//' + '10.242.2.9' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.node;
         src = encodeURIComponent(src);
         var url = app.parseUrl(context.url, src, node);
 
@@ -168,8 +168,19 @@ var app = {
   },
 
   parseUrl: function(url, src, node) {
+    var variables = url.substr(url.indexOf('?')+1).replace(/<([^=]+)=([^&]+)&>/g, function(match, name, value) {
+      switch(name) {
+        case 'ui':
+          return 'ui=de-DE&';
+          //return 'ui='+navigator.language+'&';
+        break;
+        default:
+          return '';
+      }
+    });
+
     let result = url.substring(0, url.indexOf('?'));
-    result += '?WOPISrc='+src;
+    result += '?WOPISrc='+src+'&'+variables;
 
     if(node.size === 0) {
       result += '&new=1';

@@ -8,9 +8,12 @@
 import $ from "jquery";
 import i18next from 'i18next';
 import SimpleMDE from 'simplemde';
-import marked from 'marked';
 import balloonWindow from '../../../lib/widget-balloon-window.js';
 import css from '../styles/style.scss';
+import 'highlight.js/styles/hybrid.css';
+const showdown = require('showdown');
+const showdownHighlight = require("showdown-highlight");
+import login from '../../../lib/auth.js';
 
 var app = {
   id: 'Balloon.App.Markdown',
@@ -25,6 +28,7 @@ var app = {
   editor: {},
 
   render: function() {
+    this.initExtensions();
   },
 
   preInit: function(core) {
@@ -179,6 +183,10 @@ var app = {
       $fs_browser_tree.find('.fs-file-drop').removeClass('fs-file-drop');
       $('#fs-upload').removeClass('fs-file-dropable');
 
+      var pos = app.editor.simplemde.codemirror.getCursor();
+      app.editor.simplemde.codemirror.setSelection(pos, pos);
+      app.editor.simplemde.codemirror.replaceSelection('TEST');
+
       app.balloon._handleFileSelect(e, parent_node);
     });
   },
@@ -189,41 +197,70 @@ var app = {
    * @return string rendered html
    */
   _renderMarkdown: function(markdown) {
-    var markedOptions  = {};
 
-    var renderer = new marked.Renderer();
-    var linkRenderer = renderer.link;
-    var imageRenderer = renderer.image;
+    let converter = new showdown.Converter({
+      extensions: [showdownHighlight, 'href', 'balloon-image']
+    });
 
-    renderer.link = function(href, title, text) {
-      var html = linkRenderer.call(renderer, href, title, text);
-      if(/^mailto:/.test(href) === false) {
-        return html.replace(/^<a /, '<a target="_blank" ');
-      } else {
-        return html;
+    let html = converter.makeHtml(markdown);
+
+    $('#app-markdown-edit-live-preview-content').off('click', 'a').on('click', 'a', function(e) {
+      var href = $(this).attr('href');
+
+      if(href.match(/^balloon\/[0-9a-fA-F]{24}$/)) {
+        e.preventDefault();
+
+        app.balloon.xmlHttpRequest({
+          url: app.balloon.base+'/nodes/'+href.substr(8),
+          success: function(node) {
+            app.editor.k_window.close();
+            app.balloon.openFile(node);
+          }
+        });
       }
-    }
+    });
 
-    renderer.image = function(href, title, text) {
-      var html = imageRenderer.call(renderer, href, title, text);
+    return html;
+  },
 
-      if(/^https?:\/\//.test(href) === true) {
-        return html;
-      } else {
-        var url = app.balloon.base+'/files/content?id='+href;
-        if(typeof(app.balloon.login) === 'object' && app.balloon.login.getAccessToken()) {
-          url += '&access_token='+app.balloon.login.getAccessToken();
+  initExtensions: function() {
+    showdown.extension('href', function () {
+      return [{
+        type: "output",
+        filter: function (html, converter, options) {
+          var $liveHtml = $('<div></div>').html(html);
+          $liveHtml.find('a').each(function(){
+            $(this).attr('target', '_blank');
+          });
+
+          return $liveHtml.html();
         }
+      }];
+    });
 
-        return '<img alt="'+(title || text || '')+'" src="'+url+'" />';
-      }
-    }
+    showdown.extension('balloon-image', function () {
+      return [{
+        type: "output",
+        filter: function (html, converter, options) {
+          var $liveHtml = $('<div></div>').html(html);
+          $liveHtml.find('img').each(function(){
 
-    markedOptions.renderer = renderer;
+            var href = $(this).attr('src');
 
-    marked.setOptions(markedOptions);
+            if(href.match(/^balloon\/[0-9a-fA-F]{24}$/)) {
+              var url = app.balloon.base+'/files/'+href.substr(8)+'/content';
+              if(typeof(login) === 'object' && login.getAccessToken()) {
+                url += '?access_token='+login.getAccessToken();
+              }
 
-    return marked(markdown);
+              $(this).attr('src', url);
+            }
+          });
+
+          return $liveHtml.html();
+        }
+      }];
+    });
   },
 
   /**
@@ -242,6 +279,10 @@ var app = {
    * @return void
    */
   _editorCancel: function() {
+    if(app.editor.simplemde === undefined) {
+      return;
+    }
+
     if(app.editor.data == app.editor.simplemde.value()) {
       app._closeEditorWindow();
       return true;
