@@ -5101,7 +5101,7 @@ var balloon = {
   addFile: function(name) {
     var $d = $.Deferred();
 
-    name = encodeURI(name);
+    name = encodeURIComponent(name);
 
     balloon.xmlHttpRequest({
       url: balloon.base+'/files?name='+name+'&'+balloon.param('collection', balloon.getCurrentCollectionId()),
@@ -7835,9 +7835,9 @@ var balloon = {
   isViewable: function(node) {
     let mime = node.mime;
 
-    if(balloon.isMobileViewPort()) {
+    /*if(balloon.isMobileViewPort()) {
       return false;
-    }
+    }*/
 
     var type = mime.substr(0, mime.indexOf('/'));
 
@@ -9682,7 +9682,7 @@ var balloon = {
    * @return  void
    */
   _chunkUpload: function(file) {
-    var url = balloon.base + '/files/chunk?name=' + encodeURI(file.name) + '&index=' +
+    var url = balloon.base + '/files/chunk?name=' + encodeURIComponent(file.name) + '&index=' +
       file.index + '&chunks=' + file.slices + '&size=' + file.blob.size;
 
     if(file.session) {

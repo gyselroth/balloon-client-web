@@ -29,6 +29,7 @@
 * [FIX] Rename node: mouse usage on input field #63
 * [FEATURE] New KendoBalloonFullscreenWindow #179
 * [FIX] File view close should be top right #170
+* [FIX] Filename with `&` gets cut off #194
 
 
 ## 3.1.2
