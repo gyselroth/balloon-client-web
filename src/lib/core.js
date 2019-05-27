@@ -3108,6 +3108,14 @@ var balloon = {
    * @param object context
    */
   addFileHandler: function(handler) {
+    var checksum = JSON.stringify(handler);
+
+    for(let handle of balloon.file_handlers) {
+      if(JSON.stringify(handle) === checksum) {
+        return;
+      }
+    }
+
     balloon.file_handlers.push(handler);
   },
 
