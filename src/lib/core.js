@@ -797,8 +797,6 @@ var balloon = {
       animates: ptrAnimatesIos,
 
       refresh: function() {
-        var currentCollectionId = balloon.getCurrentCollectionId();
-
         return balloon.reloadTree();
       }
     });
