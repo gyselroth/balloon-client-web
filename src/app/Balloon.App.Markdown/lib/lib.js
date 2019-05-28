@@ -10,7 +10,7 @@ import i18next from 'i18next';
 import SimpleMDE from 'simplemde';
 import balloonWindow from '../../../lib/widget-balloon-window.js';
 import css from '../styles/style.scss';
-import 'highlight.js/styles/hybrid.css';
+
 const showdown = require('showdown');
 const showdownHighlight = require("showdown-highlight");
 import login from '../../../lib/auth.js';
