@@ -11,10 +11,6 @@ const {AuthorizationServiceConfiguration} = require('@openid/appauth/built/autho
 const {AuthorizationRequest} = require('@openid/appauth/built/authorization_request.js');
 const {AuthorizationNotifier} = require('@openid/appauth/built/authorization_request_handler.js');
 const {RedirectRequestHandler} = require('@openid/appauth/built/redirect_based_handler.js');
-import {WebAuthnApp} from 'webauthn-simple-app';
-import {
-    solveRegistrationChallenge
-} from '@webauthn/client';
 
 var login = {
   accessToken: undefined,
