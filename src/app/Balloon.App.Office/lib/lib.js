@@ -171,8 +171,8 @@ var app = {
     var variables = url.substr(url.indexOf('?')+1).replace(/<([^=]+)=([^&]+)&>/g, function(match, name, value) {
       switch(name) {
         case 'ui':
-          return 'ui=de-DE&';
-          //return 'ui='+navigator.language+'&';
+          //return 'ui=de-DE&';
+          return 'ui='+navigator.language+'&';
         break;
         default:
           return '';
