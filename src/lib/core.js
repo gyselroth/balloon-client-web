@@ -446,6 +446,7 @@ var balloon = {
       balloon.resetDom();
     } else {
       this.base = this.base+'/v'+this.BALLOON_API_VERSION;
+      if(balloon.isTouchDevice()) $('body').addClass('is-touch');
     }
 
 
