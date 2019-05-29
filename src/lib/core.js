@@ -21,6 +21,8 @@ import fileExtIconMap from './file-ext-icon-map.js';
 import {mimeFileExtMap} from './mime-file-ext-map.js';
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
+import Slideout from 'slideout';
+import SlideoutCss from 'slideout/index.css';
 import pullToRefresh from 'mobile-pull-to-refresh'
 import ptrAnimatesIos from 'mobile-pull-to-refresh/dist/styles/ios/animates'
 
@@ -426,6 +428,11 @@ var balloon = {
    * @var array
    */
   fs_content_mobile_current_state: 0,
+
+  /**
+   * Slideout
+   */
+  slideout: null,
 
   /**
    * Generates a uuid v4.
@@ -878,16 +885,7 @@ var balloon = {
     $menu.off('click').on('click', 'li', balloon.menuLeftAction);
     $('#fs-menu-left-toggl').off('click').on('click', function(event) {
       event.preventDefault();
-      var $menu = $('#fs-menu-left');
-      var $toggl = $('#fs-menu-left-toggl');
-
-      if($menu.hasClass('fs-menu-left-open')) {
-        $menu.removeClass('fs-menu-left-open');
-        $toggl.removeClass('fs-menu-left-open');
-      } else {
-        $menu.addClass('fs-menu-left-open');
-        $toggl.addClass('fs-menu-left-open');
-      }
+      balloon.slideout.toggle();
     });
   },
 
@@ -3301,6 +3299,7 @@ var balloon = {
 
     $that.parent().find('li').removeClass('fs-menu-left-active');
     $that.addClass('fs-menu-left-active');
+
     balloon.updatePannel(false);
     balloon.resetDom(['search']);
 
@@ -3326,8 +3325,7 @@ var balloon = {
       return $.Deferred().resolve().promise();
     }
 
-    $('#fs-menu-left').removeClass('fs-menu-left-open');
-    $('#fs-menu-left-toggl').removeClass('fs-menu-left-open');
+    balloon.slideout.close();
 
     if(action in balloon.menu_left_items) {
       $d = balloon.menu_left_items[action].callback();
@@ -7871,11 +7869,6 @@ var balloon = {
    */
   isViewable: function(node) {
     let mime = node.mime;
-
-    /*if(balloon.isMobileViewPort()) {
-      return false;
-    }*/
-
     var type = mime.substr(0, mime.indexOf('/'));
 
     if(type == 'image' || type == 'video' || type == 'audio') {
@@ -9950,49 +9943,33 @@ var balloon = {
   },
 
   _initMenuLeftSwipeEvents: function() {
-    var $fs_swipe_bar = $('#fs-swipe-bar');
     var $fs_menu_left = $('#fs-menu-left');
-    var threshhold = $fs_swipe_bar.width() / 4;
-    var direction;
-    var x0;
+    var $fs_layout = $('#fs-layout-left');
 
-    function touchstart(e) {
-      x0 = balloon._unifyTouchEvent(e).clientX;
-    }
+    this.slideout = new Slideout({
+      'panel': $fs_layout[0],
+      'menu': $fs_menu_left[0],
+      'padding': 240,
+      'tolerance': 70
+    });
 
-    function touchemove(e) {
-      e.preventDefault();
+    var $toggle = $('#fs-menu-left-toggl');
 
-      if(direction === undefined) {
-        direction = (balloon._unifyTouchEvent(e).clientX - x0) > 0  ? 'right' : 'left';
-      }
-    }
+    this.slideout.on('beforeopen', function(){
+      $toggle.addClass('fs-menu-left-open');
+      $fs_menu_left.addClass('fs-menu-left-open');
+      $fs_menu_left.css('z-index', '15');
+    });
 
-    function touchend(e) {
-      var xDiff = balloon._unifyTouchEvent(e).clientX - x0;
-      switch(direction) {
-      case 'left':
-        if(xDiff * -1 > threshhold) {
-          $fs_menu_left.removeClass('fs-menu-left-open');
-        }
-        break;
-      case 'right':
-        if(xDiff > threshhold) {
-          $fs_menu_left.addClass('fs-menu-left-open');
-        }
-        break;
-      }
+    this.slideout.on('beforeclose', function() {
+      $toggle.removeClass('fs-menu-left-open');
+      $fs_menu_left.removeClass('fs-menu-left-open');
+      $fs_menu_left.css('z-index', '0');
+    });
 
-      direction = undefined;
-    };
-
-    $fs_swipe_bar.off('touchstart').on('touchstart', touchstart);
-    $fs_swipe_bar.off('touchmove').on('touchmove', touchemove);
-    $fs_swipe_bar.off('touchend').on('touchend', touchend);
-
-    $fs_menu_left.off('touchstart').on('touchstart', touchstart);
-    $fs_menu_left.off('touchmove').on('touchmove', touchemove);
-    $fs_menu_left.off('touchend').on('touchend', touchend);
+    this.slideout.on('translatestart', function() {
+      $fs_menu_left.css('z-index', '0');
+    });
   },
 
   /**

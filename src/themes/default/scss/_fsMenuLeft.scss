@@ -1,10 +1,7 @@
-#fs-swipe-bar {
-  position: absolute;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  width: 8px;
-  z-index: 16;
+#fs-layout-left {
+  @media screen and (min-width: $breakpointPannelVisible) {
+    transform: inherit !important;
+  }
 }
 
 #fs-menu-left {
@@ -12,19 +9,13 @@
   top: $headerHeight;
   bottom: 0;
   left: 0;
+
   width: 0;
   overflow-x: hidden;
   overflow-y: auto;
   background-color: $colorWhite;
-  border-right: 1px solid $colorBrightGrey;
-
-  transition: width 0.3s ease-in-out;
-
-  z-index: 15;
-
-  &.fs-menu-left-open {
-    width: 240px;
-  }
+  order-right: 1px solid $colorBrightGrey;
+  width: 240px;
 
   #fs-menu-left-top,
   #fs-menu-left-bottom {
@@ -124,6 +115,13 @@
   @media screen and (min-width: $breakpointPannelVisible) {
     width: 60px;
     overflow-y: hidden;
+    display: block;
+    z-index: 15 !important;
+    transition: width 0.1s ease-in-out;
+
+    &.fs-menu-left-open {
+      width: 240px;
+    }
   }
 
   @media screen and (min-height:547px) {
