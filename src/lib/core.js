@@ -1175,7 +1175,7 @@ var balloon = {
 
     setTimeout(function() {
       $snackbar.removeClass('show');
-    }, 2900);
+    }, 3900);
   },
 
 
