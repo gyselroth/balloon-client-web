@@ -8124,12 +8124,19 @@ var balloon = {
     var ext = balloon.getFileExtension(node);
     var name = node.name;
 
+    var displayName = name;
+
     if(ext != null && node.directory == false) {
       $fs_content_nodename.append('<span class="fs-ext">('+ext+')</span>');
       var filename = name.substr(0, name.length-ext.length-1);
       $field.html(filename);
+      displayName = filename + ' (' + ext.toUpperCase() + ')';
     } else {
       $field.html(name);
+    }
+
+    if($('body').hasClass('fs-fullscreen-window-open')) {
+      $('.fs-fullscreen-window .k-window-title').html(displayName);
     }
   },
 
