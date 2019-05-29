@@ -207,7 +207,7 @@ var app = {
 
     let html = converter.makeHtml(markdown);
 
-    $('#app-markdown-edit-live-preview-content').off('click', 'a').on('click', 'a', function(e) {
+    $('#app-markdown-edit-live-preview-content, .editor-preview').off('click', 'a').on('click', 'a', function(e) {
       var href = $(this).attr('href');
 
       if(href.match(/^balloon\/[0-9a-fA-F]{24}$/)) {
@@ -218,6 +218,12 @@ var app = {
           success: function(node) {
             app.editor.k_window.close();
             app.balloon.openFile(node);
+
+            if(app.balloon.id(node) !== app.balloon.id(app.balloon.last)) {
+              app.balloon.deselectAll();
+              app.balloon._updateLastNode(node);
+              app.balloon._updateContentView(node);
+            }
           }
         });
       }

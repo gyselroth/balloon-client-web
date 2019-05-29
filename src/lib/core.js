@@ -1797,12 +1797,7 @@ var balloon = {
         'history','share','share-link'
       ]);
 
-    var copy = balloon.last;
-    balloon.last = node;
-
-    if(!balloon.isSystemNode(copy)) {
-      balloon.previous = copy;
-    }
+    balloon._updateLastNode(node);
 
     if(balloon.isSystemNode(node) || balloon.isMultiSelect()) {
       e.preventDefault();
@@ -1816,6 +1811,63 @@ var balloon = {
 
     $(e.node).find('.k-in').addClass('k-state-selected');
 
+    balloon._updateContentView(node);
+  },
+
+
+  /**
+   * Pop state
+   *
+   * @param   object e
+   * @return  void
+   */
+  _statePop: function(e) {
+    balloon.resetDom('multiselect');
+    balloon.resetDom('breadcrumb');
+    balloon.previous = null;
+    balloon.last = null;
+
+    balloon._resolveHash(window.location.hash.substr(1)).then(function() {
+      var collection = balloon.getURLParam('collection'),
+        menu = balloon.getURLParam('menu');
+
+      if(collection !== null) {
+        balloon.menuLeftAction(menu, false);
+        balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
+      } else {
+        balloon.menuLeftAction(menu, true, false);
+      }
+
+      if(e.originalEvent.state === null) {
+        balloon.buildCrumb(collection);
+      } else {
+        balloon._repopulateCrumb(e.originalEvent.state.parents);
+      }
+    });
+  },
+
+  /**
+   * Update last/previous node state
+   *
+   * @param   object node
+   * @return  void
+   */
+  _updateLastNode: function(node) {
+    var copy = balloon.last;
+    balloon.last = node;
+
+    if(!balloon.isSystemNode(copy)) {
+      balloon.previous = copy;
+    }
+  },
+
+  /**
+   * Update the content view with a given node
+   *
+   * @param   object node
+   * @return  void
+   */
+  _updateContentView: function(node) {
     balloon.resetDom([
       'selected',
       'metadata',
@@ -1882,38 +1934,6 @@ var balloon = {
       event.preventDefault();
 
       balloon.fsContentMobileNext();
-    });
-  },
-
-
-  /**
-   * Pop state
-   *
-   * @param   object e
-   * @return  void
-   */
-  _statePop: function(e) {
-    balloon.resetDom('multiselect');
-    balloon.resetDom('breadcrumb');
-    balloon.previous = null;
-    balloon.last = null;
-
-    balloon._resolveHash(window.location.hash.substr(1)).then(function() {
-      var collection = balloon.getURLParam('collection'),
-        menu = balloon.getURLParam('menu');
-
-      if(collection !== null) {
-        balloon.menuLeftAction(menu, false);
-        balloon.refreshTree('/collections/children', {id: collection}, null, {nostate: true});
-      } else {
-        balloon.menuLeftAction(menu, true, false);
-      }
-
-      if(e.originalEvent.state === null) {
-        balloon.buildCrumb(collection);
-      } else {
-        balloon._repopulateCrumb(e.originalEvent.state.parents);
-      }
     });
   },
 
@@ -4441,6 +4461,9 @@ var balloon = {
       var $node = $('#fs-browser-tree').find('li[fs-id='+balloon.id(node)+']');
       $node.removeClass('fs-multiselected');
     }
+
+    $('#fs-browser-header-checkbox').removeClass('fs-browser-header-checkbox-undetermined').removeClass('fs-browser-header-checkbox-checked');
+
     $k_tree.select($());
 
     balloon.multiselect = [];
