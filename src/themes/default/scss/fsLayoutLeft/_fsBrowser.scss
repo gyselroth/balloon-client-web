@@ -125,7 +125,7 @@
 
       position: absolute;
       top: 15px;
-      right: 19px;
+      right: 18px;
 
       span {
         display: block;
@@ -537,6 +537,12 @@
   }
 
   @media screen and (min-width: #{$breakpointMetaVisible + $pannelWidthM + 100px}) {
+    #fs-browser-header {
+      #fs-browser-header-checkbox {
+        right: 20px;
+      }
+    }
+
     #fs-browser-tree {
       $metaPaddingSmallScreen: 25px;
 
