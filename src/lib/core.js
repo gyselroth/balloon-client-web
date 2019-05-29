@@ -9856,30 +9856,75 @@ var balloon = {
   },
 
   _initSwipeEvents: function() {
+    balloon._initMenuLeftSwipeEvents();
+    balloon._initMobileOverlaySwipeEvents();
+  },
+
+  _unifyTouchEvent: function(e) {
+    return e.changedTouches ? e.changedTouches[0] : e;
+  },
+
+  _initMobileOverlaySwipeEvents: function() {
+    var $overlays = $('#fs-content-nav-small-wrap, #fs-content-view-wrap');
+
+    var $body = $('body');
+
+    var threshhold = $body.width() / 4;
+    var direction;
+    var x0;
+
+    function touchstart(e) {
+      x0 = balloon._unifyTouchEvent(e).clientX;
+    }
+
+    function touchemove(e) {
+      if(direction === undefined) {
+        direction = (balloon._unifyTouchEvent(e).clientX - x0) > 0  ? 'right' : 'left';
+      }
+    }
+
+    function touchend(e) {
+      var xDiff = balloon._unifyTouchEvent(e).clientX - x0;
+
+      switch(direction) {
+      case 'right':
+        if(xDiff > threshhold) {
+          balloon.fsContentMobilePrev();
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        break;
+      }
+
+      direction = undefined;
+    };
+
+    $overlays.off('touchstart').on('touchstart', touchstart);
+    $overlays.off('touchmove').on('touchmove', touchemove);
+    $overlays.off('touchend').on('touchend', touchend);
+  },
+
+  _initMenuLeftSwipeEvents: function() {
     var $fs_swipe_bar = $('#fs-swipe-bar');
     var $fs_menu_left = $('#fs-menu-left');
     var threshhold = $fs_swipe_bar.width() / 4;
     var direction;
     var x0;
 
-    function unify(e) {
-      return e.changedTouches ? e.changedTouches[0] : e;
-    }
-
     function touchstart(e) {
-      x0 = unify(e).clientX;
+      x0 = balloon._unifyTouchEvent(e).clientX;
     }
 
     function touchemove(e) {
       e.preventDefault();
 
       if(direction === undefined) {
-        direction = (unify(e).clientX - x0) > 0  ? 'right' : 'left';
+        direction = (balloon._unifyTouchEvent(e).clientX - x0) > 0  ? 'right' : 'left';
       }
     }
 
     function touchend(e) {
-      var xDiff = unify(e).clientX - x0;
+      var xDiff = balloon._unifyTouchEvent(e).clientX - x0;
       switch(direction) {
       case 'left':
         if(xDiff * -1 > threshhold) {
