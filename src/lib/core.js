@@ -4481,18 +4481,30 @@ var balloon = {
     var $fs_browser_tree = $('#fs-browser-tree');
     var $k_tree = $fs_browser_tree.data('kendoTreeView');
 
-    for(var i=0; i<balloon.datasource._pristineData.length; i++) {
-      var node = balloon.datasource._pristineData[i];
-      var id = balloon.id(node);
-
+    var nodes = balloon.datasource._pristineData.filter(function(node) {
       //do not select _FOLDERUP
-      if(id === '_FOLDERUP') continue;
+      return balloon.id(node) !== '_FOLDERUP';
+    });
 
-      balloon.multiSelect(node);
+
+    if(nodes.length === 1) {
+      var node = nodes[0];
+
+      //balloon.multiSelect(node);
 
       var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
       $k_tree.select(dom_node);
       $k_tree.trigger('select', {node: dom_node});
+    } else if(nodes.length > 1) {
+      for(var i=0; i<nodes.length; i++) {
+        var node = nodes[i];
+
+        balloon.multiSelect(node);
+
+        var dom_node = $fs_browser_tree.find('.k-item[fs-id='+balloon.id(node)+']');
+        $k_tree.select(dom_node);
+        $k_tree.trigger('select', {node: dom_node});
+      }
     }
 
     balloon.pushState();

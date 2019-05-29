@@ -30,6 +30,7 @@
 * [FEATURE] New KendoBalloonFullscreenWindow #179
 * [FIX] File view close should be top right #170
 * [FIX] Filename with `&` gets cut off #194
+* [FIX] selectAll should not trigger multiselect when only one node is present #201
 
 
 ## 3.1.2
