@@ -94,6 +94,9 @@ var app = {
       modal: false,
       draggable: false,
       fullscreen: true,
+      deactivate: function(e) {
+        e.sender.destroy();
+      },
       keydown: function(e) {
         if(e.originalEvent.keyCode !== 27) {
           return;

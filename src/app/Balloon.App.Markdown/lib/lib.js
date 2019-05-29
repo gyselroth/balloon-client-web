@@ -83,6 +83,9 @@ var app = {
           modal: false,
           draggable: false,
           fullscreen: true,
+          deactivate: function(e) {
+            e.sender.destroy();
+          },
           close: function(e) {
             if(e.userTriggered && app._editorCancel() === false) {
               e.preventDefault();

@@ -7465,6 +7465,9 @@ var balloon = {
           modal: false,
           fullscreen: true,
           draggable: false,
+          deactivate: function(e) {
+            e.sender.destroy();
+          },
           keydown: function(e) {
             if(e.originalEvent.keyCode !== 27) {
               return;
