@@ -93,6 +93,10 @@ $searchModeDropdownWidth: 220px;
       display: block;
     }
 
+    .fs-fullscreen-window-open & {
+      display: none;
+    }
+
     .gr-i-search {
       display: none;
     }

@@ -33,6 +33,7 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
       if(options.fullscreen === true) {
         $parent.addClass('fs-fullscreen-window');
+        $('body').addClass('fs-fullscreen-window-open');
       }
 
       this.title(options.title);
@@ -87,6 +88,16 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
       position.top = newTop;
       position.left = newLeft;
+
+      return that;
+    },
+
+    close: function() {
+      var that = this;
+
+      $('body').removeClass('fs-fullscreen-window-open');
+
+      Window.fn.close.call(this);
 
       return that;
     },

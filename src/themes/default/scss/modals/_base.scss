@@ -1,9 +1,13 @@
 .fs-fullscreen-window {
   left: 0 !important;
   top: 0 !important;
-  right: 401px !important;
+  right: 0 !important;
   height: 100% !important;
   border-radius: 0 !important;
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    right: 401px !important;
+  }
 }
 
 .k-window {

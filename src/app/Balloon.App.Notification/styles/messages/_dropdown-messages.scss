@@ -114,3 +114,13 @@
     }
   }
 }
+
+@media screen and (min-width: $breakpointPannelVisible) {
+  #fs-notifications-messages {
+    &:after {
+      bottom: 20px;
+      left: 20px;
+      width: calc(100% - #{2 * 20px});
+    }
+  }
+}

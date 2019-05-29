@@ -58,3 +58,28 @@ Styles for "message center"
     }
   }
 }
+
+@media screen and (min-width: $breakpointPannelVisible) {
+  .fs-fullscreen-window-open {
+    #fs-browser-top-bar {
+      #fs-identity {
+        & > ul {
+          & > li {
+            #fs-notifications-dropdown-wrap {
+              width: 400px;
+              right: -90px;
+
+              .bln-dropdown-spike {
+                right: 92px;
+              }
+
+              #fs-notifications-dropdown {
+                padding: 27px 20px 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
