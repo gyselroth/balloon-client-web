@@ -95,7 +95,9 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
     close: function() {
       var that = this;
 
-      $('body').removeClass('fs-fullscreen-window-open');
+      if(this.options.fullscreen === true) {
+        $('body').removeClass('fs-fullscreen-window-open');
+      }
 
       Window.fn.close.call(this);
 

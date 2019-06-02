@@ -2847,7 +2847,9 @@ var balloon = {
             var that = this;
             $undo = $('<div class="fs-events-undo"><svg class="gr-icon gr-i-undo"><use xlink:href="'+iconsSvg+'#undo"></use></svg></div>').unbind('click').bind('click',
               body.data[log], function(e) {
-                balloon._undoEvent.apply(that, [e, node]);
+                balloon.alertOpenFile(function() {
+                  balloon._undoEvent.apply(that, [e, node]);
+                });
               });
             $node.append($undo);
           }
@@ -6989,6 +6991,55 @@ var balloon = {
     return $d;
   },
 
+  /**
+   * Alert window
+   *
+   * @param   string msg
+   * @return  void
+   */
+  alert: function(msg) {
+    var $div = $("#fs-alert-window");
+    var $d = $.Deferred();
+
+    $('#fs-alert-window-content').html(msg);
+
+    var $k_alert = $div.kendoBalloonWindow({
+      title: $div.attr('title'),
+      resizable: false,
+      modal: true,
+      activate: function() {
+        setTimeout(function() {
+          $div.find('input[name=ok]').focus()
+        },200);
+      },
+      close: function(e) {
+        $d.resolve();
+      }
+    }).data("kendoBalloonWindow").center().open();
+
+    $div.find('input[name=ok]').unbind('click').bind('click', function(e) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      $k_alert.close();
+    });
+
+    return $d;
+  },
+
+
+  /**
+   * Alerts that the choosen action can't be executed, while a file is currently open
+   *
+   * @param   function action
+   * @return  void
+   */
+  alertOpenFile: function(action) {
+    if($('body').hasClass('fs-fullscreen-window-open')) {
+      return balloon.alert(i18next.t('prompt.open_file_disables_action'));
+    } else {
+      return action();
+    }
+  },
 
   /**
    * Delete node
@@ -8021,7 +8072,9 @@ var balloon = {
         $submit.off('click').on('click', function(){
           var version = $fs_history.find('input[name=version]:checked').val();
           if(version !== undefined) {
-            balloon.restoreVersion(node.id, version, node.version);
+            balloon.alertOpenFile(function() {
+              balloon.restoreVersion(node.id, version, node.version);
+            });
           }
         });
       }
@@ -8047,13 +8100,6 @@ var balloon = {
         modal: true,
         open: function() {
           balloon.displayHistory($fs_history_win, node);
-
-          $fs_history_win.find('input[name="apply"]').off('click').on('click', function(){
-            var version = $fs_history_win.find('input[name=version]:checked').val();
-            if(version !== undefined) {
-              balloon.restoreVersion(node.id, version, node.version);
-            }
-          });
 
           $fs_history_win.find('input[name="cancel"]').off('click').on('click', function(){
             $fs_history_win.data("kendoBalloonWindow").close();
@@ -8759,7 +8805,9 @@ var balloon = {
       balloon.addNode.call(this);
       break;
     case 'delete':
-      balloon.deletePrompt(balloon.getSelected(balloon.getCurrentNode()));
+      balloon.alertOpenFile(function() {
+        balloon.deletePrompt(balloon.getSelected(balloon.getCurrentNode()));
+      });
       break;
     case 'restore':
       balloon.undeletePrompt(balloon.getSelected(balloon.getCurrentNode()));

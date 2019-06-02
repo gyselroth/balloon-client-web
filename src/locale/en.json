@@ -358,6 +358,7 @@
   },
   "prompt": {
     "confirm": "Confirm",
+    "alert": "Warning",
     "cancel": "No",
     "continue": "Yes",
     "ok": "Ok",
@@ -369,7 +370,8 @@
     "restore_to_root": "The parent node in which you want to restore does not exists or is deleted, would you like to restore the node(s) to your root directory?",
     "open_big_file": "The file %s is large and open it could take a long time, would you like to continue anyway?",
     "close_save_file": "Would you like to save your changes?",
-    "auto_rename_node": "A file or directory called %s already exists. Would you like to rename yours to %s?"
+    "auto_rename_node": "A file or directory called %s already exists. Would you like to rename yours to %s?",
+    "open_file_disables_action": "The choosen action can't be executed, while a file is open"
   },
   "events": {
     "unknown": "unknown",
