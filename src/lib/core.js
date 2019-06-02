@@ -8119,11 +8119,12 @@ var balloon = {
    */
   restoreVersion: function(node, version, prevVersion) {
     var options = {
-      url: balloon.base+'/files/restore?id='+balloon.id(node),
+      url: balloon.base+'/files/restore',
       type: 'POST',
       dataType: 'json',
       data: {
-        version: version
+        version: version,
+        id: balloon.id(node),
       },
       snackbar: {
         message: 'snackbar.restore_file',
@@ -8140,8 +8141,8 @@ var balloon = {
           balloon.last = data;
         }
 
-        balloon.reloadTree();
         balloon.displayHistoryView();
+        balloon.reloadTree();
 
         if($('#fs-history-window').is(':visible')) {
           balloon.displayHistoryWindow(node);
