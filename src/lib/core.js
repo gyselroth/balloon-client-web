@@ -194,13 +194,6 @@ var balloon = {
   },
 
   /**
-   * Handlers for file previews
-   *
-   * @var object
-   */
-  preview_file_handlers: {},
-
-  /**
    * File handlers
    *
    * @var array
