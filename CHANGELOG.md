@@ -32,6 +32,8 @@
 * [FIX] Filename with `&` gets cut off #194
 * [FIX] selectAll should not trigger multiselect when only one node is present #201
 * [CHANGE] Increase snackbar timeout #199
+* [CHANGE] Use slideout.js for the menu #209
+* [FIX] open a file on iPad landscape does not work #211
 
 
 ## 3.1.2

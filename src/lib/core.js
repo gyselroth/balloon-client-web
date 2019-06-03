@@ -576,7 +576,7 @@ var balloon = {
         .off('touchmove', '.k-in').on('touchmove', '.k-in', balloon._treeTouchMove);
     }
 
-    if(balloon.isMobileViewPort()) {
+    if(balloon.isTouchDevice()) {
       $fs_browser_tree
         .off('click', '.k-in').on('click', '.k-in', balloon._treeDblclick);
     } else {
@@ -584,7 +584,6 @@ var balloon = {
         .off('click', '.k-in').on('click', '.k-in', balloon._treeClick)
         .off('dblclick', '.k-in').on('dblclick', '.k-in', balloon._treeDblclick);
     }
-
 
     balloon.displayQuota();
 
