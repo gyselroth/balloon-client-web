@@ -3177,25 +3177,23 @@ var balloon = {
     var $div = $('#fs-file-handler-window');
     $div.find('li').remove();
     var $ul = $div.find('ul');
+    $div.find('div:first-child').html(i18next.t('tree.choose_handler_text', node.name));
+
+    for(let i=0; i < handlers.length; i++) {
+      let img = '';
+
+      if(handlers[i].appIcon) {
+        img = '<img src="'+handlers[i].appIcon+'" alt="" />';
+      }
+
+      $ul.append('<li data-handler="'+i+'">'+img+handlers[i].app+'</li>');
+    }
 
     var $k_display = $div.kendoBalloonWindow({
       resizable: false,
       title: i18next.t('tree.choose_handler'),
       modal: true,
       draggable: false,
-      open: function(e) {
-        $div.find('div:first-child').html(i18next.t('tree.choose_handler_text', node.name));
-
-        for(let i=0; i < handlers.length; i++) {
-          let img = '';
-
-          if(handlers[i].appIcon) {
-            img = '<img src="'+handlers[i].appIcon+'" alt="" />';
-          }
-
-          $ul.append('<li data-handler="'+i+'">'+img+handlers[i].app+'</li>');
-        }
-      }
     }).data('kendoBalloonWindow').center().open();
 
     $ul.find('li:first-child').addClass('active');
@@ -3232,9 +3230,6 @@ var balloon = {
     $checkbox.off('click').on('click', function() {
       $(this).toggleClass('active');
     });
-  },
-
-  /**
   },
 
   /**
