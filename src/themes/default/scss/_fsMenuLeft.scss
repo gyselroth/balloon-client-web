@@ -1,11 +1,5 @@
 @import '../../../../node_modules/slideout/index.css';
 
-#fs-browser-layout {
-  @media screen and (min-width: $breakpointPannelVisible) {
-    transform: inherit !important;
-  }
-}
-
 #fs-menu-left {
   position: absolute;
   top: $headerHeight;
@@ -16,7 +10,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   background-color: $colorWhite;
-  order-right: 1px solid $colorBrightGrey;
+  border-right: 1px solid $colorBrightGrey;
   width: 240px;
 
   #fs-menu-left-top,
