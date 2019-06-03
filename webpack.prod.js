@@ -15,8 +15,8 @@ common.plugins.unshift(
     title: 'balloon web ui',
     icons: {
       android: true,
-      appleIcon: true,
-      appleStartup: true,
+      appleIcon: false,
+      appleStartup: false,
       coast: false,
       favicons: true,
       firefox: true,
