@@ -5,7 +5,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackPwaManifest = require('webpack-pwa-manifest');
+const WebpackPwaManifest = require('@expo/webpack-pwa-manifest-plugin');
 const {GenerateSW} = require('workbox-webpack-plugin');
 var gitRevisionPlugin = new GitRevisionPlugin();
 
@@ -87,26 +87,45 @@ module.exports = {
       }
     }),
     new WebpackPwaManifest({
-      name: 'balloon',
-      short_name: 'balloon',
       description: 'Client for balloon',
-      background_color: '#F4F4F4',
-      theme_color: '#1E8EED',
-      crossorigin: null,
-      orientation: 'portrait-primary',
-      display: 'fullscreen',
-      ios: {
-        'apple-mobile-web-app-status-bar-style': 'black',
+      web: {
+        name: 'balloon',
+        shortName: 'balloon',
+        description: 'Client for balloon',
+        backgroundColor: '#F4F4F4',
+        themeColor: '#1E8EED',
+        crossorigin: null,
+        orientation: 'portrait-primary',
+        display: 'fullscreen',
+        meta: {
+          apple: {
+            formatDetection: '',
+            touchFullscreen: 'yes',
+            mobileWebAppCapable: 'yes',
+            barStyle: 'black',
+          },
+          viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no',
+        },
+        startUrl: '/',
+        icons: [
+          {
+            src: 'src/themes/default/img/icon_512x512.png',
+            sizes: [96, 128, 192, 256, 384, 512],
+            ios: true
+          },
+        ],
+        startupImages: [
+          {
+            src: 'src/themes/default/img/logo_3500x3500.png',
+            color: '#ffffff',
+          },
+        ],
       },
+    }, {
+      noResources: false,
+      filename: '[name].[hash].[ext]',
       publicPath: null,
-      start_url: '/',
-      icons: [
-        {
-          src: 'src/themes/default/img/icon_512x512.png',
-          sizes: [96, 128, 192, 256, 384, 512],
-          ios: true
-        }
-      ]
+      HtmlWebpackPlugin: HtmlWebpackPlugin,
     }),
     new GenerateSW({
       importWorkboxFrom: 'local',
