@@ -22,7 +22,6 @@ import {mimeFileExtMap} from './mime-file-ext-map.js';
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 import Slideout from 'slideout';
-import SlideoutCss from 'slideout/index.css';
 import pullToRefresh from 'mobile-pull-to-refresh'
 import ptrAnimatesIos from 'mobile-pull-to-refresh/dist/styles/ios/animates'
 
@@ -9944,7 +9943,7 @@ var balloon = {
 
   _initMenuLeftSwipeEvents: function() {
     var $fs_menu_left = $('#fs-menu-left');
-    var $fs_layout = $('#fs-layout-left');
+    var $fs_layout = $('#fs-browser-layout');
 
     this.slideout = new Slideout({
       'panel': $fs_layout[0],

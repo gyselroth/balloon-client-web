@@ -1,4 +1,6 @@
-#fs-layout-left {
+@import '../../../../node_modules/slideout/index.css';
+
+#fs-browser-layout {
   @media screen and (min-width: $breakpointPannelVisible) {
     transform: inherit !important;
   }
