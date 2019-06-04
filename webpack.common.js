@@ -95,7 +95,9 @@ module.exports = {
       crossorigin: null,
       orientation: 'portrait-primary',
       display: 'fullscreen',
-      ios: true,
+      ios: {
+        'apple-mobile-web-app-status-bar-style': 'black',
+      },
       publicPath: null,
       start_url: '/',
       icons: [
