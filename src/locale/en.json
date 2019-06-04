@@ -321,7 +321,8 @@
       }
     },
     "events": {
-      "show_all": "Show all events"
+      "show_all": "Show all events",
+      "placeholder_search": "Search events"
     },
     "change-password": {
       "password": "Password",

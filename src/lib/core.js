@@ -70,6 +70,11 @@ var balloon = {
   URL_PARAM_SELECTED_SEPARATOR: ',',
 
   /**
+   * Event request limit
+   */
+  EVENTS_PER_REQUEST: 50,
+
+  /**
    * Map with [FILE EXTENSION]: [SPRITE ICON CLASS]
    */
   fileExtIconMap: fileExtIconMap,
@@ -372,7 +377,7 @@ var balloon = {
         var $fs_events_all = $('#fs-events-all').hide();
 
         var $view_list = $('#fs-events ul');
-        $view_list.children().remove();
+        $view_list.empty();
 
         balloon._event_limit = false;
         var req = balloon.displayEvents($view_list, node, {skip: 0, limit: 3})
@@ -2626,23 +2631,17 @@ var balloon = {
    *
    * @param   object $dom
    * @param   object|string node
+   * @param   object params request params
    * @return  void
    */
   displayEvents: function($dom, node, params) {
-    if(balloon._event_limit === true) {
-      return;
-    }
+    if(balloon._event_limit === true) return;
 
-    var $elements = $dom.find('li');
+    var data = params || {};
 
-    if(params === undefined) {
-      $elements.remove();
-      params = {limit: 50};
-    }
+    if(data.limit === undefined) data.limit = balloon.EVENTS_PER_REQUEST;
 
-    if(node !== undefined) {
-      params.id = balloon.id(node);
-    }
+    if(node !== undefined) data.id = balloon.id(node);
 
     var share_events = [
       'deleteCollectionReference',
@@ -2662,7 +2661,7 @@ var balloon = {
 
     return balloon.xmlHttpRequest({
       url: balloon.base+'/nodes/event-log',
-      data: params,
+      data: data,
       type: 'GET',
       success: function(body) {
         var $node,
@@ -2681,7 +2680,7 @@ var balloon = {
           balloon._event_limit = true;
         }
 
-        if(body.data.length === 0 && $elements.length === 0) {
+        if(body.data.length === 0 && (data.skip === undefined || data.skip === 0)) {
           $dom.append('<li>'+i18next.t('events.no_events')+'</li>');
           return;
         }
@@ -2860,17 +2859,23 @@ var balloon = {
   /**
    * Infinite scroll events
    *
-   * @param  object $window
-   * @param  object node
+   * @param  object $list
+   * @param  object|string node
+   * @param  object params
    * @return void
    */
-  displayEventsInfiniteScroll: function($window, node) {
+  displayEventsInfiniteScroll: function($list, node, params) {
     balloon._event_limit = false;
     var skip = 0;
-    $window.unbind('scroll').bind('scroll', function() {
-      if(($window.scrollTop() + 700) >= $window[0].scrollHeight) {
-        skip = skip + 50;
-        balloon.displayEvents($window.find('ul'), node, {skip: skip, limit: 50});
+
+    params = params || {};
+
+    $list.unbind('scroll').bind('scroll', function() {
+      if(($list.scrollTop() + 700) >= $list[0].scrollHeight) {
+        skip = skip + balloon.EVENTS_PER_REQUEST;
+        params.skip = skip;
+        params.limit = balloon.EVENTS_PER_REQUEST;
+        balloon.displayEvents($list.find('ul'), node, params);
       }
     });
   },
@@ -2883,27 +2888,46 @@ var balloon = {
    */
   displayEventsWindow: function(node) {
     var $fs_event_win   = $('#fs-event-window'),
-      $fs_event_list  = $fs_event_win.find('ul'),
-      datastore     = [];
+      $fs_event_list  = $fs_event_win.find('#fs-events-window-list'),
+      $fs_event_list_ul  = $fs_event_list.find('ul'),
+      $fs_event_search = $fs_event_win.find('input[name=event-log-search]');
+
+    $fs_event_list_ul.empty();
 
     if($fs_event_win.is(':visible')) {
-      balloon.displayEventsInfiniteScroll($fs_event_win, node);
-      balloon.displayEvents($fs_event_list, node);
+      balloon.displayEventsInfiniteScroll($fs_event_list, node);
+      balloon.displayEvents($fs_event_list_ul, node);
     } else {
-      balloon.resetDom('events-win');
-      $fs_event_win   = $('#fs-event-window'),
-      $fs_event_list  = $fs_event_win.find('ul'),
-      balloon.displayEventsInfiniteScroll($fs_event_win, node);
+      balloon.displayEventsInfiniteScroll($fs_event_list, node);
 
       $fs_event_win.kendoBalloonWindow({
         title: $fs_event_win.attr('title'),
         resizable: false,
         modal: true,
         open: function() {
-          balloon.displayEvents($fs_event_list, node);
+          balloon.displayEvents($fs_event_list_ul, node);
         }
       }).data("kendoBalloonWindow").center().open();
     }
+
+    $fs_event_search.off('keyup').on('keyup', function(e) {
+      var value = $(this).val();
+
+      if(value.length >= 3) {
+        var params = {query: {'$or': [
+          {name: value},
+          {'previous.name': value}
+        ]}};
+
+        $fs_event_list_ul.empty();
+        balloon.displayEventsInfiniteScroll($fs_event_list, node, params);
+        balloon.displayEvents($fs_event_list_ul, node, params);
+      } else if(e.keyCode === 8 && value.length === 2) {
+        $fs_event_list_ul.empty();
+        balloon.displayEventsInfiniteScroll($fs_event_list, node);
+        balloon.displayEvents($fs_event_list_ul, node);
+      }
+    });
   },
 
 

@@ -322,7 +322,8 @@
       }
     },
     "events": {
-      "show_all": "Alle Events anzeigen"
+      "show_all": "Alle Events anzeigen",
+      "placeholder_search": "Events durchsuchen"
     },
     "change-password": {
       "password": "Passwort",
