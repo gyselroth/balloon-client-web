@@ -380,8 +380,7 @@ var balloon = {
         $view_list.empty();
 
         balloon._event_limit = false;
-        var req = balloon.displayEvents($view_list, node, {skip: 0, limit: 3})
-
+        var req = balloon.displayEvents($view_list, node, {offset: 0, limit: 3});
 
         req.done(function(body) {
           if(body && body.count < body.total) {
@@ -2680,7 +2679,7 @@ var balloon = {
           balloon._event_limit = true;
         }
 
-        if(body.data.length === 0 && (data.skip === undefined || data.skip === 0)) {
+        if(body.data.length === 0 && (data.offset === undefined || data.offset === 0)) {
           $dom.append('<li>'+i18next.t('events.no_events')+'</li>');
           return;
         }
@@ -2866,14 +2865,14 @@ var balloon = {
    */
   displayEventsInfiniteScroll: function($list, node, params) {
     balloon._event_limit = false;
-    var skip = 0;
+    var offset = 0;
 
     params = params || {};
 
     $list.unbind('scroll').bind('scroll', function() {
       if(($list.scrollTop() + 700) >= $list[0].scrollHeight) {
-        skip = skip + balloon.EVENTS_PER_REQUEST;
-        params.skip = skip;
+        offset = offset + balloon.EVENTS_PER_REQUEST;
+        params.offset = offset;
         params.limit = balloon.EVENTS_PER_REQUEST;
         balloon.displayEvents($list.find('ul'), node, params);
       }
