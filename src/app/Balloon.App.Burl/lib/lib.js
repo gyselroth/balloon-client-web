@@ -25,9 +25,9 @@ var app = {
 
   preInit: function(core) {
     this.balloon = core;
-    this.balloon.addNew(app.BURL_EXTENSION, 'app.burl.tree.burl_file', 'hyperlink', this.addBurl.bind(this));
+    this.balloon.addNew(app.BURL_EXTENSION, 'app.burl.tree.burl_file', 'file-burl', this.addBurl.bind(this));
 
-    this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-language';
+    this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-file-burl';
     this.balloon.mimeFileExtMap['application/vnd.balloon.burl'] = app.BURL_EXTENSION;
 
     app.balloon.addFileHandler({

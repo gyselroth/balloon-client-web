@@ -34,11 +34,11 @@ var app = {
   preInit: function(core) {
     this.balloon = core;
 
-    this.balloon.addNew(app.MARKDOWN_EXTENSION, 'app.markdown.markdownFile', 'file-text', function(type) {
+    this.balloon.addNew(app.MARKDOWN_EXTENSION, 'app.markdown.markdownFile', 'file-markdown', function(type) {
       return core.showNewNode(type, core.addFile);
     });
 
-    this.balloon.fileExtIconMap[app.MARKDOWN_EXTENSION] = 'gr-i-file-text';
+    this.balloon.fileExtIconMap[app.MARKDOWN_EXTENSION] = 'gr-i-file-markdown';
     this.balloon.mimeFileExtMap['text/markdown'] = app.MARKDOWN_EXTENSION;
 
     app.balloon.addFileHandler({

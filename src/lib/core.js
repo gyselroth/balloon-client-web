@@ -265,7 +265,7 @@ var balloon = {
     'help': {
       name: 'help',
       label: 'login.help',
-      icon: 'help',
+      icon: 'hint',
       hasDropDown: false,
       hasCount: false,
       callback: function() {

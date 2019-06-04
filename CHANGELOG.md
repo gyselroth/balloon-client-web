@@ -38,6 +38,7 @@
 * [FEATURE] Search over event log #143
 * [CHANGE] Only display search result after a search occured #198
 * [FIX] Use fake password field for external storage to avoid autocomplete #76
+* [CHANGE] alternative tipps icon #70 
 
 
 ## 3.1.2
