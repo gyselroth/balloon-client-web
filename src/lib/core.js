@@ -6755,7 +6755,7 @@ var balloon = {
     }
 
     var query = balloon.buildQuery(content, filters);
-debugger;
+
     if(query === undefined) {
       return false
     }
