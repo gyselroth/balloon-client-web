@@ -35,6 +35,7 @@
 * [CHANGE] Use slideout.js for the menu #209
 * [FIX] open a file on iPad landscape does not work #211
 * [FIX] Restoring a version results in status 422 #212
+* [FEATURE] Search over event log #143
 
 
 ## 3.1.2
