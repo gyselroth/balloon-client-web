@@ -605,13 +605,6 @@ var balloon = {
 
     $fs_search_input.off('focus').on('focus', function() {
       $fs_search.addClass('fs-search-focused');
-
-      if($('#fs-search-filter').data('initialized') !== true) {
-        //populate filters before opening
-        balloon.advancedSearch();
-      } else {
-        balloon.initSearchResultBreadCrumb();
-      }
     });
 
     $fs_search_input.off('blur').on('blur', function() {
@@ -630,8 +623,6 @@ var balloon = {
       if($('#fs-search-filter').data('initialized') !== true) {
         //populate filters before opening
         balloon.advancedSearch();
-      } else {
-        balloon.initSearchResultBreadCrumb();
       }
 
       $('#fs-search-filter').toggle();
@@ -694,7 +685,9 @@ var balloon = {
         var value = $(this).val();
         $fs_search_mode_toggle.find('span').contents().last().replaceWith(i18next.t(balloon.search_modes[value].label));
         $fs_search.removeClass('fs-search-mode-dropdown-open');
-        balloon.advancedSearch();
+
+        balloon._refreshSearchResult();
+
         $fs_search_input.focus();
       });
 
@@ -6576,14 +6569,9 @@ var balloon = {
    * @return  void
    */
   advancedSearch: function(filters) {
-    balloon.initSearchResultBreadCrumb();
-
     var $fs_search = $('#fs-search');
     var $fs_search_input = $fs_search.find('#fs-search-input');
     var $fs_search_filter = $('#fs-search-filter');
-
-    if(!$fs_search_input.is(':focus')) $fs_search_input;
-    $fs_search_input.off('keyup').on('keyup', balloon.buildExtendedSearchQuery);
 
     balloon.xmlHttpRequest({
       url: balloon.base+'/users/' + login.user.id + '/node-attribute-summary',
@@ -6673,11 +6661,13 @@ var balloon = {
           var filter = $this.parent().attr('id').replace('fs-search-filter-', '');
 
           balloon.resetSearchFilter(filter);
+          balloon._refreshSearchResult();
+          $fs_search_filter.hide();
         });
 
         $fs_search_filter.find('input[name=fs-search-filter-reset]').off('click').on('click', function() {
           balloon.resetSearchFilter(['tags', 'color', 'mime']);
-          balloon.buildExtendedSearchQuery();
+          balloon._refreshSearchResult();
           $fs_search_filter.hide();
         });
 
@@ -6723,6 +6713,17 @@ var balloon = {
   },
 
   /**
+   * Refreshes search result. Resets search if no query resulted
+   *
+   * @return void
+   */
+  _refreshSearchResult() {
+    if(balloon.buildExtendedSearchQuery() === false) {
+      balloon.resetSearch();
+    }
+  },
+
+  /**
    * Build query & search
    *
    * @return void
@@ -6754,12 +6755,12 @@ var balloon = {
     }
 
     var query = balloon.buildQuery(content, filters);
-
+debugger;
     if(query === undefined) {
-      balloon.datasource.data([]);
-      return;
+      return false
     }
 
+    balloon.initSearchResultBreadCrumb();
     return balloon.executeQuery(query);
   },
 
@@ -6793,8 +6794,7 @@ var balloon = {
     if(balloon.search_modes && balloon.search_modes[mode] && balloon.search_modes[mode].executeQuery) {
       return balloon.search_modes[mode].executeQuery(query);
     } else {
-      balloon.datasource.data([]);
-      return $.Deferred().resolve().promise();
+      return $.Deferred().reject().promise();
     }
 
   },
@@ -9109,11 +9109,6 @@ var balloon = {
           .removeClass('fs-search-mobile-visible')
           .removeClass('fs-search-filtered')
           .removeClass('fs-search-mode-dropdown-open');
-
-        var modes = Object.keys(balloon.search_modes);
-
-        $fs_search.find('#fs-search-mode-toggle span').contents().last().replaceWith(i18next.t(balloon.search_modes[modes[0]].label));
-        $fs_search.find('#fs-search-mode-'+ modes[0]).prop('checked', true);
 
         $fs_search_input.val('');
         $('#fs-crumb-search').data('is-search-result', false);

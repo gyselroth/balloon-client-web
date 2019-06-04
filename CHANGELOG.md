@@ -36,6 +36,7 @@
 * [FIX] open a file on iPad landscape does not work #211
 * [FIX] Restoring a version results in status 422 #212
 * [FEATURE] Search over event log #143
+* [CHANGE] Only display search result after a search occured #198
 
 
 ## 3.1.2
