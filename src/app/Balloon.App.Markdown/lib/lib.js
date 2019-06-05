@@ -10,6 +10,7 @@ import i18next from 'i18next';
 import SimpleMDE from 'simplemde';
 import balloonWindow from '../../../lib/widget-balloon-window.js';
 import css from '../styles/style.scss';
+import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
 const showdown = require('showdown');
 const showdownHighlight = require("showdown-highlight");
@@ -169,9 +170,97 @@ var app = {
     app.editor.simplemde = new SimpleMDE({
       element: this.$windowHtml.find('textarea')[0],
       autofocus: true,
-      toolbar: ['bold', 'italic', '|', 'heading-1', 'heading-2', 'heading-3', '|', 'code', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', '|', 'preview', '|', 'guide'],
+      toolbar: [
+        {
+          name: 'bold',
+          action: SimpleMDE.toggleBold,
+          className: 'gr-icon-bold',
+          title: 'Bold'
+        }, {
+          name: 'italic',
+          action: SimpleMDE.toggleItalic,
+          className: 'gr-icon-italic',
+          title: 'Italic'
+        },
+
+        '|',
+
+        {
+          name: 'heading-1',
+          action: SimpleMDE.toggleHeading1,
+          className: 'gr-icon-heading-big',
+          title: 'Heading 1'
+        }, {
+          name: 'heading-2',
+          action: SimpleMDE.toggleHeading2,
+          className: 'gr-icon-heading-medium',
+          title: 'Heading 2'
+        }, {
+          name: 'heading-3',
+          action: SimpleMDE.toggleHeading3,
+          className: 'gr-icon-heading-small',
+          title: 'Heading 3'
+        },
+
+        '|',
+
+        {
+          name: 'code',
+          action: SimpleMDE. toggleCodeBlock,
+          className: 'gr-icon-html',
+          title: 'Code'
+        }, {
+          name: 'quote',
+          action: SimpleMDE.toggleBlockquote,
+          className: 'gr-icon-quote',
+          title: 'Quote'
+        }, {
+          name: 'unordered-list',
+          action: SimpleMDE.toggleUnorderedList,
+          className: 'gr-icon-insert-unordered-list',
+          title: 'Unordered list'
+        }, {
+          name: 'ordered-list',
+          action: SimpleMDE.toggleOrderedList,
+          className: 'gr-icon-insert-ordered-list',
+          title: 'Numbered list'
+        },
+
+        '|',
+
+        {
+          name: 'link',
+          action: SimpleMDE.drawLink,
+          className: 'gr-icon-hyperlink',
+          title: 'Create link'
+        }, {
+          name: 'image',
+          action: SimpleMDE.drawImage,
+          className: 'gr-icon-image',
+          title: 'Insert image'
+        },
+
+        '|',
+
+        {
+          name: 'preview',
+          action: SimpleMDE.togglePreview,
+          className: 'gr-icon-preview',
+          title: 'Toggle preview'
+        },
+
+        '|',
+
+        {
+          name: 'guide',
+          action: 'https://simplemde.com/markdown-guide',
+          className: 'gr-icon-help',
+          title: 'Markdown guide'
+        }
+      ],
       spellChecker: false,
       previewRender: app._renderMarkdown,
+      autoDownloadFontAwesome: false,
       shortcuts: {
         'toggleSideBySide': null,
         'toggleFullScreen': null,
@@ -180,6 +269,12 @@ var app = {
 
     var parent_node = app.balloon.getCurrentCollectionId();
     var $fs_browser_tree = $('#fs-browser-tree');
+
+    this.$windowHtml.find('.editor-toolbar a').map(function(i, el) {
+      var icon = el.className.substring(8);
+
+      $(el).append('<svg class="gr-icon gr-i-'+ icon + '"><use xlink:href="' + iconsSvg + '#' + icon + '"></use></svg>');
+    });
 
     this.$windowHtml.unbind('drop').on('drop', function(e) {
       $fs_browser_tree.removeClass('fs-file-dropable');
