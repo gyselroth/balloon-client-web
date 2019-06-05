@@ -45,8 +45,8 @@ var app = {
     $div.html(
       '<div class="error-message"></div>'+
       '<div class="fs-window-form">'+
-        '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
-        '<label>'+i18next.t('app.burl.url')+'</label><input placeholder="http://www.example.org" name="url" type="text"/>'+
+        '<div class="fs-window-form-row"><label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/></div>'+
+        '<div class="fs-window-form-row"><label>'+i18next.t('app.burl.url')+'</label><input placeholder="http://www.example.org" name="url" type="text"/></div>'+
       '</div>'+
       '<div class="fs-window-secondary-actions">'+
         '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit" tabindex="2"/>'+

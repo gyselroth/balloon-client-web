@@ -188,7 +188,7 @@
     clear: both;
 
     &.full-width {
-      width: calc(100% + #{2 * $sidePadding};
+      width: calc(100% + #{2 * $sidePadding});
       margin-left: $sidePadding * -1;
       margin-right: $sidePadding * -1;
     }
@@ -201,20 +201,25 @@
 
       @include clearfix;
 
-      label,
-      input {
-        float: left;
+      .fs-window-form-row {
+        @include clearfix;
+
+        label,
+        input {
+          float: left;
+        }
+
+        label {
+          width: $labelWidth;
+          margin-right: $labelMarginRight;
+
+        }
+
+        input[type=text],input[type=password] {
+          width: calc(100% - #{$labelWidth + $labelMarginRight});
+        }
       }
 
-      label {
-        width: $labelWidth;
-        margin-right: $labelMarginRight;
-
-      }
-
-      input[type=text],input[type=password] {
-        width: calc(100% - #{$labelWidth + $labelMarginRight});
-      }
     }
   }
 
