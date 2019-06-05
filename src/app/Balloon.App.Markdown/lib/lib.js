@@ -35,11 +35,11 @@ var app = {
   preInit: function(core) {
     this.balloon = core;
 
-    this.balloon.addNew(app.MARKDOWN_EXTENSION, 'app.markdown.markdownFile', 'file-text', function(type) {
+    this.balloon.addNew(app.MARKDOWN_EXTENSION, 'app.markdown.markdownFile', 'file-markdown', function(type) {
       return core.showNewNode(type, core.addFile);
     });
 
-    this.balloon.fileExtIconMap[app.MARKDOWN_EXTENSION] = 'gr-i-file-text';
+    this.balloon.fileExtIconMap[app.MARKDOWN_EXTENSION] = 'gr-i-file-markdown';
     this.balloon.mimeFileExtMap['text/markdown'] = app.MARKDOWN_EXTENSION;
 
     app.balloon.addFileHandler({
@@ -188,17 +188,17 @@ var app = {
         {
           name: 'heading-1',
           action: SimpleMDE.toggleHeading1,
-          className: 'gr-icon-heading-1',
+          className: 'gr-icon-heading-big',
           title: 'Heading 1'
         }, {
           name: 'heading-2',
           action: SimpleMDE.toggleHeading2,
-          className: 'gr-icon-heading-2',
+          className: 'gr-icon-heading-medium',
           title: 'Heading 2'
         }, {
           name: 'heading-3',
           action: SimpleMDE.toggleHeading3,
-          className: 'gr-icon-heading-3',
+          className: 'gr-icon-heading-small',
           title: 'Heading 3'
         },
 
