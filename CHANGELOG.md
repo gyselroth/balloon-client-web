@@ -1,6 +1,6 @@
-## 3.2.x
+## 3.2.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Wed Jun 05 14:47:01 CEST 2019
 
 * [FEATURE] Display mount information #73
 * [CHANGE] Implement paged node listing #133
@@ -39,6 +39,11 @@
 * [CHANGE] Only display search result after a search occured #198
 * [FIX] Use fake password field for external storage to avoid autocomplete #76
 * [CHANGE] alternative tipps icon #70 
+* [FIX] Infinite scroll on event log is truly infinite #214
+* [FIX] add burl form url input on new line #216
+* [FIX] Typo in search menu #208
+* [CHANGE] Prompt user for certain actions when file is open #206
+* [FEATURE] Drag and Drop upload of images into md files #205
 
 
 ## 3.1.2
