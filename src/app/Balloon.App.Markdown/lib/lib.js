@@ -267,9 +267,6 @@ var app = {
       },
     });
 
-    var parent_node = app.balloon.getCurrentCollectionId();
-    var $fs_browser_tree = $('#fs-browser-tree');
-
     this.$windowHtml.find('.editor-toolbar a').map(function(i, el) {
       var icon = el.className.substring(8);
 
@@ -277,15 +274,40 @@ var app = {
     });
 
     this.$windowHtml.unbind('drop').on('drop', function(e) {
+      var $fs_browser_tree = $('#fs-browser-tree');
+
       $fs_browser_tree.removeClass('fs-file-dropable');
       $fs_browser_tree.find('.fs-file-drop').removeClass('fs-file-drop');
       $('#fs-upload').removeClass('fs-file-dropable');
 
-      var pos = app.editor.simplemde.codemirror.getCursor();
-      app.editor.simplemde.codemirror.setSelection(pos, pos);
-      app.editor.simplemde.codemirror.replaceSelection('TEST');
+      app.balloon._handleFileSelect(e, app.balloon.getCurrentCollectionId()).done(function($dFiles) {
+        if($dFiles) {
+          $dFiles.map(function($dFile) {
+            $dFile.then(function(file) {
 
-      app.balloon._handleFileSelect(e, parent_node);
+              var node = file.node;
+              var insertText = '';
+
+              switch(node.mime) {
+              case 'image/png':
+              case 'image/jpeg':
+              case 'image/png':
+              case 'image/gif':
+              case 'image/svg+xml':
+                insertText = '![](balloon/' + node.id + ') ';
+                break;
+              default:
+                insertText = '[' + node.name + '](balloon/' + node.id + ') ';
+                break;
+              }
+
+              var pos = app.editor.simplemde.codemirror.getCursor();
+              app.editor.simplemde.codemirror.setSelection(pos, pos);
+              app.editor.simplemde.codemirror.replaceSelection(insertText);
+            });
+          });
+        }
+      });
     });
   },
 

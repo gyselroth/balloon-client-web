@@ -51,7 +51,14 @@ dataTransferItemsHandler.prototype._handleEntries = function(entries, parent) {
 
   $.when.apply(this, promises)
     .done(function() {
-      $d.resolve();
+      var $dFiles = [];
+      var i;
+
+      for(i=0; i < arguments.length; i++) {
+        $dFiles = $dFiles.concat(arguments[i]);
+      }
+
+      $d.resolve($dFiles);
     })
     .fail(function(err) {
       $d.reject(err);
