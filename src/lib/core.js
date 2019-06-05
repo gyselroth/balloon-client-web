@@ -9366,8 +9366,10 @@ var balloon = {
    */
   _handleFileSelect: function(e, parent_node) {
     if(balloon.isSearch() && balloon.getCurrentCollectionId() === null) {
-      return;
+      return $.Deferred().reject().promise();
     }
+
+    var $dHandleFileSelect = $.Deferred();
 
     e.stopPropagation();
     e.preventDefault();
@@ -9381,13 +9383,17 @@ var balloon = {
         var $d = handler.handleItems(e.originalEvent.dataTransfer.items, balloon.id(parent_node));
 
         $d.done(function(files) {
+          // successfully added items to queue, files is an array of promisses to be fullfilled, when given file/directory upload finishes
           balloon.hideSpinner();
+          $dHandleFileSelect.resolve(files);
         });
 
         $d.fail(function(err) {
+          // failed adding to queue
           balloon.hideSpinner();
           blobs = e.originalEvent.dataTransfer.files;
-          balloon._handleFileSelectFilesOnly(blobs, parent_node);
+          var files = balloon._handleFileSelectFilesOnly(blobs, parent_node);
+          $dHandleFileSelect.resolve(files);
         });
       } catch(err) {
         balloon.hideSpinner();
@@ -9399,8 +9405,11 @@ var balloon = {
 
     if(blobs) {
       //if blobs are set - either browser does not support directory upload, or only files have been selected
-      balloon._handleFileSelectFilesOnly(blobs, parent_node);
+      var files = balloon._handleFileSelectFilesOnly(blobs, parent_node);
+      $dHandleFileSelect.resolve(files);
     }
+
+    return $dHandleFileSelect;
   },
 
   /**
@@ -9419,8 +9428,8 @@ var balloon = {
         parent: parent
       }];
 
-      balloon.uploadFiles(files);
-      $d.resolve();
+      var $filesD = balloon.uploadFiles(files);
+      $d.resolve($filesD);
     }, function(err) {
       $d.reject(err);
     });
@@ -9445,7 +9454,7 @@ var balloon = {
       });
     }
 
-    balloon.uploadFiles(files);
+    return balloon.uploadFiles(files);
   },
 
   /**
@@ -9455,6 +9464,7 @@ var balloon = {
    * @return  void
    */
   uploadFiles: function(files) {
+    var filePromises = [];
     balloon.resetDom(['upload-progress', 'uploadmgr-progress']);
 
     if(balloon.upload_manager === null ||
@@ -9511,6 +9521,10 @@ var balloon = {
           },
         });
 
+        var $dFile = $.Deferred();
+
+        filePromises.push($dFile);
+
         balloon.upload_manager.files[uuid] = {
           progress:   progressnode,
           blob:     file.blob,
@@ -9526,6 +9540,7 @@ var balloon = {
           request:  null,
           status:   1,
           id: uuid,
+          dFile: $dFile,
         };
 
         balloon.upload_manager.queue.push(uuid);
@@ -9538,7 +9553,7 @@ var balloon = {
     }
 
     if(Object.keys(balloon.upload_manager.files).length <= 0) {
-      return;
+      return filePromises;
     }
 
     $('#fs-upload-list').off('click', '.fs-progress-icon').on('click', '.fs-progress-icon', function() {
@@ -9570,6 +9585,7 @@ var balloon = {
 
     balloon._uploadManagerNext();
 
+    return filePromises;
   },
 
   /**
@@ -9620,10 +9636,24 @@ var balloon = {
    * Upload done, removes it from pending uploads, and schedules next
    *
    * @param  string uuid, id of the file
+   * @param  boolean successfull
    * @return void
    */
-  _uploadManagerDone: function(uuid) {
+  _uploadManagerDone: function(uuid, successfull) {
     delete balloon.upload_manager.pending[uuid];
+
+    var file = balloon.upload_manager.files[uuid];
+    if(successfull) {
+      file.dFile.resolve({
+        type: 'file',
+        node: file.node,
+        name: file.name,
+        parent: file.parent
+      });
+    } else {
+      file.dFile.reject();
+    }
+
     balloon._uploadManagerNext();
   },
 
@@ -9703,7 +9733,7 @@ var balloon = {
           file.manager.count.success.toString(), file.manager.count.upload)
         );
 
-        balloon._uploadManagerDone(file.id);
+        balloon._uploadManagerDone(file.id, true);
       }
 
       return;
@@ -9725,7 +9755,7 @@ var balloon = {
 
       file.manager.count.transfer++;
 
-      balloon._uploadManagerDone(file.id);
+      balloon._uploadManagerDone(file.id, false);
     } else {
       file.end = file.start + balloon.BYTES_PER_CHUNK;
 
@@ -9861,6 +9891,11 @@ var balloon = {
         $('#fs-upload-info > span').html(balloon.getReadableFileSizeString(file.manager.transfered_bytes));
       },
       success: function(response) {
+        //add node from final chunk response
+        if(response.id) {
+          file.node = response;
+        }
+
         file.session = response.session;
         balloon._chunkUploadManager(file);
         balloon._checkUploadEnd();
