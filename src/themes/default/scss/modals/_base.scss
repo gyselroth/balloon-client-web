@@ -203,23 +203,22 @@
 
       .fs-window-form-row {
         @include clearfix;
-
-        label,
-        input {
-          float: left;
-        }
-
-        label {
-          width: $labelWidth;
-          margin-right: $labelMarginRight;
-
-        }
-
-        input[type=text],input[type=password] {
-          width: calc(100% - #{$labelWidth + $labelMarginRight});
-        }
       }
 
+      label,
+      input {
+        float: left;
+      }
+
+      label {
+        width: $labelWidth;
+        margin-right: $labelMarginRight;
+
+      }
+
+      input[type=text],input[type=password] {
+        width: calc(100% - #{$labelWidth + $labelMarginRight});
+      }
     }
   }
 
