@@ -618,7 +618,11 @@ var login = {
   },
 
   initApp: function() {
-    if(localStorage.getItem('webauthn') === null && "credentials" in navigator) {
+    if(
+      localStorage.getItem('webauthn') === null && "credentials" in navigator
+      &&
+      ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch)
+    ) {
       var $login_setup_mfa = $('#login-setup-webauthn').show();
       var $webauthn_error = $('#login-webauthn-setup-error').hide();
       var $login_basic =  $('#login-basic').hide();
