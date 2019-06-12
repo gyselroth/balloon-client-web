@@ -7576,7 +7576,7 @@ var balloon = {
           },
           open: function(e) {
             setTimeout(function(){
-              e.sender.wrapper.find('textarea').focus();
+              $textarea.focus();
             }, 600);
 
             e.sender.wrapper.find('textarea').unbind('change').bind('change',function(){
