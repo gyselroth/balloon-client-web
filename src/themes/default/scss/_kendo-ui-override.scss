@@ -59,6 +59,11 @@
   }
 }
 
+.k-list-scroller {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 div.k-window-content {
   z-index: auto;
 }
