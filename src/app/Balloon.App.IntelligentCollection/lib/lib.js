@@ -123,7 +123,7 @@ var app = {
             return;
           }
 
-          if(app.balloon.nodeExists(name) || name === '') {
+          if(app.balloon.nodeExists(name, true) || name === '') {
             $input_name.addClass('error-input');
             app.fieldsValid.name = false;
           } else {

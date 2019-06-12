@@ -93,7 +93,7 @@ var app = {
             return;
           }
 
-          if(app.balloon.nodeExists(name+'.'+app.BURL_EXTENSION) || name === '') {
+          if(app.balloon.nodeExists(name+'.'+app.BURL_EXTENSION, true) || name === '') {
             $input_name.addClass('error-input');
             fieldsValid.name = false;
           } else {

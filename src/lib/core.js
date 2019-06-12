@@ -3852,11 +3852,16 @@ var balloon = {
    * Does node exists?
    *
    * @param   string name
+   * @param   boolean ignoreDeleted
    * @return  bool
    */
-  nodeExists: function(name) {
+  nodeExists: function(name, ignoreDeleted) {
     for(var node=0; node < balloon.datasource._data.length; node++) {
-      if(balloon.datasource._data[node].name.toLowerCase() === name.toLowerCase()) {
+      if(
+        balloon.datasource._data[node].name.toLowerCase() === name.toLowerCase()
+        &&
+        (ignoreDeleted !== true || balloon.datasource._data[node].deleted === undefined)
+      ){
         return true;
       }
     }
@@ -5026,7 +5031,7 @@ var balloon = {
             return;
           }
 
-          if(balloon.nodeExists(name) || name === '') {
+          if(balloon.nodeExists(name, true) || name === '') {
             mayCreate = false;
             $(this).addClass('error-input');
             $submit.attr('disabled', true);
