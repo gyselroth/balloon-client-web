@@ -32,7 +32,8 @@
     "nav": {
       "overview": "Übersicht",
       "change-password": "Passwort ändern",
-      "google-authenticator": "Multi-Faktor-Authentisierung"
+      "google-authenticator": "Multi-Faktor-Authentisierung",
+      "webauthn": "Passwortlose Authentifizierung"
     },
     "attribute": {
       "id": "Benutzer-ID",
@@ -52,6 +53,17 @@
       "hint": {
         "inactive": "Um Multi-Faktor-Authentisierung nutzen zu können benötigst du ein Smartphone und die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a>. Nach dem Aktivieren wird dir einmalig ein QR Code angezeigt, welchen du mit der App scannen musst. Achtung: Nach Aktivierung von Multi-Faktor-Authentisierung ist der Zugang nur noch mit dieser App möglich.",
         "active": "Multi-Faktor-Authentisierung ist aktiv."
+      }
+    },
+    "webauthn": {
+      "activate": "Aktivieren",
+      "deactivate": "Deaktivieren",
+      "confirm": {
+        "deactivate": "Bist Du sicher, dass du die Paswortlose Authentifizierung deaktiviern willst?"
+      },
+      "hint": {
+        "inactive": "Die Passwortlose Authentifizierung ist deaktiviert.",
+        "active": "Die Passwortlose Authentifizierung ist aktiviert."
       }
     }
   },

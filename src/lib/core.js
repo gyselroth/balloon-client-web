@@ -2271,7 +2271,11 @@ var balloon = {
 
     var mayActivate2FA = (login.getAdapter() !== 'basic' && login.user && login.internalIdp === true);
     $('#fs-profile-window-title-google-authenticator').toggleClass('disabled', !mayActivate2FA);
-    $('#fs-profile-window-change-google-authenticator').toggleClass('disabled', !mayActivate2FA);
+    $('#fs-profile-window-google-authenticator').toggleClass('disabled', !mayActivate2FA);
+
+    var maySetupWebauthn = ('credentials' in navigator && mayActivate2FA);
+    $('#fs-profile-window-title-webauthn').toggleClass('disabled', !maySetupWebauthn);
+    $('#fs-profile-window-change-webauthn').toggleClass('disabled', !maySetupWebauthn);
 
     $('#fs-profile-window dl dt').not('.disabled').off('click').on('click', function(event) {
       var view = $(this).attr('id').substr(24);
@@ -2312,6 +2316,9 @@ var balloon = {
       break;
     case 'google-authenticator':
       balloon._displayUserProfileGoogleAuthenticator();
+      break;
+    case 'webauthn':
+      balloon._displayUserProfileWebauthn();
       break;
     }
 
@@ -2613,9 +2620,64 @@ var balloon = {
         });
       });
     });
+  },
 
 
+  /**
+   * Displays the webauthn screen
+   *
+   * @return  void
+   */
+  _displayUserProfileWebauthn: function() {
+    var $view = $('#fs-profile-window-webauthn');
+    var $buttons = $view.find('#fs-profile-window-webauthn-buttons');
+    var $hintInactive = $view.find('#fs-profile-window-webauthn-hint-incative').hide();
+    var $hintActive = $view.find('#fs-profile-window-webauthn-hint-active').hide();
+    var $errorSetup = $view.find('#fs-profile-window-webauthn-error-setup').hide();
+    var $btnActivate = $buttons.find('input[name="activate"]').hide();
+    var $btnDeactivate = $buttons.find('input[name="deactivate"]').hide();
 
+    var webauthnLS = localStorage.getItem('webauthn');
+
+    if(webauthnLS === 'false' || !webauthnLS) {
+      $btnActivate.show();
+      $hintInactive.show();
+    } else {
+      $btnDeactivate.show();
+      $hintActive.show();
+    }
+
+    $btnActivate.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      login.setupWebauthn()
+        .then(() => {
+          $btnDeactivate.show();
+          $hintActive.show();
+
+          $btnActivate.hide();
+          $hintInactive.hide();
+        })
+        .catch(error => {
+          $errorSetup.show();
+        });
+    });
+
+    $btnDeactivate.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      var msg  = i18next.t('profile.webauthn.confirm.deactivate');
+
+      balloon.promptConfirm(msg, function() {
+        localStorage.setItem('webauthn', 'false');
+
+        $btnDeactivate.hide();
+        $hintActive.hide();
+
+        $btnActivate.show();
+        $hintInactive.show();
+      });
+    });
   },
 
   /**

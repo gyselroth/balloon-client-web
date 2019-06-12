@@ -32,7 +32,8 @@
     "nav": {
       "overview": "Overview",
       "change-password": "Change password",
-      "google-authenticator": "Two factor authentication"
+      "google-authenticator": "Two factor authentication",
+      "webauthn": "Passwortlose authentication"
     },
     "attribute": {
       "id": "User Id",
@@ -52,6 +53,17 @@
       "hint": {
         "inactive": "In order to activate multi factor authentication, you need a smartphone and the app <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=en\" target=\"blank\">Google Authenticator</a>. After activating multi factor authentication a QR code, which you need to scan with the app, will be displayed. Attention, after the activation the login will only be possible using the google authenticator app.",
         "active": "Multi factor authentication is enabled."
+      }
+    },
+    "webauthn": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "confirm": {
+        "deactivate": "Do you really want to deactivate multi passwordless authentication?"
+      },
+      "hint": {
+        "inactive": "Passwordless authentication is inactive.",
+        "active": "Passwordless authentication is active."
       }
     }
   },
