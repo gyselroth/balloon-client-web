@@ -7578,10 +7578,6 @@ var balloon = {
             setTimeout(function(){
               $textarea.focus();
             }, 600);
-
-            e.sender.wrapper.find('textarea').unbind('change').bind('change',function(){
-              data = $textarea.val();
-            });
           }
         }).data("kendoBalloonWindow").center().open();
       }
