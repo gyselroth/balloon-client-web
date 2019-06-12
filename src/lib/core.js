@@ -239,7 +239,7 @@ var balloon = {
     'shared_link': {
       name: 'shared_link',
       label: 'menu.shared_link',
-      icon: 'hyperlink',
+      icon: 'language',
       callback: function() {
         return balloon.refreshTree('/nodes', {query: {"app.Balloon\\App\\Sharelink.token": {$exists: 1}}}, {});
       }
@@ -1571,7 +1571,7 @@ var balloon = {
             switch(metaOrder[metaProp]) {
             case 'sharelink_token':
               if(node.sharelink_token) {
-                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.sharelink') + '"><svg class="gr-icon gr-i-hyperlink"><use xlink:href="'+iconsSvg+'#hyperlink"></use></svg></div>');
+                meta_html_children.push('<div class="fs-node-state" title="' + i18next.t('tree.node_states.sharelink') + '"><svg class="gr-icon gr-i-language"><use xlink:href="'+iconsSvg+'#language"></use></svg></div>');
               }
               break;
             case 'deleted':
