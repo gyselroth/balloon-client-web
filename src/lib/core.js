@@ -7558,16 +7558,6 @@ var balloon = {
           modal: false,
           fullscreen: true,
           draggable: false,
-          keydown: function(e) {
-            if(e.originalEvent.keyCode !== 27) {
-              return;
-            }
-
-            if(data == $textarea.val()) {
-              $k_display.close();
-              return;
-            }
-          },
           close: function(e) {
             if(e.userTriggered && data != $textarea.val()) {
               //user tries to close window with unsaved changes
