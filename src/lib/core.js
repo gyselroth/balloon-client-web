@@ -7897,7 +7897,8 @@ var balloon = {
     var valid = [
       'application/xml',
       'application/json',
-      'inode/x-empty'
+      'inode/x-empty',
+      'application/x-sql'
     ];
 
     return valid.indexOf(mime) > -1;
