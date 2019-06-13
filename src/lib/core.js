@@ -7377,38 +7377,45 @@ var balloon = {
         balloon.deselectAll();
       },
       success: function(data) {
-        //move can only be executed in cloud:root and child collections, therefore no need for reloatTree
+        //move can only be executed in cloud:root and child collections, therefore no need for reloadTree
         balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
       },
-      error: function(data) {
-        if(data.status === 400 && data.responseJSON && data.responseJSON.code === 19 && conflict !== 2) {
-          var body = data.responseJSON;
-          if(typeof(balloon.id(source)) == 'string') {
-            var nodes = [source];
+      error: function(xhr) {
+        switch(xhr.status) {
+        case 422:
+          if(xhr.responseJSON && xhr.responseJSON.code === 19 && conflict !== 2) {
+            var body = xhr.responseJSON;
+            if(typeof(balloon.id(source)) == 'string') {
+              var nodes = [source];
+            } else {
+              var nodes = body;
+            }
+
+            var id   = [];
+            var list = i18next.t('prompt.merge');
+            list += '<ul>';
+
+            for(var i in nodes) {
+              id.push(nodes[i].id);
+              list += '<li>'+nodes[i].name+'</li>';
+            }
+
+            list   += '</ul>';
+
+            if(typeof(balloon.id(source)) === 'string') {
+              id = balloon.id(source);
+            }
+
+            balloon.promptConfirm(list, 'move', [id, destination, 2, clone]);
           } else {
-            var nodes = body;
+            balloon.displayError(xhr);
           }
-
-          var id   = [];
-          var list = i18next.t('prompt.merge');
-          list += '<ul>';
-
-          for(var i in nodes) {
-            id.push(nodes[i].id);
-            list += '<li>'+nodes[i].name+'</li>';
-          }
-
-          list   += '</ul>';
-
-          if(typeof(balloon.id(source)) === 'string') {
-            id = balloon.id(source);
-          }
-
-          balloon.promptConfirm(list, 'move', [id, destination, 2, clone]);
-        } else {
-          balloon.displayError(data);
+          break;
+        default:
+          balloon.displayError(xhr);
+          break;
         }
-      }
+      },
     });
   },
 
