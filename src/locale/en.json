@@ -8,7 +8,7 @@
     "code": "Code",
     "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
     "dont_remind_webauthn": "Do not ask me again.",
-    "setup_webauthn": "Do you hate passwords? We too. Your device is compatible to use a form of passwordless authentication. You may setup this now or at any time in the user settings.",
+    "setup_webauthn": "Your device is compatible to use a form of passwordless authentication. You may setup this now or at any time in the user settings.",
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
