@@ -33,7 +33,7 @@
       "overview": "Overview",
       "change-password": "Change password",
       "google-authenticator": "Two factor authentication",
-      "webauthn": "Passwortlose authentication"
+      "webauthn": "Passwordless authentication"
     },
     "attribute": {
       "id": "User Id",

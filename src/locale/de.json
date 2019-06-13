@@ -33,7 +33,7 @@
       "overview": "Übersicht",
       "change-password": "Passwort ändern",
       "google-authenticator": "Multi-Faktor-Authentisierung",
-      "webauthn": "Passwortlose Authentifizierung"
+      "webauthn": "Authentifizierung ohne Passwort"
     },
     "attribute": {
       "id": "Benutzer-ID",
@@ -59,11 +59,11 @@
       "activate": "Aktivieren",
       "deactivate": "Deaktivieren",
       "confirm": {
-        "deactivate": "Bist Du sicher, dass du die Paswortlose Authentifizierung deaktiviern willst?"
+        "deactivate": "Bist du sicher, dass du Authentifizierung ohne Passwort deaktiviern willst?"
       },
       "hint": {
-        "inactive": "Die Passwortlose Authentifizierung ist deaktiviert.",
-        "active": "Die Passwortlose Authentifizierung ist aktiviert."
+        "inactive": "Die Authentifizierung ohne Passwort ist deaktiviert.",
+        "active": "Die Authentifizierung ohne Passwort ist aktiviert."
       }
     }
   },
