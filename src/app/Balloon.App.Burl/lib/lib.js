@@ -194,20 +194,20 @@ var app = {
    * @return void
    */
   handleBurl: function(node) {
-    this.balloon.xmlHttpRequest({
-      url: this.balloon.base+'/files/content',
+    app.balloon.xmlHttpRequest({
+      url: app.balloon.base+'/files/content',
       type: 'GET',
       data: {
-        id: this.balloon.id(node),
+        id: app.balloon.id(node),
       },
       dataType: 'text',
       success: function (data) {
         try {
           let url = new URL(data);
           var msg  = i18next.t('app.burl.prompt.open_burl', url.href);
-          this.balloon.promptConfirm(msg, this._handleBurl, [url]);
+          app.balloon.promptConfirm(msg, app._handleBurl, [url]);
         } catch (error) {
-          this.balloon.displayError(error);
+          app.balloon.displayError(error);
         }
       }.bind(this)
     });
