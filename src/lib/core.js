@@ -4500,7 +4500,7 @@ var balloon = {
     balloon.resetDom(['upload', 'preview', 'metadata', 'history', 'selected', 'view-bar']);
     balloon.updatePannel(true);
 
-    var index = balloon.multiselect.indexOf(node);
+    var index = balloon.getMultiselectIndex(node);
     var $selected = $('#fs-browser-tree').find('li[fs-id='+balloon.id(node)+']');
 
     if(index >= 0 && stay === false) {
@@ -4516,6 +4516,22 @@ var balloon = {
     $('#fs-browser-summary').show();
   },
 
+  /**
+   * Find the index of a given node in the multiselect array
+   * Note: always use this method over balloon.multiselect.indexOf(node),
+   * as multiselect may contain a kendo objects or another node object
+   * with the same id, instead of the given node object.
+   *
+   * @param   object|string node
+   * @return  integer
+   */
+  getMultiselectIndex: function(node) {
+    var id = balloon.id(node);
+
+    return balloon.multiselect.findIndex(function(element) {
+      return id === balloon.id(element);
+    });
+  },
 
   /**
    * Deselects all currently selected nodes
@@ -4587,8 +4603,8 @@ var balloon = {
    */
   isSelected: function(node) {
     if(balloon.isMultiSelect()) {
-      return (balloon.multiselect.indexOf(node) >= 0);
-    }    else {
+      return (balloon.getMultiselectIndex(node) >= 0);
+    } else {
       return (node.id === balloon.getCurrentNode().id);
     }
   },
