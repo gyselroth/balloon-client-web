@@ -13,6 +13,7 @@
 * [FIX] Fix getting index of nodes in multiselect array #44
 * [FIX] Fix this.balloon is undefined in burl handler #149
 * [CHANGE] Switch position of login button and webauthn #182
+* [CHANGE] Change event search query to $regex #143
 
 
 ## 3.2.0-beta1

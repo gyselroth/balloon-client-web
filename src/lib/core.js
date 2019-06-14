@@ -2969,8 +2969,8 @@ var balloon = {
 
       if(value.length >= 3) {
         var params = {query: {'$or': [
-          {name: value},
-          {'previous.name': value}
+          {name: {$regex:value, $options:'i'}},
+          {'previous.name': {$regex:value, $options:'i'}}
         ]}};
 
         $fs_event_list_ul.empty();
