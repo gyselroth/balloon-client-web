@@ -623,30 +623,26 @@ var login = {
       &&
       ('ontouchstart' in window || window.DocumentTouch && document instanceof DocumentTouch)
     ) {
-      var $login_setup_mfa = $('#login-setup-webauthn').show();
+      var $login_setup_webauthn = $('#login-setup-webauthn').show();
       var $webauthn_error = $('#login-webauthn-setup-error').hide();
       var $login_basic =  $('#login-basic').hide();
       var $login_oidc = $('#login-oidc').hide();
-      var $reminder = $login_setup_mfa.find('span[class=checkbox]').off('click').on('click', function() {
-        $(this).toggleClass('active');
-      });
 
-      $login_setup_mfa.find('input[type=submit]').off('click').on('click', function() {
+      $login_setup_webauthn.find('input[type=submit]').off('click').on('click', function() {
         if($(this).attr('name') === 'ignore') {
-          let reminder = $reminder.hasClass('active');
-          if(reminder === true) {
+          if($login_setup_webauthn.find('input[name="webauthn-reminder"]').is(':checked')) {
             localStorage.setItem('webauthn', 'false');
           }
 
           login.fetchIdentity();
           login.initBrowser();
-          $login_setup_mfa.hide();
+          $login_setup_webauthn.hide();
           $login_basic.show();
           $login_oidc.show();
           $webauthn_error.hide();
         } else {
           login.setupWebauthn().then(() => {
-            $login_setup_mfa.hide();
+            $login_setup_webauthn.hide();
             $login_basic.show();
             $login_oidc.show();
             login.fetchIdentity();

@@ -1,3 +1,10 @@
+## 3.2.0-beta3
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: 
+
+* [CHANGE] Use real input[type="checkbox"] + label for webauthn setup wizard #182
+
+
 ## 3.2.0-beta2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Jun 14 15:17:02 CEST 2019

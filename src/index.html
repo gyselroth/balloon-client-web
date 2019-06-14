@@ -124,9 +124,12 @@
                   <p data-i18n="login.setup_webauthn"></p>
                   <div id="login-webauthn-setup-error" class="error-message" data-i18n="login.error.webauthn_setup"></div>
                   <input type="submit" name="submit" class="fs-button-primary" data-i18n="[value]button.setup"/>
-
-                  <div><span class="checkbox"></span> <span data-i18n="login.dont_remind_webauthn"></span></div>
+                  <div>
+                      <input type="checkbox" name="webauthn-reminder" id="webauthn-reminder" />
+                      <label for="webauthn-reminder" data-i18n="login.dont_remind_webauthn"></label>
+                  </div>
                   <input type="submit" name="ignore" class="fs-button-secondary" data-i18n="[value]button.ignore"/>
+
                </div>
                <div id="login-basic">
                   <input type="text" name="username" autocomplete="current-username" data-i18n="[placeholder]login.username"/>
