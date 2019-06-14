@@ -2928,15 +2928,20 @@ var balloon = {
   displayEventsInfiniteScroll: function($list, node, params) {
     balloon._event_limit = false;
     var offset = 0;
+    var currentlyLoading = false;
 
     params = params || {};
 
     $list.unbind('scroll').bind('scroll', function() {
-      if(($list.scrollTop() + 700) >= $list[0].scrollHeight) {
+      if(currentlyLoading === false && ($list.scrollTop() + 700) >= $list[0].scrollHeight) {
+        currentlyLoading = true;
         offset = offset + balloon.EVENTS_PER_REQUEST;
         params.offset = offset;
         params.limit = balloon.EVENTS_PER_REQUEST;
-        balloon.displayEvents($list.find('ul'), node, params);
+        balloon.displayEvents($list.find('ul'), node, params)
+          .always(function() {
+            currentlyLoading = false;
+          });
       }
     });
   },
