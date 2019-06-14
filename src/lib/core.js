@@ -2713,11 +2713,18 @@ var balloon = {
       'copyCollectionReference'
     ];
 
+    var curSearch = Object.assign({}, params);
+    delete curSearch.offset;
+    $dom.data('curSearch', curSearch);
+
     return balloon.xmlHttpRequest({
       url: balloon.base+'/nodes/event-log',
       data: data,
       type: 'GET',
       success: function(body) {
+        //return if result is from an outdated search query
+        if($dom.data('curSearch') !== curSearch) return;
+
         var $node,
           $icon,
           $text,
