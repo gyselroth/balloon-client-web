@@ -1,3 +1,20 @@
+## 3.2.0-beta2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+* [FIX] Allow scrolling in kendo autocompletes #207
+* [FIX] Balloon file editor can only be opened once #200
+* [FIX] Allow application/x-sql to be edited in text editor
+* [CHANGE] Change Icons for shared links
+* [FIX] Ignore deleted nodes when adding new nodes #121
+* [CHANGE] Only show webauthn dialog on touch devices #182
+* [FEATURE] Allow to activate/deactivate webauthn from user settings #182
+* [FIX] move/clone should prompt user to merge if conflict=19 #118
+* [FIX] Fix getting index of nodes in multiselect array #44
+* [FIX] Fix this.balloon is undefined in burl handler #149
+* [CHANGE] Switch position of login button and webauthn #182
+
+
 ## 3.2.0-beta1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Jun 05 14:47:01 CEST 2019
