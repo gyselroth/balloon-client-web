@@ -17,6 +17,7 @@
 * [FIX] Avoid displaying event results from an old search #143
 * [FIX] Clearing event search input should display all events #143
 * [FIX] Avoid stacking of multiple infinite scroll requests #143
+* [CHANGE] Only activate change password if user.has_password === true
 
 
 ## 3.2.0-beta1

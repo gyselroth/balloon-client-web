@@ -2265,7 +2265,7 @@ var balloon = {
     balloon.resetDom('user-profile');
 
     //change password should only be possible for internal users
-    var mayChangePassword = (login.user && login.user.auth === 'internal');
+    var mayChangePassword = (login.user && login.user.auth === 'internal' && login.user.has_password === true);
     $('#fs-profile-window-title-change-password').toggleClass('disabled', !mayChangePassword);
     $('#fs-profile-window-change-password').toggleClass('disabled', !mayChangePassword);
 
