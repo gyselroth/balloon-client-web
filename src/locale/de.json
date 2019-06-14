@@ -6,7 +6,7 @@
     "login": "Login",
     "logout": "Logout",
     "code": "Code",
-    "multi_factor_auth": "Dieses Konto ist mit multi factor authentication geschützt. Bitte gib den Code vom google authenticator ein:",
+    "multi_factor_auth": "Dieses Konto ist mit Multi-Faktor-Authentisierung geschützt. Bitte gib den Code vom google authenticator ein:",
     "dont_remind_webauthn": "Nicht mehr danach fragen.",
     "setup_webauthn": "Dein Gerät unterstützt eine Form von Authentifzierung ohne Passwort und kann jetzt eingerichtet werden oder später in den Benutzereinstellungen.",
     "events": "Events",
