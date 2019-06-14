@@ -4,7 +4,7 @@ const common = require('./webpack.common.js');
 module.exports = merge(common, {
   devtool: 'eval-source-map',
   devServer: {
-    https: false,
+    //https: true,
     //public: 'webpack:8080',
     proxy: {
       '/api': {

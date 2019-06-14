@@ -104,6 +104,12 @@
     "trash": "Trash",
     "search": "Search"
   },
+  "app": {
+    "file_editor": "Edit file (balloon editor)",
+    "file_viewer": "Display file (balloon viewer)",
+    "file_preview": "Display preview (balloon thubmnail)",
+    "file_downloader": "Download file"
+  },
   "search": {
     "results": "Search results",
     "reset_filter": "Reset",

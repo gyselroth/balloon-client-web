@@ -1,6 +1,6 @@
 ## 3.2.0-beta2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Fri Jun 14 15:17:02 CEST 2019
 
 * [FIX] Allow scrolling in kendo autocompletes #207
 * [FIX] Balloon file editor can only be opened once #200
@@ -18,6 +18,7 @@
 * [FIX] Clearing event search input should display all events #143
 * [FIX] Avoid stacking of multiple infinite scroll requests #143
 * [CHANGE] Only activate change password if user.has_password === true
+* [CHANGE] Added translations for in-built default balloon file handler apps
 
 
 ## 3.2.0-beta1

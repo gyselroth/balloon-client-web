@@ -43,7 +43,7 @@ var app = {
     this.balloon.mimeFileExtMap['text/markdown'] = app.MARKDOWN_EXTENSION;
 
     app.balloon.addFileHandler({
-      app: 'SimpleMDE Markdown Editor',
+      app: 'Markdown Editor (SimpleMDE)',
       appIcon: null,
       ext: 'md',
       handler: app.editMarkdownFile

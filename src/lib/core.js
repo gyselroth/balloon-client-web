@@ -762,25 +762,25 @@ var balloon = {
     }
 
     balloon.addFileHandler({
-      app: 'balloon file editor',
+      app: i18next.t('app.file_editor'),
       test: balloon.isEditable,
       handler: balloon.editFile
     });
 
     balloon.addFileHandler({
-      app: 'balloon file viewer',
+      app: i18next.t('app.file_viewer'),
       test: balloon.isViewable,
       handler: balloon.displayFile
     });
 
     balloon.addFileHandler({
-      app: 'balloon preview viewer',
+      app: i18next.t('app.file_preview'),
       test: function(node){return node.preview},
       handler: balloon.openPreview
     });
 
     balloon.addFileHandler({
-      app: 'balloon file downloader',
+      app: i18next.t('app.file_downloader'),
       test: function(node){return true;},
       handler: balloon.downloadNode
     });
