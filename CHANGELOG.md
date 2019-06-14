@@ -3,6 +3,7 @@
 **Date**: 
 
 * [CHANGE] Use real input[type="checkbox"] + label for webauthn setup wizard #182
+* [CHANGE] Use real input[type="checkbox"] + label for remember handler #149
 
 
 ## 3.2.0-beta2

@@ -189,6 +189,7 @@
         input[type="radio"] {
           & + label {
             padding-left: 36px;
+            padding-top: 0;
             vertical-align: text-top;
             min-height: 30px;
             margin-top: 0;

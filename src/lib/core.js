@@ -3319,7 +3319,7 @@ var balloon = {
       $k_display.close();
     });
 
-    var $checkbox = $div.find('.checkbox').removeClass('active');
+    var $checkbox = $div.find('input[name="choose-handler-remember"]').prop('checked', false);
 
     $div.find('input[type=submit]').off('click').on('click', function() {
       let index = $ul.find('li.active').attr('data-handler');
@@ -3327,7 +3327,7 @@ var balloon = {
       $k_display.close();
       handler.handler(node, handler.context);
 
-      if($checkbox.hasClass('active')) {
+      if($checkbox.is(':checked')) {
         let defaultApps = {};
         if(localStorage.defaultApps) {
           defaultApps = JSON.parse(localStorage.defaultApps);
@@ -3337,10 +3337,6 @@ var balloon = {
 
         localStorage.defaultApps = JSON.stringify(defaultApps);
       }
-    });
-
-    $checkbox.off('click').on('click', function() {
-      $(this).toggleClass('active');
     });
   },
 
