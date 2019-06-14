@@ -2945,6 +2945,7 @@ var balloon = {
   /**
    * Display events
    *
+   * @param object node (optional)
    * @return void
    */
   displayEventsWindow: function(node) {
@@ -2954,6 +2955,8 @@ var balloon = {
       $fs_event_search = $fs_event_win.find('input[name=event-log-search]');
 
     $fs_event_list_ul.empty();
+    $fs_event_list.data('last-search-value', '');
+    $fs_event_search.val('');
 
     if($fs_event_win.is(':visible')) {
       balloon.displayEventsInfiniteScroll($fs_event_list, node);
@@ -2972,25 +2975,48 @@ var balloon = {
     }
 
     $fs_event_search.off('keyup').on('keyup', function(e) {
-      var value = $(this).val();
+      balloon._eventsWindowSearch.bind(this)(node);
+    });
 
-      if(value.length >= 3) {
-        var params = {query: {'$or': [
-          {name: {$regex:value, $options:'i'}},
-          {'previous.name': {$regex:value, $options:'i'}}
-        ]}};
-
-        $fs_event_list_ul.empty();
-        balloon.displayEventsInfiniteScroll($fs_event_list, node, params);
-        balloon.displayEvents($fs_event_list_ul, node, params);
-      } else if(e.keyCode === 8 && value.length === 2) {
-        $fs_event_list_ul.empty();
-        balloon.displayEventsInfiniteScroll($fs_event_list, node);
-        balloon.displayEvents($fs_event_list_ul, node);
-      }
+    $fs_event_search.on('search', function (e) {
+      balloon._eventsWindowSearch.bind(this)(node);
     });
   },
 
+  /**
+   * Event search event handler
+   *
+   * @param object node (optional)
+   * @return void
+   */
+  _eventsWindowSearch: function(node) {
+    var value = $(this).val();
+
+    var $fs_event_list  = $('#fs-event-window #fs-events-window-list'),
+      $fs_event_list_ul  = $fs_event_list.find('ul');
+
+    var lastSearchValue = $fs_event_list.data('last-search-value');
+
+    if(value.length >= 3) {
+      //do not search for same query twice
+      if(value === lastSearchValue) return;
+
+      $fs_event_list.data('last-search-value', value);
+      var params = {query: {'$or': [
+        {name: {$regex:value, $options:'i'}},
+        {'previous.name': {$regex:value, $options:'i'}}
+      ]}};
+
+      $fs_event_list_ul.empty();
+      balloon.displayEventsInfiniteScroll($fs_event_list, node, params);
+      balloon.displayEvents($fs_event_list_ul, node, params);
+    } else if(lastSearchValue !== '') {
+      $fs_event_list.data('last-search-value', '');
+      $fs_event_list_ul.empty();
+      balloon.displayEventsInfiniteScroll($fs_event_list, node);
+      balloon.displayEvents($fs_event_list_ul, node);
+    }
+  },
 
   /**
    * Undo event
