@@ -14,6 +14,9 @@
 * [FIX] Fix this.balloon is undefined in burl handler #149
 * [CHANGE] Switch position of login button and webauthn #182
 * [CHANGE] Change event search query to $regex #143
+* [FIX] Avoid displaying event results from an old search #143
+* [FIX] Clearing event search input should display all events #143
+* [FIX] Avoid stacking of multiple infinite scroll requests #143
 
 
 ## 3.2.0-beta1
