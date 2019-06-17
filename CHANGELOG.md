@@ -1,9 +1,12 @@
-## 3.2.0-beta3
+## 2.2.0-beta3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: 
 
 * [CHANGE] Use real input[type="checkbox"] + label for webauthn setup wizard #182
 * [CHANGE] Use real input[type="checkbox"] + label for remember handler #149
+* [CHANGE] Changed translations for in-built file handler apps
+* [CHANGE] removed preview file handler
+* [CHANGE] Desktop download popup should contain more information about proper installation way on linux #77
 
 
 ## 3.2.0-beta2

@@ -9,7 +9,8 @@
       "debian": "DEB based (.deb)",
       "redhat": "RPM based (.rpm)",
       "download": "Download",
-      "hint": "There is full featured desktop client app which brings your cloud to your desktop. The desktop client is available for Windows, Mac OS X and Linux. You can get if you hit the icon {icon-app-download} on the bottom left."
+      "hint": "There is full featured desktop client app which brings your cloud to your desktop. The desktop client is available for Windows, Mac OS X and Linux. You can get if you hit the icon {icon-app-download} on the bottom left.",
+      "advanced": "Also see the desktop client installation <a href='https://balloons.readthedocs.io/en/latest/desktop-client'>documentation</a> if you want further information or instructions how to install the desktop client on Linux via package sources."
     }
   }
 }

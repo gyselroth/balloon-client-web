@@ -46,6 +46,7 @@ var app = {
         + '<li id="fs-desktop-deb"><div class="icon"></div><span class="title">'+i18next.t('app.desktopclient.debian')+'</span><span class="download">'+i18next.t('app.desktopclient.download')+'</span></li>'
         + '<li id="fs-desktop-rpm"><div class="icon"></div><span class="title">'+i18next.t('app.desktopclient.redhat')+'</span><span class="download">'+i18next.t('app.desktopclient.download')+'</span></li>'
       + '</ul>'
+      + '<div>'+i18next.t('app.desktopclient.documentation')+'</div>'
     +'</div>');
 
     $div.off('click').on('click', 'li', this.download);
