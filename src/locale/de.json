@@ -105,10 +105,9 @@
     "search": "Suchen"
   },
   "app": {
-    "file_editor": "Datei editieren (balloon editor)",
-    "file_viewer": "Datei öffnen (balloon viewer)",
-    "file_preview": "Miniaturansicht öffnen (balloon thubmnail)",
-    "file_downloader": "Datei herunterladen"
+    "file_editor": "Text Editor",
+    "file_viewer": "Vorschau",
+    "file_downloader": "Download"
   },
   "search": {
     "results": "Suchresultate",

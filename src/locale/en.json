@@ -105,10 +105,9 @@
     "search": "Search"
   },
   "app": {
-    "file_editor": "Edit file (balloon editor)",
-    "file_viewer": "Display file (balloon viewer)",
-    "file_preview": "Display preview (balloon thubmnail)",
-    "file_downloader": "Download file"
+    "file_editor": "Text Editor",
+    "file_viewer": "Preview",
+    "file_downloader": "Download"
   },
   "search": {
     "results": "Search results",

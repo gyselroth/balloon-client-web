@@ -774,12 +774,6 @@ var balloon = {
     });
 
     balloon.addFileHandler({
-      app: i18next.t('app.file_preview'),
-      test: function(node){return node.preview},
-      handler: balloon.openPreview
-    });
-
-    balloon.addFileHandler({
       app: i18next.t('app.file_downloader'),
       test: function(node){return true;},
       handler: balloon.downloadNode
@@ -8532,23 +8526,6 @@ var balloon = {
     $input.unbind('blur').bind('blur', function() {
       $meta_tags.removeClass('fs-select-tags');
     });
-  },
-
-  /**
-   * Open preview
-   */
-  openPreview: function(node) {
-    var $fs_preview_win = $('#fs-preview-window');
-    var $preview = $('#fs-preview-thumb').find('img');
-
-    var $k_preview_win = $fs_preview_win.kendoBalloonWindow({
-      title: node.name,
-      resizable: false,
-      modal: true,
-      open: function() {
-        $fs_preview_win.html($preview);
-      }
-    }).data('kendoBalloonWindow').center().open();
   },
 
   /**
