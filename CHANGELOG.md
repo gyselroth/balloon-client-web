@@ -1,3 +1,10 @@
+## 3.2.0-beta4
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: 
+
+* [FIX] Reset view bar when menu is changed
+
+
 ## 3.2.0-beta3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Mon Jun 17 17:02:02 CEST 2019
