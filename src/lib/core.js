@@ -3283,7 +3283,7 @@ var balloon = {
     var $div = $('#fs-file-handler-window');
     $div.find('li').remove();
     var $ul = $div.find('ul');
-    $div.find('div:first-child').html(i18next.t('tree.choose_handler_text', node.name));
+    $div.find('#fs-file-handler-window-text').html(i18next.t('tree.choose_handler_text', node.name));
 
     for(let i=0; i < handlers.length; i++) {
       let img = '';
