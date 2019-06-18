@@ -3395,7 +3395,7 @@ var balloon = {
     $that.addClass('fs-menu-left-active');
 
     balloon.updatePannel(false);
-    balloon.resetDom(['search']);
+    balloon.resetDom(['search', 'view-bar']);
 
     if(action === 'cloud') {
       balloon.resetDom('breadcrumb-home');
