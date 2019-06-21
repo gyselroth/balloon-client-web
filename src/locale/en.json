@@ -203,6 +203,7 @@
   },
   "button": {
     "save": "Save",
+    "save_close": "Save and close",
     "setup": "Setup",
     "ignore": "Ignore",
     "cancel": "Cancel",

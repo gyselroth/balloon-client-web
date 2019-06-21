@@ -203,6 +203,7 @@
   },
   "button": {
     "save": "Speichern",
+    "save_close": "Speichern und Schliessen",
     "setup": "Einrichten",
     "ignore": "Ignorieren",
     "cancel": "Abbrechen",

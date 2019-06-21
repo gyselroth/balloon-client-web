@@ -7702,7 +7702,8 @@ var balloon = {
     });
 
     $div.find('input[type=submit]').off('click').on('click', function(e) {
-      balloon.saveFile(node, $textarea.val());
+      var name = $(this).attr('name');
+      balloon.saveFile(node, $textarea.val(), (name === 'save'));
     });
   },
 
@@ -7712,10 +7713,11 @@ var balloon = {
    *
    * @param  object node
    * @param  string content
+   * @param  boolean keepFileOpen
    * @return void
    */
-  saveFile: function(node, content) {
-    balloon.xmlHttpRequest({
+  saveFile: function(node, content, keepFileOpen) {
+    return balloon.xmlHttpRequest({
       url: balloon.base+'/files?id='+balloon.id(node),
       type: 'PUT',
       data: content,
@@ -7730,7 +7732,7 @@ var balloon = {
         }
       },
       success: function(data) {
-        balloon.resetDom('edit');
+        if(keepFileOpen !== true) balloon.resetDom('edit');
 
         if(balloon.last && balloon.last.id === data.id) {
           balloon.last = data;

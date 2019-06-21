@@ -106,7 +106,8 @@ var app = {
     });
 
     app.$windowHtml.find('input[type=submit]').off('click').on('click', function(e) {
-      app._editorSave();
+      var name = $(this).attr('name');
+      app._editorSave(name !== 'save-close');
     });
   },
 
@@ -153,6 +154,7 @@ var app = {
           '<div id="app-markdown-edit-live-editor">'+
             '<textarea></textarea>'+
             '<div id="app-markdown-edit-editor-button-wrapper" class="fs-window-secondary-actions">'+
+                '<input type="submit" class="fs-button-secondary" name="save-close" value="'+ i18next.t('button.save_close') +'" />'+
                 '<input type="submit" class="fs-button-primary" name="save" value="'+ i18next.t('button.save') +'" />'+
             '</div>'+
           '</div>'+
@@ -392,11 +394,12 @@ var app = {
   /**
    * Save the content of the editor
    *
+   * @param boolean keepFileOpen
    * @return void
    */
-  _editorSave: function() {
-    app.balloon.saveFile(app.editor.node, app.editor.simplemde.value());
-    app._closeEditorWindow();
+  _editorSave: function(keepFileOpen) {
+    app.balloon.saveFile(app.editor.node, app.editor.simplemde.value(), true);
+    if(keepFileOpen !== true) app._closeEditorWindow();
   },
 
   /**
