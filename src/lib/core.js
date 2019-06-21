@@ -7650,6 +7650,7 @@ var balloon = {
    */
   _editFile: function(node) {
     balloon.resetDom('edit');
+    var editorData;
     var $div = $('#fs-edit-live'),
       $textarea = $div.find('textarea');
 
@@ -7668,7 +7669,8 @@ var balloon = {
       },
       dataType: 'text',
       success: function (data) {
-        $textarea.val(data);
+        editorData = data;
+        $textarea.val(editorData);
 
         var $k_display = $div.kendoBalloonWindow({
           title: winTitle,
@@ -7677,7 +7679,7 @@ var balloon = {
           fullscreen: true,
           draggable: false,
           close: function(e) {
-            if(e.userTriggered && data != $textarea.val()) {
+            if(e.userTriggered && editorData != $textarea.val()) {
               //user tries to close window with unsaved changes
               e.preventDefault();
               var msg  = i18next.t('prompt.close_save_file', node.name);
@@ -7702,8 +7704,12 @@ var balloon = {
     });
 
     $div.find('input[type=submit]').off('click').on('click', function(e) {
+      var value = $textarea.val();
       var name = $(this).attr('name');
-      balloon.saveFile(node, $textarea.val(), (name === 'save'));
+
+      if(name === 'save') editorData = value;
+
+      balloon.saveFile(node, value, (name === 'save'));
     });
   },
 

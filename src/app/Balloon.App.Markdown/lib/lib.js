@@ -398,6 +398,8 @@ var app = {
    * @return void
    */
   _editorSave: function(keepFileOpen) {
+    if(keepFileOpen === true) app.editor.data = app.editor.simplemde.value();
+
     app.balloon.saveFile(app.editor.node, app.editor.simplemde.value(), true);
     if(keepFileOpen !== true) app._closeEditorWindow();
   },
