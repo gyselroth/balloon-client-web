@@ -5,6 +5,7 @@
 * [FIX] Reset view bar when menu is changed #224
 * [FIX] Avoid doubled text in file handler chooser #225
 * [FIX] menu swipe upwards opens the menu #229
+* [FIX] Remove fs-fullscreen-window-open on icon close click #230
 
 
 ## 3.2.0-beta3

@@ -92,6 +92,17 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
       return that;
     },
 
+    _actionForIcon: function(icon) {
+      if(icon.hasClass('k-i-close')) {
+        // remove the class, when window is close via action icon close.
+        // a bit of a hack though, but unfourtanetly the action handler only
+        // calls `_close`, which we can't extend without running into circular loops
+        $('body').removeClass('fs-fullscreen-window-open');
+      }
+
+      return Window.fn._actionForIcon.call(this, icon);
+    },
+
     close: function() {
       var that = this;
 
