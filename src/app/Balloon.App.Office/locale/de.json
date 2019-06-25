@@ -20,7 +20,12 @@
       },
       "word_document": "Word-Dokument",
       "excel_document": "Excel-Dokument",
-      "powerpoint_document": "Powerpoint-Dokument"
+      "powerpoint_document": "Powerpoint-Dokument",
+      "snackbar": {
+        "docx_created": "Das Word-Dokument <b>{{name}}</b> wurde erstellt.",
+        "xlsx_created": "Das Excel-Dokument <b>{{name}}</b> wurde erstellt.",
+        "pptx_created": "Das Powerpoint-Dokument <b>{{name}}</b> wurde erstellt."
+      }
     }
   },
 

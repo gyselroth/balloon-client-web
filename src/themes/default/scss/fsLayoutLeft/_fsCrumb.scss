@@ -1,16 +1,37 @@
 #fs-crumb {
-  width: calc(100% - 150px);
+  @include clearfix;
+
+  width: calc(100% - 40px);
   display: block;
   float: left;
-  margin: 15px 0 8px 0;
+  margin: 4px 0;
+
+  #fs-crumb-back {
+    $buttonSize: 30px;
+
+    @include icon-button($buttonSize);
+
+    display: none;
+    color: $colorActiveBlue;
+    cursor: pointer;
+    float: left;
+    margin: -2px 16px 0 0;
+  }
+
+  &.is-child #fs-crumb-back {
+    display: block;
+  }
 
   ul {
+    float: left;
+    width: calc(100% - 46px);
+
     li {
       display: none;
       color: $colorMediumGrey;
       width: auto;
-      height: 17px;
-      line-height: 17px;
+      height: 22px;
+      line-height: 22px;
       font-size: $fontSizeParagraph;
       font-weight: $fontWeightParagraph;
       letter-spacing: 0.3px;
@@ -23,13 +44,6 @@
 
       cursor: pointer;
 
-      &:after {
-        // TODO pixtron - use svg or icon font
-        content: ">";
-        display: inline-block;
-        padding: 0 10px;
-      }
-
       &:last-child {
         display: inline-block;
         color: $colorDarkGrey;
@@ -40,24 +54,75 @@
         font-weight: 500;
         letter-spacing: 0.4px;
         text-align: left;
-
-        &:after {
-          display: none;
-        }
       }
 
       &.removed {
         cursor: default;
       }
+    }
+  }
 
-      @media screen and (min-width: $breakpointBreadcrumb) {
-        display: inline-block;
+  @media screen and (min-width: $breakpointBreadcrumbM) {
+    #fs-crumb-back {
+      display: none !important;
+    }
 
+    ul {
+      float: none;
+      width: 100%;
+
+      li {
         &:last-child {
           @include font-headline;
           height: 27px;
           line-height: 27px;
         }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointBreadcrumbL) {
+    margin: 15px 0 8px 0;
+
+    ul {
+      li {
+        display: inline-block;
+
+        &:after {
+          // TODO pixtron - use svg or icon font
+          content: ">";
+          padding: 0 10px;
+        }
+
+        &:last-child {
+          &:after {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    width: calc(100% - 100px);
+
+    ul {
+      li {
+        display: none;
+
+        &:last-child {
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible + $breakpointBreadcrumbL) {
+    margin: 15px 0 8px 0;
+
+    ul {
+      li {
+        display: inline-block;
       }
     }
   }

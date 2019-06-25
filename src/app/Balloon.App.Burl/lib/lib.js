@@ -25,39 +25,17 @@ var app = {
 
   preInit: function(core) {
     this.balloon = core;
-    this.balloon.addNew(app.BURL_EXTENSION, 'app.burl.tree.burl_file', 'hyperlink', this.addBurl.bind(this));
+    this.balloon.addNew(app.BURL_EXTENSION, 'app.burl.tree.burl_file', 'file-burl', this.addBurl.bind(this));
 
-    this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-language';
+    this.balloon.fileExtIconMap[app.BURL_EXTENSION] = 'gr-i-file-burl';
     this.balloon.mimeFileExtMap['application/vnd.balloon.burl'] = app.BURL_EXTENSION;
 
-    this.balloon.addPreviewHandler('burl', this._handlePreview);
+    app.balloon.addFileHandler({
+      app: 'balloon burl',
+      ext: 'burl',
+      handler: app.handleBurl
+    });
   },
-
-  /**
-   * Checks if "preview" for a given node can be handled by this app.
-   * If it can handle it, return a handler to preview the file
-   *
-   * @param   string mime
-   * @return  void|function
-   */
-  _handlePreview: function(node) {
-    if (app.isBurlFile(node)) {
-      return function(node) {
-        app.handleBurl(node);
-      }
-    }
-  },
-
-  /**
-   * Check if file is .burl
-   *
-   * @param   object node
-   * @return  bool
-   */
-  isBurlFile: function(node) {
-    return this.BURL_EXTENSION === this.balloon.getFileExtension(node);
-  },
-
 
   addBurl: function() {
     var $d = $.Deferred();
@@ -67,8 +45,8 @@ var app = {
     $div.html(
       '<div class="error-message"></div>'+
       '<div class="fs-window-form">'+
-        '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
-        '<label>'+i18next.t('app.burl.url')+'</label><input placeholder="http://www.example.org" name="url" type="text"/>'+
+        '<div class="fs-window-form-row"><label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/></div>'+
+        '<div class="fs-window-form-row"><label>'+i18next.t('app.burl.url')+'</label><input placeholder="http://www.example.org" name="url" type="text"/></div>'+
       '</div>'+
       '<div class="fs-window-secondary-actions">'+
         '<input name="cancel" value='+i18next.t('button.cancel')+' type="submit" tabindex="2"/>'+
@@ -115,7 +93,7 @@ var app = {
             return;
           }
 
-          if(app.balloon.nodeExists(name+'.'+app.BURL_EXTENSION) || name === '') {
+          if(app.balloon.nodeExists(name+'.'+app.BURL_EXTENSION, true) || name === '') {
             $input_name.addClass('error-input');
             fieldsValid.name = false;
           } else {
@@ -183,6 +161,16 @@ var app = {
       url: this.balloon.base+'/files?name='+name+'&'+this.balloon.param('collection', this.balloon.getCurrentCollectionId()),
       type: 'PUT',
       data: url,
+      snackbar: {
+        message: 'app.burl.snackbar.file_created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          app.balloon.remove(response, true, true);
+        }
+      },
       success: function(data) {
         this.balloon.refreshTree('/collections/children', {id: this.balloon.getCurrentCollectionId()});
         app.balloon.added_rename = data.id;
@@ -206,20 +194,20 @@ var app = {
    * @return void
    */
   handleBurl: function(node) {
-    this.balloon.xmlHttpRequest({
-      url: this.balloon.base+'/files/content',
+    app.balloon.xmlHttpRequest({
+      url: app.balloon.base+'/files/content',
       type: 'GET',
       data: {
-        id: this.balloon.id(node),
+        id: app.balloon.id(node),
       },
       dataType: 'text',
       success: function (data) {
         try {
           let url = new URL(data);
           var msg  = i18next.t('app.burl.prompt.open_burl', url.href);
-          this.balloon.promptConfirm(msg, this._handleBurl, [url]);
+          app.balloon.promptConfirm(msg, app._handleBurl, [url]);
         } catch (error) {
-          this.balloon.displayError(error);
+          app.balloon.displayError(error);
         }
       }.bind(this)
     });

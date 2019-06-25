@@ -1,0 +1,14 @@
+#fs-content-nav-small-more {
+
+  display: none;
+
+  .fs-content-select-active & {
+    margin: 0 -1*$fsContentSidePaddingS;
+    padding: 0 $fsContentSidePaddingS;
+    display: block;
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    display: none !important;
+  }
+}

@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title data-i18n="title"></title>
+
     <style>
         #fs-spinner,
-        #fs-snackbar {
+        #fs-snackbar,
+        #login-webauthn,
+        #fs-rename-window {
             display: none;
         }
 
@@ -116,19 +119,37 @@
             <div id="login-body">
                <div id="login-credentials-error" class="error-message" data-i18n="login.error.credentials"></div>
                <div id="login-code-error" class="error-message" data-i18n="login.error.code"></div>
+               <div id="login-webauthn-error" class="error-message" data-i18n="login.error.webauthn"></div>
+               <div id="login-setup-webauthn">
+                  <p data-i18n="login.setup_webauthn"></p>
+                  <div id="login-webauthn-setup-error" class="error-message" data-i18n="login.error.webauthn_setup"></div>
+                  <input type="submit" name="submit" class="fs-button-primary" data-i18n="[value]button.setup"/>
+                  <div>
+                      <input type="checkbox" name="webauthn-reminder" id="webauthn-reminder" />
+                      <label for="webauthn-reminder" data-i18n="login.dont_remind_webauthn"></label>
+                  </div>
+                  <input type="submit" name="ignore" class="fs-button-secondary" data-i18n="[value]button.ignore"/>
+
+               </div>
                <div id="login-basic">
-                  <input type="text" name="username" autocomplete="off" data-i18n="[placeholder]login.username"/>
-                  <input type="password" name="password" autocomplete="off" data-i18n="[placeholder]login.password"/>
+                  <input type="text" name="username" autocomplete="current-username" data-i18n="[placeholder]login.username"/>
+                  <input type="password" name="password" autocomplete="current-password" data-i18n="[placeholder]login.password"/>
 
                   <div id="login-mfa">
                       <p data-i18n="login.multi_factor_auth"></p>
                       <input type="text" name="code" autocomplete="off" data-i18n="[placeholder]login.code"/>
                   </div>
+
+                  <div id="login-recaptcha" class="g-recaptcha"></div>
+
                   <div class="login-select">
                       <select id="login-locale"></select>
                       <svg class="gr-icon gr-i-expand"><use xlink:href="<%= iconsSvg %>#expand"></use></svg>
                   </div>
                   <input type="submit" name="submit" class="fs-button-primary" data-i18n="[value]login.login"/>
+                  <div id="login-webauthn">
+                      <svg viewBox="0 0 24 24" class="gr-icon gr-i-fingerprint"><use xlink:href="<%= iconsSvg %>#fingerprint"></use></svg>
+                  </div>
                </div>
                <div id="login-oidc-error" class="error-message" data-i18n="login.error.oidc"></div>
                <div id="login-oidc"></div>
@@ -138,12 +159,6 @@
     </div>
 
     <div style="display: none;" id="fs-namespace">
-        <!-- TODO pixtron - what is this for? -->
-        <div id="fs-browser-properties"></div>
-
-        <!-- TODO pixtron - remove this? -->
-        <input id="fs-query" name="query" type="hidden" value=""/>
-
         <div id="fs-browser-top-bar">
             <div id="fs-menu-left-toggl" data-i18n="[title]nav.action.toggle_menu">
                 <svg class="gr-icon gr-i-menu"><use xlink:href="<%= iconsSvg %>#menu"></use></svg>
@@ -163,16 +178,7 @@
                     <svg viewBox="0 0 24 24" class="gr-icon gr-i-expand"><use xlink:href="<%= iconsSvg %>#expand"></use></svg>
                 </div>
                 <div id="fs-search-mode-dropdown" class="bln-dropdown fs-search-dropwdown">
-                    <ul class="bln-dropdown-content fs-search-dropdown-content">
-                        <li data-i18n="[title]search.mode.nodename">
-                            <input type="radio" name="fs-search-mode" value="nodename" id="fs-search-mode-nodename" checked="checked" />
-                            <label for="fs-search-mode-nodename" data-i18n="search.mode.nodename"></label>
-                        </li>
-                        <li data-i18n="[title]search.mode.fulltext">
-                            <input type="radio" name="fs-search-mode" value="fulltext" id="fs-search-mode-fulltext" />
-                            <label for="fs-search-mode-fulltext" data-i18n="search.mode.fulltext"></label>
-                        </li>
-                    </ul>
+                    <ul class="bln-dropdown-content fs-search-dropdown-content"></ul>
                 </div>
                 <div id="fs-search-reset">
                     <svg viewBox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg>
@@ -238,9 +244,12 @@
         <div id="fs-browser-layout">
             <div id="fs-layout-left">
                 <div id="fs-layout-left-container">
-                    <div id="fs-layout-left-inner">
+                    <div id="fs-layout-left-inner" >
                     <div id="fs-layout-left-header">
                         <div id="fs-crumb">
+                            <div id="fs-crumb-back">
+                                <svg class="gr-icon gr-i-arrow-w"><use xlink:href="<%= iconsSvg %>#arrow-w"></use></svg>
+                            </div>
                             <ul id="fs-crumb-search-list">
                                 <li fs-id="" data-i18n="search.results"></li>
                             </ul>
@@ -250,6 +259,10 @@
                         </div>
 
                         <div id="fs-browser-action">
+                            <div id="fs-browser-action-mobile">
+                                <svg viewbox="0, 0, 24, 24" class="gr-icon gr-i-plus"><use xlink:href="<%= iconsSvg %>#plus"></use></svg>
+                                <svg viewbox="0, 0, 24, 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg>
+                            </div>
                             <ul id="fs-browser-action-buttons">
                                 <li data-i18n="[title]nav.action.add">
                                     <svg class="gr-icon gr-i-add"><use xlink:href="<%= iconsSvg %>#add"></use></svg>
@@ -270,51 +283,106 @@
                         <input name="files[]" id="fs-files" type="file" multiple="multiple"/>
                     </div>
 
-                    <div id="fs-browser">
-                        <div id="fs-browser-header">
-                            <div class="fs-browser-column fs-browser-column-icon" data-i18n="[title]nav.action.filter">
-                                <svg class="gr-icon gr-i-funnel" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#funnel"></use></svg>
-                                <div id="fs-action-filter" class="fs-action-element"></div>
-                            </div>
-                            <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-sortable fs-browser-column-name"><div data-i18n="tree.column.name"></div><span><svg class="gr-icon gr-i-expand" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#expand"></use></svg></span></div>
-                            <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-sortable fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
-                            <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-sortable fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
-                            <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-checkbox"></div>
 
-                            <div id="fs-action-filter-select" class="bln-dropdown">
-                                <span class="bln-dropdown-spike"></span>
-                                <ul class="bln-dropdown-content">
-                                    <li>
-                                        <input type="checkbox" name="directory" id="fs-filter-directory" checked>
-                                        <label for="fs-filter-directory" data-i18n="tree.filter.directories" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="file" id="fs-filter-file" checked>
-                                        <label for="fs-filter-file" data-i18n="tree.filter.files" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="share" id="fs-filter-share" checked>
-                                        <label for="fs-filter-share" data-i18n="tree.filter.shares" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="deleted" id="fs-filter-deleted">
-                                        <label for="fs-filter-deleted" data-i18n="tree.filter.deleted" />
-                                    </li>
-                                    <li>
-                                        <input type="checkbox" name="hidden" id="fs-filter-hidden">
-                                        <label for="fs-filter-hidden" data-i18n="tree.filter.hidden" />
-                                    </li>
-                                </ul>
+                    <div id="fs-browser" class="pull-to-refresh-ios">
+                        <div class="pull-to-refresh-ios__spinner">
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                            <div class="pull-to-refresh-ios__blade"></div>
+                        </div>
+
+                        <div class="pull-to-refresh-ios__main">
+                            <div id="fs-browser-header">
+                                <div class="fs-browser-column" id="fs-browser-action-sorting" data-i18n="[title]nav.action.sort">
+                                    <svg class="gr-icon gr-i-sort-desc" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#sort-desc"></use></svg>
+                                    <div id="fs-action-sorting" class="fs-action-element" data-i18n="tree.sorting.name_asc"></div>
+                                </div>
+
+                                <div class="fs-browser-column fs-browser-column-icon" data-i18n="[title]nav.action.filter">
+                                    <svg class="gr-icon gr-i-funnel" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#funnel"></use></svg>
+                                    <div id="fs-action-filter" class="fs-action-element"></div>
+                                </div>
+                                <div id="fs-browser-header-name" class="fs-browser-column fs-browser-column-sortable fs-browser-column-name"><div data-i18n="tree.column.name"></div><span><svg class="gr-icon gr-i-expand" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#expand"></use></svg></span></div>
+                                <div id="fs-browser-header-size" class="fs-browser-column fs-browser-column-sortable fs-browser-column-size"><div data-i18n="tree.column.size"></div><span></span></div>
+                                <div id="fs-browser-header-changed" class="fs-browser-column fs-browser-column-sortable fs-browser-column-changed"><div data-i18n="tree.column.changed"></div><span></span></div>
+                                <div id="fs-browser-header-checkbox" class="fs-browser-column fs-browser-column-checkbox"><span></span></div>
+
+                                <div id="fs-action-filter-select" class="bln-dropdown">
+                                    <span class="bln-dropdown-spike"></span>
+                                    <ul class="bln-dropdown-content">
+                                        <li>
+                                            <input type="checkbox" name="directory" id="fs-filter-directory" checked>
+                                            <label for="fs-filter-directory" data-i18n="tree.filter.directories" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="file" id="fs-filter-file" checked>
+                                            <label for="fs-filter-file" data-i18n="tree.filter.files" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="share" id="fs-filter-share" checked>
+                                            <label for="fs-filter-share" data-i18n="tree.filter.shares" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="deleted" id="fs-filter-deleted">
+                                            <label for="fs-filter-deleted" data-i18n="tree.filter.deleted" />
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="hidden" id="fs-filter-hidden">
+                                            <label for="fs-filter-hidden" data-i18n="tree.filter.hidden" />
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div id="fs-action-sorting-select" class="bln-dropdown">
+                                    <span class="bln-dropdown-spike"></span>
+                                    <ul class="bln-dropdown-content">
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-name-asc" value="name:asc" checked />
+                                            <label for="fs-sorting-name-asc" data-i18n="tree.sorting.name_asc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-name-desc" value="name:desc" />
+                                            <label for="fs-sorting-name-desc" data-i18n="tree.sorting.name_desc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-size-asc" value="size:asc" />
+                                            <label for="fs-sorting-size-asc" data-i18n="tree.sorting.size_asc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-size-desc" value="size:desc"  />
+                                            <label for="fs-sorting-size-desc" data-i18n="tree.sorting.size_desc" />
+                                        </li>
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-changed-asc" value="changed:asc"  />
+                                            <label for="fs-sorting-changed-asc" data-i18n="tree.sorting.changed_asc" />
+                                        </li>
+                                        <li>
+                                            <input type="radio" name="sort-direction" id="fs-sorting-changed-desc" value="changed:desc"  />
+                                            <label for="fs-sorting-changed-desc" data-i18n="tree.sorting.changed_desc" />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
+
+                            <div id="fs-browser-tree" class="pull-to-refresh-ios__main"></div>
+
+                            <div id="fs-action-refresh" class="fs-action-element" data-i18n="[title]nav.action.refresh">
+                                <svg class="gr-icon gr-i-refresh"><use xlink:href="<%= iconsSvg %>#refresh"></use></svg>
                             </div>
                         </div>
 
-                        <div id="fs-browser-fresh" data-i18n="tree.no_nodes"></div>
-
-                        <div id="fs-browser-tree"></div>
-
-                        <div id="fs-action-refresh" class="fs-action-element" data-i18n="[title]nav.action.refresh">
-                            <svg class="gr-icon gr-i-refresh"><use xlink:href="<%= iconsSvg %>#refresh"></use></svg>
-                        </div>
 
                         <div id="fs-upload"></div>
                     </div>
@@ -324,200 +392,255 @@
 
             <div id="fs-content">
                 <div id="fs-content-inner">
-                    <div id="fs-browser-summary"></div>
-
-                    <div id="fs-properties-name">
-                        <span class="fs-value"></span>
-                        <span class="fs-ext"></span>
+                    <div id="fs-browser-summary">
+                        <div></div>
                     </div>
 
-                    <ul id="fs-browser-select-action">
-                        <li id="fs-action-download" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.download">
-                            <svg class="gr-icon gr-i-download"><use xlink:href="<%= iconsSvg %>#download"></use></svg>
-                        </li>
-                        <li id="fs-action-delete" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.delete">
-                            <svg class="gr-icon gr-i-trash"><use xlink:href="<%= iconsSvg %>#trash"></use></svg>
-                        </li>
-                        <li id="fs-action-restore" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.restore">
-                            <svg class="gr-icon gr-i-restore-trash"><use xlink:href="<%= iconsSvg %>#restore-trash"></use></svg>
-                        </li>
-                        <li id="fs-action-copy" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.copy">
-                            <svg class="gr-icon gr-i-copy"><use xlink:href="<%= iconsSvg %>#copy"></use></svg>
-                        </li>
-                        <li id="fs-action-cut" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.cut">
-                            <svg class="gr-icon gr-i-cut"><use xlink:href="<%= iconsSvg %>#cut"></use></svg>
-                        </li>
-                        <li id="fs-action-paste" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.paste">
-                            <div id="fs-action-paste-count" class="fs-tiny-button-count"></div>
-                            <svg class="gr-icon gr-i-paste"><use xlink:href="<%= iconsSvg %>#paste"></use></svg>
-                        </li>
-                        <li id="fs-action-rename" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.rename">
-                            <svg class="gr-icon gr-i-text-edit"><use xlink:href="<%= iconsSvg %>#text-edit"></use></svg>
-                        </li>
-                        <li id="fs-action-perma-link" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.perma-link">
-                            <svg class="gr-icon gr-i-hyperlink"><use xlink:href="<%= iconsSvg %>#hyperlink"></use></svg>
+                    <div id="fs-properties-name">
+                        <div class="fs-content-nodename">
+                            <span class="fs-value"></span>
+                            <span class="fs-ext"></span>
+                        </div>
+                    </div>
+
+                    <a role="button" href="#" id="fs-content-close">
+                        <svg class="gr-icon gr-i-close" viewBox="0 0 24 24">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="<%= iconsSvg %>#close"></use>
+                        </svg>
+                    </a>
+
+                    <div id="fs-browser-select-action">
+                        <ul>
+                            <li id="fs-action-download" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.download">
+                                <svg class="gr-icon gr-i-download"><use xlink:href="<%= iconsSvg %>#download"></use></svg>
+                            </li>
+                            <li id="fs-action-delete" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.delete">
+                                <svg class="gr-icon gr-i-trash"><use xlink:href="<%= iconsSvg %>#trash"></use></svg>
+                            </li>
+                            <li id="fs-action-restore" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.restore">
+                                <svg class="gr-icon gr-i-restore-trash"><use xlink:href="<%= iconsSvg %>#restore-trash"></use></svg>
+                            </li>
+                            <li id="fs-action-copy" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.copy">
+                                <svg class="gr-icon gr-i-copy"><use xlink:href="<%= iconsSvg %>#copy"></use></svg>
+                            </li>
+                            <li id="fs-action-cut" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.cut">
+                                <svg class="gr-icon gr-i-cut"><use xlink:href="<%= iconsSvg %>#cut"></use></svg>
+                            </li>
+                            <li id="fs-action-paste" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.paste">
+                                <div id="fs-action-paste-count" class="fs-tiny-button-count"></div>
+                                <svg class="gr-icon gr-i-paste"><use xlink:href="<%= iconsSvg %>#paste"></use></svg>
+                            </li>
+                            <li id="fs-action-rename" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.rename">
+                                <svg class="gr-icon gr-i-text-edit"><use xlink:href="<%= iconsSvg %>#text-edit"></use></svg>
+                            </li>
+                            <li id="fs-action-perma-link" class="fs-action-element fs-action-disabled" data-i18n="[title]nav.action.perma-link">
+                                <svg class="gr-icon gr-i-hyperlink"><use xlink:href="<%= iconsSvg %>#hyperlink"></use></svg>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <ul id="fs-content-nav-small-more" class="fs-content-nav-small">
+                        <li>
+                            <span data-i18n="nav.view.more"></span>
+                            <svg viewBox="0 0 24 24" class="gr-icon gr-i-arrowhead-e"><use xlink:href="<%= iconsSvg %>#arrowhead-e"></use></svg>
                         </li>
                     </ul>
-
-                    <dl id="fs-content-view">
-                        <dd id="fs-preview">
-                            <div id="fs-preview-thumb">
-                                <div></div>
-                            </div>
-
-                            <div id="fs-preview-properties">
-                                <div id="fs-properties-meta-tags" class="fs-preview-property">
-                                    <div id="fs-properties-meta-tags-input">
-                                        <div class="fs-preview-label" data-i18n="view.prop.head.tags"></div>
-                                        <div id="fs-preview-add-tag">
-                                            <input type="text" name="add_tag"/>
-                                        </div>
-                                        <div id="fs-preview-add-tag-button">
-                                            <div class="fs-add">
-                                                <svg viewBox="0 0 24 24" class="gr-icon gr-i-plus"><use xlink:href="<%= iconsSvg %>#plus"></use></svg>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="fs-properties-meta-tags-tags">
-                                        <ul class="tag-list"></ul>
-                                    </div>
-                                </div>
-
-                                <div id="fs-properties-meta-color" class="fs-preview-property">
-                                    <div class="fs-preview-label" data-i18n="view.prop.head.color_tag"></div>
-                                    <ul>
-                                        <li class="fs-color-magenta"></li>
-                                        <li class="fs-color-purple"></li>
-                                        <li class="fs-color-blue"></li>
-                                        <li class="fs-color-green"></li>
-                                        <li class="fs-color-yellow"></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </dd>
-                        <dd id="fs-share-link">
-                            <div class="fs-button-wrap fs-share-link-button-wrap">
-                                <button id="fs-share-link-create" class="fs-button-primary" data-i18n="view.share_link.create"></button>
-                                <button id="fs-share-link-edit" class="fs-button-primary" data-i18n="view.share_link.edit"></button>
-                                <button id="fs-share-link-delete" data-i18n="view.share_link.delete"></button>
-                            </div>
-                        </dd>
-                        <dd id="fs-share">
-                            <div class="fs-button-wrap fs-share-button-wrap">
-                                <button id="fs-share-create" class="fs-button-primary" data-i18n="view.share.create"></button>
-                                <button id="fs-share-edit" class="fs-button-primary" data-i18n="view.share.edit"></button>
-                                <button id="fs-share-delete" data-i18n="view.share.delete"></button>
-                            </div>
-                            <div id="fs-share-consumers">
-                                <h6 data-i18n="view.share.access_rights"></h6>
-                                <ul></ul>
-                                <span class="fs-share-hint-owner-only" data-i18n="view.share.owner_only"></span>
-                            </div>
-                        </dd>
-                        <dd id="fs-metadata">
-                            <table class="fs-metadata-group">
-                                <tbody>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.deleted"></th>
-                                        <td id="fs-metadata-deleted"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.created"></th>
-                                        <td id="fs-metadata-created"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.changed"></th>
-                                        <td id="fs-metadata-changed"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.size"></th>
-                                        <td id="fs-metadata-size"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <th data-i18n="view.prop.head.path"></th>
-                                        <td id="fs-metadata-path"><span class="fs-value"></span></td>
-                                    </tr>
-                                </tbody>
-
-                                <tbody>
-                                    <tr class="fs-searchable fs-metadata-fileonly">
-                                        <th data-i18n="view.prop.head.version"></th>
-                                        <td id="fs-metadata-version"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable fs-metadata-fileonly">
-                                        <th data-i18n="view.prop.head.hash"></th>
-                                        <td id="fs-metadata-hash"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.mime"></th>
-                                        <td id="fs-metadata-mime"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.id"></th>
-                                        <td id="fs-metadata-id"><span class="fs-value"></span></td>
-                                    </tr>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.share"></th>
-                                        <td id="fs-metadata-share">
-                                            <svg class="gr-icon gr-i-folder-shared" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#folder-shared"></use></svg>
-                                            <span class="fs-value"></span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-
-                                <tbody>
-                                    <tr class="fs-searchable">
-                                        <th data-i18n="view.prop.head.perma-link">Perma Link:</th>
-                                        <td id="fs-metadata-perma-link"><span class="fs-value">#share/5c657e011421d10012585f16</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </dd>
-                        <dd id="fs-history">
-                            <ul></ul>
-                            <div id="fs-history-actions">
-                                <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
-                                <button class="fs-button-small" id="fs-history-all" data-i18n="view.history.show_all" />
-                            </div>
-                        </dd>
-                        <dd id="fs-events">
-                            <ul></ul>
-                            <button class="fs-button-small" id="fs-events-all" data-i18n="view.events.show_all" />
-                        </dd>
-                        <dd id="fs-properties">
-                            <fieldset class="fs-properties-group">
-                                <div>
-                                    <label for="fs-properties-description" data-i18n="view.prop.head.description"></label>
-                                    <textarea id="fs-properties-description"></textarea>
-                                </div>
-                                <div>
-                                    <label for="fs-properties-copyright" data-i18n="view.prop.head.copyright"></label>
-                                    <input id="fs-properties-copyright" type="text"/>
-                                </div>
-                                <div>
-                                    <label for="fs-properties-author" data-i18n="view.prop.head.author"></label>
-                                    <input id="fs-properties-author" type="text"/>
-                                </div>
-                                <div>
-                                    <label for="fs-properties-license" data-i18n="view.prop.head.license"></label>
-                                    <input id="fs-properties-license" type="text"/>
-                                </div>
-                            </fieldset>
-
-                            <div class="fs-properties-group">
-                                <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
-                                <label for="fs-readonly" data-i18n="view.properties.readonly"></label>
-                            </div>
-                            <div class="fs-properties-group" id="fs-properties-destroy-date">
-                                <div class="fs-properties-label" data-i18n="view.properties.destroy_date"></div>
-                                <div id="fs-properties-destroy-date-preview"></div>
-                                <button id="fs-properties-destroy-date-set" class="fs-button-small" data-i18n="view.properties.set_destroy_date"></button>
-                                <button id="fs-properties-destroy-date-edit" class="fs-button-small" data-i18n="view.properties.edit_destroy_date"></button>
-                            </div>
-                        </dd>
-                    </dl>
                 </div>
             </div>
+        </div>
+
+        <div id="fs-action-add-select-mobile" class="bln-dropdown-mobile">
+            <ul></ul>
+            <button data-i18n="button.cancel"></button>
+        </div>
+
+        <div id="fs-content-nav-small-wrap">
+            <div id="fs-content-nav-small-header" class="fs-content-overlay-header">
+                <a role="button" href="#" class="fs-content-view-back">
+                    <svg class="gr-icon  gr-i-arrow-w"><use xlink:href="<%= iconsSvg %>#arrow-w"></use></svg>
+                </a>
+                <div class="fs-content-nodename">
+                    <span class="fs-value"></span>
+                    <span class="fs-ext"></span>
+                </div>
+            </div>
+            <ul id="fs-content-nav-small" class="fs-content-nav-small"></ul>
+        </div>
+
+        <div id="fs-content-view-wrap">
+            <div id="fs-content-view-header" class="fs-content-overlay-header">
+                <a role="button" href="#" class="fs-content-view-back">
+                    <svg class="gr-icon  gr-i-arrow-w"><use xlink:href="<%= iconsSvg %>#arrow-w"></use></svg>
+                </a>
+                <div class="fs-content-nodename">
+                    <span class="fs-value"></span>
+                    <span class="fs-ext"></span>
+                </div>
+            </div>
+            <dl id="fs-content-view">
+                <dd id="fs-preview">
+                    <div id="fs-preview-thumb">
+                        <div></div>
+                    </div>
+
+                    <div id="fs-preview-properties">
+                        <div id="fs-properties-meta-tags" class="fs-preview-property">
+                            <div id="fs-properties-meta-tags-input">
+                                <div class="fs-preview-label" data-i18n="view.prop.head.tags"></div>
+                                <div id="fs-preview-add-tag">
+                                    <input type="text" name="add_tag"/>
+                                </div>
+                                <div id="fs-preview-add-tag-button">
+                                    <div class="fs-add">
+                                        <svg viewBox="0 0 24 24" class="gr-icon gr-i-plus"><use xlink:href="<%= iconsSvg %>#plus"></use></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="fs-properties-meta-tags-tags">
+                                <ul class="tag-list"></ul>
+                            </div>
+                        </div>
+
+                        <div id="fs-properties-meta-color" class="fs-preview-property">
+                            <div class="fs-preview-label" data-i18n="view.prop.head.color_tag"></div>
+                            <ul>
+                                <li class="fs-color-magenta"></li>
+                                <li class="fs-color-purple"></li>
+                                <li class="fs-color-blue"></li>
+                                <li class="fs-color-green"></li>
+                                <li class="fs-color-yellow"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </dd>
+                <dd id="fs-share-link">
+                    <div class="fs-button-wrap fs-share-link-button-wrap">
+                        <button id="fs-share-link-create" class="fs-button-primary" data-i18n="view.share_link.create"></button>
+                        <button id="fs-share-link-edit" class="fs-button-primary" data-i18n="view.share_link.edit"></button>
+                        <button id="fs-share-link-delete" data-i18n="view.share_link.delete"></button>
+                    </div>
+                </dd>
+                <dd id="fs-share">
+                    <div class="fs-button-wrap fs-share-button-wrap">
+                        <button id="fs-share-create" class="fs-button-primary" data-i18n="view.share.create"></button>
+                        <button id="fs-share-edit" class="fs-button-primary" data-i18n="view.share.edit"></button>
+                        <button id="fs-share-delete" data-i18n="view.share.delete"></button>
+                    </div>
+                    <div id="fs-share-consumers">
+                        <h6 data-i18n="view.share.access_rights"></h6>
+                        <ul></ul>
+                        <span class="fs-share-hint-owner-only" data-i18n="view.share.owner_only"></span>
+                    </div>
+                </dd>
+                <dd id="fs-metadata">
+                    <table class="fs-metadata-group">
+                        <tbody>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.deleted"></th>
+                                <td id="fs-metadata-deleted"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.created"></th>
+                                <td id="fs-metadata-created"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.changed"></th>
+                                <td id="fs-metadata-changed"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.size"></th>
+                                <td id="fs-metadata-size"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr>
+                                <th data-i18n="view.prop.head.path"></th>
+                                <td id="fs-metadata-path"><span class="fs-value"></span></td>
+                            </tr>
+                        </tbody>
+
+                        <tbody>
+                            <tr class="fs-searchable fs-metadata-fileonly">
+                                <th data-i18n="view.prop.head.version"></th>
+                                <td id="fs-metadata-version"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable fs-metadata-fileonly">
+                                <th data-i18n="view.prop.head.hash"></th>
+                                <td id="fs-metadata-hash"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.mime"></th>
+                                <td id="fs-metadata-mime"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.id"></th>
+                                <td id="fs-metadata-id"><span class="fs-value"></span></td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.share"></th>
+                                <td id="fs-metadata-share">
+                                    <svg class="gr-icon gr-i-folder-shared" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#folder-shared"></use></svg>
+                                    <span class="fs-value"></span>
+                                </td>
+                            </tr>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.mount"></th>
+                                <td id="fs-metadata-mount">
+                                    <svg class="gr-icon gr-i-folder-storage" viewBox="0 0 24 24"><use xlink:href="<%= iconsSvg %>#folder-storage"></use></svg>
+                                    <span class="fs-value"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody>
+                            <tr class="fs-searchable">
+                                <th data-i18n="view.prop.head.perma-link">Perma Link:</th>
+                                <td id="fs-metadata-perma-link"><span class="fs-value">#share/5c657e011421d10012585f16</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </dd>
+                <dd id="fs-history">
+                    <ul></ul>
+                    <div id="fs-history-actions">
+                        <input type="submit" class="fs-button-primary" name="restore" data-i18n="[value]view.history.restore">
+                        <button class="fs-button-small" id="fs-history-all" data-i18n="view.history.show_all" />
+                    </div>
+                </dd>
+                <dd id="fs-events">
+                    <ul></ul>
+                    <button class="fs-button-small" id="fs-events-all" data-i18n="view.events.show_all" />
+                </dd>
+                <dd id="fs-properties">
+                    <fieldset class="fs-properties-group">
+                        <div>
+                            <label for="fs-properties-description" data-i18n="view.prop.head.description"></label>
+                            <textarea id="fs-properties-description"></textarea>
+                        </div>
+                        <div>
+                            <label for="fs-properties-copyright" data-i18n="view.prop.head.copyright"></label>
+                            <input id="fs-properties-copyright" type="text"/>
+                        </div>
+                        <div>
+                            <label for="fs-properties-author" data-i18n="view.prop.head.author"></label>
+                            <input id="fs-properties-author" type="text"/>
+                        </div>
+                        <div>
+                            <label for="fs-properties-license" data-i18n="view.prop.head.license"></label>
+                            <input id="fs-properties-license" type="text"/>
+                        </div>
+                    </fieldset>
+
+                    <div class="fs-properties-group">
+                        <input type="checkbox" name="readonly" class="fs-onoffswitch-checkbox" id="fs-readonly">
+                        <label for="fs-readonly" data-i18n="view.properties.readonly"></label>
+                    </div>
+                    <div class="fs-properties-group" id="fs-properties-destroy-date">
+                        <div class="fs-properties-label" data-i18n="view.properties.destroy_date"></div>
+                        <div id="fs-properties-destroy-date-preview"></div>
+                        <button id="fs-properties-destroy-date-set" class="fs-button-small" data-i18n="view.properties.set_destroy_date"></button>
+                        <button id="fs-properties-destroy-date-edit" class="fs-button-small" data-i18n="view.properties.edit_destroy_date"></button>
+                    </div>
+                </dd>
+            </dl>
         </div>
 
         <div id="fs-upload-progress">
@@ -564,7 +687,12 @@
 
         <div id="fs-event-window" data-i18n="[title]login.events">
             <div id="fs-event-window-content">
-                <ul></ul>
+                <div id="fs-event-window-search">
+                    <input type="search" name="event-log-search" data-i18n="[placeholder]view.events.placeholder_search" />
+                </div>
+                <div id="fs-events-window-list">
+                    <ul></ul>
+                </div>
                 <div id="fs-event-window-footer"></div>
             </div>
         </div>
@@ -577,7 +705,7 @@
             <div id="fs-history-window-button-wrapper" class="fs-window-secondary-actions">
                 <hr />
                 <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.history.cancel"/>
-                <input type="button" tabindex="1" name="apply" class="fs-button-primary" data-i18n="[value]view.history.restore"/>
+                <input type="submit" tabindex="1" name="apply" class="fs-button-primary" data-i18n="[value]view.history.restore"/>
             </div>
         </div>
 
@@ -585,8 +713,8 @@
             <dl>
                 <dt id="fs-profile-window-title-overview" data-i18n="[title]profile.nav.overview">
                     <span data-i18n="profile.nav.overview"></span>
-                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-n"></use></svg>
-                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-s"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="<%= iconsSvg %>#arrowhead-n"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="<%= iconsSvg %>#arrowhead-s"></use></svg>
                 </dt>
                 <dd id="fs-profile-window-overview">
                     <div id="fs-profile-window-quota">
@@ -635,8 +763,8 @@
 
                 <dt id="fs-profile-window-title-change-password" data-i18n="[title]profile.nav.change-password">
                     <span data-i18n="profile.nav.change-password;[title]login.change-password"></span>
-                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-n"></use></svg>
-                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-s"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="<%= iconsSvg %>#arrowhead-n"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="<%= iconsSvg %>#arrowhead-s"></use></svg>
                 </dt>
                 <dd id="fs-profile-window-change-password">
                     <div id="fs-profile-window-change-password-form">
@@ -663,8 +791,8 @@
 
                 <dt id="fs-profile-window-title-google-authenticator" data-i18n="[title]profile.nav.google-authenticator">
                     <span data-i18n="profile.nav.google-authenticator"></span>
-                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-n"></use></svg>
-                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="assets/icons.e470e3b1670d03afc46f22ab84a5e6f8.svg#arrowhead-s"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="<%= iconsSvg %>#arrowhead-n"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="<%= iconsSvg %>#arrowhead-s"></use></svg>
                 </dt>
                 <dd id="fs-profile-window-google-authenticator">
                     <p id="fs-profile-window-google-authenticator-hint-incative" data-i18n="[html]profile.google-authenticator.hint.inactive"></p>
@@ -675,7 +803,29 @@
                         <input type="button" tabindex="1" name="deactivate" class="fs-button-primary" data-i18n="[value]profile.google-authenticator.deactivate" />
                     </div>
 
-                    <div id="fs-profile-window-google-authenticator-code"></div>
+                    <div id="fs-profile-window-google-authenticator-code">
+                        <div id="fs-profile-window-google-authenticator-qr"></div>
+                        <div id="fs-profile-window-google-authenticator-secret"></div>
+                    </div>
+                </dd>
+
+                <dt id="fs-profile-window-title-webauthn" data-i18n="[title]profile.nav.webauthn">
+                    <span data-i18n="profile.nav.webauthn"></span>
+                    <svg class="gr-icon gr-i-arrowhead-n"><use xlink:href="<%= iconsSvg %>#arrowhead-n"></use></svg>
+                    <svg class="gr-icon gr-i-arrowhead-s"><use xlink:href="<%= iconsSvg %>#arrowhead-s"></use></svg>
+                </dt>
+                <dd id="fs-profile-window-webauthn">
+                    <p data-i18n="login.setup_webauthn"></p>
+
+                    <p id="fs-profile-window-webauthn-hint-incative" data-i18n="[html]profile.webauthn.hint.inactive"></p>
+                    <p id="fs-profile-window-webauthn-hint-active" data-i18n="profile.webauthn.hint.active"></p>
+
+                    <p id="fs-profile-window-webauthn-error-setup" class="error-message" data-i18n="login.error.webauthn_setup"></p>
+
+                    <div id="fs-profile-window-webauthn-buttons">
+                        <input type="button" tabindex="1" name="activate" class="fs-button-primary" data-i18n="[value]profile.webauthn.activate" />
+                        <input type="button" tabindex="1" name="deactivate" class="fs-button-primary" data-i18n="[value]profile.webauthn.deactivate" />
+                    </div>
                 </dd>
             </dl>
         </div>
@@ -726,6 +876,13 @@
             <div id="fs-prompt-window-button-wrapper" class="fs-window-secondary-actions">
                 <input type="button" tabindex="1" name="cancel" data-i18n="[value]prompt.cancel"/>
                 <input type="button" tabindex="2" name="confirm" class="fs-button-primary" data-i18n="[value]prompt.continue"/>
+            </div>
+        </div>
+
+        <div id="fs-alert-window" class="fs-alert-window-inner" data-i18n="[title]prompt.alert">
+            <div id="fs-alert-window-content" class="fs-alert-window-content"></div>
+            <div id="fs-prompt-alert-button-wrapper" class="fs-window-secondary-actions">
+                <input type="button" tabindex="1" name="ok" class="fs-button-primary" data-i18n="[value]prompt.ok"/>
             </div>
         </div>
 
@@ -786,7 +943,7 @@
                 </fieldset>
             </div>
             <div id="fs-destroy-date-window-button-wrapper" class="fs-window-secondary-actions">
-                <input type="button" tabindex="2" data-i18n="[value]view.properties.destroy_date_window.cancel" />
+                <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.properties.destroy_date_window.cancel" />
                 <input type="submit" tabindex="1" name="share" data-i18n="[value]view.properties.destroy_date_window.save" class="fs-button-primary" />
             </div>
         </div>
@@ -832,7 +989,7 @@
                 <hr class="full-width" />
             </div>
             <div id="fs-share-link-settings-window-button-wrapper" class="fs-window-secondary-actions">
-                <input type="button" tabindex="2" data-i18n="[value]view.share_link.settings.cancel" />
+                <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.share_link.settings.cancel" />
                 <input type="submit" tabindex="1" name="share" data-i18n="[value]view.share_link.settings.save" class="fs-button-primary" />
             </div>
         </div>
@@ -952,8 +1109,8 @@
             </div>
             <div id="fs-share-window-button-wrapper" class="fs-window-secondary-actions">
                 <input type="button" tabindex="2" name="cancel" data-i18n="[value]view.share.cancel" />
-                <input type="submit" tabindex="1" name="create" data-i18n="[value]view.share.create" class="fs-button-primary" />
-                <input type="submit" tabindex="1" name="save" data-i18n="[value]view.share.save" class="fs-button-primary" />
+                <input type="submit" tabindex="1" name="create" data-i18n="[value]view.share.create" class="fs-button-primary" disabled />
+                <input type="submit" tabindex="1" name="save" data-i18n="[value]view.share.save" class="fs-button-primary" disabled />
             </div>
         </div>
 
@@ -968,11 +1125,38 @@
             </div>
         </div>
 
+        <div id="fs-file-handler-window">
+            <div id="fs-file-handler-window-text"></div>
+            <ul></ul>
+            <div>
+                <input type="checkbox" name="choose-handler-remember" id="choose-handler-remember" />
+                <label for="choose-handler-remember" data-i18n="tree.choose_handler_remember"></label>
+            </div>
+            <div class="fs-window-secondary-actions">
+                <input type="button" tabindex="2" data-i18n="[value]button.cancel" />
+                <input type="submit" tabindex="1" name="open" data-i18n="[value]button.open" class="fs-button-primary" />
+            </div>
+        </div>
+
         <div id="fs-help-window" data-i18n="[title]login.help">
             <div id="fs-help-window-content">
                 <ul></ul>
                 <div id="fs-help-window-footer"></div>
             </div>
+        </div>
+    </div>
+
+    <div id="fs-rename-window">
+        <div id="fs-rename-window-content">
+            <h6 data-i18n="misc.rename_node"></h6>
+            <a id="fs-rename-window-close" href="#">
+                <svg viewbox="0 0 24 24" class="gr-icon gr-i-close"><use xlink:href="<%= iconsSvg %>#close"></use></svg>
+            </a>
+            <hr />
+            <input type="text" />
+            <hr />
+            <input type="submit" name="cancel"  data-i18n="[value]button.cancel" />
+            <input type="submit" name="save" data-i18n="[value]button.save" class="fs-button-primary" />
         </div>
     </div>
 

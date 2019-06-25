@@ -1,6 +1,19 @@
 @import '../../../themes/default/scss/includes/colors.scss';
 @import '../../../themes/default/scss/includes/mixins.scss';
 
+$dotfontsPath: '../dotsfont';
+@font-face {
+    font-family: 'dotsfont';
+    src: url('#{$dotfontsPath}/dotsfont.eot');
+    src: url('#{$dotfontsPath}/dotsfont.eot?#iefix') format('embedded-opentype'),
+         url('#{$dotfontsPath}/dotsfont.woff2') format('woff2'),
+         url('#{$dotfontsPath}/dotsfont.woff') format('woff'),
+         url('#{$dotfontsPath}/dotsfont.ttf') format('truetype'),
+         url('#{$dotfontsPath}/dotsfont.svg#dotsfontregular') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
 #fs-external-storage {
   display: none;
   width: 560px;
@@ -8,6 +21,11 @@
   label {
     margin: 10px 0 5px 0;
     display: block;
+  }
+
+  input[name=password] {
+    font-family: 'dotsfont' !important;
+    font-size: 8px;
   }
 
   .fs-external-storage-select {

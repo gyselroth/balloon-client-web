@@ -6,7 +6,7 @@ $sidePadding: 50px;
 
 .fs-profile-window {
 
-  width: 800px  ;
+  width: 800px;
 
   & > div.k-header {
     padding: 0 $sidePadding;
@@ -35,6 +35,12 @@ $sidePadding: 50px;
 
   dl {
     @include accordion($sidePadding, false);
+
+    dt {
+      .gr-icon {
+        right: 50px;
+      }
+    }
   }
 
   #fs-profile-window-quota {
@@ -137,27 +143,8 @@ $sidePadding: 50px;
     }
   }
 
-  #fs-profile-window-change-password {
-    .fs-window-form {
-      $labelWidth: 150px;
-
-      & > div {
-        @include clearfix;
-
-        label {
-          width: $labelWidth;
-        }
-
-        input[type='password'] {
-          width: calc(100% - #{$labelWidth + 15px});
-        }
-      }
-    }
-  }
-
-  #fs-profile-window-google-authenticator {
-    @include clearfix;
-
+  #fs-profile-window-google-authenticator,
+  #fs-profile-window-webauthn {
     p {
       margin-bottom: 20px;
 
@@ -171,18 +158,69 @@ $sidePadding: 50px;
       }
     }
 
-    #fs-profile-window-google-authenticator-buttons {
-      float: left;
-      width: calc(100%-200px);
+    #fs-profile-window-google-authenticator-buttons,
+    #fs-profile-window-webuathn-buttons, {
+      width: 100%;
     }
 
     #fs-profile-window-google-authenticator-code {
-      float: right;
       width: 200px;
       height: 200px;
+      margin-top: 20px;
     }
 
+    #fs-profile-window-google-authenticator-secret {
+      color: $colorActiveBlue;
+      cursor: pointer;
+    }
+  }
+}
 
+@media only screen and (min-width: $breakpointWindowFormsFloat) {
+  #fs-profile-window {
+    #fs-profile-window-change-password {
+      .fs-window-form {
+        $labelWidth: 150px;
+
+        & > div {
+          @include clearfix;
+
+          label {
+            width: $labelWidth;
+          }
+
+          input[type='password'] {
+            width: calc(100% - #{$labelWidth + 15px});
+          }
+        }
+      }
+    }
+
+    #fs-profile-window-google-authenticator {
+      @include clearfix;
+
+      #fs-profile-window-google-authenticator-buttons {
+        float: left;
+        width: calc(100% - 200px);
+      }
+
+      #fs-profile-window-google-authenticator-code {
+        float: right;
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $breakpointWindowFullscreen + 1px) {
+  #fs-profile-window {
+    dl {
+      dt {
+        .gr-icon {
+          right: 20px;
+        }
+      }
+    }
   }
 }
 
@@ -285,6 +323,55 @@ $sidePadding: 50px;
 
         td {
           padding-left: 63px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 455px) {
+  #fs-profile-window {
+    #fs-profile-window-quota {
+      #fs-profile-quota {
+        table {
+          th,
+          td {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding-left: 0;
+            line-height: 24px;
+          }
+
+          td {
+            margin-bottom: 12px;
+          }
+        }
+
+        #fs-profile-quota-left,
+        #fs-profile-quota-used {
+          th:before {
+            top: 10px;
+          }
+        }
+      }
+    }
+
+    #fs-profile-window-user {
+      #fs-profile-user {
+        table {
+          th,
+          td {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding-left: 0;
+            line-height: 24px;
+          }
+
+          td {
+            margin-bottom: 12px;
+          }
         }
       }
     }

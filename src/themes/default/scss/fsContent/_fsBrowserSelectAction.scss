@@ -1,15 +1,72 @@
 #fs-browser-select-action {
-  $buttonHeight: 30px;
+  $buttonHeightS: 40px;
+  $buttonHeightM: 30px;
 
-  margin-top: 16px;
-  height: $buttonHeight;
-  width: 345px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
 
-  li {
-    @include icon-button-small($buttonHeight, $buttonHeight);
+  margin: 9px -1*$fsContentSidePaddingS 10px;
+  padding: 16px 0 $fsContentSidePaddingS;
+  height: $buttonHeightS;
+  width: auto;
 
-    &:last-child {
+  ul {
+    padding: 0 $fsContentSidePaddingS;
+    display: block;
+    box-sizing: border-box;
+
+    li {
+      @include icon-button-small($buttonHeightS, $buttonHeightS);
+
+      margin-right: 8px;
+
+      &.fs-action-disabled {
+        display: none;
+      }
+    }
+
+    &:after {
+      //needed for spacing while scrolling the menu
+      content: "";
+      display: inline-block;
+      border: none;
       margin-right: 0;
+      width: $fsContentSidePaddingS - 8px;
+      height: $buttonHeightS;
+    }
+  }
+
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    margin: 0;
+    padding-bottom: 0;
+
+    width: 345px;
+    height: $buttonHeightM;
+
+    ul {
+      margin: 0;
+      padding: 0;
+
+      li {
+        width: $buttonHeightM;
+        height: $buttonHeightM;
+        margin-right: 13px;
+
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &.fs-action-disabled {
+          display: inline-block;
+        }
+      }
+
+      &:after {
+        display: none;
+      }
     }
   }
 }

@@ -56,12 +56,12 @@
       }
 
       #fs-display-close {
-        position: absolute;
-        top: 21px;
-        right: 21px;
+        position: fixed;
+        top: 40px;
+        right: 40px;
         width: 28px;
         height: 28px;
-        color: $colorMediumGrey;
+        color: $colorWhite;
         cursor: pointer;
       }
     }

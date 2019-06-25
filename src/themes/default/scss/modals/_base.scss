@@ -1,3 +1,15 @@
+.fs-fullscreen-window {
+  left: 0 !important;
+  top: 0 !important;
+  right: 0 !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    right: 401px !important;
+  }
+}
+
 .k-window {
   $headerHeight: 72px;
   $sidePadding: 60px;
@@ -22,28 +34,17 @@
   }
 
   .fs-window-form {
-    $labelWidth: 100px;
-    $labelMarginRight: 15px;
-
-    @include clearfix;
-
     padding-top: 30px;
-
-    label,
-    input {
-      float: left;
-    }
 
     label {
       padding: 0;
-      width: $labelWidth;
+      width: 100%;
       line-height: 45px;
-      margin-right: $labelMarginRight;
       margin-bottom: 10px;
     }
 
     input[type=text],input[type=password] {
-      width: calc(100% - #{$labelWidth + $labelMarginRight});
+      width: 100%;
 
       font-size: $fontSizeParagraph;
       font-weight: $fontWeightParagraph;
@@ -60,6 +61,7 @@
   & > div.k-header {
     box-sizing: border-box;
     position: relative;
+    z-index: 1;
     left: 0;
     top: 0;
     background-color: transparent;
@@ -186,9 +188,37 @@
     clear: both;
 
     &.full-width {
-      width: calc(100% + #{2 * $sidePadding};
+      width: calc(100% + #{2 * $sidePadding});
       margin-left: $sidePadding * -1;
       margin-right: $sidePadding * -1;
+    }
+  }
+
+  @media only screen and (min-width: $breakpointWindowFormsFloat) {
+    .fs-window-form {
+      $labelWidth: 100px;
+      $labelMarginRight: 15px;
+
+      @include clearfix;
+
+      .fs-window-form-row {
+        @include clearfix;
+      }
+
+      label,
+      input {
+        float: left;
+      }
+
+      label {
+        width: $labelWidth;
+        margin-right: $labelMarginRight;
+
+      }
+
+      input[type=text],input[type=password] {
+        width: calc(100% - #{$labelWidth + $labelMarginRight});
+      }
     }
   }
 
@@ -232,6 +262,14 @@
     .fs-window-secondary-actions {
       input {
         margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &[name="cancel"] {
+          display: none;
+        }
       }
     }
   }
@@ -246,9 +284,12 @@
 @import './fsHistoryWindow';
 @import './fsProfileWindow';
 @import './fsPromptWindow';
+@import './fsAlertWindow';
 @import './fsUploadmgr';
 @import './fsShare';
 @import './fsShareLink';
 @import './fsShareLinkSettings';
 @import './fsDestroyDate';
 @import './fsNewNode';
+@import './fsFileHandler';
+@import './fsRenameWindow';

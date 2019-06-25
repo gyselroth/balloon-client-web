@@ -6,7 +6,9 @@
     "login": "Login",
     "logout": "Logout",
     "code": "Code",
-    "multi_factor_auth": "Dieses Konto ist mit multi factor authentication geschützt. Bitte gib den Code vom google authenticator ein:",
+    "multi_factor_auth": "Dieses Konto ist mit Multi-Faktor-Authentisierung geschützt. Bitte gib den Code vom google authenticator ein:",
+    "dont_remind_webauthn": "Nicht mehr danach fragen.",
+    "setup_webauthn": "Dein Gerät unterstützt eine Form von Authentifzierung ohne Passwort und kann jetzt eingerichtet werden oder später in den Benutzereinstellungen.",
     "events": "Events",
     "profile": "Profil",
     "settings": "Einstellungen",
@@ -15,7 +17,9 @@
       "server": "Der balloon-Server meldet aktuell eine Störung, bitte versuche es später erneut.",
       "credentials": "Der Benutzername oder das Passwort ist falsch.",
       "code": "Der Code ist ungültig.",
-      "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider."
+      "oidc": " Ein Fehler ist aufgetreten bei der Authentifizierung deines Kontos über den gewählten Identity Provider.",
+      "webauthn_setup": "Ein Fehler ist aufgetreten bei der Einrichtung der Authentifzierung ohne Passwort. Du kannst diesen Schritt ignorieren oder es nocheinmal versuchen.",
+      "webauthn": "Ein Fehler ist aufgetreten bei der Authentifzierung ohne Passwort. Du kannst Benutzername/Passwort eingeben oder es nochmals versuchen."
     }
   },
   "profile": {
@@ -28,7 +32,8 @@
     "nav": {
       "overview": "Übersicht",
       "change-password": "Passwort ändern",
-      "google-authenticator": "Multi-Faktor-Authentisierung"
+      "google-authenticator": "Multi-Faktor-Authentisierung",
+      "webauthn": "Authentifizierung ohne Passwort"
     },
     "attribute": {
       "id": "Benutzer-ID",
@@ -40,6 +45,7 @@
     "google-authenticator": {
       "activate": "Aktivieren",
       "deactivate": "Deaktivieren",
+      "secret_copied": "Der code wurde in die Zwischenablage kopiert",
       "confirm": {
         "activate": "Bist du sicher, dass du Multi-Faktor-Authentisierung aktivieren willst? Nach Aktivierung ist der Zugang nur noch mithilfe der Google Authenticator App möglich.",
         "deactivate": "Bist du sicher, dass du Multi-Faktor-Authentisierung deaktivieren willst?"
@@ -47,6 +53,17 @@
       "hint": {
         "inactive": "Um Multi-Faktor-Authentisierung nutzen zu können benötigst du ein Smartphone und die App <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=de\" target=\"blank\">Google Authenticator</a>. Nach dem Aktivieren wird dir einmalig ein QR Code angezeigt, welchen du mit der App scannen musst. Achtung: Nach Aktivierung von Multi-Faktor-Authentisierung ist der Zugang nur noch mit dieser App möglich.",
         "active": "Multi-Faktor-Authentisierung ist aktiv."
+      }
+    },
+    "webauthn": {
+      "activate": "Aktivieren",
+      "deactivate": "Deaktivieren",
+      "confirm": {
+        "deactivate": "Bist du sicher, dass du Authentifizierung ohne Passwort deaktiviern willst?"
+      },
+      "hint": {
+        "inactive": "Die Authentifizierung ohne Passwort ist deaktiviert.",
+        "active": "Die Authentifizierung ohne Passwort ist aktiviert."
       }
     }
   },
@@ -64,6 +81,7 @@
       "cut": "Ausschneiden",
       "paste": "Einfügen",
       "filter": "Filter",
+      "sorting": "Sortierung",
       "rename": "Umbenennen",
       "perma-link": "Perma Link kopieren"
     },
@@ -74,7 +92,8 @@
       "history": "Verlauf",
       "share_folder": "Ordner freigeben",
       "share_link": "Link teilen",
-      "events": "Events"
+      "events": "Events",
+      "more": "Weitere Optionen"
     }
   },
   "menu": {
@@ -85,12 +104,16 @@
     "trash": "Gelöschte Objekte",
     "search": "Suchen"
   },
+  "app": {
+    "file_editor": "Text Editor",
+    "file_viewer": "Vorschau",
+    "file_downloader": "Download"
+  },
   "search": {
     "results": "Suchresultate",
     "reset_filter": "Zurücksetzen",
     "apply_filter": "Anwenden",
     "mode": {
-      "fulltext": "Volltext",
       "nodename": "Dateiname"
     },
     "filter": {
@@ -123,6 +146,14 @@
         "shares": "Freigaben",
         "hidden": "Versteckt"
     },
+    "sorting": {
+      "name_asc": "Name aufsteigend",
+      "name_desc": "Name absteigend",
+      "size_asc": "Grösse aufsteigend",
+      "size_desc": "Grösse absteigend",
+      "changed_asc": "Geändert aufsteigend",
+      "changed_desc": "Geändert absteigend"
+    },
     "open_folder": "Ordner öffnen",
     "folder": "Ordner",
     "txt_file": "Text-Dokument",
@@ -132,7 +163,11 @@
     "error": {
       "folder_exists": "Ein Ordner mit dem Name %s existiert bereits."
     },
-    "folderup": "Zurück"
+    "folderup": "Zurück",
+    "choose_handler": "Wähle eine App",
+    "choose_handler_text": "Mit welcher App soll die Datei %s geöffnet werden?",
+    "choose_handler_remember": "Diesen Dateityp immer mit dieser App öffnen.",
+    "no_handler_found": "Es wurde keine App gefunden welche die Datei %s öffnen kann. Möchtest du die Datei herunterladen?"
   },
   "user": {
     "disk_space": "Speicherplatz:",
@@ -152,17 +187,32 @@
     "minute": "{{count}} Minute",
     "minute_plural": "{{count}} Minuten",
     "second": "{{count}} Sekunde",
-    "second_plural": "{{count}} Sekunden"
+    "second_plural": "{{count}} Sekunden",
+    "year_ago": "vor einem Jahr",
+    "year_ago_plural": "vor {{count}} Jahren",
+    "month_ago": "vor einem Monat",
+    "month_ago_plural": "vor {{count}} Monaten",
+    "day_ago": "vor einem Tag",
+    "day_ago_plural": "vor {{count}} Tagen",
+    "hour_ago": "vor einer Stunde",
+    "hour_ago_plural": "vor {{count}} Stunden",
+    "minute_ago": "vor einer Minute",
+    "minute_ago_plural": "vor {{count}} Minuten",
+    "second_ago": "vor einer Sekunde",
+    "second_ago_plural": "vor {{count}} Sekunden"
   },
   "button": {
     "save": "Speichern",
-    "cancel": "Abbrechen"
+    "setup": "Einrichten",
+    "ignore": "Ignorieren",
+    "cancel": "Abbrechen",
+    "open": "Öffnen"
   },
   "view": {
     "prop": {
       "head": {
-        "mime": "Dateityp:",
-        "id": "ID:",
+        "mime": "Dateityp",
+        "id": "ID",
         "contains": "Enthält",
         "changed": "Geändert",
         "deleted": "Gelöscht",
@@ -181,7 +231,9 @@
         "path": "Pfad",
         "coordinate": "Koordinaten",
         "author": "Autor",
-        "perma-link": "Perma Link"
+        "perma-link": "Perma Link",
+        "mount": "Externer Speicher",
+        "mount_value": "%s (%s@%s://%s) [%s]"
       },
       "data": {
         "size": "%s (%s Bytes)",
@@ -288,7 +340,8 @@
       }
     },
     "events": {
-      "show_all": "Alle Events anzeigen"
+      "show_all": "Alle Events anzeigen",
+      "placeholder_search": "Events durchsuchen"
     },
     "change-password": {
       "password": "Passwort",
@@ -325,6 +378,7 @@
   },
   "prompt": {
     "confirm": "Bestätigen",
+    "alert": "Warnung",
     "cancel": "Nein",
     "continue": "Ja",
     "ok": "OK",
@@ -336,7 +390,8 @@
     "restore_to_root": "Der ursprüngliche Ordner existiert nicht mehr oder ist gelöscht, willst du die Dateien/Ordner in deinen obersten Ordner wiederherstellen?",
     "open_big_file": "Die Datei %s ist sehr gross und das Öffnen kann einige Zeit in Anspruch nehmen, willst du dennoch fortfahren?",
     "close_save_file": "Willst du deine Änderungen speichern?",
-    "auto_rename_node": "Eine Datei/ein Ordner mit dem Name %s existiert bereits, möchtest du sie/ihn umbenennen in %s?"
+    "auto_rename_node": "Eine Datei/ein Ordner mit dem Name %s existiert bereits, möchtest du sie/ihn umbenennen in %s?",
+    "open_file_disables_action": "Die gewählte Aktion kann nicht ausgeführt werden, wenn eine Datei offen ist"
   },
   "events": {
     "unknown": "Unbekannt",
@@ -423,7 +478,18 @@
     "node_moved": "{{count}} Element wurde nach <b>{{dest}}</b> verschoben.",
     "node_moved_plural": "{{count}} Elemente wurden nach <b>{{dest}}</b> verschoben.",
     "node_moved_folderup": "{{count}} Element wurde <b>in den übergeordneten Ordner</b> verschoben.",
-    "node_moved_folderup_plural": "{{count}} Elemente wurden <b>in den übergeordneten Ordner</b> verschoben."
+    "node_moved_folderup_plural": "{{count}} Elemente wurden <b>in den übergeordneten Ordner</b> verschoben.",
+    "node_deleted": "{{count}} Element wurde in den <b>Papierkorb</b> verschoben.",
+    "node_deleted_plural": "{{count}} Elemente wurden in den <b>Papierkorb</b> verschoben.",
+    "collection_created": "Der Ordner <b>{{name}}</b> wurde erstellt.",
+    "file_created": "Die Datei <b>{{name}}</b> wurde erstellt.",
+    "node_renamed": "Das Element <b>{{old_name}}</b> wurde nach <b>{{new_name}}</b> umbenannt.",
+    "node_undeleted": "{{count}} Element wurde wiederhergestellt.",
+    "node_undeleted_plural": "{{count}} Elemente wurde wiederhergestellt.",
+    "file_saved": "Die Datei <b>{{name}}</b> wurde gespeichert.",
+    "share_added": "Der Ordner <b>{{name}}</b> wurde freigegeben.",
+    "share_updated": "Die Freigabe für den Ordner <b>{{name}}</b> wurde angepasst.",
+    "restore_file": "Die Version <b>{{version}}</b> wurde wiederhergestellt."
   },
   "new_node": {
     "title": {
@@ -431,5 +497,8 @@
       "txt": "Neues Text-Dokument"
     },
     "name": "Name"
+  },
+  "misc": {
+    "rename_node": "Datei umbenennen"
   }
 }

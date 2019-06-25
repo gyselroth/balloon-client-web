@@ -48,8 +48,8 @@ var app = {
         '<label>'+i18next.t('new_node.name')+'</label><input name="name" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.hostname')+'</label><input name="host" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.share_name')+'</label><input name="share" type="text"/>'+
-        '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="off" name="username" type="text"/>'+
-        '<label>'+i18next.t('app.externalstorage.password')+'</label><input autocomplete="off" name="password" type="password"/>'+
+        '<label>'+i18next.t('app.externalstorage.username')+'</label><input autocomplete="current-username" name="username" type="text"/>'+
+        '<label>'+i18next.t('app.externalstorage.password')+'</label><input name="password" type="text"/>'+
         '<label>'+i18next.t('app.externalstorage.workgroup')+'</label><input name="workgroup" type="text"/>'+
       '</div>'+
       '<div class="fs-window-secondary-actions">'+
@@ -95,7 +95,7 @@ var app = {
             return;
           }
 
-          if(app.balloon.nodeExists(name) || name === '') {
+          if(app.balloon.nodeExists(name, true) || name === '') {
             $input_name.addClass('error-input');
             fieldsValid.name = false;
           } else {
@@ -181,6 +181,16 @@ var app = {
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/collections',
       type: 'POST',
+      snackbar: {
+        message: 'app.externalstorage.snackbar.created',
+        values: {
+          name: name
+        },
+        icon: 'undo',
+        iconAction: function(response) {
+          app.balloon.remove(response);
+        }
+      },
       data: {
         name: name,
         id: app.balloon.getCurrentCollectionId(),

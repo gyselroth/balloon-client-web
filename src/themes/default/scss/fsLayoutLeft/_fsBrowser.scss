@@ -1,13 +1,13 @@
 #fs-browser {
   $headerHeight: 28px; //height of the header
   $headerBorderColor: $colorLightGrey;
-  $nodeHeight: 50px; //height of a single node
+  $nodeHeight: 54px; //height of a single node
 
-  $lineHeight: 30px;
+  $lineHeight: 46px;
 
   $iconWidth: 26px;
   $metaWidth: 120px;
-  $sizeWidth: 110px;
+  $sizeWidth: 115px;
   $changedWidth: 150px;
   $checkboxWidth: 18px;
 
@@ -15,12 +15,32 @@
 
   $border-radius: 4px;
 
-  $breakpointMetaVisible: 659px;
-  $breakpointSizeVisible: 720px;
-  $breakpointChangedVisible: 875px;
+  $breakpointMetaVisible: 414px;
+  $breakpointSizeChangedVisible: 750px;
+
+  $fsContentHeightMultiselectS: 144px;
+  $fsContentHeightSelectS: 200px;
+
+  $bottomPadding: 90px;
+
+  $fsActionRefreshTop: 30px;
+  $fsActionRefreshButtonSize: 30px;
+
 
   position: relative;
-  padding-bottom: 90px;
+  padding-bottom: $bottomPadding;
+
+  .fs-content-paste-active & {
+    padding-bottom: #{$bottomPadding + $fsContentHeightMultiselectS};
+  }
+
+  .fs-content-multiselect-active & {
+    padding-bottom: #{$bottomPadding + $fsContentHeightMultiselectS};
+  }
+
+  .fs-content-select-active & {
+    padding-bottom: #{$bottomPadding + $fsContentHeightSelectS};
+  }
 
   .fs-browser-column {
     display: inline-block;
@@ -49,7 +69,7 @@
     width: $iconWidth;
     height: $lineHeight;
     margin: 0;
-    padding: 3px 0;
+    padding: 7px 0;
   }
 
   .fs-browser-column-changed {
@@ -61,70 +81,82 @@
   }
 
   .fs-browser-column-checkbox {
-    @include checkbox($checkboxWidth);
+    margin: -15px -17px -15px -14px;
+    padding: 15px 17px 15px 14px;
+
+    span {
+      @include checkbox($checkboxWidth);
+      display: block;
+    }
   }
 
   #fs-browser-header {
-    border: 1px solid $headerBorderColor;
-    border-radius: $border-radius;
-    padding: 0 17px 0 12px;
+    padding: 0;
     margin-bottom: 20px;
     position: relative;
 
     .fs-browser-column {
-      $paddingTopBottom: ($headerHeight - $lineHeight) / 2;
+      $paddingTopBottom: 0;
 
       position: relative;
+      line-height: 30px;
+      height: 30px;
       padding-top: $paddingTopBottom;
       padding-bottom: $paddingTopBottom;
+
       div {
         display: inline-block;
         width: auto;
       }
     }
 
-    .fs-browser-column-name {
-      width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
-    }
-
+    .fs-browser-column-icon,
+    .fs-browser-column-name,
     .fs-browser-column-size,
     .fs-browser-column-changed {
-      border-left: 1px dotted $headerBorderColor;
-      padding-left: $columnPaddingLeftRight - 1px;
       display: none;
     }
 
     #fs-browser-header-checkbox {
-      width: $checkboxWidth;
-      height: $checkboxWidth;
-      border: 1px solid $colorMediumGrey;
-      border-radius: 2px;
       cursor: pointer;
+      display: inline-block;
+
+      padding: 5px 16px 5px 15px;
+
+      position: absolute;
+      top: 15px;
+      right: 18px;
+
+      span {
+        display: block;
+        width: $checkboxWidth;
+        height: $checkboxWidth;
+        border: 1px solid $colorMediumGrey;
+        border-radius: 2px;
+      }
 
       &.fs-browser-header-checkbox-checked {
-        @include checkboxChecked;
+        span {
+          @include checkboxChecked;
 
-        background-size: 20px;
+          background-size: 20px;
+        }
       }
 
       &.fs-browser-header-checkbox-undetermined {
-        @include checkboxUndetermined;
+        span {
+          @include checkboxUndetermined;
+        }
       }
     }
 
-    .fs-browser-column-icon {
-      .gr-icon {
-        $iconSize: 13px;
-
-        position: relative;
-        top: 0;
-        left: 3px;
-        width: $iconSize;
-        height: $iconSize;
-      }
+    #fs-browser-action-sorting {
+      padding: 2px 0;
+      margin-left: -2px;
     }
 
-    #fs-action-filter {
+    #fs-action-filter,
+    #fs-action-sorting {
       position: absolute;
       left: 0;
       top: 0;
@@ -133,7 +165,14 @@
       cursor: pointer;
     }
 
-    #fs-action-filter-select {
+    #fs-action-sorting {
+      width: auto;
+      padding-left: 100%;
+      white-space: nowrap;
+    }
+
+    #fs-action-filter-select,
+    #fs-action-sorting-select {
       @include dropdown(140px, 34px);
 
       left: -1px;
@@ -146,9 +185,11 @@
       .bln-dropdown-content {
         padding: 8px 0;
 
-        input[type="checkbox"] {
+        input[type="checkbox"],
+        input[type="radio"] {
           & + label {
             padding-left: 36px;
+            padding-top: 0;
             vertical-align: text-top;
             min-height: 30px;
             margin-top: 0;
@@ -177,11 +218,42 @@
         }
       }
     }
+
+    #fs-action-sorting-select {
+      width: 200px;
+
+      .bln-dropdown-spike {
+        right: 170px;
+      }
+
+      .bln-dropdown-content {
+        li {
+          position: relative;
+        }
+
+        input[type="radio"] {
+          position: absolute;
+          top: 7px;
+          left: 8px;
+          display: inline-block;
+
+          & + label {
+            cursor: pointer;
+
+            &:before {
+              display: none !important;
+            }
+          }
+        }
+      }
+    }
+
   }
 
   #fs-browser-tree {
 
     width: 100%;
+    overflow: hidden;
 
     // single node
     .k-item {
@@ -214,12 +286,26 @@
         .fs-browser-column-name {
           width: calc(100% - #{$iconWidth + $checkboxWidth});
           height: $lineHeight;
+          line-height: 17px;
           color: $colorDarkGrey;
           font-size: $fontSizeParagraph;
           font-weight: $fontWeightParagraph;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
+
+          .fs-name {
+            margin-top: 5px;
+            display: inline-block;
+          }
+
+          & > p {
+            margin-top: 2px;
+            color: $colorMediumGrey;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
 
           .fs-ext {
             text-transform: uppercase;
@@ -233,6 +319,10 @@
             margin-top: 0;
             margin-left: -7px;
             border: 1px solid $colorLightGrey;
+          }
+
+          .fs-browser-column-name-path {
+            display: none;
           }
         }
 
@@ -255,6 +345,10 @@
 
           .fs-node-state {
             height: 24px;
+          }
+
+          .gr-icon {
+            display: block;
           }
 
           .fs-color-tag {
@@ -281,20 +375,6 @@
           }
         }
 
-        &.fs-browser-search-item {
-          .fs-browser-column-name {
-            height: 33px;
-            margin-top: -2px;
-            margin-bottom: -1px;
-            line-height: 17px;
-
-            & > p {
-              line-height: 14px;
-              margin-top: 2px;
-              color: $colorMediumGrey;
-            }
-          }
-        }
       }
 
       &:hover {
@@ -319,9 +399,11 @@
           padding: ($paddingTopBottom - $borderSize) ($paddingRight - $borderSize) ($paddingTopBottom - $borderSize) ($paddingLeft - $borderSize);
 
           .fs-browser-column-checkbox {
-            @include checkboxChecked;
+            span {
+              @include checkboxChecked;
 
-            background-size: 20px;
+              background-size: 20px;
+            }
           }
         }
       }
@@ -353,33 +435,60 @@
       }
 
       &.fs-folderup {
-        margin-bottom: 20px;
-
-        .k-in {
-          .fs-browser-column-icon {
-            color: $colorActiveBlue;
-          }
-
-          .fs-browser-column-name {
-            color: $colorMediumGrey;
-          }
-        }
+        display: none;
       }
     }
   }
 
   #fs-action-refresh {
-    @include icon-button(30px, 30px);
+    @include icon-button($fsActionRefreshButtonSize, $fsActionRefreshButtonSize);
 
-    position: absolute;
     background-color: $colorWhite;
     color: $colorActiveBlue;
     border-radius: 4px;
-    bottom: 30px;
-    right: 0;
+    top: $fsActionRefreshTop;
+    left: calc(50% - #{$fsActionRefreshButtonSize/2});
 
     &:hover {
       color: $colorHoverBlue;
+    }
+
+    .fs-content-paste-active & {
+      top: #{$fsActionRefreshTop + $fsContentHeightMultiselectS};
+    }
+
+    .fs-content-multiselect-active & {
+      top: #{$fsActionRefreshTop + $fsContentHeightMultiselectS};
+    }
+
+    .fs-content-select-active & {
+      top: #{$fsActionRefreshTop + $fsContentHeightSelectS};
+    }
+  }
+
+  @media screen and (min-width: $breakpointBreadcrumbM) {
+    #fs-browser-tree {
+      .k-item {
+        &.fs-folderup {
+          display: block;
+          margin-bottom: 20px;
+
+          .k-in {
+            .fs-browser-column-icon {
+              color: $colorActiveBlue;
+            }
+
+            .fs-browser-column-name {
+              color: $colorMediumGrey;
+              line-height: $lineHeight;
+
+              .fs-name {
+                margin-top: 0;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -403,74 +512,8 @@
     }
   }
 
-  @media screen and (min-width: $breakpointSizeVisible) {
-    #fs-browser-header {
-      .fs-browser-column-size {
-        display: inline-block;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
-      }
-    }
-
-    #fs-browser-tree {
-      .k-item {
-        .k-in {
-          .fs-browser-column-meta {
-            padding-right: 0;
-            width: $metaWidth;
-          }
-
-          .fs-browser-column-size {
-            display: inline-block;
-          }
-
-          .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
-          }
-        }
-      }
-    }
-  }
-
-  @media screen and (min-width: $breakpointChangedVisible) {
-    #fs-browser-header {
-      .fs-browser-column-changed {
-        display: inline-block;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
-      }
-    }
-
-    #fs-browser-tree {
-      .k-item {
-        .k-in {
-          .fs-browser-column-changed {
-            display: inline-block;
-          }
-
-          .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
-          }
-        }
-      }
-    }
-  }
-
   @media screen and (min-width: $breakpointPannelVisible) {
-    #fs-browser-header {
-      .fs-browser-column-changed,
-      .fs-browser-column-size {
-        display: none;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$checkboxWidth});
-      }
-    }
+    padding-bottom: #{$bottomPadding} !important;
 
     #fs-browser-tree {
       .k-item {
@@ -487,9 +530,20 @@
         }
       }
     }
+
+    #fs-action-refresh {
+      top: #{$fsActionRefreshTop} !important;
+      left: calc(100% - #{$fsActionRefreshButtonSize});
+    }
   }
 
-  @media screen and (min-width: #{$breakpointMetaVisible + 400px}) {
+  @media screen and (min-width: #{$breakpointMetaVisible + $pannelWidthM + 100px}) {
+    #fs-browser-header {
+      #fs-browser-header-checkbox {
+        right: 20px;
+      }
+    }
+
     #fs-browser-tree {
       $metaPaddingSmallScreen: 25px;
 
@@ -502,21 +556,60 @@
           }
 
           .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth});
+            width: calc(100% - #{$iconWidth + $metaWidth + $metaPaddingSmallScreen + $checkboxWidth + 2px});
           }
         }
       }
     }
   }
 
-  @media screen and (min-width: #{$breakpointSizeVisible + 400px}) {
+  @media screen and (min-width: #{$breakpointSizeChangedVisible + $pannelWidthM + 100px}) {
     #fs-browser-header {
-      .fs-browser-column-size {
+      border: 1px solid $headerBorderColor;
+      border-radius: $border-radius;
+      padding: 0 17px 0 12px;
+
+
+      .fs-browser-column-icon,
+      .fs-browser-column-name,
+      .fs-browser-column-size,
+      .fs-browser-column-changed {
         display: inline-block;
       }
 
+      .fs-browser-column-icon {
+        padding-top: 2px;
+
+        .gr-icon {
+          $iconSize: 13px;
+
+          position: relative;
+          top: 0;
+          left: 3px;
+          width: $iconSize;
+          height: $iconSize;
+        }
+      }
+
       .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$sizeWidth} - #{$checkboxWidth});
+        width: calc(100% - #{$iconWidth + $changedWidth + $sizeWidth + $checkboxWidth + 2px});
+      }
+
+      .fs-browser-column-size,
+      .fs-browser-column-changed {
+        border-left: 1px dotted $headerBorderColor;
+        padding-left: $columnPaddingLeftRight - 1px;
+      }
+
+      #fs-browser-action-sorting,
+      #fs-action-sorting-select {
+        display: none !important;
+      }
+
+      #fs-browser-header-checkbox {
+        position: relative;
+        top: auto;
+        right: auto;
       }
     }
 
@@ -528,38 +621,43 @@
             width: $metaWidth;
           }
 
-          .fs-browser-column-size {
-            display: inline-block;
-          }
-
-          .fs-browser-column-name {
-            width: calc(100% - #{$iconWidth + $metaWidth + $sizeWidth + $checkboxWidth});
-          }
-        }
-      }
-    }
-  }
-
-  @media screen and (min-width: #{$breakpointChangedVisible + 400px}) {
-    #fs-browser-header {
-      .fs-browser-column-changed {
-        display: inline-block;
-      }
-
-      .fs-browser-column-name {
-        width: calc(100% - #{$iconWidth} - #{$changedWidth} - #{$sizeWidth} - #{$checkboxWidth});
-      }
-    }
-
-    #fs-browser-tree {
-      .k-item {
-        .k-in {
+          .fs-browser-column-size,
           .fs-browser-column-changed {
             display: inline-block;
           }
 
           .fs-browser-column-name {
             width: calc(100% - #{$iconWidth + $metaWidth + $changedWidth + $sizeWidth + $checkboxWidth});
+
+            line-height: $lineHeight;
+
+            .fs-name {
+              margin-top: 0;
+            }
+
+            .fs-browser-column-name-size-changed {
+              display: none !important;
+            }
+
+            .fs-browser-column-name-path {
+              display: block;
+            }
+          }
+
+          &.fs-browser-search-item {
+            .fs-browser-column-name {
+              line-height: 17px;
+
+              .fs-name {
+                margin-top: 5px;
+              }
+
+              & > p {
+                line-height: 14px;
+                margin-top: 2px;
+                color: $colorMediumGrey;
+              }
+            }
           }
         }
       }
@@ -601,4 +699,9 @@
   .k-icon {
     display: none;
   }
+}
+
+
+.is-touch #fs-browser #fs-action-refresh {
+  display: none;
 }

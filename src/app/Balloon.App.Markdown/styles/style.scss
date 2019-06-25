@@ -1,0 +1,237 @@
+@import '../../../themes/default/scss/includes/colors';
+@import '../../../themes/default/scss/includes/mixins';
+
+@import '../../../../node_modules/codemirror/lib/codemirror.css';
+
+#app-markdown-edit-live {
+  #app-markdown-edit-live-editor {
+    display: block;
+    height: 100%;
+  }
+
+  #app-markdown-edit-live-preview {
+    display: none;
+  }
+
+  &.preview-active {
+    #app-markdown-edit-live-editor {
+      display: none;
+    }
+
+    #app-markdown-edit-live-preview {
+      display: block;
+      height: 100%;
+
+      #app-markdown-edit-live-preview-content {
+        height: calc(100% - 77px);
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+    }
+  }
+}
+
+.editor-toolbar {
+  $buttonHeight: 30px;
+
+  a {
+    @include icon-button-small($buttonHeight, $buttonHeight);
+
+    &.active {
+      color: $colorWhite;
+      border-color: $colorActiveBlue;
+      background-color: $colorActiveBlue;
+    }
+  }
+
+  i.separator {
+    display: inline-block;
+    text-indent: -10px;
+    border-left: 1px solid $colorLightGrey;
+    color: transparent;
+    height: 22px;
+    position: relative;
+    top: -12px;
+  }
+
+  a,
+  i.separator {
+    margin-right: 5px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.CodeMirror {
+    height: calc(100% - 51px - 77px - 22px - 29px);
+    border: 1px solid #ddd;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding: 10px;
+    font: inherit;
+    z-index: 1;
+}
+
+.CodeMirror-scroll {
+  height: 100%;
+}
+
+.CodeMirror-fullscreen {
+    background: #fff;
+    position: fixed !important;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    z-index: 9;
+}
+
+.CodeMirror-sided {
+    width: 50% !important;
+}
+
+.editor-statusbar {
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #959694;
+    text-align: right;
+}
+
+.editor-statusbar span {
+    display: inline-block;
+    min-width: 4em;
+    margin-left: 1em;
+}
+
+.editor-statusbar .lines:before {
+    content: 'lines: '
+}
+
+.editor-statusbar .words:before {
+    content: 'words: '
+}
+
+.editor-statusbar .characters:before {
+    content: 'characters: '
+}
+
+.editor-preview {
+    padding: 10px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #fafafa;
+    z-index: 7;
+    overflow: auto;
+    display: none;
+    box-sizing: border-box;
+}
+
+.editor-preview-side {
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 50%;
+    top: 50px;
+    right: 0;
+    background: #fafafa;
+    z-index: 9;
+    overflow: auto;
+    display: none;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+}
+
+.editor-preview-active-side {
+    display: block
+}
+
+.editor-preview-active {
+    display: block
+}
+
+.editor-preview>p,
+.editor-preview-side>p {
+    margin-top: 0
+}
+
+.editor-preview pre,
+.editor-preview-side pre {
+    background: #eee;
+    margin-bottom: 10px;
+}
+
+.editor-preview table td,
+.editor-preview table th,
+.editor-preview-side table td,
+.editor-preview-side table th {
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+.CodeMirror .CodeMirror-code .cm-tag {
+    color: #63a35c;
+}
+
+.CodeMirror .CodeMirror-code .cm-attribute {
+    color: #795da3;
+}
+
+.CodeMirror .CodeMirror-code .cm-string {
+    color: #183691;
+}
+
+.CodeMirror .CodeMirror-selected {
+    background: #d9d9d9;
+}
+
+.CodeMirror .CodeMirror-code .cm-header-1 {
+    font-size: 200%;
+    line-height: 200%;
+}
+
+.CodeMirror .CodeMirror-code .cm-header-2 {
+    font-size: 160%;
+    line-height: 160%;
+}
+
+.CodeMirror .CodeMirror-code .cm-header-3 {
+    font-size: 125%;
+    line-height: 125%;
+}
+
+.CodeMirror .CodeMirror-code .cm-header-4 {
+    font-size: 110%;
+    line-height: 110%;
+}
+
+.CodeMirror .CodeMirror-code .cm-comment {
+    background: rgba(0, 0, 0, .05);
+    border-radius: 2px;
+}
+
+.CodeMirror .CodeMirror-code .cm-link {
+    color: #7f8c8d;
+}
+
+.CodeMirror .CodeMirror-code .cm-url {
+    color: #aab2b3;
+}
+
+.CodeMirror .CodeMirror-code .cm-strikethrough {
+    text-decoration: line-through;
+}
+
+.CodeMirror .CodeMirror-placeholder {
+    opacity: .5;
+}
+
+
+@import '../../../../node_modules/codemirror-spell-checker/src/css/spell-checker.css';
+@import './preview';
+@import '../../../../node_modules/highlight.js/styles/hybrid.css';

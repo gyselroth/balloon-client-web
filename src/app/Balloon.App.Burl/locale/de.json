@@ -8,6 +8,9 @@
       },
       "prompt": {
         "open_burl": "Willst du %s in einem neuen Tab öffnen?"
+      },
+      "snackbar": {
+        "file_created": "Die URL-Verknüpfung <b>{{name}}</b> wurde erstellt."
       }
     }
   }

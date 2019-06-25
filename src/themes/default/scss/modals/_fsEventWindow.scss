@@ -9,16 +9,28 @@ $sidePadding: 60px;
   display: none;
   width: 680px + (2 * $sidePadding);
 
+  overflow-y: hidden;
+
   #fs-event-window-content {
-    position: relative;
     height: 100%;
     width: 100%;
-    padding-right: $sidePadding;
 
-    ul {
-      padding-bottom: 100px;
+    #fs-event-window-search {
+      padding-bottom: 15px;
+    }
 
-      @include events-list;
+    #fs-events-window-list {
+      position: relative;
+      height: calc(100% - 45px);
+      width: 100%;
+      padding-right: $sidePadding;
+      overflow-y: auto;
+
+      ul {
+        padding-bottom: 100px;
+
+        @include events-list;
+      }
     }
 
     #fs-event-window-footer {

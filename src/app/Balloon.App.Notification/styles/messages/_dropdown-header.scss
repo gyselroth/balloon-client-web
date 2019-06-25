@@ -20,10 +20,23 @@
     right: 0;
   }
 
-  @media screen and (min-width: $breakpointMenuVisible) {
+  @media screen and (min-width: $breakpointNotificationsL) {
     h3 {
       font-size: 24px;
       line-height: 27px;
+    }
+  }
+}
+
+@media screen and (min-width: $breakpointPannelVisible) {
+  .fs-fullscreen-window-open {
+    #fs-notifications-header {
+      margin-bottom: 26px;
+
+      h3 {
+        font-size: 15px;
+        line-height: 27px;
+      }
     }
   }
 }

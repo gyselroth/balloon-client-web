@@ -1,0 +1,31 @@
+$sidePadding: 60px;
+
+#fs-file-handler-window {
+  display: none;
+  width: 440px + (2 * $sidePadding);
+  padding-bottom: 40px;
+  padding-top: 13px;
+
+  li {
+    border: solid 2px #CCC;
+    margin: 10px 0;
+    padding: 10px;
+    cursor: pointer;
+    line-height: 28px;
+  }
+
+  li > span {
+    line-height: 20px;
+  }
+
+  img {
+    width: 22px;
+    margin-right: 5px;
+    float: left;
+  }
+
+  .active {
+    box-shadow: 0 2px 25px 0 rgba(77,75,89,0.24);
+    border: 2px solid #39a5ff;
+  }
+}

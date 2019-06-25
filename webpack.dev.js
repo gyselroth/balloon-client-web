@@ -4,6 +4,8 @@ const common = require('./webpack.common.js');
 module.exports = merge(common, {
   devtool: 'eval-source-map',
   devServer: {
+    //https: true,
+    //public: 'webpack:8080',
     proxy: {
       '/api': {
         target: process.env.BALLOON_API_URL || 'https://localhost:8081',

@@ -1,0 +1,36 @@
+$sidePadding: 50px;
+
+#fs-alert-window {
+  display: none;
+}
+
+.fs-alert-window {
+
+  & > div.k-header {
+    padding: 0 $sidePadding;
+
+    .k-window-title {
+      left: $sidePadding;
+      width: calc(100% - #{2 * $sidePadding});
+    }
+  }
+
+  & > div.k-window-content {
+    box-sizing: border-box;
+    padding-left: $sidePadding;
+    padding-right: $sidePadding;
+  }
+
+  hr.full-width {
+    width: calc(100% + #{2 * $sidePadding});
+    margin: 29px #{-1 * $sidePadding};
+  }
+}
+
+
+.k-window >div.fs-alert-window-inner {
+  display: none;
+  padding-bottom: 40px;
+  min-width: 400px;
+  max-width: 500px + (2 * $sidePadding);
+}

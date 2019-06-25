@@ -1,0 +1,83 @@
+
+@mixin fs-content-mobile-overlay() {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  right: -100%;
+  top: 0;
+  bottom: 0;
+  background-color: $colorWhite;
+  box-sizing: border-box;
+  transition: right 0.2s ease-in-out;
+  z-index: 18;
+
+  .fs-content-overlay-header {
+    @include clearfix;
+
+    $iconSize: 30px;
+
+    padding: 25px 0;
+
+    .fs-content-view-back {
+      @include icon-button($iconSize, $iconSize);
+
+      float: left;
+      display: block;
+      margin-left: -3px;
+
+      .gr-icon {
+        color: $colorActiveBlue;
+      }
+    }
+
+    .fs-content-nodename {
+      $extWidth: 53px;
+      $extMargin: 3px;
+      $iconMargin: 16px;
+
+      @include clearfix;
+
+      width: calc(100% - #{$iconSize + $iconMargin});
+      margin-left: $iconMargin;
+      float: left;
+      display: block;
+      font-size: $fontSizeLeadBold;
+      line-height: $lineHeightLeadBold;
+      font-weight: 400;
+      padding: #{($iconSize - $lineHeightLeadBold) / 2} 0;
+
+      .fs-value,
+      .fs-ext {
+        display: block;
+        float: left;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .fs-value {
+        text-overflow: ellipsis;
+        max-width: calc(100% - #{$extWidth + $extMargin});
+
+
+        &:last-child {
+          max-width: 100%;
+        }
+      }
+
+      .fs-ext {
+        text-transform: uppercase;
+        margin-left: $extMargin;
+      }
+
+    }
+
+    span {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+@mixin fs-content-mobile-overlay-left() {
+  right: 25%;
+}

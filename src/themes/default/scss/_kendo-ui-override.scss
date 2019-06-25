@@ -44,11 +44,28 @@
 .k-overlay {
   opacity: 1 !important;
   filter: none !important;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: $overlayBackgroundColor;
 
   &.bln-overlay-clickable {
     cursor: pointer;
   }
+}
+
+.k-list-container.k-popup ul.k-list li {
+  svg {
+    position: relative;
+    top: 6px;
+    left: -3px;
+  }
+}
+
+.k-list-scroller {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+div.k-window-content {
+  z-index: auto;
 }
 
 @import './kendoUiOverride/date-and-time-picker';

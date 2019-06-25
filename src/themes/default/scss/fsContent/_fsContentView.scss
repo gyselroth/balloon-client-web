@@ -6,8 +6,146 @@
 @import './fsContentView/fsShare';
 @import './fsContentView/fsShareLink';
 
-#fs-content-view {
-  margin-top: 20px;
 
-  @include accordion($fsContentSidePadding);
+#fs-content-view-wrap {
+  @include fs-content-mobile-overlay;
+
+  padding: 0 $fsContentSidePaddingS;
+
+  .fs-content-mobile-detail & {
+    right: 0;
+  }
+
+  #fs-content-view {
+    @include accordion($fsContentSidePaddingS);
+
+    position: relative;
+    background-color: $colorWhite;
+    height: calc(100% - 65px);
+
+    dt {
+      display: none;
+
+      &.active {
+        display: block;
+
+        &:before {
+          display: none;
+        }
+
+        .gr-i-arrowhead-n {
+          display: none;
+        }
+      }
+
+      .gr-icon {
+        display: none;
+      }
+    }
+
+    dd {
+      display: none;
+      padding: 0;
+
+      &.active {
+        &:before {
+          display: none;
+        }
+
+        max-height: calc(100% - 55px);
+        overflow: auto;
+      }
+
+      &.disabled {
+        display: none !important;
+      }
+    }
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    $top: 168px;
+
+    position: fixed;
+    width: $pannelWidthM;
+    height: calc(100% - #{$top});
+    top: $top;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    padding: 0 $fsContentSidePaddingM;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    z-index: 10;
+
+    &.active-mobile {
+      right: auto;
+      animation: none;
+    }
+
+    #fs-content-view-header {
+      display: none;
+    }
+
+    #fs-content-view {
+      padding: 0;
+
+      dt {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        margin: 0 -1*$fsContentSidePaddingM 0;
+        padding: 16px $fsContentSidePaddingM 18px;
+
+        .gr-icon {
+          display: block;
+          position: absolute;
+          top: 13px;
+          right: 20px;
+          color: $colorMediumGrey;
+        }
+
+        .gr-i-arrowhead-n {
+          display: none;
+        }
+
+        &.active {
+          &:before {
+            display: block;
+          }
+
+          .gr-i-arrowhead-s {
+            display: none;
+          }
+          .gr-i-arrowhead-n {
+            display: block;
+          }
+        }
+
+        &.disabled {
+          color: $colorLightGrey;
+
+          .gr-i-arrowhead-s {
+            color: $colorLightGrey;
+          }
+        }
+      }
+
+      dd {
+        position: relative;
+        padding-top: 2px;
+        padding: 2px $fsContentSidePaddingM 65px;
+        margin: 0 -1*$fsContentSidePaddingM;
+
+        &.active {
+          &:before {
+            display: block;
+            left: 0;
+          }
+
+          max-height: auto;
+          overflow: auto;
+        }
+      }
+    }
+  }
 }

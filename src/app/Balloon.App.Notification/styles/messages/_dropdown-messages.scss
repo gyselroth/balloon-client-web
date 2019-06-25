@@ -106,11 +106,21 @@
 
   }
 
-  @media screen and (min-width: $breakpointIncreasePadding) {
+  @media screen and (min-width: $breakpointNotificationsXL) {
     &:after {
       bottom: 40px;
       left: 56px;
       width: calc(100% - #{2 * 56px});
+    }
+  }
+}
+
+@media screen and (min-width: $breakpointPannelVisible) {
+  #fs-notifications-messages {
+    &:after {
+      bottom: 20px;
+      left: 20px;
+      width: calc(100% - #{2 * 20px});
     }
   }
 }

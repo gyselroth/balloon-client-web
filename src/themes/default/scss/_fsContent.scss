@@ -1,25 +1,62 @@
-$fsContentSidePadding: 30px;
-
 @import './fsContent/fsBrowserSelectAction';
 @import './fsContent/fsPropertiesName';
 @import './fsContent/fsContentView';
+@import './fsContent/fsContentNavSmallWrap';
+@import './fsContent/fsContentNavSmallMore';
 
 #fs-content {
-
+  @include shadow-default;
   position: absolute;
-  right: 0;
-  top: 0;
+  left: 0;
+  bottom: 0;
   border-top: 1px solid $colorBrightGrey;
   background-color: $colorWhite;
-  height: 100%;
+  height: auto;
   overflow: hidden;
+  display: none;
+  z-index: 17;
+
+  #fs-content-close {
+    @include icon-button(28px);
+
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 2px;
+    color: $colorMediumGrey;
+  }
 
   #fs-content-inner {
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     border-bottom: 1px solid $colorBrightGrey;
     box-sizing: border-box;
-    padding: 22px $fsContentSidePadding 0;
+    padding: 47px $fsContentSidePaddingS 0;
+  }
+
+  .fs-content-paste-active &,
+  .fs-content-select-active &,
+  .fs-content-multiselect-active & {
+    display: block;
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    left: auto;
+    bottom: auto;
+    right: 0;
+    top: 0;
+    height: 100%;
+    display: block;
+    box-shadow: none;
+
+    #fs-content-close {
+      display: none;
+    }
+
+    #fs-content-inner {
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 22px $fsContentSidePaddingM 0;
+    }
   }
 }

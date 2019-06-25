@@ -1,3 +1,95 @@
+## 3.2.0
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Jun 25 07:41:04 CEST 2019 
+
+* [FIX] Reset view bar when menu is changed #224
+* [FIX] Avoid doubled text in file handler chooser #225
+* [FIX] menu swipe upwards opens the menu #229
+* [FIX] Remove fs-fullscreen-window-open on icon close click #230
+
+
+## 3.2.0-beta3
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Mon Jun 17 17:02:02 CEST 2019
+
+* [CHANGE] Use real input[type="checkbox"] + label for webauthn setup wizard #182
+* [CHANGE] Use real input[type="checkbox"] + label for remember handler #149
+* [CHANGE] Changed translations for in-built file handler apps
+* [CHANGE] removed preview file handler
+* [CHANGE] Desktop download popup should contain more information about proper installation way on linux #77
+
+
+## 3.2.0-beta2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Jun 14 15:17:02 CEST 2019
+
+* [FIX] Allow scrolling in kendo autocompletes #207
+* [FIX] Balloon file editor can only be opened once #200
+* [FIX] Allow application/x-sql to be edited in text editor
+* [CHANGE] Change Icons for shared links
+* [FIX] Ignore deleted nodes when adding new nodes #121
+* [CHANGE] Only show webauthn dialog on touch devices #182
+* [FEATURE] Allow to activate/deactivate webauthn from user settings #182
+* [FIX] move/clone should prompt user to merge if conflict=19 #118
+* [FIX] Fix getting index of nodes in multiselect array #44
+* [FIX] Fix this.balloon is undefined in burl handler #149
+* [CHANGE] Switch position of login button and webauthn #182
+* [CHANGE] Change event search query to $regex #143
+* [FIX] Avoid displaying event results from an old search #143
+* [FIX] Clearing event search input should display all events #143
+* [FIX] Avoid stacking of multiple infinite scroll requests #143
+* [CHANGE] Only activate change password if user.has_password === true
+* [CHANGE] Added translations for in-built default balloon file handler apps
+
+
+## 3.2.0-beta1
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Jun 05 14:47:01 CEST 2019
+
+* [FEATURE] Display mount information #73
+* [CHANGE] Implement paged node listing #133
+* [FEATURE] Undo move/clone via snackbar #42
+* [FIX] Undo event "addCollectionShare" #157
+* [FEATURE] Support for multiple office clients #149
+* [FEATURE] Various snackbar undo actions #62
+* [FIX] prompt user to save unsaved changes in text file #159
+* [FIX] Not visible if a resource is a user or group in share dropdown #168
+* [FIX] Share link from search context, no ui response #144
+* [FIX] App aborts if received a server error #108
+* [FEATURE] Implement webauthn authentification #182
+* [FEATURE] Support for progressive web app (pwa) #82
+* [FIX] Various actions reload the tree, without respecting search results #78
+* [FIX] FOLDERUP in a search result ends in parent menu #177
+* [FIX] Search does not get correctly initialized #176
+* [FIX] reloadTree should work in search mode as well #173
+* [FEATURE] Refresh tree with scrolling down #162
+* [FEATURE] swipe left menu from right to left to open #82
+* [FIX] Adding new node reloads root instead of current collection #158
+* [FEATURE] Full WOPI support and support for multiple file handler apps #149
+* [FEATURE] Implement recaptcha v2 ui #148
+* [CHANGE] NTH: Own app for elastic search #129
+* [FIX] Searching by tag resets search filter #126
+* [FEATURE] Implement all features from the desktop version into the mobile version #81
+* [FIX] Rename node: mouse usage on input field #63
+* [FEATURE] New KendoBalloonFullscreenWindow #179
+* [FIX] File view close should be top right #170
+* [FIX] Filename with `&` gets cut off #194
+* [FIX] selectAll should not trigger multiselect when only one node is present #201
+* [CHANGE] Increase snackbar timeout #199
+* [CHANGE] Use slideout.js for the menu #209
+* [FIX] open a file on iPad landscape does not work #211
+* [FIX] Restoring a version results in status 422 #212
+* [FEATURE] Search over event log #143
+* [CHANGE] Only display search result after a search occured #198
+* [FIX] Use fake password field for external storage to avoid autocomplete #76
+* [CHANGE] alternative tipps icon #70 
+* [FIX] Infinite scroll on event log is truly infinite #214
+* [FIX] add burl form url input on new line #216
+* [FIX] Typo in search menu #208
+* [CHANGE] Prompt user for certain actions when file is open #206
+* [FEATURE] Drag and Drop upload of images into md files #205
+
+
 ## 3.1.3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue May 14 16:37:12 CEST 2019

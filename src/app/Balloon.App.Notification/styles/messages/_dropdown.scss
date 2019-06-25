@@ -1,4 +1,5 @@
-$breakpointIncreasePadding: $breakpointSearchVisible;
+$breakpointNotificationsL: 550px;
+$breakpointNotificationsXL: $breakpointPannelVisible;
 
 @import './dropdown-header';
 @import './dropdown-messages';
@@ -12,11 +13,11 @@ Styles for "message center"
       & > li {
         #fs-notifications-dropdown-wrap {
           width: 640px;
-          max-width: calc(100vw - 17px);
-          right: -52px;
+          max-width: calc(100vw - 20px);
+          right: -109px;
 
           .bln-dropdown-spike {
-            right: 54px;
+            right: 111px;
           }
 
           #fs-notifications-dropdown {
@@ -35,16 +36,46 @@ Styles for "message center"
           }
         }
 
-        @media screen and (min-width: $breakpointMenuVisible) {
+        @media screen and (min-width: $breakpointNotificationsL) {
           #fs-notifications-dropdown-wrap {
-            max-width: calc(100vw - 87px);
+            max-width: calc(100vw - 107px);
+            right: -52px;
+
+            .bln-dropdown-spike {
+              right: 54px;
+            }
           }
         }
 
-        @media screen and (min-width: $breakpointIncreasePadding) {
+        @media screen and (min-width: $breakpointNotificationsXL) {
           #fs-notifications-dropdown-wrap {
             #fs-notifications-dropdown {
               padding: 37px 56px 40px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: $breakpointPannelVisible) {
+  .fs-fullscreen-window-open {
+    #fs-browser-top-bar {
+      #fs-identity {
+        & > ul {
+          & > li {
+            #fs-notifications-dropdown-wrap {
+              width: 400px;
+              right: -90px;
+
+              .bln-dropdown-spike {
+                right: 92px;
+              }
+
+              #fs-notifications-dropdown {
+                padding: 27px 20px 20px;
+              }
             }
           }
         }

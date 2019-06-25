@@ -7,6 +7,8 @@
     "logout": "Logout",
     "code": "Code",
     "multi_factor_auth": "Your account has been protected with multi factor authentication. Please enter the code from your google authenticator:",
+    "dont_remind_webauthn": "Do not ask me again.",
+    "setup_webauthn": "Your device is compatible to use a form of passwordless authentication. You may setup this now or at any time in the user settings.",
     "events": "Events",
     "profile": "Profile",
     "settings": "Settings",
@@ -15,7 +17,9 @@
       "server": "The balloon server reports an ongoing incident, please try it again later.",
       "credentials": "Wrong username or password given.",
       "code": "Invalid code provided.",
-      "oidc": "There was an error authenticate you via the choosen identity provider."
+      "oidc": "There was an error authenticate you via the choosen identity provider.",
+      "webauthn_setup": "There was an error to setup passwordless authentication. You may proceed by ignoring this step or try again.",
+      "webauthn": "There was an error to auhenticate using passwordless authentication. You may process by using username/password or try again."
     }
   },
   "profile": {
@@ -28,7 +32,8 @@
     "nav": {
       "overview": "Overview",
       "change-password": "Change password",
-      "google-authenticator": "Two factor authentication"
+      "google-authenticator": "Two factor authentication",
+      "webauthn": "Passwordless authentication"
     },
     "attribute": {
       "id": "User Id",
@@ -40,6 +45,7 @@
     "google-authenticator": {
       "activate": "Activate",
       "deactivate": "Deactivate",
+      "secret_copied": "The code has been copied to the clipboard",
       "confirm": {
         "activate": "Do you really want to activate multi factor authentication? After the activation the login will only be possible using the google authenticator app.",
         "deactivate": "Do you really want to deactivate multi factor authentication?"
@@ -47,6 +53,17 @@
       "hint": {
         "inactive": "In order to activate multi factor authentication, you need a smartphone and the app <a href=\"https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=en\" target=\"blank\">Google Authenticator</a>. After activating multi factor authentication a QR code, which you need to scan with the app, will be displayed. Attention, after the activation the login will only be possible using the google authenticator app.",
         "active": "Multi factor authentication is enabled."
+      }
+    },
+    "webauthn": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "confirm": {
+        "deactivate": "Do you really want to deactivate multi passwordless authentication?"
+      },
+      "hint": {
+        "inactive": "Passwordless authentication is inactive.",
+        "active": "Passwordless authentication is active."
       }
     }
   },
@@ -64,6 +81,7 @@
       "cut": "Cut",
       "paste": "Paste",
       "filter": "Filter",
+      "sorting": "Sorting",
       "rename": "Rename",
       "perma-link": "Copy permalink"
     },
@@ -74,7 +92,8 @@
       "history": "History",
       "share_folder": "Share folder",
       "share_link": "Share link",
-      "events": "Events"
+      "events": "Events",
+      "more": "More options"
     }
   },
   "menu": {
@@ -85,12 +104,16 @@
     "trash": "Trash",
     "search": "Search"
   },
+  "app": {
+    "file_editor": "Text Editor",
+    "file_viewer": "Preview",
+    "file_downloader": "Download"
+  },
   "search": {
-    "results": "Searchresults",
+    "results": "Search results",
     "reset_filter": "Reset",
     "apply_filter": "Apply",
     "mode": {
-      "fulltext": "Fulltext",
       "nodename": "Filename"
     },
     "filter": {
@@ -123,6 +146,14 @@
         "shares": "Shares",
         "hidden": "Hidden"
     },
+    "sorting": {
+      "name_asc": "Name ascending",
+      "name_desc": "Name descending",
+      "size_asc": "Size ascending",
+      "size_desc": "Size descending",
+      "changed_asc": "Changed ascending",
+      "changed_desc": "Changed descending"
+    },
     "open_folder": "Open folder",
     "folder": "Folder",
     "txt_file": "Text Document",
@@ -132,7 +163,11 @@
     "error": {
       "folder_exists": "A folder named %s does already exists."
     },
-    "folderup": "Back"
+    "folderup": "Back",
+    "choose_handler": "Choose app",
+    "choose_handler_text": "Choose an app to open file file %s",
+    "choose_handler_remember": "Always open this file type with the choosen app.",
+    "no_handler_found": "There was no app found which can open %s. Would you like to download the file instead?"
   },
   "user": {
     "disk_space": "Disk space:",
@@ -152,17 +187,32 @@
     "minute": "{{count}} minute",
     "minute_plural": "{{count}} minutes",
     "second": "{{count}} second",
-    "second_plural": "{{count}} seconds"
+    "second_plural": "{{count}} seconds",
+    "year_ago": "one year ago",
+    "year_ago_plural": "{{count}} years ago",
+    "month_ago": "one month ago",
+    "month_ago_plural": "{{count}} months ago",
+    "day_ago": "one day ago",
+    "day_ago_plural": "{{count}} days ago",
+    "hour_ago": "one hour ago",
+    "hour_ago_plural": "{{count}} hours ago",
+    "minute_ago": "one minute ago",
+    "minute_ago_plural": "{{count}} minutes ago",
+    "second_ago": "one second ago",
+    "second_ago_plural": "{{count}} seconds ago"
   },
   "button": {
     "save": "Save",
-    "cancel": "Cancel"
+    "setup": "Setup",
+    "ignore": "Ignore",
+    "cancel": "Cancel",
+    "open": "Open"
   },
   "view": {
     "prop": {
       "head": {
-        "mime": "Mime:",
-        "id": "ID:",
+        "mime": "Mime",
+        "id": "ID",
         "contains": "Contains",
         "changed": "Changed",
         "deleted": "Deleted",
@@ -181,7 +231,9 @@
         "path": "Path",
         "coordinate": "Coordinate",
         "author": "Author",
-        "perma-link": "Permalink"
+        "perma-link": "Permalink",
+        "mount": "Mount",
+        "mount_value": "%s (%s@%s://%s) [%s]"
       },
       "data": {
         "size": "%s (%s Bytes)",
@@ -287,7 +339,8 @@
       }
     },
     "events": {
-      "show_all": "Show all events"
+      "show_all": "Show all events",
+      "placeholder_search": "Search events"
     },
     "change-password": {
       "password": "Password",
@@ -324,6 +377,7 @@
   },
   "prompt": {
     "confirm": "Confirm",
+    "alert": "Warning",
     "cancel": "No",
     "continue": "Yes",
     "ok": "Ok",
@@ -335,7 +389,8 @@
     "restore_to_root": "The parent node in which you want to restore does not exists or is deleted, would you like to restore the node(s) to your root directory?",
     "open_big_file": "The file %s is large and open it could take a long time, would you like to continue anyway?",
     "close_save_file": "Would you like to save your changes?",
-    "auto_rename_node": "A file or directory called %s already exists. Would you like to rename yours to %s?"
+    "auto_rename_node": "A file or directory called %s already exists. Would you like to rename yours to %s?",
+    "open_file_disables_action": "The choosen action can't be executed, while a file is open"
   },
   "events": {
     "unknown": "unknown",
@@ -422,7 +477,18 @@
     "node_moved": "{{count}} Element has been moved to <b>{{dest}}</b>.",
     "node_moved_plural": "{{count}} Elements have been moved to <b>{{dest}}</b>.",
     "node_moved_folderup": "{{count}} Element has been moved to <b>the parent folder</b>.",
-    "node_moved_folderup_plural": "{{count}} Elements have been moved to <b>the parent folder</b>."
+    "node_moved_folderup_plural": "{{count}} Elements have been moved to <b>the parent folder</b>.",
+    "node_deleted": "{{count}} Element has been moved to <b>Trash</b>.",
+    "node_deleted_plural": "{{count}} Elemente have been moved to <b>Trash</b>.",
+    "collection_created": "The folder <b>{{name}}</b> has been created.",
+    "file_created": "The file <b>{{name}}</b> has been created.",
+    "node_renamed": "The element <b>{{old_name}}</b> has been renamed to <b>{{new_name}}</b>.",
+    "node_undeleted": "{{count}} element has been recovered.",
+    "node_undeleted_plural": "{{count}} elements have been recovered.",
+    "file_saved": "The file <b>{{name}}</b> has been saved.",
+    "share_added": "The collection <b>{{name}}</b> has been shared.",
+    "share_updated": "The share for the collection <b>{{name}}</b> has been updated.",
+    "restore_file": "The version <b>{{version}}</b> has been restored."
   },
   "new_node": {
     "title": {
@@ -430,5 +496,8 @@
       "txt": "New Text Document"
     },
     "name": "Name"
+  },
+  "misc": {
+    "rename_node": "Rename file"
   }
 }

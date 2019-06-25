@@ -13,6 +13,8 @@ import desktop from '../app/Balloon.App.DesktopClient/lib/lib.js';
 import burl from '../app/Balloon.App.Burl/lib/lib.js';
 import external from '../app/Balloon.App.ExternalStorage/lib/lib.js';
 import intelligentCollection from '../app/Balloon.App.IntelligentCollection/lib/lib.js';
+import elasticsearch from '../app/Balloon.App.Elasticsearch/lib/lib.js';
+import markdown from '../app/Balloon.App.Markdown/lib/lib.js';
 
 const map = {
   'Balloon.App.Office': office,
@@ -23,6 +25,8 @@ const map = {
   'Balloon.App.Burl': burl,
   'Balloon.App.ExternalStorage': external,
   'Balloon.App.IntelligentCollection': intelligentCollection,
+  'Balloon.App.Elasticsearch': elasticsearch,
+  'Balloon.App.Markdown': markdown,
 };
 
 var app = {
@@ -34,7 +38,9 @@ var app = {
     'Balloon.App.DesktopClient': {enabled: true, config: {}},
     'Balloon.App.Burl': {enabled: true, config: {}},
     'Balloon.App.ExternalStorage': {enabled: true, config: {}},
-    'Balloon.App.IntelligentCollection': {enabled: true, config: {}}
+    'Balloon.App.IntelligentCollection': {enabled: true, config: {}},
+    'Balloon.App.Elasticsearch': {enabled: true, config: {}},
+    'Balloon.App.Markdown': {enabled: true, config: {}}
   },
 
   init: function(config) {
@@ -52,7 +58,7 @@ var app = {
       var app = this.apps[name];
 
       if(app.enabled === true && map[name]['render']) {
-        map[name].render();
+        map[name].render(app.config);
       }
     }
   },

@@ -16,10 +16,11 @@ $snackBarVisibleDuration: 2s;
   transform: translate(-50%,0);
   width: auto;
   min-width: 300px;
+  max-width: calc(100vw - 20px);
   height: auto;
   background-color: $colorWhite;
   border-radius: 4px;
-  padding: 8px 11px 8px 15px;
+  padding: 8px 45px 8px 15px;
   margin: 0 auto;
   z-index: 12001;
 
@@ -31,20 +32,24 @@ $snackBarVisibleDuration: 2s;
   #fs-snackbar-message,
   #fs-snackbar-icon {
     display: inline-block;
-    height: 24px;
     line-height: 24px;
     vertical-align: middle;
   }
 
   #fs-snackbar-message {
-    float: left;
+    height: auto;
+    width: auto;
   }
 
   #fs-snackbar-icon {
-    float: right;
     height: 24px;
     width: 24px;
-    margin-left: 10px;
+
+    display: block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 11px;
 
     &.has-action {
       cursor: pointer;

@@ -8,6 +8,9 @@
       },
       "prompt": {
         "open_burl": "Do you want to open %s in a new tab?"
+      },
+      "snackbar": {
+        "file_created": "The URL Shortcut <b>{{name}}</b> has been created."
       }
     }
   }

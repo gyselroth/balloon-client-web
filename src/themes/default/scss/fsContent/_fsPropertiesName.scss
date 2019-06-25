@@ -1,31 +1,68 @@
 #fs-browser-summary,
 #fs-properties-name {
+  $extWidth: 53px;
+  $extMargin: 3px;
+
   @include clearfix;
   @include font-paragraph-bold;
 
-  span {
-    $extWidth: 53px;
-    $extMargin: 3px;
+  position: relative;
 
-    display: block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    float: left;
+  div:first-child {
+    height: 20px;
 
-    &.fs-value {
-      max-width: calc(100% - #{$extWidth + $extMargin});
+    span {
+      display: block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      float: left;
 
-      &:last-child {
-        max-width: 100%;
+      &.fs-value {
+        max-width: calc(100% - #{$extWidth + $extMargin + 30px)});
+
+        &:last-child {
+          max-width: calc(100% - 30px);
+        }
+      }
+
+      &.fs-ext {
+        margin-left: $extMargin;
+        text-transform: uppercase;
+        max-width: $extWidth;
       }
     }
+  }
 
-    &.fs-ext {
-      margin-left: $extMargin;
-      text-transform: uppercase;
-      max-width: $extWidth;
+  @media screen and (min-width: $breakpointPannelVisible) {
+    div:first-child {
+      line-height: 20px;
+
+      span {
+        &.fs-value {
+          max-width: calc(100% - #{$extWidth + $extMargin});
+
+          &:last-child {
+            max-width: 100%;
+          }
+        }
+      }
     }
+  }
+}
+
+#fs-browser-summary,
+#fs-properties-name {
+  position: absolute;
+  top: 25px;
+  left: 20px;
+  width: calc(100% - #{$fsContentSidePaddingM * 2 + 45px});
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: auto;
   }
 }
 

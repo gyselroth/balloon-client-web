@@ -1,8 +1,19 @@
 html,
 body,
 #fs-namespace {
-  height: 100%;
-  position: relative;
+  @include fs-content-mobile-overlay;
+
+  right: 0;
+  -webkit-overflow-scrolling: touch;
+
+  .fs-content-mobile-more &,
+  .fs-content-mobile-detail & {
+    @include fs-content-mobile-overlay-left;
+  }
+
+  @media screen and (min-width: $breakpointPannelVisible) {
+    right: 0 !important;
+  }
 }
 
 svg,
@@ -83,7 +94,7 @@ select {
     border: 2px solid $colorActiveBlue;
   }
 
-  &::-ms-extend {
+  &::-ms-expand {
     display: none;
   }
 
@@ -119,6 +130,7 @@ input[type="checkbox"] {
   & + label {
     position: relative;
     padding-left: 30px;
+    padding-top: 2px;
     line-height: 17px;
     display: inline-block;
     vertical-align: text-top;

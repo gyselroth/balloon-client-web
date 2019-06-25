@@ -1,34 +1,30 @@
 
 #fs-browser-layout {
   position: absolute;
-  top: 60px;
-  bottom: 0;
   left: 0;
-  right: 0;
+  top: $headerHeight;
   overflow: hidden;
   z-index: 10;
 
-  #fs-layout-left {
-    width: 100%;
-  }
-
-  #fs-content {
-    width: 0;
-  }
+  height: calc(100% - #{$headerHeight});
+  width: 100%;
 
   #fs-layout-left,
   #fs-content {
+    width: 100%;
     transition: width 0.3s ease-in-out;
   }
 
   @media screen and (min-width: $breakpointPannelVisible) {
-    $pannelWidth: 400px;
+    right: 0 !important;
+    transform: inherit !important;
+
     #fs-layout-left {
-      width: calc(100% - #{$pannelWidth});
+      width: calc(100% - #{$pannelWidthM});
     }
 
     #fs-content {
-      width: $pannelWidth;
+      width: $pannelWidthM;
     }
   }
 }
