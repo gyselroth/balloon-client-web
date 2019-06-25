@@ -1,6 +1,6 @@
-## 3.2.0-beta4
+## 3.2.0
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: 
+**Date**: Tue Jun 25 07:41:04 CEST 2019 
 
 * [FIX] Reset view bar when menu is changed #224
 * [FIX] Avoid doubled text in file handler chooser #225
