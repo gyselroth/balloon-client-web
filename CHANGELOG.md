@@ -1,3 +1,10 @@
+## 3.2.2
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Jun 26 13:45:04 CEST 2019 
+
+Test release
+
+
 ## 3.2.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Jun 26 12:16:04 CEST 2019 
