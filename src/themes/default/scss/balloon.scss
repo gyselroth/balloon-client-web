@@ -1,4 +1,8 @@
-@import '../../../../node_modules/ubuntu-fontface/ubuntu.css';
+
+$UbuntuFontsPath: '../../../../node_modules/ubuntu-fontface/fonts';
+
+@import '../../../../node_modules/ubuntu-fontface/_ubuntu-base.scss';
+//@import '../../../../node_modules/ubuntu-fontface/ubuntu.css';
 
 @import '../../../../node_modules/mobile-pull-to-refresh/dist/styles/ios/style.css';
 

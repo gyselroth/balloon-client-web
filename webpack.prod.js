@@ -14,13 +14,13 @@ common.plugins.unshift(
     background: 'transparent',
     title: 'balloon web ui',
     icons: {
-      android: true,
+      android: false,
       appleIcon: false,
       appleStartup: false,
       coast: false,
       favicons: true,
       firefox: true,
-      opengraph: true,
+      opengraph: false,
       twitter: false,
       yandex: false,
       windows: true

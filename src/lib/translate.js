@@ -15,6 +15,16 @@ import login from './auth.js'
 import app from './app.js'
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
+const kendoCultures = {
+  'de': require('kendo-ui-core/js/cultures/kendo.culture.de.js'),
+  'de-CH': require('kendo-ui-core/js/cultures/kendo.culture.de-CH.js'),
+  'de-AT': require('kendo-ui-core/js/cultures/kendo.culture.de-AT.js'),
+  'de-DE': require('kendo-ui-core/js/cultures/kendo.culture.de-DE.js'),
+  'en': require('kendo-ui-core/js/cultures/kendo.culture.en.js'),
+  'en-GB': require('kendo-ui-core/js/cultures/kendo.culture.en-GB.js'),
+  'en-AU': require('kendo-ui-core/js/cultures/kendo.culture.en-AU.js'),
+  'en-US': require('kendo-ui-core/js/cultures/kendo.culture.en-US.js'),
+}
 
 var translate = {
   config: {},
@@ -33,9 +43,7 @@ var translate = {
 
   loadCulture: function(locale) {
     try {
-      require('bundle-loader!kendo-ui-core/js/cultures/kendo.culture.'+locale+'.js')((data) => {
-        kendo.culture(locale);
-      });
+      kendo.culture(kendoCultures[locale]);
     } catch (e) {
       //fallback to en-US
     }

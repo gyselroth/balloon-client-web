@@ -1,3 +1,11 @@
+## 3.2.1
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Jun 26 12:16:04 CEST 2019 
+
+* [FIX] Two browser reloads are necessary after new release has been deployed #234
+* [FIX] Too many assets in precache-manifest #232
+
+
 ## 3.2.0
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Jun 25 07:41:04 CEST 2019 
