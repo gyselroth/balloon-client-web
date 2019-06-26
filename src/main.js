@@ -12,6 +12,8 @@ import translate from './lib/translate.js';
 import svgxuse from 'svgxuse';
 import balloonCss from './themes/default/scss/balloon.scss';
 import { polyfill } from 'es6-promise'; polyfill();
+import { Workbox } from 'workbox-window';
+
 window.jquery = $;
 
 $.ajax({
@@ -28,8 +30,16 @@ $.ajax({
   }
 });
 
+
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/service-worker.js', { scope: '/' });
+  const wb = new Workbox('/service-worker.js');
+
+  wb.addEventListener('activated', (event) => {
+    if (event.isUpdate) {
+      // reload when there is a newer version available
+      window.location.reload();
+    }
   });
+
+  wb.register();
 }
