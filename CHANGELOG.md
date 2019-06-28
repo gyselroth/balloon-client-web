@@ -1,3 +1,17 @@
+## 3.2.4
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Jun 28 09:41:04 CEST 2019 
+
+* [FIX] Android soft navigation bar overlaps content (action bar) #239
+
+
+## 3.2.3
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Jun 26 13:45:04 CEST 2019 
+
+* [FIX] Removed css revision from css load url
+
+
 ## 3.2.2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Jun 26 13:45:04 CEST 2019 

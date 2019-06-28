@@ -5,6 +5,7 @@
   top: $headerHeight;
   overflow: hidden;
   z-index: 10;
+  min-height: inherit;
 
   height: calc(100% - #{$headerHeight});
   width: 100%;
