@@ -5,6 +5,7 @@
   top: $headerHeight;
   overflow: hidden;
   z-index: 10;
+  min-height: inherit;
 
   height: calc(100% - #{$headerHeight});
   width: 100%;
@@ -17,7 +18,7 @@
 
   @media screen and (min-width: $breakpointPannelVisible) {
     right: 0 !important;
-    transform: inherit !important;
+    //transform: inherit !important;
 
     #fs-layout-left {
       width: calc(100% - #{$pannelWidthM});
