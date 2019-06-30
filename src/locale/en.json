@@ -498,6 +498,9 @@
     "name": "Name"
   },
   "misc": {
-    "rename_node": "Rename file"
+    "rename_node": "Rename file",
+    "app_notifications": {
+      "update_available": "An update is available"
+    }
   }
 }

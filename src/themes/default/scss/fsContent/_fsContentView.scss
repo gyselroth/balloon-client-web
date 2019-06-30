@@ -77,6 +77,13 @@
     overflow-y: scroll;
     z-index: 10;
 
+    .app-notification-visible & {
+      $topUpdateAvailable: $top + $appNotificationHeight;
+
+      height: calc(100% - #{$topUpdateAvailable});
+      top: $topUpdateAvailable;
+    }
+
     &.active-mobile {
       right: auto;
       animation: none;
