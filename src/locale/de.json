@@ -499,6 +499,9 @@
     "name": "Name"
   },
   "misc": {
-    "rename_node": "Datei umbenennen"
+    "rename_node": "Datei umbenennen",
+    "app_notifications": {
+      "update_available": "Ein update ist verfügbar"
+    }
   }
 }

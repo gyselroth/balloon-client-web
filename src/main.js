@@ -34,11 +34,16 @@ $.ajax({
 if ('serviceWorker' in navigator) {
   const wb = new Workbox('/service-worker.js');
 
-  wb.addEventListener('activated', (event) => {
-    if (event.isUpdate) {
-      // reload when there is a newer version available
-      window.location.reload();
-    }
+  wb.addEventListener('waiting', (event) => {
+    $('body').addClass('app-notification-visible');
+    $('#update-notification').show().off('click').on('click', () => {
+
+      wb.addEventListener('activated', (event) => {
+        window.location.reload();
+      });
+
+      wb.messageSW({type: 'SKIP_WAITING'});
+    });
   });
 
   wb.register();

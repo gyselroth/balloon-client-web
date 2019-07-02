@@ -1,3 +1,10 @@
+## 3.2.5
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: 
+
+* [CHANGE] "Reload" Banner, when update is available #242
+
+
 ## 3.2.4
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Jun 28 09:41:04 CEST 2019 

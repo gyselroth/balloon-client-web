@@ -11,6 +11,11 @@
   transition: right 0.2s ease-in-out;
   z-index: 18;
 
+  .app-notification-visible & {
+    top: $appNotificationHeight;
+    height: calc(100% - #{$appNotificationHeight});
+  }
+
   .fs-content-overlay-header {
     @include clearfix;
 
