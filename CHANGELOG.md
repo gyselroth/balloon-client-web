@@ -1,14 +1,8 @@
 ## 3.2.5
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: 
+**Date**: Mon Jul 09 11:14:01 CEST 2019
 
 * [CHANGE] "Reload" Banner, when update is available #242
-
-
-## 3.2.4
-**Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Mon Jul 08 11:10:01 CEST 2019 
-
 * [FIX] Desktop client button is not visible #250
 
 
