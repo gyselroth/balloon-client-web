@@ -1,5 +1,12 @@
 ## 3.2.4
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Mon Jul 08 11:10:01 CEST 2019 
+
+* [FIX] Desktop client button is not visible #250
+
+
+## 3.2.4
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Jun 28 09:41:04 CEST 2019 
 
 * [FIX] Android soft navigation bar overlaps content (action bar) #239
