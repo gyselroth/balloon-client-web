@@ -25,6 +25,9 @@ $UbuntuFontsPath: '../../../../node_modules/ubuntu-fontface/fonts';
 
 @import 'kendo-ui-override';
 
+// update banner
+@import 'app-notification';
+
 // header top bar
 @import 'header';
 

@@ -111,7 +111,7 @@ module.exports = {
     new GenerateSW({
       importWorkboxFrom: 'local',
       clientsClaim: true,
-      skipWaiting: true
+      skipWaiting: false
     }),
     new webpack.DefinePlugin({
       'process.env.VERSION': JSON.stringify(process.env.VERSION || gitRevisionPlugin.version()),

@@ -1,0 +1,41 @@
+
+.app-notification {
+  $buttonHeight: 30px;
+
+  @include clearfix;
+
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: $appNotificationHeight;
+  background-color: $colorActiveBlue;
+  color: $colorWhite;
+  z-index: 12001;
+  padding: 5px;
+  box-sizing: border-box;
+
+  .app-notification-button {
+    @include icon-button-small($buttonHeight);
+
+    float: left;
+
+    &:hover {
+      color: $colorActiveBlue;
+      border-color: $colorWhite;
+      background-color: $colorWhite;
+    }
+  }
+
+  .app-notification-text {
+    width: 100%;
+  }
+
+  .app-notification-button + .app-notification-text {
+    $margin-left: 10px;
+
+    float: left;
+    line-height: $buttonHeight;
+    margin-left: $margin-left;
+    width: calc(100% - #{$buttonHeight + $margin-left});
+  }
+}
