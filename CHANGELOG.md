@@ -1,3 +1,10 @@
+## 3.2.6
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+* [FIX] Do not navigate to currently open profile register #244
+
+
 ## 3.2.5
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Mon Jul 09 11:14:01 CEST 2019

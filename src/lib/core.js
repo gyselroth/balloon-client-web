@@ -2296,6 +2296,11 @@ var balloon = {
    * @return  void
    */
   _userProfileNavigateTo: function(view) {
+    var $curActive = $('#fs-profile-window dl dt.active');
+
+    // Do not navigate to currently active
+    if($curActive.length > 0 && $curActive.attr('id').substr(24) === view) return;
+
     $('#fs-profile-window dl > *').removeClass('active');
 
     $('#fs-profile-window-title-'+view).addClass('active');
