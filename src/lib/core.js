@@ -2373,6 +2373,9 @@ var balloon = {
 
         // User attributes
         var $table = $('#fs-profile-user').find('table');
+        // make sure no double data is displayed #244
+        $table.find('tr').remove();
+
         var attributes = ['id', 'username', 'created'];
         for(var i=0; i<attributes.length; i++) {
           var attribute = attributes[i];
