@@ -3,6 +3,7 @@
 **Date**:
 
 * [FIX] Do not navigate to currently open profile register #244
+* [FIX] right panel should display refresh content after changes to node #249
 
 
 ## 3.2.5

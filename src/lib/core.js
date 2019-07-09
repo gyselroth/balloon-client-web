@@ -6039,14 +6039,12 @@ var balloon = {
       dataType: 'json',
       statusCode: {
         204: function(e) {
-          balloon.refreshTree('/collections/children', {id: balloon.getCurrentCollectionId()});
+          balloon.reloadTree().then(function() {
+            if(balloon.last === null || node.shareowner.id !== login.user.id) return;
 
-          if(node.shareowner.id === login.user.id) {
-            balloon.last.shared = false;
-            if(balloon.id(node) == balloon.id(balloon.last)) {
-              balloon.switchView('share');
-            }
-          }
+            balloon._updateContentView(balloon.last);
+            balloon.switchView('share');
+          });
         }
       },
     });
@@ -6073,12 +6071,12 @@ var balloon = {
         name: name
       },
       success: function(data) {
-        node.shared = true;
-        balloon.reloadTree();
-        if(balloon.id(node) == balloon.id(balloon.last)) {
-          balloon.last.shareowner = data.shareowner;
+        balloon.reloadTree().then(function() {
+          if(balloon.last === null) return;
+
+          balloon._updateContentView(balloon.last);
           balloon.switchView('share');
-        }
+        });
       },
     };
 
@@ -6303,9 +6301,14 @@ var balloon = {
 
           $.when(shareLinkRequest, destroyRequest).done(function() {
             balloon.reloadTree().then(function() {
-              balloon.switchView('share-link');
+              if(balloon.last === null) return;
+
               $k_win.close();
               balloon.showShareLink();
+
+              balloon._updateContentView(balloon.last);
+              balloon.switchView('share-link');
+
             });
           });
         });
@@ -6404,12 +6407,16 @@ var balloon = {
       url: balloon.base+'/nodes/share-link?id='+balloon.id(node),
       type: 'DELETE',
       success: function(body) {
-        delete balloon.last.sharelink_token;
-        balloon.reloadTree();
+        balloon.reloadTree().then(function() {
+          if(balloon.last === null) return;
 
-        $('#fs-share-link-edit').hide();
-        $('#fs-share-link-delete').hide();
-        $('#fs-share-link-create').show();
+          $('#fs-share-link-edit').hide();
+          $('#fs-share-link-delete').hide();
+          $('#fs-share-link-create').show();
+
+          balloon._updateContentView(balloon.last);
+          balloon.switchView('share-link');
+        });
       }
     });
   },
