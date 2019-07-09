@@ -3626,7 +3626,7 @@ var balloon = {
             ts = Math.round(date.getTime() / 1000);
           }
 
-          balloon._setDestroy(node, ts, $k_win);
+          balloon._setDestroy(node, ts, $k_win, true);
         });
 
         $fs_destroy_date_win.find('input:button').unbind().click(function() {
@@ -3644,17 +3644,17 @@ var balloon = {
    * @param object node
    * @param null|integer ts
    */
-  _setDestroy: function(node, ts, $k_win) {
+  _setDestroy: function(node, ts, $k_win, reload) {
     var curTs = (new Date(node.destroy)).getTime() / 1000;
     var $d = $.Deferred();
 
     if(ts !== curTs) {
       if(ts === null) {
-        balloon.selfDestroyNode(node, ts, $k_win, $d);
+        balloon.selfDestroyNode(node, ts, $k_win, $d, reload);
       } else {
         var dateHr = kendo.toString(new Date(ts * 1000), kendo.culture().calendar.patterns.g)
         var msg  = i18next.t('view.properties.prompt_destroy', dateHr, node.name);
-        balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win]).then(function() {
+        balloon.promptConfirm(msg, 'selfDestroyNode', [node, ts, $k_win, reload]).then(function() {
           $d.resolve();
         }, function() {
           $d.resolve();
@@ -3677,7 +3677,7 @@ var balloon = {
    * @param object node
    * @param null|integer ts
    */
-  selfDestroyNode: function(node, ts, $k_win) {
+  selfDestroyNode: function(node, ts, $k_win, reload) {
     var url;
 
     var $d = $.Deferred();
@@ -3696,10 +3696,18 @@ var balloon = {
           $k_win.close();
         }
 
-        $d.resolve();
+        if(reload) {
+          balloon.reloadTree().then(function() {
+            if(balloon.last === null) return;
 
-        node.destroy = ts === null ? undefined : (new Date(ts * 1000)).toISOString();
-        balloon.displayProperties(node);
+            balloon._updateContentView(balloon.last);
+            balloon.switchView('properties');
+
+            $d.resolve();
+          });
+        } else {
+          $d.resolve();
+        }
       }
     });
 
