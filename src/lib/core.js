@@ -249,6 +249,7 @@ var balloon = {
       label: 'menu.trash',
       icon: 'trash',
       callback: function() {
+        balloon.tree.filter.deleted = 2;
         return balloon.refreshTree('/nodes/trash', {}, {});
       }
     },
