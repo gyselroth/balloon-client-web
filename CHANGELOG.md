@@ -1,3 +1,13 @@
+## 3.2.6
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Thu Jul 11 12:29:23 CEST 2019
+
+* [FIX] Do not navigate to currently open profile register #244
+* [FIX] right panel should display refresh content after changes to node #249
+* [FIX] tree should be updated after destroy date has been set #249
+* [FIX] Open deleted nodes via trash menu does not list any children #254
+
+
 ## 3.2.5
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Mon Jul 09 11:14:01 CEST 2019
