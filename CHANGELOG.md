@@ -1,6 +1,6 @@
 ## 3.2.6
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Thu Jul 11 12:29:23 CEST 2019
 
 * [FIX] Do not navigate to currently open profile register #244
 * [FIX] right panel should display refresh content after changes to node #249
