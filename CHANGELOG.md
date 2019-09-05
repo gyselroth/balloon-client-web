@@ -1,5 +1,12 @@
 ## 3.2.6
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: 
+
+* [FIX] fallback locale does not work #261
+
+
+## 3.2.6
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Thu Jul 11 12:29:23 CEST 2019
 
 * [FIX] Do not navigate to currently open profile register #244

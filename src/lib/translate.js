@@ -24,7 +24,9 @@ const kendoCultures = {
   'en-GB': require('kendo-ui-core/js/cultures/kendo.culture.en-GB.js'),
   'en-AU': require('kendo-ui-core/js/cultures/kendo.culture.en-AU.js'),
   'en-US': require('kendo-ui-core/js/cultures/kendo.culture.en-US.js'),
-}
+};
+
+const defaultLang = 'en';
 
 var translate = {
   config: {},
@@ -100,7 +102,7 @@ var translate = {
           prefix: 'i18next_res_',
           expirationTime: 60*60*120
         },
-        fallbackLng: translate.config.defaultLang,
+        fallbackLng: translate.config.defaultLang || defaultLang,
         backend: {
           ajax: translate.load,
           loadPath: function(lng,ns){
