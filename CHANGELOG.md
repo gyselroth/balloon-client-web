@@ -1,4 +1,11 @@
-## 3.2.6
+## 3.2.8
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: 
+
+* [FIX] json query for users/groups is not properly escaped #260
+
+
+## 3.2.7
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: 
 
