@@ -2998,7 +2998,7 @@ var balloon = {
    * @return void
    */
   _eventsWindowSearch: function(node) {
-    var value = $(this).val();
+    var value = encodeURIComponent($(this).val());
 
     var $fs_event_list  = $('#fs-event-window #fs-events-window-list'),
       $fs_event_list_ul  = $fs_event_list.find('ul');
@@ -5566,12 +5566,12 @@ var balloon = {
           return;
         }
 
-        var value = $share_consumer_search.data("kendoAutoComplete").value()
+        var value = encodeURIComponent($share_consumer_search.data("kendoAutoComplete").value());
         if(value === '' || value === undefined) {
           return;
         }
 
-        var filter = JSON.stringify({'query': {'name': $share_consumer_search.data("kendoAutoComplete").value()}});
+        var filter = JSON.stringify({'query': {'name': value}});
 
         balloon.xmlHttpRequest({
           url: balloon.base+'/groups?'+filter,
@@ -5592,7 +5592,7 @@ var balloon = {
           }
         });
 
-        filter = JSON.stringify({'query': {'username': $share_consumer_search.data("kendoAutoComplete").value()}});
+        filter = JSON.stringify({'query': {'username': value}});
 
         balloon.xmlHttpRequest({
           url: balloon.base+'/users?'+filter,
@@ -5751,7 +5751,7 @@ var balloon = {
         serverFiltering: true,
         transport: {
           read: function(operation) {
-            var value = $input.data("kendoAutoComplete").value()
+            var value = encodeURIComponent($input.data("kendoAutoComplete").value());
             if(value === '' || value === undefined) {
               operation.success([]);
               $input.data('kendoAutoComplete').close();
@@ -5764,7 +5764,7 @@ var balloon = {
               var filter = {
                 'query': {
                   'name': {
-                    "$regex": $input.data("kendoAutoComplete").value(),
+                    "$regex": value,
                     "$options": "i"
                   },
                 }
@@ -5800,7 +5800,7 @@ var balloon = {
             var filter = {
               'query': {
                 'username': {
-                  "$regex": $input.data("kendoAutoComplete").value(),
+                  "$regex": value,
                   "$options": "i"
                 },
               }
@@ -6893,7 +6893,7 @@ var balloon = {
       $('#fs-search').removeClass('fs-search-filtered');
     }
 
-    var query = balloon.buildQuery(content, filters);
+    var query = balloon.buildQuery(encodeURIComponent(content), filters);
 
     if(query === undefined) {
       return false
