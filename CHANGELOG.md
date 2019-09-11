@@ -1,15 +1,9 @@
-## 3.2.8
-**Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: 
-
-* [FIX] json query for users/groups is not properly escaped #260
-
-
 ## 3.2.7
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: 
+**Date**: Wed Sep 11 16:31:23 CEST 2019
 
 * [FIX] fallback locale does not work #261
+* [FIX] json query for users/groups is not properly escaped #260
 
 
 ## 3.2.6
