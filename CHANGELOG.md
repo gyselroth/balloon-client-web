@@ -1,3 +1,11 @@
+## 3.2.8
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Oct 02 14:33:22 CEST 2019
+
+* [FIX] Cannot start container balloon_balloon-web_1 #262
+* [FIX] Updated dependencies (npm audit)
+
+
 ## 3.2.7
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Sep 11 16:31:23 CEST 2019
