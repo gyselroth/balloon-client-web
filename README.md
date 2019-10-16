@@ -35,7 +35,7 @@ This is the web based user interface for the [balloon](https://github.com/gyselr
 * ... And more
 
 # Documentation
-Interested? How to deploy? Well please visit the [documentation](https://gyselroth.github.io/balloon-docs/).
+Interested? How to deploy? Please visit the [documentation](https://gyselroth.github.io/balloon-docs/).
 
 ## Requirements
 You need a running balloon server to operate the balloon web client. Please see [balloon](https://github.com/gyselroth/balloon) for further information.
