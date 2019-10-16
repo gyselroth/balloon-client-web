@@ -70,7 +70,8 @@ $(DIST_DIR)/balloon-web-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
 	@mkdir -p $(PACK_DIR)/usr/share/balloon-web
 	@cp -Rp $(BUILD_DIR)/* $(PACK_DIR)/usr/share/balloon-web
 	@mkdir $(PACK_DIR)/usr/share/balloon-web/nginx
-	@cp -Rp $(BASE_DIR)/packaging/nginx.conf $(PACK_DIR)/usr/share/balloon-web/nginx
+	@cp -Rp $(BASE_DIR)/packaging/debian/nginx.conf $(PACK_DIR)/usr/share/balloon-web/nginx
+	@cp -Rp $(BASE_DIR)/packaging/debian/nginx-web.conf $(PACK_DIR)/usr/share/balloon-web/nginx
 	@-test -d $(DIST_DIR) || mkdir $(DIST_DIR)
 	@dpkg-deb --build $(PACK_DIR) $@
 	@rm -rf $(PACK_DIR)
@@ -184,5 +185,6 @@ install: $(INSTALL_TARGET)
 
 $(INSTALL_TARGET): $(BUILD_TARGET)
 	@cp -Rp $(BUILD_DIR)/* $(INSTALL_PREFIX)/usr/share/balloon-web
-	@mkdir -p /etc/nginx/conf.d
-	@cp -Rp $(BASE_DIR)/packaging/nginx.conf /etc/nginx/conf.d
+	@mkdir -p /etc/nginx/conf.d/balloon
+	@cp -Rp $(BASE_DIR)/packaging/debian/nginx.conf /etc/nginx/conf.d/balloon.conf
+	@cp -Rp $(BASE_DIR)/packaging/debian/nginx-web.conf /etc/nginx/conf.d/balloon/web.conf
