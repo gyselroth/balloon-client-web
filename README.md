@@ -34,6 +34,9 @@ This is the web based user interface for the [balloon](https://github.com/gyselr
 * Inbuilt app system to support 3rd party apps (and core apps as well)
 * ... And more
 
+# Documentation
+Interested? How to deploy? Well please visit the [documentation](https://gyselroth.github.io/balloon-docs/).
+
 ## Requirements
 You need a running balloon server to operate the balloon web client. Please see [balloon](https://github.com/gyselroth/balloon) for further information.
 
