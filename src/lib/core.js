@@ -3905,6 +3905,8 @@ var balloon = {
       return;
     }
 
+    if(balloon.isTouchDevice() && balloon.isMultiSelect()) return;
+
     $('body').removeClass('fs-content-multiselect-active fs-content-select-active');
 
     if(balloon.last.directory === true) {
