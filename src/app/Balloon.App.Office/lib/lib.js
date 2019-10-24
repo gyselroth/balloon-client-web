@@ -97,18 +97,6 @@ var app = {
       deactivate: function(e) {
         e.sender.destroy();
       },
-      keydown: function(e) {
-        if(e.originalEvent.keyCode !== 27) {
-          return;
-        }
-
-        e.stopImmediatePropagation();
-        var msg  = i18next.t('app.office.close_edit_file', node.name);
-        app.balloon.promptConfirm(msg, function(){
-           $k_display.close();
-           $div.remove();
-        });
-      },
       open: function(e) {
         $('#fs-edit-office_wnd_title').html(
           $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
@@ -129,15 +117,6 @@ var app = {
 
         $div.find('form').submit();
         app.eventHandler(node);
-
-        $(this.wrapper).find('.k-i-close').unbind('click.fix').bind('click.fix', function(e){
-          e.stopImmediatePropagation();
-          var msg  = i18next.t('app.office.close_edit_file', node.name);
-          app.balloon.promptConfirm(msg, function(){
-             $k_display.close();
-             $div.remove();
-          });
-        });
       }
     }).data("kendoBalloonWindow").center();
   },
