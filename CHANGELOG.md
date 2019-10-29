@@ -10,6 +10,7 @@
 * [FIX] Fix issues hitting esc in md editor #257
 * [CHANGE] Remove confirm prompt when closing office document #258
 * [FIX] Hide spinner only after all running requests have been completed #119
+* [CHANGE] Sort share consumers, allow scrolling #264
 
 ## 3.2.8
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
@@ -47,28 +48,28 @@
 
 ## 3.2.4
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Fri Jun 28 09:41:04 CEST 2019 
+**Date**: Fri Jun 28 09:41:04 CEST 2019
 
 * [FIX] Android soft navigation bar overlaps content (action bar) #239
 
 
 ## 3.2.3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Wed Jun 26 13:45:04 CEST 2019 
+**Date**: Wed Jun 26 13:45:04 CEST 2019
 
 * [FIX] Removed css revision from css load url
 
 
 ## 3.2.2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Wed Jun 26 13:45:04 CEST 2019 
+**Date**: Wed Jun 26 13:45:04 CEST 2019
 
 Test release
 
 
 ## 3.2.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Wed Jun 26 12:16:04 CEST 2019 
+**Date**: Wed Jun 26 12:16:04 CEST 2019
 
 * [FIX] Two browser reloads are necessary after new release has been deployed #234
 * [FIX] Too many assets in precache-manifest #232
@@ -76,7 +77,7 @@ Test release
 
 ## 3.2.0
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Tue Jun 25 07:41:04 CEST 2019 
+**Date**: Tue Jun 25 07:41:04 CEST 2019
 
 * [FIX] Reset view bar when menu is changed #224
 * [FIX] Avoid doubled text in file handler chooser #225
@@ -158,7 +159,7 @@ Test release
 * [FEATURE] Search over event log #143
 * [CHANGE] Only display search result after a search occured #198
 * [FIX] Use fake password field for external storage to avoid autocomplete #76
-* [CHANGE] alternative tipps icon #70 
+* [CHANGE] alternative tipps icon #70
 * [FIX] Infinite scroll on event log is truly infinite #214
 * [FIX] add burl form url input on new line #216
 * [FIX] Typo in search menu #208

@@ -5504,9 +5504,14 @@ var balloon = {
         success: function(data) {
           $share_name.val(data.name);
 
+          data.acl.sort(function(a,b) {
+            if(a.role.name === b.role.name) return 0;
+            return a.role.name > b.role.name ? 1 : -1;
+          });
+
           for(var i in data.acl) {
             var consumer = data.acl[i];
-            balloon._addShareConsumer(consumer, acl);
+            balloon._addShareConsumer(consumer, acl, false, false);
           }
 
           balloon.prepareShareWindow(node, acl);
@@ -5601,7 +5606,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl, true);
+            acl = balloon._addShareConsumer(role, acl, true, true);
           }
         });
 
@@ -5623,7 +5628,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl, true);
+            acl = balloon._addShareConsumer(role, acl, true, true);
           }
         });
       }
@@ -5631,7 +5636,7 @@ var balloon = {
 
     balloon._userAndGroupAutocomplete($share_consumer_search, true, function(item) {
       selected = true;
-      balloon._addShareConsumer(item, acl, true);
+      balloon._addShareConsumer(item, acl, true, true);
     });
 
     $fs_share_win.find('#fs-share-window-toggle-consumers a').off('click').on('click', function() {
@@ -5872,7 +5877,7 @@ var balloon = {
    * @param  Array acl
    * @return object
    */
-  _addShareConsumer: function(item, acl, scrollToItem) {
+  _addShareConsumer: function(item, acl, scrollToItem, sort) {
     var $fs_share_win_consumers = $('#fs-share-window-consumers');
     var $fs_share_win_consumers_ul = $fs_share_win_consumers.find('> ul');
 
@@ -5895,7 +5900,7 @@ var balloon = {
 
     var icon = item.type === 'group' ? 'group' : 'person';
     var $consumer = $(
-      '<li id="fs-share-window-consumer-' + item.role.id + '">'+
+      '<li id="fs-share-window-consumer-' + item.role.id + '" data-name="' + name + '">'+
         '<svg class="gr-icon gr-i-'+icon+'"><use xlink:href="'+iconsSvg+'#'+icon+'"></use></svg>'+
         '<span>'+name+'</span>'+
       '</li>'
@@ -5945,13 +5950,18 @@ var balloon = {
 
     $consumer.append($consumer_privilege);
 
-    $fs_share_win_consumers_ul.append($consumer);
+    if(sort) {
+      balloon._insertToSortedList($fs_share_win_consumers_ul, $consumer, 'name');
+    } else {
+      $fs_share_win_consumers_ul.append($consumer);
+    }
     $fs_share_win_consumers.show();
 
     balloon._setToggleConsumersVisibility(acl);
 
     if(scrollToItem) {
-      $fs_share_win_consumers_ul.animate({scrollTop: $fs_share_win_consumers_ul.prop('scrollHeight')}, 250);
+      var newScrollTop = $consumer.offset().top - $fs_share_win_consumers.offset().top + $fs_share_win_consumers_ul.scrollTop()
+      $fs_share_win_consumers_ul.animate({scrollTop: newScrollTop}, 250);
     }
 
     $('#fs-share-window').data('kendoBalloonWindow').center();
@@ -5978,6 +5988,56 @@ var balloon = {
     $consumer_privilege.find('.fs-share-window-selected-privilege').off('click').on('click', balloon._showPrivilegeSelector);
 
     return acl;
+  },
+
+  _insertToSortedList: function($list, $el, dataAttr) {
+    var curItems = $list.children().map(function() {
+      var $this = $(this);
+      return {string: $this.data(dataAttr), id: $this.attr('id')};
+    });
+
+    var position = findInsertPosition($el.data(dataAttr), curItems);
+
+    if(position === 0) {
+      $list.prepend($el);
+    } else if(position >= curItems.length) {
+      $list.append($el);
+    } else {
+      $el.insertAfter('#' + curItems[position-1].id);
+    }
+
+    function findInsertPosition(value, array, startVal, endVal) {
+      var length = array.length;
+      var start = typeof(startVal) != 'undefined' ? startVal : 0;
+      var end = typeof(endVal) != 'undefined' ? endVal : length - 1;
+      var m = start + Math.floor((end - start)/2);
+
+      if(length == 0){
+        return 0;
+      }
+
+      if(value > array[end].string){
+        return end + 1;
+      }
+
+      if(value < array[start].string) {
+        return start;
+      }
+
+      if(start >= end){
+        return end;
+      }
+
+      if(value < array[m].string) {
+        return findInsertPosition(value, array, start, m - 1);
+      }
+
+      if(value > array[m].string) {
+        return findInsertPosition(value, array, m + 1, end);
+      }
+
+      return m+1;
+    }
   },
 
   /**
