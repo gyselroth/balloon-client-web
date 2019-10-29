@@ -1,3 +1,15 @@
+## 3.2.9
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+* [FIX] Do not change scroll position when selecting a node #222
+* [CHANGE] Increase chunk size to 16MB #268
+* [FIX] Destroy existing baloonWindow before opening a new one #246
+* [FIX] Disable treeDblclick on touch during multiselect #267
+* [FIX] Fix scrolling on iOS 13 #267
+* [FIX] Fix issues hitting esc in md editor #257
+* [CHANGE] Remove confirm prompt when closing office document #258
+
 ## 3.2.8
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Oct 02 14:33:22 CEST 2019
