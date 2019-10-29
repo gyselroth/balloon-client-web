@@ -3807,6 +3807,7 @@ var balloon = {
       balloon._folderUp();
     }
 
+    return false;
   },
 
   /**
