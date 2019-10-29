@@ -59,9 +59,9 @@ var balloon = {
 
 
   /**
-   * Chunk upload size (4MB Chunk)
+   * Chunk upload size (16MB Chunk)
    */
-  BYTES_PER_CHUNK: 4194304,
+  BYTES_PER_CHUNK: 16777216,
 
 
   /**
