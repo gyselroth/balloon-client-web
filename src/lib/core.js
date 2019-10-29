@@ -116,6 +116,14 @@ var balloon = {
 
 
   /**
+   * Requests currently running which needs to display spinner
+   *
+   * @var object
+   */
+  runningRequests: 0,
+
+
+  /**
    * Upload manager
    *
    * @var object
@@ -4899,6 +4907,7 @@ var balloon = {
    */
   showSpinner: function() {
     var $fs_spinner = $('#fs-spinner');
+    balloon.runningRequests ++;
 
     if(!$fs_spinner.is(':visible')) {
       $('#fs-namespace').addClass('fs-loader-cursor');
@@ -4914,8 +4923,9 @@ var balloon = {
    */
   hideSpinner: function() {
     var $fs_spinner = $('#fs-spinner');
+    balloon.runningRequests --;
 
-    if($fs_spinner.is(':visible')) {
+    if($fs_spinner.is(':visible') && balloon.runningRequests === 0) {
       $('#fs-namespace').removeClass('fs-loader-cursor');
       $fs_spinner.hide();
     }

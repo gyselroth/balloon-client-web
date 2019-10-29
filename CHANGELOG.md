@@ -9,6 +9,7 @@
 * [FIX] Fix scrolling on iOS 13 #267
 * [FIX] Fix issues hitting esc in md editor #257
 * [CHANGE] Remove confirm prompt when closing office document #258
+* [FIX] Hide spinner only after all running requests have been completed #119
 
 ## 3.2.8
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
