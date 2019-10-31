@@ -3534,9 +3534,9 @@ var balloon = {
 
     var $fs_properties = $('#fs-properties');
     var $fs_readonly = $fs_properties.find('input[name=readonly]');
-    var $fs_destroy_date_preview = $fs_properties.find('#fs-properties-destroy-date-preview');
-    var $fs_destroy_date_set = $fs_properties.find('#fs-properties-destroy-date-set');
-    var $fs_destroy_date_edit = $fs_properties.find('#fs-properties-destroy-date-edit');
+    var $fs_destroy_date = $('#fs-properties-destroy-date');
+    var $fs_destroy_date_preview = $fs_destroy_date.find('#fs-properties-destroy-date-preview');
+    var $fs_destroy_date_remove = $fs_destroy_date.find('#fs-properties-destroy-date-remove');
 
     $('#fs-properties').off('focusout').on('focusout', 'textarea,input[type="text"],select', balloon._saveMetaAttributes);
 
@@ -3544,12 +3544,10 @@ var balloon = {
       var formatedDate = kendo.toString(new Date(node.destroy), kendo.culture().calendar.patterns.g);
 
       $fs_destroy_date_preview.html(formatedDate);
-      $fs_destroy_date_set.hide();
-      $fs_destroy_date_edit.show();
+      $fs_destroy_date.addClass('fs-properties-has-destroy-date');
     } else {
       $fs_destroy_date_preview.html('');
-      $fs_destroy_date_set.show();
-      $fs_destroy_date_edit.hide();
+      $fs_destroy_date.removeClass('fs-properties-has-destroy-date');
     }
 
     $fs_readonly.prop('checked', node.readonly);
@@ -3569,7 +3567,13 @@ var balloon = {
       });
     });
 
-    $fs_properties.find('button').off('click').on('click', balloon.showDestroyDate);
+    $fs_properties.find('button.fs-properties-destroy-trigger-window').off('click').on('click', balloon.showDestroyDate);
+
+    $fs_destroy_date_remove.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      balloon.selfDestroyNode(node, null, null, true);
+    })
 
     for(var meta_attr in node.meta) {
       $('#fs-properties-'+meta_attr).val(node.meta[meta_attr]);

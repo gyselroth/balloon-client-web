@@ -327,6 +327,7 @@
       "destroy_date": "Destruction date",
       "set_destroy_date": "Set date",
       "edit_destroy_date": "Edit date",
+      "remove_destroy_date": "Remove date",
       "prompt_destroy": "Would you really like to set the date/time %s for node %s for self destruction?",
       "readonly": "Readonly (No content changes can be made anymore, but you can still modify meta data)",
       "destroy_date_window": {
