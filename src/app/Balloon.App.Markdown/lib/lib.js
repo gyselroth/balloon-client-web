@@ -93,7 +93,7 @@ var app = {
             }
           },
           open: function(e) {
-            app.editor.simplemde.value(app.editor.data);
+            app._setEditorContent(app.editor.data);
 
             if(app.editor.data.length > 0) {
               app._togglePreview(true);
@@ -127,9 +127,10 @@ var app = {
 
           app._togglePreview();
         });
+      app.$windowHtml.focus();
     } else {
       app.$windowHtml.removeClass('preview-active');
-      app.editor.simplemde.value(app.editor.data);
+      app._setEditorContent(app.editor.data);
     }
   },
 
@@ -317,7 +318,6 @@ var app = {
    * @return string rendered html
    */
   _renderMarkdown: function(markdown) {
-
     let converter = new showdown.Converter({
       extensions: [showdownHighlight, 'href', 'balloon-image']
     });
@@ -435,6 +435,17 @@ var app = {
   _closeEditorWindow: function() {
     app.editor.k_window.close();
     app.editor = {};
+  },
+
+  /**
+   * Set the content of the markdown editor and focus editor.
+   *
+   * @return void
+   */
+  _setEditorContent: function(content) {
+    app.editor.simplemde.value(content);
+    app.editor.simplemde.codemirror.refresh();
+    app.editor.simplemde.codemirror.focus();
   }
 }
 

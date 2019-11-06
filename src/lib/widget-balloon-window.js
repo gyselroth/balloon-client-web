@@ -10,6 +10,10 @@ import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 
     init: function(target, options) {
       var that = this;
+
+      var existingWin = $(target).data('kendoBalloonWindow');
+      if(existingWin) existingWin.destroy();
+
       Window.fn.init.call(this, target, options);
 
       if(this.options.closeViaOverlay === undefined) {

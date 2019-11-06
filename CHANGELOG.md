@@ -1,3 +1,21 @@
+## 3.2.9
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Nov 06 14:39:33 CET 2019
+
+* [FIX] Do not change scroll position when selecting a node #222
+* [CHANGE] Increase chunk size to 16MB #268
+* [FIX] Destroy existing baloonWindow before opening a new one #246
+* [FIX] Disable treeDblclick on touch during multiselect #267
+* [FIX] Fix scrolling on iOS 13 #267
+* [FIX] Fix issues hitting esc in md editor #257
+* [CHANGE] Remove confirm prompt when closing office document #258
+* [FIX] Hide spinner only after all running requests have been completed #119
+* [CHANGE] Sort share consumers, allow scrolling #264
+* [CHANGE] Allow to remove a set destroy date #252
+* [FIX] Elasticsearch fulltextsearch does not work with balloon 2.5+ (using ingest attachment) #271
+* [FIX] Wrong date/time formats with non en-us locale #272
+
+
 ## 3.2.8
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Oct 02 14:33:22 CEST 2019
@@ -34,28 +52,28 @@
 
 ## 3.2.4
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Fri Jun 28 09:41:04 CEST 2019 
+**Date**: Fri Jun 28 09:41:04 CEST 2019
 
 * [FIX] Android soft navigation bar overlaps content (action bar) #239
 
 
 ## 3.2.3
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Wed Jun 26 13:45:04 CEST 2019 
+**Date**: Wed Jun 26 13:45:04 CEST 2019
 
 * [FIX] Removed css revision from css load url
 
 
 ## 3.2.2
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Wed Jun 26 13:45:04 CEST 2019 
+**Date**: Wed Jun 26 13:45:04 CEST 2019
 
 Test release
 
 
 ## 3.2.1
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Wed Jun 26 12:16:04 CEST 2019 
+**Date**: Wed Jun 26 12:16:04 CEST 2019
 
 * [FIX] Two browser reloads are necessary after new release has been deployed #234
 * [FIX] Too many assets in precache-manifest #232
@@ -63,7 +81,7 @@ Test release
 
 ## 3.2.0
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Tue Jun 25 07:41:04 CEST 2019 
+**Date**: Tue Jun 25 07:41:04 CEST 2019
 
 * [FIX] Reset view bar when menu is changed #224
 * [FIX] Avoid doubled text in file handler chooser #225
@@ -145,7 +163,7 @@ Test release
 * [FEATURE] Search over event log #143
 * [CHANGE] Only display search result after a search occured #198
 * [FIX] Use fake password field for external storage to avoid autocomplete #76
-* [CHANGE] alternative tipps icon #70 
+* [CHANGE] alternative tipps icon #70
 * [FIX] Infinite scroll on event log is truly infinite #214
 * [FIX] add burl form url input on new line #216
 * [FIX] Typo in search menu #208

@@ -68,7 +68,7 @@ var app = {
 
       should.push({
         match: {
-          'content.content': {
+          'attachment.content': {
             query: value,
             minimum_should_match: "90%"
           }

@@ -45,7 +45,7 @@ var translate = {
 
   loadCulture: function(locale) {
     try {
-      kendo.culture(kendoCultures[locale]);
+      kendo.culture(locale);
     } catch (e) {
       //fallback to en-US
     }

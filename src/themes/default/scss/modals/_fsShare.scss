@@ -101,7 +101,7 @@ $sidePadding: 30px;
         display: block;
         width: 100%;
         max-height: $maxDisplayed * 31px + 1px;
-        overflow-y: hidden;
+        overflow-y: auto;
         overflow-x: hidden;
 
         & > li {

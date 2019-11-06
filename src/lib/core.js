@@ -59,9 +59,9 @@ var balloon = {
 
 
   /**
-   * Chunk upload size (4MB Chunk)
+   * Chunk upload size (16MB Chunk)
    */
-  BYTES_PER_CHUNK: 4194304,
+  BYTES_PER_CHUNK: 16777216,
 
 
   /**
@@ -113,6 +113,14 @@ var balloon = {
    * @var object
    */
   last: null,
+
+
+  /**
+   * Requests currently running which needs to display spinner
+   *
+   * @var object
+   */
+  runningRequests: 0,
 
 
   /**
@@ -3526,9 +3534,9 @@ var balloon = {
 
     var $fs_properties = $('#fs-properties');
     var $fs_readonly = $fs_properties.find('input[name=readonly]');
-    var $fs_destroy_date_preview = $fs_properties.find('#fs-properties-destroy-date-preview');
-    var $fs_destroy_date_set = $fs_properties.find('#fs-properties-destroy-date-set');
-    var $fs_destroy_date_edit = $fs_properties.find('#fs-properties-destroy-date-edit');
+    var $fs_destroy_date = $('#fs-properties-destroy-date');
+    var $fs_destroy_date_preview = $fs_destroy_date.find('#fs-properties-destroy-date-preview');
+    var $fs_destroy_date_remove = $fs_destroy_date.find('#fs-properties-destroy-date-remove');
 
     $('#fs-properties').off('focusout').on('focusout', 'textarea,input[type="text"],select', balloon._saveMetaAttributes);
 
@@ -3536,12 +3544,10 @@ var balloon = {
       var formatedDate = kendo.toString(new Date(node.destroy), kendo.culture().calendar.patterns.g);
 
       $fs_destroy_date_preview.html(formatedDate);
-      $fs_destroy_date_set.hide();
-      $fs_destroy_date_edit.show();
+      $fs_destroy_date.addClass('fs-properties-has-destroy-date');
     } else {
       $fs_destroy_date_preview.html('');
-      $fs_destroy_date_set.show();
-      $fs_destroy_date_edit.hide();
+      $fs_destroy_date.removeClass('fs-properties-has-destroy-date');
     }
 
     $fs_readonly.prop('checked', node.readonly);
@@ -3561,7 +3567,13 @@ var balloon = {
       });
     });
 
-    $fs_properties.find('button').off('click').on('click', balloon.showDestroyDate);
+    $fs_properties.find('button.fs-properties-destroy-trigger-window').off('click').on('click', balloon.showDestroyDate);
+
+    $fs_destroy_date_remove.off('click').on('click', function(event) {
+      event.preventDefault();
+
+      balloon.selfDestroyNode(node, null, null, true);
+    })
 
     for(var meta_attr in node.meta) {
       $('#fs-properties-'+meta_attr).val(node.meta[meta_attr]);
@@ -3807,6 +3819,7 @@ var balloon = {
       balloon._folderUp();
     }
 
+    return false;
   },
 
   /**
@@ -3904,6 +3917,8 @@ var balloon = {
       //this was a "double click" on two different nodes
       return;
     }
+
+    if(balloon.isTouchDevice() && balloon.isMultiSelect()) return;
 
     $('body').removeClass('fs-content-multiselect-active fs-content-select-active');
 
@@ -4896,6 +4911,7 @@ var balloon = {
    */
   showSpinner: function() {
     var $fs_spinner = $('#fs-spinner');
+    balloon.runningRequests ++;
 
     if(!$fs_spinner.is(':visible')) {
       $('#fs-namespace').addClass('fs-loader-cursor');
@@ -4911,8 +4927,9 @@ var balloon = {
    */
   hideSpinner: function() {
     var $fs_spinner = $('#fs-spinner');
+    balloon.runningRequests --;
 
-    if($fs_spinner.is(':visible')) {
+    if($fs_spinner.is(':visible') && balloon.runningRequests === 0) {
       $('#fs-namespace').removeClass('fs-loader-cursor');
       $fs_spinner.hide();
     }
@@ -5491,9 +5508,14 @@ var balloon = {
         success: function(data) {
           $share_name.val(data.name);
 
+          data.acl.sort(function(a,b) {
+            if(a.role.name === b.role.name) return 0;
+            return a.role.name > b.role.name ? 1 : -1;
+          });
+
           for(var i in data.acl) {
             var consumer = data.acl[i];
-            balloon._addShareConsumer(consumer, acl);
+            balloon._addShareConsumer(consumer, acl, false, false);
           }
 
           balloon.prepareShareWindow(node, acl);
@@ -5588,7 +5610,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl, true);
+            acl = balloon._addShareConsumer(role, acl, true, true);
           }
         });
 
@@ -5610,7 +5632,7 @@ var balloon = {
               role: data.data[0]
             }
 
-            acl = balloon._addShareConsumer(role, acl, true);
+            acl = balloon._addShareConsumer(role, acl, true, true);
           }
         });
       }
@@ -5618,7 +5640,7 @@ var balloon = {
 
     balloon._userAndGroupAutocomplete($share_consumer_search, true, function(item) {
       selected = true;
-      balloon._addShareConsumer(item, acl, true);
+      balloon._addShareConsumer(item, acl, true, true);
     });
 
     $fs_share_win.find('#fs-share-window-toggle-consumers a').off('click').on('click', function() {
@@ -5859,7 +5881,7 @@ var balloon = {
    * @param  Array acl
    * @return object
    */
-  _addShareConsumer: function(item, acl, scrollToItem) {
+  _addShareConsumer: function(item, acl, scrollToItem, sort) {
     var $fs_share_win_consumers = $('#fs-share-window-consumers');
     var $fs_share_win_consumers_ul = $fs_share_win_consumers.find('> ul');
 
@@ -5882,7 +5904,7 @@ var balloon = {
 
     var icon = item.type === 'group' ? 'group' : 'person';
     var $consumer = $(
-      '<li id="fs-share-window-consumer-' + item.role.id + '">'+
+      '<li id="fs-share-window-consumer-' + item.role.id + '" data-name="' + name + '">'+
         '<svg class="gr-icon gr-i-'+icon+'"><use xlink:href="'+iconsSvg+'#'+icon+'"></use></svg>'+
         '<span>'+name+'</span>'+
       '</li>'
@@ -5932,13 +5954,18 @@ var balloon = {
 
     $consumer.append($consumer_privilege);
 
-    $fs_share_win_consumers_ul.append($consumer);
+    if(sort) {
+      balloon._insertToSortedList($fs_share_win_consumers_ul, $consumer, 'name');
+    } else {
+      $fs_share_win_consumers_ul.append($consumer);
+    }
     $fs_share_win_consumers.show();
 
     balloon._setToggleConsumersVisibility(acl);
 
     if(scrollToItem) {
-      $fs_share_win_consumers_ul.animate({scrollTop: $fs_share_win_consumers_ul.prop('scrollHeight')}, 250);
+      var newScrollTop = $consumer.offset().top - $fs_share_win_consumers.offset().top + $fs_share_win_consumers_ul.scrollTop()
+      $fs_share_win_consumers_ul.animate({scrollTop: newScrollTop}, 250);
     }
 
     $('#fs-share-window').data('kendoBalloonWindow').center();
@@ -5965,6 +5992,56 @@ var balloon = {
     $consumer_privilege.find('.fs-share-window-selected-privilege').off('click').on('click', balloon._showPrivilegeSelector);
 
     return acl;
+  },
+
+  _insertToSortedList: function($list, $el, dataAttr) {
+    var curItems = $list.children().map(function() {
+      var $this = $(this);
+      return {string: $this.data(dataAttr), id: $this.attr('id')};
+    });
+
+    var position = findInsertPosition($el.data(dataAttr), curItems);
+
+    if(position === 0) {
+      $list.prepend($el);
+    } else if(position >= curItems.length) {
+      $list.append($el);
+    } else {
+      $el.insertAfter('#' + curItems[position-1].id);
+    }
+
+    function findInsertPosition(value, array, startVal, endVal) {
+      var length = array.length;
+      var start = typeof(startVal) != 'undefined' ? startVal : 0;
+      var end = typeof(endVal) != 'undefined' ? endVal : length - 1;
+      var m = start + Math.floor((end - start)/2);
+
+      if(length == 0){
+        return 0;
+      }
+
+      if(value > array[end].string){
+        return end + 1;
+      }
+
+      if(value < array[start].string) {
+        return start;
+      }
+
+      if(start >= end){
+        return end;
+      }
+
+      if(value < array[m].string) {
+        return findInsertPosition(value, array, start, m - 1);
+      }
+
+      if(value > array[m].string) {
+        return findInsertPosition(value, array, m + 1, end);
+      }
+
+      return m+1;
+    }
   },
 
   /**

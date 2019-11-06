@@ -254,6 +254,8 @@
 
     width: 100%;
     overflow: hidden;
+    // override touch-action: none, added by kendo as inline-style, which disables scrolling on iOS 13
+    touch-action: auto !important;
 
     // single node
     .k-item {

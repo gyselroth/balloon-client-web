@@ -52,11 +52,6 @@
     div {
       line-height: 30px;
       float: left;
-
-      &#fs-properties-destroy-date-preview {
-        margin: 0 10px 0 28px;
-        color: $colorDarkGrey;
-      }
     }
 
     button {
@@ -64,6 +59,41 @@
       min-width: 90px;
       padding-left: 18px;
       padding-right: 18px;
+    }
+
+    #fs-properties-destroy-date-preview,
+    #fs-properties-destroy-date-modify {
+      display: none;
+    }
+
+    &.fs-properties-has-destroy-date {
+      .fs-properties-label {
+        height: 50px;
+      }
+
+      #fs-properties-destroy-date-set {
+        display: none;
+      }
+
+      #fs-properties-destroy-date-preview,
+      #fs-properties-destroy-date-modify {
+        display: block;
+        margin: 0 10px 0 28px;
+      }
+
+      #fs-properties-destroy-date-preview {
+        color: $colorDarkGrey;
+      }
+
+      #fs-properties-destroy-date-modify {
+        button {
+          margin-left: 10px;
+
+          &:last-child {
+            margin-left: 0;
+          }
+        }
+      }
     }
   }
 }
