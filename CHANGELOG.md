@@ -1,6 +1,6 @@
 ## 3.2.9
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Wed Nov 06 14:39:33 CET 2019
 
 * [FIX] Do not change scroll position when selecting a node #222
 * [CHANGE] Increase chunk size to 16MB #268
@@ -13,6 +13,7 @@
 * [CHANGE] Sort share consumers, allow scrolling #264
 * [CHANGE] Allow to remove a set destroy date #252
 * [FIX] Elasticsearch fulltextsearch does not work with balloon 2.5+ (using ingest attachment) #271
+* [FIX] Wrong date/time formats with non en-us locale #272
 
 
 ## 3.2.8
