@@ -12,6 +12,8 @@
 * [FIX] Hide spinner only after all running requests have been completed #119
 * [CHANGE] Sort share consumers, allow scrolling #264
 * [CHANGE] Allow to remove a set destroy date #252
+* [FIX] Elasticsearch fulltextsearch does not work with balloon 2.5+ (using ingest attachment) #271
+
 
 ## 3.2.8
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
