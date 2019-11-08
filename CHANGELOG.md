@@ -1,3 +1,11 @@
+## 3.2.10
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Nov 08 09:39:33 CET 2019
+
+* [CHANGE] Add support for wopi host wopi_url #274
+* [FIX] Invalid locale using excel office 365 #275
+
+
 ## 3.2.9
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Nov 06 14:39:33 CET 2019
