@@ -4,6 +4,7 @@
 
 * [CHANGE] Add support for wopi host wopi_url #274
 * [FIX] Invalid locale using excel office 365 #275
+* [FIX] Switch to color/date in intelligent folder wizard only works once #276
 
 
 ## 3.2.9
