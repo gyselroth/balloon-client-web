@@ -397,7 +397,7 @@ var app = {
 
     //TODO adds throttle support for balloon v2.7, remove case in web ui v3.3
     if(app.balloon.last.subscription_throttle === undefined) {
-      $throttle.hide();
+      $throttle.parent().hide();
     } else {
       $throttle.val(app.balloon.last.subscription_throttle);
     }
