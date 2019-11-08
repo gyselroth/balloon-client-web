@@ -7,6 +7,7 @@
         "save": "Save",
         "exclude_me": "Exclude my own changes",
         "recursive": "Subscribe to sub folders",
+        "throttle": "Throttle interval (in seconds)",
         "description": "Get notified if something gets changed in this node."
       },
       "messages": {
