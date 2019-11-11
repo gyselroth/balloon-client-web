@@ -61,11 +61,12 @@ var app = {
       values: {}
     }];
 
-    if(this.$win === null) {
-      this.$win = $('<div id="fs-intelligent-collection-window"></div>');
-      $('body').append(this.$win);
+    if(this.$win !== null) {
+      this.$win.remove();
     }
 
+    this.$win = $('<div id="fs-intelligent-collection-window"></div>');
+    $('body').append(this.$win);
     var $win = this.$win;
 
     $win.html(
@@ -358,9 +359,8 @@ var app = {
 
     $dropdown.off('change').on('change', function(event) {
       event.preventDefault();
-
       app._onPropertyChanged(filter, $(this).val());
-    });
+    }).trigger('change');
   },
 
   /**

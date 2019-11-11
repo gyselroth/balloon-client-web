@@ -38,6 +38,7 @@ var app = {
                       ext: action['@attributes'].ext,
                       handler: app.fileHandler,
                       context: {
+                        wopi_url: host.wopi_url,
                         url: action['@attributes'].urlsrc,
                       }
                     });
@@ -102,8 +103,14 @@ var app = {
           $('#fs-browser-tree').find('li[gr-id="'+node.id+'"]').find('.k-in').find('> span').clone()
         );
 
-        var src = window.location.protocol + '//' + window.location.hostname + app.balloon.base+'/office/wopi/files/'+session.node;
-        //var src = window.location.protocol + '//' + '10.242.2.9' + ':' + '8084'+app.balloon.base+'/office/wopi/files/'+session.node;
+        //TODO balloon v2.7.0 supports wopi_url, remove backup in web client v3.3
+        var src;
+        if(context.wopi_url) {
+          src = context.wopi_url+'/files/'+session.node;
+        } else {
+          src = window.location.protocol + '//' + window.location.hostname + app.balloon.base+'/office/wopi/files/'+session.node;
+        }
+
         src = encodeURIComponent(src);
         var url = app.parseUrl(context.url, src, node);
 
@@ -152,10 +159,6 @@ var app = {
   parseUrl: function(url, src, node) {
     var variables = url.substr(url.indexOf('?')+1).replace(/<([^=]+)=([^&]+)&>/g, function(match, name, value) {
       switch(name) {
-        case 'ui':
-          //return 'ui=de-DE&';
-          return 'ui='+navigator.language+'&';
-        break;
         default:
           return '';
       }

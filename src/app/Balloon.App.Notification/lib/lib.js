@@ -348,6 +348,7 @@ var app = {
       '<div><input type="checkbox" id="fs-notification-subscribe" name="subscribe" value="1" /><label for="fs-notification-subscribe">'+i18next.t('app.notification.settings.subscribe')+'</label></div>'+
       '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-exclude_me" checked="checked" name="exclude_me" value="1" disabled /><label for="fs-notification-exclude_me">'+i18next.t('app.notification.settings.exclude_me')+'</label></div>'+
       '<div class="fs-notification-suboption"><input type="checkbox" id="fs-notification-recursive" name="recursive" value="1" disabled /><label for="fs-notification-recursive">'+i18next.t('app.notification.settings.recursive')+'</label></div>'+
+      '<div class="fs-notification-suboption"><label for="fs-notification-throttle">'+i18next.t('app.notification.settings.throttle')+'</label><input type="number" id="fs-notification-throttle" name="throttle" disabled /></div>'+
       '<input type="submit" class="fs-button-primary" value="'+i18next.t('app.notification.settings.save')+'">'+
     '</dd>');
 
@@ -373,6 +374,7 @@ var app = {
     var $subscribe = app.$contentSettings.find('input[name=subscribe]');
     var $exclude_me = app.$contentSettings.find('input[name=exclude_me]');
     var $recursive = app.$contentSettings.find('input[name=recursive]');
+    var $throttle = app.$contentSettings.find('input[name=throttle]');
     var $submit = app.$contentSettings.find('input[type=submit]');
 
     if(app.balloon.last.subscription === false) {
@@ -387,14 +389,21 @@ var app = {
       $recursive.parent().show();
     }
 
-    app._toggleCheckboxDisabled(app.balloon.last.subscription);
+    app._toggleSettingsDisabled(app.balloon.last.subscription);
 
     $subscribe.prop('checked', app.balloon.last.subscription);
     $exclude_me.prop('checked', exclude_me);
     $recursive.prop('checked', app.balloon.last.subscription_recursive);
 
+    //TODO adds throttle support for balloon v2.7, remove case in web ui v3.3
+    if(app.balloon.last.subscription_throttle === undefined) {
+      $throttle.parent().hide();
+    } else {
+      $throttle.val(app.balloon.last.subscription_throttle);
+    }
+
     $subscribe.off('change').on('change', function() {
-      app._toggleCheckboxDisabled($subscribe.prop('checked'));
+      app._toggleSettingsDisabled($subscribe.prop('checked'));
     });
 
     $submit.off('click').on('click', function(){
@@ -402,7 +411,8 @@ var app = {
       app.subscribe(app.balloon.last,
         $subscribe.is(':checked'),
         $exclude_me.is(':checked'),
-        $recursive.is(':checked')
+        $recursive.is(':checked'),
+        $throttle.val(),
       );
     });
   },
@@ -412,14 +422,17 @@ var app = {
    *
    * @return void
    */
-  _toggleCheckboxDisabled: function(subscribed) {
+  _toggleSettingsDisabled: function(subscribed) {
     var $exclude_me = app.$contentSettings.find('input[name=exclude_me]');
     var $recursive = app.$contentSettings.find('input[name=recursive]');
+    var $throttle = app.$contentSettings.find('input[name=throttle]');
 
     if(subscribed) {
+      $throttle.prop('disabled', false);
       $exclude_me.prop('disabled', false);
       $recursive.prop('disabled', false);
     } else {
+      $throttle.prop('disabled', true);
       $exclude_me.prop('disabled', true);
       $recursive.prop('disabled', true);
     }
@@ -430,7 +443,7 @@ var app = {
    *
    * @return void
    */
-  subscribe: function(node, subscription, exclude_me, recursive) {
+  subscribe: function(node, subscription, exclude_me, recursive, throttle) {
     app.balloon.xmlHttpRequest({
       url: app.balloon.base+'/nodes/subscription',
       type: 'POST',
@@ -439,7 +452,8 @@ var app = {
         id: app.balloon.id(node),
         subscribe: subscription,
         exclude_me: exclude_me,
-        recursive: recursive
+        recursive: recursive,
+        throttle: throttle,
       },
       success: function(node) {
         app.balloon.last = node;
