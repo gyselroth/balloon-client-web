@@ -10,7 +10,7 @@
       "redhat": "RPM based (.rpm)",
       "download": "Download",
       "hint": "Es gibt eine App, welche deine ganze Cloud auf deinen Desktop bringt. Die App gibt es für Windows, Mac OS X und Linux. Du kannst diese herunterladen, indem du auf {icon-app-download} klickst unten links.",
-      "documentation": "In der <a target='_blank' href='https://balloons.readthedocs.io/en/latest/desktop-client'>Dokumentation (EN)</a> sind weitere Instruktionen wie der Desktop-Client unter Linux von Paketquellen installiert werden kann."
+      "documentation": "In der <a target='_blank' href='https://gyselroth.github.io/balloon-docs/desktop-client/installation'>Dokumentation (EN)</a> sind weitere Instruktionen wie der Desktop-Client unter Linux von Paketquellen installiert werden kann."
     }
   }
 }
