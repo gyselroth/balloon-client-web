@@ -1,3 +1,17 @@
+## 3.2.11
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Nov 13 10:39:43 CET 2019
+
+### Bugfixes
+
+* Desktop client popup provides outdated url to the documentation #279
+
+### Common
+
+* Starting with v3.2.11 the changelog has a new format, all changes get splitted into sub categeories within the changelog to get a better readability. Note
+for debian pkg changelog the issues get merged in a single list.
+
+
 ## 3.2.10
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Nov 08 09:39:33 CET 2019
