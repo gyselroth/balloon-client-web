@@ -412,7 +412,7 @@ var app = {
         $subscribe.is(':checked'),
         $exclude_me.is(':checked'),
         $recursive.is(':checked'),
-        $throttle.val(),
+        $throttle.val()
       );
     });
   },

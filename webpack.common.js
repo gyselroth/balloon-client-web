@@ -7,6 +7,7 @@ const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const {GenerateSW} = require('workbox-webpack-plugin');
+const RobotstxtPlugin = require("robotstxt-webpack-plugin");
 var gitRevisionPlugin = new GitRevisionPlugin();
 
 var isDev = process.env.NODE_ENV !== 'production';
@@ -107,6 +108,12 @@ module.exports = {
           ios: true
         }
       ]
+    }),
+    new RobotstxtPlugin({
+      policy: [{
+        userAgent: "*",
+        disallow: "/",
+      }]
     }),
     new GenerateSW({
       importWorkboxFrom: 'local',
