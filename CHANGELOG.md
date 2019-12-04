@@ -1,3 +1,12 @@
+## 3.2.12
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Wed Dec 04 12:25:42 CET 2019
+
+### Changes
+
+*  Hide SPA content from bots SEO #281 
+
+
 ## 3.2.11
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Nov 13 10:39:43 CET 2019
