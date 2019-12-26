@@ -606,6 +606,10 @@ var balloon = {
 
     balloon.displayQuota();
 
+    $('#fs-settings-dropdown-wrap').off('bln-dropdown-show').on('bln-dropdown-show', function(event) {
+      balloon.displayQuota();
+    });
+
     var $fs_search = $('#fs-search');
     var $fs_search_input = $fs_search.find('#fs-search-input');
     var $fs_search_filter_toggle = $fs_search.find('#fs-search-toggle-filter');
@@ -927,6 +931,8 @@ var balloon = {
       } else {
         $dropdown = $clicked.find('.fs-identity-dropdown');
       }
+
+      $dropdown.trigger('bln-dropdown-show');
 
       if($dropdown.hasClass('fs-identity-dropdown-open')) {
         $dropdown.removeClass('fs-identity-dropdown-open');
