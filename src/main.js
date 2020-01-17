@@ -38,7 +38,7 @@ if ('serviceWorker' in navigator) {
     $('body').addClass('app-notification-visible');
     $('#update-notification').show().off('click').on('click', () => {
 
-      wb.addEventListener('activated', (event) => {
+      wb.addEventListener('controlling', (event) => {
         window.location.reload();
       });
 
