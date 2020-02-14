@@ -8,7 +8,9 @@
 import "@babel/polyfill";
 import iconsSvg from '@gyselroth/icon-collection/src/icons.svg';
 import $ from "jquery";
-import translate from './lib/translate.js';
+import auth from './lib/auth.js';
+import translation from './lib/translate.js';
+import app from './lib/app.js';
 import svgxuse from 'svgxuse';
 import balloonCss from './themes/default/scss/balloon.scss';
 import { polyfill } from 'es6-promise'; polyfill();
@@ -18,18 +20,24 @@ window.jquery = $;
 
 $.ajax({
   url: '/config.json',
-  success: function(body, responseText, response) {
+  complete: async function(body, responseText, response) {
     if(body.localScript) {
       $.getScript(body.localScript);
     }
+    console.log("auth init");
 
-    translate.init(body);
-  },
-  error: function() {
-    translate.init({});
+    try {
+      await translation.init(responseText || {});
+      await auth.init();
+      app.init(responseText || {});
+      app.render();
+      auth.initApp();
+    } catch (e) {
+      auth.hideLoader(true);
+      $('#login').show();
+    }
   }
 });
-
 
 if ('serviceWorker' in navigator) {
   const wb = new Workbox('/service-worker.js');

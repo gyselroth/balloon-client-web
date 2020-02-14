@@ -7,6 +7,11 @@ module.exports = merge(common, {
     //https: true,
     //public: 'webpack:8080',
     proxy: {
+      '/.well-known': {
+        target: process.env.BALLOON_API_URL || 'http://localhost:8084',
+        changeOrigin: true,
+        secure: (process.env.BALLOON_API_URL_SECURE || 'false') === 'true'
+      },
       '/api': {
         target: process.env.BALLOON_API_URL || 'http://localhost:8084',
         changeOrigin: true,

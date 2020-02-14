@@ -8,6 +8,28 @@
 import $ from "jquery";
 import i18next from 'i18next';
 import css from '../styles/style.scss';
+const parser = require('fast-xml-parser');
+const he = require('he');
+
+var options = {
+    attributeNamePrefix : "@_",
+    attrNodeName: "attr", //default is 'false'
+    textNodeName : "#text",
+    ignoreAttributes : true,
+    ignoreNameSpace : false,
+    allowBooleanAttributes : false,
+    parseNodeValue : true,
+    parseAttributeValue : false,
+    trimValues: true,
+    cdataTagName: "__cdata", //default is 'false'
+    cdataPositionChar: "\\c",
+    parseTrueNumberOnly: false,
+    arrayMode: false, //"strict"
+    attrValueProcessor: (val, attrName) => he.decode(val, {isAttributeValue: true}),//default is a=>a
+    tagValueProcessor : (val, tagName) => he.decode(val), //default is a=>a
+    stopNodes: ["parse-me-as-string"]
+};
+
 
 var app = {
   id: 'Balloon.App.Office',
