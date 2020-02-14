@@ -1,9 +1,20 @@
+## 3.2.13
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Feb 14 15:13:42 CET 2019
+
+### Bugfixes
+* Reload button on "Update available" Banner does not work on iOS #284
+* Quota does not get updated #283
+
+## Packaging
+* Discontinue distribution of deb packages #286
+
+
 ## 3.2.12
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Dec 04 12:25:42 CET 2019
 
 ### Changes
-
 *  Hide SPA content from bots SEO #281 
 
 
@@ -12,11 +23,9 @@
 **Date**: Wed Nov 13 10:39:43 CET 2019
 
 ### Bugfixes
-
 * Desktop client popup provides outdated url to the documentation #279
 
 ### Common
-
 * Starting with v3.2.11 the changelog has a new format, all changes get splitted into sub categeories within the changelog to get a better readability. Note
 for debian pkg changelog the issues get merged in a single list.
 

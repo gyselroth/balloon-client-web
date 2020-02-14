@@ -14,7 +14,6 @@ VERSION := "0.0.1"
 endif
 
 # PACKAGES
-DEB = $(DIST_DIR)/balloon-web-$(VERSION).deb
 TAR = $(DIST_DIR)/balloon-web-$(VERSION).tar.gz
 
 # NPM STUFF
@@ -26,8 +25,16 @@ INSTALL_TARGET = "$(INSTALL_PREFIX)usr/share/balloon-web"
 NPM_TARGET = $(NODE_MODULES_DIR)
 WEBPACK_TARGET = $(BUILD_DIR)
 ESLINT_TARGET = $(BASE_DIR)
-CHANGELOG_TARGET = $(PACK_DIR)/DEBIAN/changelog
 BUILD_TARGET = $(ESLINT_TARGET) $(WEBPACK_TARGET)
+
+#DOCKER
+DOCKER_NAME=gyselroth/balloon-web
+
+
+help: ## This help.
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+
+.DEFAULT_GOAL := help
 
 # TARGETS
 .PHONY: all
@@ -55,27 +62,11 @@ build: $(BUILD_TARGET)
 
 
 .PHONY: dist
-dist: tar deb
+dist: tar docker
 
-
-.PHONY: deb
-deb: $(DIST_DIR)/balloon-web-$(VERSION).deb
-
-$(DIST_DIR)/balloon-web-$(VERSION).deb: $(CHANGELOG_TARGET) $(BUILD_TARGET)
-	@-test ! -d $(PACK_DIR) || rm -rfv $(PACK_DIR)
-	@mkdir -p $(PACK_DIR)/DEBIAN
-	@cp $(BASE_DIR)/packaging/debian/control $(PACK_DIR)/DEBIAN/control
-	@sed -i s/'{version}'/$(VERSION)/g $(PACK_DIR)/DEBIAN/control
-	@cp $(BASE_DIR)/packaging/debian/postinst $(PACK_DIR)/DEBIAN/postinst
-	@mkdir -p $(PACK_DIR)/usr/share/balloon-web
-	@cp -Rp $(BUILD_DIR)/* $(PACK_DIR)/usr/share/balloon-web
-	@mkdir $(PACK_DIR)/usr/share/balloon-web/nginx
-	@cp -Rp $(BASE_DIR)/packaging/debian/nginx.conf $(PACK_DIR)/usr/share/balloon-web/nginx
-	@cp -Rp $(BASE_DIR)/packaging/debian/nginx-web.conf $(PACK_DIR)/usr/share/balloon-web/nginx
-	@-test -d $(DIST_DIR) || mkdir $(DIST_DIR)
-	@dpkg-deb --build $(PACK_DIR) $@
-	@rm -rf $(PACK_DIR)
-
+.PHONY: docker #Build test and create docker image
+docker: $(BUILD_TARGET) composer-no-dev
+	docker build -t $(DOCKER_NAME):$(VERSION) .
 
 .PHONY: tar
 tar: $(TAR)
@@ -91,73 +82,6 @@ $(TAR): $(BUILD_TARGET)
 	@rm -rf $(PACK_DIR)
 
 	@touch $@
-
-
-.PHONY: changelog
-changelog: $(CHANGELOG_TARGET)
-
-$(CHANGELOG_TARGET): CHANGELOG.md
-	@-test -d $(@D) || mkdir -p $(@D)
-	@v=""
-	@stable="stable"
-	@author=""
-	@category=""
-	@date=""
-	@changes=""
-	@-test ! -f $@ || rm $@
-
-	@while read l; \
-	do \
-		if [ "$${l:0:3}" == "###" ]; \
-		then \
-			category=$${l:4}; \
-		elif [ "$${l:0:2}" == "##" ]; \
-		then \
-	 		if [ "$$v" != "" ]; \
-	 		then \
-	 			echo "balloon ($$v) $$stable; urgency=low" >> $@; \
-	 			echo -e "$$changes" >> $@; \
-	 			echo >>  $@; \
-	 			echo " -- $$author  $$date" >> $@; \
-	 			echo >>  $@; \
-	 			v=""; \
-	 			stable="stable"; \
-	 			author=";" \
-	 			date=";" \
-	 			changes=""; \
-	 		fi; \
-	 		v=$${l:3}; \
-			if [[ "$$v" == *"RC"* ]]; \
-	 	 	then \
-	 			stable="unstable"; \
-	 		elif [[ "$$v" == *"BETA"* ]]; \
-	 		then \
-	 			stable="unstable"; \
-	 		elif [[ "$$v" == *"ALPHA"* ]]; \
-	 		then \
-	 			stable="unstable"; \
-	 		elif [[ "$$v" == *"dev"* ]]; \
-			then \
-	 			stable="unstable"; \
-	 		fi \
-	 	elif [ "$${l:0:5}" == "**Mai" ]; \
-	 	then \
-	 		p1=`echo $$l | cut -d '>' -f1`; \
-	 		p2=`echo $$l | cut -d '>' -f2`; \
-	 		author="$${p1:16}>"; \
-	 		date=$${p2:13}; \
-	 		date=`date -d"$$date" +'%a, %d %b %Y %H:%M:%S %z'`; \
-			if [ $$? -ne 0 ]; \
-			then \
-				date=`date +'%a, %d %b %Y %H:%M:%S %z'`; \
-			fi; \
-			echo $$date; \
-	 	elif [ "$${l:0:2}" == "* " ]; \
-	 	then \
-			changes="  $$changes\n  $$l"; \
-	 	fi; \
-	done < $<
-	@echo generated $@ from $<
 
 
 .PHONY: npm
@@ -190,5 +114,3 @@ install: $(INSTALL_TARGET)
 $(INSTALL_TARGET): $(BUILD_TARGET)
 	@cp -Rp $(BUILD_DIR)/* $(INSTALL_PREFIX)/usr/share/balloon-web
 	@mkdir -p /etc/nginx/conf.d/balloon
-	@cp -Rp $(BASE_DIR)/packaging/debian/nginx.conf /etc/nginx/conf.d/balloon.conf
-	@cp -Rp $(BASE_DIR)/packaging/debian/nginx-web.conf /etc/nginx/conf.d/balloon/web.conf

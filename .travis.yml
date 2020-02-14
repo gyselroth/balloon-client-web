@@ -1,7 +1,7 @@
 dist: trusty
 sudo: false
 language: node_js
-node_js: '8'
+node_js: '12'
 os:
 - linux
 notifications:
@@ -10,17 +10,9 @@ before_install:
 - export version=$TRAVIS_TAG
 - if [ "${version:0:1}" == "v" ]; then version=${version:1}; fi;
 - if [ "$version" == "" ]; then version=$TRAVIS_BUILD_NUMBER; fi;
-script: make VERSION=$version deb tar
-before_deploy:
-- if [[ "$version" == *"-"* ]]; then export deb_distribution=unstable; docker_tag=latest-unstable; else export
-  deb_distribution=stable; docker_tag=latest; fi;
-- if [[ "$TRAVIS_BRANCH" == "master" ]]; then export deb_distribution=nightly; fi;
-- export date=$(date +%Y-%m-%d)
-- cp packaging/debian/bintray.json bintray.json
-- sed -i s/'{version}'/$version/g bintray.json
-- sed -i s/'{date}'/$date/g bintray.json
-- sed -i s/'{deb_distribution}'/$deb_distribution/g bintray.json
-- cat bintray.json
+script:
+- make build
+- if [ "$TRAVIS_TAG" != "" ]; then make dist VERSION=$version; fi
 deploy:
 - provider: releases
   api_key:
@@ -30,17 +22,8 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-- provider: bintray
-  skip_cleanup: true
-  file: bintray.json
-  user: raffis
-  on:
-    tags: true
-  key:
-    secure: dqYiouXasiWqN2J+OeZGVnyNkpP3In3+WL55OctHYdJJmUACxlfc4yislhtYZVLNJB3BP2GI/HXpgmGDMjP/X8qaFsup8FnHGge/3k/S8TEUP5NneFaGXXfWKi3yac0cYvO1FOi1B2rp50XvXco2ydg9ETD8ZSPzMiVysP3/iAzTeyAVvjkOIGUMNYH4XKVfuVg4ba6qeHGa3/GdIwF5OvDdj9T58cPjN7LHIUjDE1xEFtzgs4R0vclKfIJglOVHWmv2a6nOi9CQfaiVi6evGhHSoO9G25ragR1Nsiluijx/ASjPuTiG7ZU/1p7VlsKv5HVTVi/7ARtJZAkg9LjFp8T2DeWuA5kzt2v8rNU18bouSMZu49NGky4l0S4qJsYtB1Nof+Ti2tEBfifv1v//Ey5gRFVfLWPzJ7td55xm3JN5KynPIoIuW9XcgkLIlCZyGSsuxggqPnIUzGS79yybps1UQH6VrN2Hn94kO7aLrRahe61EkvgqUB6WYOM35OyaGinvVM+FIGeWWxtDXRzYLLoxxq6AP4CczSgSt3nUcdVVnwRg0m0vz/IKwg4SG4XEsLBleCNe8FJkdC8VN3mQyww1kgyxpxumE9WgebXFPBxRILqS+zcD33X0Rc5hrKy7A5fm0bfvFqMut+H+kvNlzVHtf0/gVd3h+p46pF2sr08=
-after_deploy:
+after_script:
   - test "$TRAVIS_TAG" != "" && version=${TRAVIS_TAG:1};
-  - test "$TRAVIS_TAG" != "" && docker build -t gyselroth/balloon-web:$version .
   - test "$TRAVIS_TAG" != "" && docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - test "$TRAVIS_TAG" != "" && docker tag gyselroth/balloon-web:$version gyselroth/balloon-web:$docker_tag
   - test "$TRAVIS_TAG" != "" && docker push gyselroth/balloon-web:$version
