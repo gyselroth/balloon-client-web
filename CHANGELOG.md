@@ -6,7 +6,10 @@
 * Reload button on "Update available" Banner does not work on iOS #284
 * Quota does not get updated #283
 
-## Packaging
+### Changes
+* Add custom error pages #285
+
+### Packaging
 * Discontinue distribution of deb packages #286
 
 
