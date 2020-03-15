@@ -518,6 +518,10 @@ var balloon = {
     balloon.previous = null;
     balloon.last = null;
 
+    //reset upload_manager uppon login
+    balloon.upload_manager = null
+    balloon.resetDom(['uploadmgr-progress', 'upload-progress', 'uploadmgr-progress-files']);
+
     app.preInit(this);
     balloon.kendoFixes();
 
@@ -10113,6 +10117,7 @@ var balloon = {
 
         file.status = 2;
         file.manager.count.transfer++;
+        balloon._uploadManagerDone(file.id, false);
         balloon._checkUploadEnd();
 
         var data = balloon.parseError(e);
