@@ -5496,7 +5496,10 @@ var balloon = {
 
     if(!node.shared && !node.reference) {
       $share_name.val(node.name);
-      balloon.prepareShareWindow(node, acl);
+      window.setTimeout(function() {
+        // give kendo some time to cleanup a previous share window
+        balloon.prepareShareWindow(node, acl);
+      }, 0);
     } else {
       balloon.xmlHttpRequest({
         url: balloon.base+'/collections/share',
@@ -5581,6 +5584,7 @@ var balloon = {
 
     var selected = false;
 
+    $share_consumer_search.val('');
     $share_consumer_search.unbind('keyup').bind('keyup', function(e) {
       if(e.keyCode == 13) {
         if(selected === true) {
