@@ -1,10 +1,19 @@
+## 3.2.13
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**:
+
+### Bugfixes
+
+* Failure during upload, stop upload queue #289
+* Share consumer autocomplete does not work #288
+
 ## 3.2.12
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Wed Dec 04 12:25:42 CET 2019
 
 ### Changes
 
-*  Hide SPA content from bots SEO #281 
+*  Hide SPA content from bots SEO #281
 
 
 ## 3.2.11
