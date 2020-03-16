@@ -1,11 +1,11 @@
 ## 3.2.13
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**:
+**Date**: Mon Mar 16 16:28:03
 
 ### Bugfixes
-
 * Failure during upload, stop upload queue #289
 * Share consumer autocomplete does not work #288
+
 
 ## 3.2.12
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
