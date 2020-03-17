@@ -1,6 +1,14 @@
+## 3.2.14
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Mar 17 11:49:03 CET 2020
+
+### Changes
+*  Add content-security-policy by default #292
+
+
 ## 3.2.13
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
-**Date**: Mon Mar 16 16:28:03
+**Date**: Mon Mar 16 16:28:03 CET 2020
 
 ### Bugfixes
 * Failure during upload, stop upload queue #289

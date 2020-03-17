@@ -1,2 +1,3 @@
 FROM nginx:1-alpine
-COPY build/ /usr/share/nginx/html
+COPY packaging/nginx.conf /etc/nginx/conf.d/default.conf
+COPY build/ /usr/share/balloon-web
