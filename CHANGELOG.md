@@ -1,9 +1,21 @@
+## 3.2.15
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Tue Mar 24 16:10:03 CET 2020
+
+### Changes
+* Allow google recaptcha through CSP #292
+
+### Packaging
+* Run nginx master rootless, inherit from nginxinc/nginx-unprivileged instead official docker nginx
+* Disable nginx server token in production build
+
+
 ## 3.2.14
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Mar 17 11:49:03 CET 2020
 
 ### Changes
-*  Add content-security-policy by default #292
+* Add content-security-policy by default #292
 
 
 ## 3.2.13
