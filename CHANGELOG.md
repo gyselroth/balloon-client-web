@@ -1,3 +1,11 @@
+## 3.2.16
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Mar 27 12:49:03 CET 2020
+
+### Bugfixes
+* Fixes invalid port binding 8080 instead 80
+
+
 ## 3.2.15
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Tue Mar 24 16:10:03 CET 2020
