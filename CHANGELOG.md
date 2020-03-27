@@ -1,3 +1,11 @@
+## 3.2.17
+**Maintainer**: balloon-team <opensource@gyselroth.net>\
+**Date**: Fri Mar 27 15:06:03 CET 2020
+
+### Bugfixes
+* Allow frames to self (CSP), fixes loolwsd client #292
+
+
 ## 3.2.16
 **Maintainer**: balloon-team <opensource@gyselroth.net>\
 **Date**: Fri Mar 27 12:49:03 CET 2020
